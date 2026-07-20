@@ -1,0 +1,25 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Фото Лодки+|
+|\4=.*zc_Object_ProductPhoto*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|null|||
+|ValueData|Название файла|||
+|zc_ObjectBlob_ProductPhoto_Data|Фото|||
+|zc_ObjectString_ProductPhoto_Comment|Примечание|||
+|zc_ObjectLink_ProductPhoto_Product|[[zc_Object_Product|Product]]|||
+|zc_ObjectLink_ProductPhoto_PhotoTag|[[zc_Object_PhotoTag|Категория фото]]|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/2=.нет|/2=.наверно да|/2=.нет|/2=.нет|
+
+-
+-
+

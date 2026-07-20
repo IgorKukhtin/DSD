@@ -1,0 +1,27 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+
+|\4=.Справочник +Элементы Boat Structure(Лодка)+|
+|\4=.*zc_Object_ProdColorItems*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|15.10.20|07.12.20|23.12.20|29.03.21|19.07.22|
+|ObjectCode|№ п/п|_.+/-|в разрезе ProdColorGroup, сквозной, тогда перенумеровываем, или с 1 для каждой группы???|
+|ValueData|null|||
+|zc_ObjectString_ProdColorItems_Comment|Примечание/или Цвет|||
+|zc_ObjectBoolean_ProdColorItems_ProdOptions|добавить как Опцию|||||_=.NEW|
+|zc_ObjectLink_ProdColorItems_Product|[[zc_Object_Product|Лодка]]||/2<.Сложный ключ|
+|zc_ObjectFloat_ProdColorItems_OrderClient|[[zc_Movement_OrderClient|Заказ Клиента]]|_.+||||_=.NEW|
+|-zc_ObjectLink_ProdColorItems_ProdColorGroup-|-[[zc_Object_ProdColorGroup|ProdColorGroup]]-||-Категория: Hypalon, Fiberglass, Upholstery, Stitching, Color, ...-||_=.DELETE|
+|zc_ObjectLink_ProdColorItems_ProdColorPattern|[[zc_Object_ProdColorPattern|Boat Structure]]||Категория: Hypalon, Fiberglass, Upholstery, Stitching, Color, ... + ProdColorPattern.Name: №1,№2,... или Hull, Deck, ...|_=.NEW|
+|zc_ObjectLink_ProdColorItems_MaterialOptions|[[zc_Object_MaterialOptions|Категория Опций]]|||||||_=.NEW|
+|-zc_ObjectLink_ProdColorItems_ProdColor-|-[[zc_Object_ProdColor|Цвет]]-||||_=.DELETE|
+|zc_ObjectLink_ProdColorItems_Goods|[[zc_Object_Goods|Комплектующие]]||Факт||_=.NEW|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/4=.да, надо заполнить|/4=.да, надо заполнить|/4=.да, надо заполнить|/4=.да, надо заполнить|
+
+-
+-

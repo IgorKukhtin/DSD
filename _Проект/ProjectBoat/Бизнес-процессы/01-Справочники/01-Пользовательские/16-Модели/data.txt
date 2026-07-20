@@ -1,0 +1,35 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Модели+|
+|\4=.*zc_Object_ProdModel*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|11.01.2021|
+|ObjectCode|Код|_.+||
+|ValueData|Название|||
+|zc_ObjectString_ProdModel_PatternCIN|Pattern CIN||шаблон для формирования CIN лодки:DE-AGLB????|_=.NEW|
+|zc_ObjectFloat_ProdModel_Length|Length |||
+|zc_ObjectFloat_ProdModel_Beam|Beam|||
+|zc_ObjectFloat_ProdModel_Height|Height|||
+|zc_ObjectFloat_ProdModel_Weight|Weight|||
+|zc_ObjectFloat_ProdModel_Fuel|Fuel capacity|||
+|zc_ObjectFloat_ProdModel_Speed|Speed (km/h)|||
+|zc_ObjectFloat_ProdModel_Seating|Seating|||
+|zc_ObjectLink_ProdModel_Brand|[[zc_Object_Brand|Марка]]|||
+|zc_ObjectLink_ProdModel_ProdEngine|[[zc_Object_ProdEngine|Мотор]]|||
+|-zc_ObjectString_Article-|-Артикул-|||
+|zc_ObjectString_ProdModel_Comment|Примечание|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_Product|Лодки]]|/4=.нет|/4=.нет|/4=.нет|
+|[[zc_Object_ColorPattern|Шаблон Boat Structure]]|
+|[[zc_Object_ProdOptions|Названия Опций]]|
+
+
+-
+-

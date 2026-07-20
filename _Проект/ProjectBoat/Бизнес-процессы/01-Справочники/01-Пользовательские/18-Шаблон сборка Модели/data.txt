@@ -1,0 +1,31 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Шаблон сборка Модели+|
+|\4=.*zc_Object_ReceiptProdModel*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|22.12.22|
+|ObjectCode|Код|_.+||
+|ValueData|Название|_.+|Марка+Модель+Примечание+Пользовательский Код|
+|zc_ObjectBoolean_ReceiptProdModel_Main|Признак главный|||
+|zc_ObjectString_ReceiptProdModel_Code|Пользовательский Код|_.+/-|если пусто - берем Код модели|
+|zc_ObjectString_ReceiptProdModel_Comment|Примечание|||
+|zc_ObjectLink_ReceiptProdModel_Model|[[zc_Object_Model|Модель]]|||
+|zc_ObjectLink_ReceiptProdModel_Unit|[[zc_Object_Unit|Участок сборки]]|||_=.NEW|
+|zc_ObjectLink_Protocol_Insert|[[zc_Object_User|Пользователь (создание)]]|_.+||
+|zc_ObjectLink_Protocol_Update|[[zc_Object_User|Пользователь (корректировка)]]|_.+||
+|zc_ObjectDate_Protocol_Insert|Дата создания|_.+||
+|zc_ObjectDate_Protocol_Update|Дата корректировки|_.+||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_ReceiptProdModelChild|Элементы для сборки Модели]]|/4=.да, надо заполнить|[[zc_Movement_ProductionUnion#zc_MI_Master|Производство - сборка]]|/4=.да, надо заполнить|
+|[[zc_Object_Product|Лодки]]|/2=.|
+|[[zc_Object_PriceListItem|Элемент прайс-листа]]|
+
+-
+-

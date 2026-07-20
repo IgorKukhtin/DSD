@@ -1,0 +1,32 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Элементы для сборки Модели+|
+|\4=.*zc_Object_ReceiptProdModelChild*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|11.12.20|19.12.22|
+|ObjectCode|null|||
+|ValueData|Примечание|||
+|zc_ObjectFloat_ReceiptProdModelChild_Value|Значение|||
+|zc_ObjectFloat_ReceiptProdModelChild_ForCount|Для кол-во|_.+|||_=.NEW|
+|zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel|[[zc_Object_ReceiptProdModel|Шаблон сборка Модели]]|||
+|/3<.zc_ObjectLink_ReceiptProdModelChild_Object|[[zc_Object_Goods|Goods]]|/2<.|/2<.|
+|[[zc_Object_ReceiptService|Работы/Услуги]]|_=.NEW|
+|-[[zc_Object_ProdColorPattern|Boat Structure ]]-|||_=.DELETE|
+|zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel|[[zc_Object_ReceiptLevel|Этап сборки]]|||_=.NEW|
+|zc_ObjectLink_Protocol_Insert|[[zc_Object_User|Пользователь (создание)]]|_.+||
+|zc_ObjectLink_Protocol_Update|[[zc_Object_User|Пользователь (корректировка)]]|_.+||
+|zc_ObjectDate_Protocol_Insert|Дата создания|_.+||
+|zc_ObjectDate_Protocol_Update|Дата корректировки|_.+||
+
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/4=.да|/4=.да, надо заполнить|/4=.да, надо заполнить|/4=.да, надо заполнить|
+
+-
+-

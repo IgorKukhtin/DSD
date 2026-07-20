@@ -1,0 +1,30 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+
+|\4=.Справочник +Элементы Опций (Лодка)+|
+|\4=.*zc_Object_ProdOptItems*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|15.10.20|24.12.20|04.01.21|29.03.21|06.04.21|29.05.23|
+|ObjectCode|№ п/п|_.+|с 1 для каждой Лодки|
+|ValueData|null|||
+|zc_ObjectFloat_ProdOptItems_DiscountTax|% скидки|||||_=.NEW|
+|zc_ObjectString_ProdOptItems_PartNumber|PartNumber||№ по тех паспорту установленного доп. оборудования|
+|zc_ObjectString_ProdOptItems_Comment|Примечание/или Цвет|||
+|zc_ObjectString_ProdOptItems_CommentOpt|Примечание(опция)||||||||_=.NEW|
+|zc_ObjectLink_ProdOptItems_Product|[[zc_Object_Product|Лодка]]||/2<.Сложный ключ|
+|zc_ObjectFloat_ProdOptItems_OrderClient|[[zc_Movement_OrderClient|Заказ Клиента]]|_.+||||_=.NEW|
+|zc_ObjectLink_ProdOptItems_ProdOptPattern|[[zc_Object_ProdOptPattern|ProdOptPattern]]||-вид/№ доп. оборудования: световая установка, навигация, холодильное оборудование, кофемашина, и т.п.- почти не используется|_=.NEW|
+|zc_ObjectLink_ProdOptItems_Goods|[[zc_Object_Goods|Комплектующие]]||Факт||_=.NEW|
+|zc_ObjectLink_ProdOptItems_ProdOptions|[[zc_Object_ProdOptions|Название Опции]]|||
+|zc_ObjectFloat_ProdOptItems_Count|Count||Кол-во самих опций|||||_=.NEW|
+|-zc_ObjectFloat_ProdOptItems_PriceIn-|-PriceIn-|_.+|временно убрал, может потом понадобится|
+|-zc_ObjectFloat_ProdOptItems_PriceOut-|-PriceOut-|_.+|временно убрал, может потом понадобится|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/4=.да, надо заполнить|/4=.да, надо заполнить|/4=.да, надо заполнить|/4=.да, надо заполнить|
+
+-
+-

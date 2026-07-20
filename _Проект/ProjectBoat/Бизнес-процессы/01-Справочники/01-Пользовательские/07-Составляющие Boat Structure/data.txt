@@ -1,0 +1,22 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+
+|\4=.Справочник +Составляющие Boat Structure+|
+|\4=.*zc_Object_ProdColorGroup*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|11.12.20|
+|ObjectCode|Код|_.+/-||
+|ValueData|Название|||
+|-zc_ObjectString_Article-|-Артикул-|||
+|zc_ObjectLink_ProdColorGroup_ProdColorKind|[[zc_Object_ProdColorKind|Виды Boat Structure]]|||_=.NEW|
+|zc_ObjectString_ProdColorGroup_Comment|Примечание|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|-[[zc_Object_ProdColorItems|Элементы Цвета (Лодка)]]-|/4=.да, надо заполнить|/4=.да, надо заполнить|/4=.да, надо заполнить|
+|[[zc_Object_ProdColorPattern|Boat Structure]]|
+
+-
+-

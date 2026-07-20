@@ -1,0 +1,24 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Фото Boat Structure+|
+|\4=.*zc_Object_ProdColorPatternPhoto*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|null|||
+|ValueData|Название файла|||
+|zc_ObjectBlob_ProdColorPatternPhoto_Data|Фото|||
+|zc_ObjectString_ProdColorPatternPhoto_Comment|Примечание|||
+|zc_ObjectLink_ProdColorPatternPhoto_ProdColorPattern|[[zc_Object_ProdColorPattern|Boat Structure]]|||
+
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/2=.нет|/2=.наверно да|/2=.нет|/2=.нет|
+
+-
+-

@@ -1,0 +1,40 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+
+|\4=.Справочник +Лодки+|
+|\4=.*zc_Object_Product*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|23.12.20|29.12.20|04.01.2021|10.01.2021|23.02.2021|26.02.2021|02.02.2023|10.03.2024|
+|ObjectCode|Код|_.+||
+|ValueData|Описание|||
+|zc_ObjectFloat_Product_Hours|Hours||фиксируется последнее время отработанных часов, при продаже=0, при последнем тех.обслуживании/ремонте=факт|
+|-zc_ObjectFloat_Product_DiscountTax-|-% скидки (основной)-|||||_=.NEW|||_=.DELETE|
+|-zc_ObjectFloat_Product_DiscountNextTax-|-% скидки (дополнительный)-||применяется к сумме с учетом основной скидки|||_=.NEW|||_=.DELETE|
+|zc_ObjectDate_Product_DateStart|Начало производства|||
+|zc_ObjectDate_Product_DateBegin|Дата план||Планируемая дата завершения сборки|||||||_=.RENAME|
+|zc_ObjectDate_Product_DateSale|Продажа|||
+|-zc_ObjectString_Article-|-Артикул-||||||_=.DELETE|
+|zc_ObjectString_Product_CIN|CIN|||
+|zc_ObjectString_Product_EngineNum|EngineNum|_.+|при резерве с остатка, должен подставляться номер из партии|
+|zc_ObjectString_Product_Comment|Примечание|||
+|zc_ObjectBoolean_Product_BasicConf|BasicConf||включать базовую Комплектацию |_=.NEW|
+|zc_ObjectBoolean_Product_ProdColorPattern|Boat Structure||автоматически добавить все Items Boat Structure|_=.NEW|
+|zc_ObjectBoolean_Product_Reserve|Резервация||Предварительный заказ с нейизвестной конфигурацией||||||||_=.NEW|
+|-zc_ObjectLink_Product_ProdGroup-|-[[zc_Object_ProdGroup|ProdGroup]]-|||
+|-zc_ObjectLink_Product_Brand|-[[zc_Object_Brand|Марка]]-||лишнее, надо брать для zc_Object_Model|
+|zc_ObjectLink_Product_Model|[[zc_Object_Model|Модель]]|||
+|-zc_ObjectLink_Product_Engine|-[[zc_Object_Engine|Мотор]]-||лишнее, надо брать для zc_Object_Model|
+|zc_ObjectLink_Product_ReceiptProdModel|[[zc_Object_ReceiptProdModel|Шаблон сборка Модели]]||||_=.NEW|
+|-zc_ObjectLink_Product_Client-|-[[zc_Object_Client|Клиент]]-||теперь это св-во в самом заказе|||_=.NEW||_=.DELETE|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_ProdColorItems|Элементы Boat Structure (Лодка)]]|[[zc_Movement_OrderClient|Заказ Клиента]]|[[zc_Movement_OrderClient#zc_MI_Master|Заказ Клиента]]|/4=.да, надо заполнить|
+|[[zc_Object_ProdOptItems|Элементы Опций (Лодка)]]|||
+|[[zc_Object_ProductDocument|Документация Лодки]]|||
+|[[zc_Object_ProductPhoto|Фото Лодки]]|||
+
+-
+-

@@ -1,0 +1,29 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Шаблон Boat Structure+|
+|\4=.*zc_Object_ColorPattern*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|Код|_.+||
+|ValueData|Название|_.+|Марка+Модель+Примечание+Пользовательский Код|
+|zc_ObjectString_ColorPattern_Code|Пользовательский Код|_.+/-|если пусто - берем Код модели|
+|zc_ObjectString_ColorPattern_Comment|Примечание|||
+|zc_ObjectLink_ColorPattern_Model|[[zc_Object_Model|Модель]]|||
+|zc_ObjectLink_Protocol_Insert|[[zc_Object_User|Пользователь (создание)]]|_.+||
+|zc_ObjectLink_Protocol_Update|[[zc_Object_User|Пользователь (корректировка)]]|_.+||
+|zc_ObjectDate_Protocol_Insert|Дата создания|_.+||
+|zc_ObjectDate_Protocol_Update|Дата корректировки|_.+||
+
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_ProdColorPattern|Boat Structure]]|/4=.да, надо заполнить|[[zc_Movement_OrderClient#zc_MI_Master|Заказ Клиента]]|/4=.да, надо заполнить|
+|[[zc_Object_ReceiptGoods|Шаблон сборка Узла]]|/3=.да, надо заполнить|
+
+-
+-

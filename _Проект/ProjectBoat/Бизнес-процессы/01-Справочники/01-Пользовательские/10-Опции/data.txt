@@ -1,0 +1,32 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+
+|\4=.Справочник +Названия Опций+|
+|\4=.*zc_Object_ProdOptions*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|25.12.20|21.06.22|23.04.22|29.05.23|
+|ObjectCode|Код|_.+||
+|ValueData|Название||доп. оборудование|
+|zc_ObjectFloat_ProdOptions_SalePrice|Цена продажи без ндс|_.+||_=.NEW|
+|zc_ObjectFloat_ProdOptions_Amount|Кол-во (комплектующие)||||||_=.NEW|
+|zc_ObjectLink_ProdOptions_TaxKind|[[zc_Object_TaxKind|Тип НДС]]|||_=.NEW|
+|-zc_ObjectFloat_ProdOptions_Level-|-Level-||-таким образом, получаем расстановку в строгом соответствии, как чек-лист-|_=.DELETE|
+|-zc_ObjectString_Article-|-Artikel Nr-|||_=.DELETE|
+|zc_ObjectString_ProdOptions_Comment|Примечание/или Цвет|||
+|zc_ObjectLink_ProdOptions_Model|[[zc_Object_Model|Модель]]|||_=.NEW|
+|zc_ObjectLink_ProdOptions_Goods|[[zc_Object_Goods|Комплектующие]]||только для ProdColorPattern=null|_=.NEW|
+|zc_ObjectLink_ProdOptions_MaterialOptions|[[zc_Object_MaterialOptions|Категория Опций]]||||_=.NEW|
+|-zc_ObjectLink_ProdOptions_ProdColor-|-[[zc_Object_ProdColor|ProdColor]]-||||_=.NEW|
+|zc_ObjectLink_ProdOptions_ProdColorPattern|[[zc_Object_ProdColorPattern|Элементы Boat Structure]]|||||_=.NEW|
+|zc_ObjectString_Id_Site|Id Сайт||||_=.NEW|
+|zc_ObjectFloat_ProdOptions_CodeVergl|Альтернативный код||||_=.NEW|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_ProdOptItems|Элементы Опций (Лодка)]]|/4=.да, надо заполнить|[[zc_Movement_OrderClient#zc_MI_Master|Заказ Клиента]]|/4=.да, надо заполнить|
+|-[[zc_Object_ProdColorPattern|Элементы Boat Structure]]-|/3=.да, надо заполнить|
+
+-
+-

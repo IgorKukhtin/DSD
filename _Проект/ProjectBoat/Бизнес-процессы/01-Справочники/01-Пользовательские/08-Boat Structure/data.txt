@@ -1,0 +1,27 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+
+|\4=.Справочник +Boat Structure+|
+|\4=.*zc_Object_ProdColorPattern*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|01.12.20|11.12.20|25.12.20|23.04.22|
+|ObjectCode|№ п/п|_.+/-|в разрезе ProdColorGroup, с 1 для каждой группы?|
+|ValueData|Элемент||№1,№2,... или Hull, Deck|
+|zc_ObjectString_ProdColorPattern_Comment|Примечание/Цвет||*всегда Цвет*|
+|zc_ObjectLink_ProdColorPattern_ColorPattern|[[zc_Object_ColorPattern|Шаблон Boat Structure ]]||||_=.NEW|
+|zc_ObjectLink_ProdColorPattern_ProdColorGroup|[[zc_Object_ProdColorGroup|Составляющие Boat Structure]]||Категория/Группа: Hypalon, Fiberglass, Upholstery, Stitching, Color, ...|
+|zc_ObjectLink_ProdColorPattern_Goods|[[zc_Object_Goods|Goods]]|||_=.NEW|
+|-zc_ObjectLink_ProdColorPattern_ProdOptions-|-[[zc_Object_ProdOptions|Опция]]-||скорей всего не понадобится|||_=.NEW|_=.DELETE|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_ProdColorItems|Элементы Boat Structure (Лодка)]]|/6=.да, надо заполнить|[[zc_Movement_OrderClient#zc_MI_Master|Заказ Клиента]]|/6=.да, надо заполнить|
+|-[[zc_Object_ReceiptProdModelChild|Элементы для сборки Модели]]-|/5=.да, надо заполнить|
+|[[zc_Object_ReceiptGoodsChild|Элементы сборки Узлов]]|
+|[[zc_Object_ProdColorPatternPhoto|Фото Boat Structure]]|
+|[[zc_Object_ProdOptions|Опция]]|
+
+-
+-

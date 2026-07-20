@@ -1,0 +1,103 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]]
+
+h3. [[Пользовательские_справочники|Пользовательские]]
+[[Автоматические_справочники|Автоматические]]
+[[Служебные_справочники|Служебные]]
+[[Enum_справочники|Enum]]
+[[Истории]]
+[[Справочники_Управленческий_Учет|Управленческий Учет]]
+
+h3. [[Документы]]
+[[Проводки]]
+
+-
+-
+
+h1. Пользовательские справочники
+
+* + * [[zc_Object_ProdGroup|Группы]] *zc_Object_ProdGroup*
+* + * [[zc_Object_Product|Лодки]] *zc_Object_Product*
+* + * [[zc_Object_ProductDocument|Документация Лодки]] *zc_Object_ProductDocument*
+* + * [[zc_Object_ProductPhoto|Фото Лодки]] *zc_Object_ProductPhoto*
+
+* + * [[zc_Object_ColorPattern|Шаблон Boat Structure]] *zc_Object_ColorPattern*
+* + * [[zc_Object_ProdColorGroup|Составляющие Boat Structure]] *zc_Object_ProdColorGroup*
+* + * [[zc_Object_ProdColorPattern|Boat Structure]] *zc_Object_ProdColorPattern*
+* + * [[zc_Object_ProdColorPatternPhoto|Photo Boat Structure]] *zc_Object_ProdColorPatternPhoto*
+
+* + * [[zc_Object_ProdOptions|Опции]] *zc_Object_ProdOptions*
+* + * [[zc_Object_ProdOptPattern|Шаблоны Опций (Лодка)]] *zc_Object_ProdOptPattern*
+* + * [[zc_Object_MaterialOptions|Категория Опций]] *zc_Object_MaterialOptions*
+
+* + * [[zc_Object_ProdColorItems|Элементы Boat Structure (Лодка)]] *zc_Object_ProdColorItems*
+* + * [[zc_Object_ProdOptItems|Элементы Опций (Лодка)]] *zc_Object_ProdOptItems*
+
+* + * [[zc_Object_Brand|Торговые Марки]] *zc_Object_Brand*
+* + * [[zc_Object_ProdModel|Модели]] *zc_Object_ProdModel*
+* + * [[zc_Object_ProdEngine|Моторы]] *zc_Object_ProdEngine*
+* + * [[zc_Object_ProdColor|Цвета]] *zc_Object_ProdColor*
+
+* + * [[zc_Object_ReceiptProdModel|Шаблон сборка Модели]] *zc_Object_ReceiptProdModel*
+* + * [[zc_Object_ReceiptProdModelChild|Элементы сборки Модели]] *zc_Object_ReceiptProdModelChild*
+* + * [[zc_Object_ReceiptLevel|Этап сборки]] *zc_Object_ReceiptLevel*
+
+* + * [[zc_Object_ReceiptServiceGroup|Группа Работы/Услуги]] *zc_Object_ReceiptServiceGroup*
+* + * [[zc_Object_ReceiptService|Работы/Услуги]] *zc_Object_ReceiptService*
+* + * [[zc_Object_ReceiptServiceModel|Работы/Услуги (модель)]] *zc_Object_ReceiptServiceModel*
+* + * [[zc_Object_ReceiptServiceMaterial|Работы/Услуги (Сырье)]] *zc_Object_ReceiptServiceMaterial*
+
+* + * [[zc_Object_ReceiptGoods|Шаблон сборка Узлов]] *zc_Object_ReceiptGoods*
+* + * [[zc_Object_ReceiptGoodsChild|Элементы сборки Узлов]] *zc_Object_ReceiptGoodsChild*
+
+-
+-
+
+* + * [[zc_Object_Partner|Поставщики]] *zc_Object_Partner*
+* + * [[zc_Object_Client|Клиенты]] *zc_Object_Client*
+* + * [[zc_Object_Unit|Склад/Участок сборки]] *zc_Object_Unit*
+* + * [[zc_Object_PartionCell| Ячейка хранения (Партия учета)]] *zc_Object_PartionCell*
+
+* + * [[zc_Object_Country|Страны]] *zc_Object_Country*
+* + * [[zc_Object_PLZ|Почтовые адреса]] *zc_Object_PLZ*
+
+* + * [[zc_Object_BankAccount|Расчетные счета]] *zc_Object_Bank*
+* + * [[zc_Object_Cash|Кассы]]| *zc_Object_Bank*
+* + * [[zc_Object_Currency|Валюты]] *zc_Object_Bank*
+* + * [[zc_Object_Bank|Банки]] *zc_Object_Bank*
+
+* + * [[zc_Object_GoodsGroup|Группы]] *zc_Object_GoodsGroup*
+* + * [[zc_Object_Goods|Комплектующие]] *zc_Object_Goods*
+* + * [[zc_Object_GoodsSize|Размеры]] *zc_Object_GoodsSize*
+* + * [[zc_Object_GoodsTag|Категория]] *zc_Object_GoodsTag*
+* + * [[zc_Object_Measure|Единицы измерения]] *zc_Object_Measure*
+* + * [[zc_Object_MeasureCode|Сокращенный код ед. изм.]] *zc_Object_MeasureCode*
+
+* + * [[zc_Object_GoodsDocument|Документация Комплектующие]] *zc_Object_GoodsDocument*
+* + * [[zc_Object_GoodsPhoto|Фото Комплектующие]] *zc_Object_GoodsPhoto*
+* + * [[zc_Object_DocTag|Категория Документация]] *zc_Object_DocTag*
+* + * [[zc_Object_PhotoTag|Категория Фото ]] *zc_Object_PhotoTag*
+* + * [[zc_Object_GoodsArticle|Артикул Комплектующие]] *zc_Object_GoodsArticle*
+
+* + * [[zc_Object_PriceList|Прайс листы]] *zc_Object_PriceList*
+
+* + * [[zc_Object_BankAccountPdf|Документ Расчетный счет, скан документов]] *zc_Object_BankAccountPdf*
+* + * [[zc_Object_InvoicePdf|Документ Счет, скан документов]] *zc_Object_InvoicePdf*
+
+
+* + * [[zc_Object_CountryBrand|Страна производитель]] *zc_Object_CountryBrand*
+* + * [[zc_Object_Currency|Валюта]] *zc_Object_Currency*     -- *!!!* +select * from Valuta+
+
+* + * [[zc_Object_Member|Физические лица]] *zc_Object_Member*
+* + - [[zc_Object_Position|Должности]] *zc_Object_Position*
+* + - [[zc_Object_Personal|Сотрудники]] *zc_Object_Personal*
+
+* + * [[zc_Object_EmailSettings|Установки для внешнего Импорта/Экспорта]] *zc_Object_EmailSettings*
+* + * [[zc_Object_EmailKind|Тип внешнего Импорта/Экспорта]] *zc_Object_EmailKind* - Enum
+* + * [[zc_Object_EmailTools|Параметры подключения к внешнему Импорту/Экспорту]] *zc_Object_EmailTools* - Enum
+
+* + * [[zc_Object_MailSend|Отправка по почте]] *zc_Object_MailSend*
+* + * [[zc_Object_MailKind|Тип Отправки по почте]] *zc_Object_MailKind* - Enum
+
+--
+--
+
