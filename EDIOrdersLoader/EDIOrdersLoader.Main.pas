@@ -147,6 +147,8 @@ type
     spSelectMovement_effie: TdsdStoredProc;
     spInsert_Movement_effie: TdsdStoredProc;
     spUpdatet_effie_OperDate_get: TdsdStoredProc;
+    actVchasno_SendQuality: TdsdVchasnoEDIAction;
+    mactVchasnoQuality: TMultiAction;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -793,6 +795,26 @@ begin
                             //
                             MyDelay_two(3000);
 
+                       end;
+
+                       //
+                       //еще отправка Е-Сертификат
+                       if (FieldByName('isEdiESert').AsBoolean  = true) and (FormParams.ParamByName('Err_str_toEDI').Value = '')
+                        //and (1=0)
+                       then begin
+                            //Документ продажа
+                            FormParams.ParamByName('MovementId_sale').Value := FieldByName('Id').AsInteger;
+                            //
+                            if mactVchasnoQuality.Execute
+                            then actUpdateEdiCONDRATrue.Execute
+                            else begin
+                                  // Ошибку записать в базе
+                                  FormParams.ParamByName('Err_str_toEDI').Value := 'Ошибка при отправке Е-Сертификат';
+                                  // Ошибку показать в логе
+                                  AddToLog_Vchasno(true, 'Ошибка при отправке Е-Сертификат Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
+                                  AddToLog_Vchasno(true, actVchasno_SendQuality.ErrorText.Value, true);
+                                  AddToLog_Vchasno(true, '', true);
+                             end;
                        end;
               end;
 

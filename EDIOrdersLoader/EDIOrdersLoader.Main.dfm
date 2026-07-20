@@ -11746,6 +11746,62 @@ object MainForm: TMainForm
         end>
       Caption = 'actUpdateEdiCONDRATrue'
     end
+    object actVchasno_SendQuality: TdsdVchasnoEDIAction
+      Category = 'Quality_vch'
+      MoveParams = <>
+      Caption = 'actVchasnoEDISignComdoc'
+      Host.Value = 'https://edi.vchasno.ua/api/v2/certificates'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = vchSendQuality
+      KeyFileName.Value = ''
+      KeyFileName.Component = FormParams
+      KeyFileName.ComponentItem = 'FileNameKey'
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.Component = FormParams
+      KeyUserName.ComponentItem = 'UserNameKey'
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      HeaderDataSet = DataCondraCDS
+    end
+    object mactVchasnoQuality: TMultiAction
+      Category = 'Quality_vch'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = acGet_Quality_ReportName
+        end
+        item
+          Action = actPrintQuality_saveFile
+        end
+        item
+          Action = actSelectData_Condra
+        end
+        item
+          Action = actVchasno_SendQuality
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1045'-'#1057#1077#1088#1090#1080#1092#1080#1082#1072#1090'>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1045'-'#1057#1077#1088#1090#1080#1092#1080#1082#1072#1090'>'
+      ImageIndex = 89
+    end
   end
   object spHeaderOrder: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_EDIOrder'
