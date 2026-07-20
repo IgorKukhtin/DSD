@@ -1,0 +1,49 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]]
+
+h3. [[Пользовательские_справочники|Пользовательские]]
+[[Автоматические_справочники|Автоматические]]
+[[Служебные_справочники|Служебные]]
+[[Enum_справочники|Enum]]
+[[Истории]]
+[[Справочники_Управленческий_Учет|Управленческий Учет]]
+
+-
+-
+
+h1. Служебные справочники
+
+Эти справочники содержат Служебную информацию. Соответственно для них не может быть процедуры gpInsertUpdate_...
+На уровне метамодели они ничем не отличаются от обычных справочников.
+Элементы справочников создаются сразу после создания базы данных.
+
+* [[zc_Object_User|Пользователи]] *zc_Object_User*
+
+* [[zc_Object_Role|Role]] *zc_Object_Role*
+
+* [[zc_Object_UserRole|Установки для Пользователя - Роли]] *zc_Object_UserRole*
+
+
+* [[zc_Object_Program|Программы]] *zc_Object_Program*
+
+* [[zc_Object_Form|Формы приложения]] *zc_Object_Form*
+
+* [[zc_Object_Action|Action в MainForm]] *zc_Object_Action*
+
+* [[zc_Object_UserFormSettings|Пользовательские настройки форм]] *zc_Object_UserFormSettings*
+
+* [[zc_Object_Process|Процессы]] *zc_Object_Process*
+
+* [[zc_Object_RoleRight|Установки прав на роли]] *zc_Object_RoleRight*
+* [[zc_Object_RoleAction|Установки для роли - Action из MainForm]] *zc_Object_RoleAction*
+* [[zc_Object_RoleProcessAccess|Установки для роли - Процессы]] *zc_Object_RoleProcessAccess*
+
+* -[[zc_Object_GlobalConst|Глобальные параметры]]- *zc_Object_GlobalConst*
+
+* [[zc_Object_Language|Язык перевода]] *zc_Object_Language*
+* [[zc_Object_TranslateWord|Перевод Слов]] *zc_Object_TranslateWord*
+* [[zc_Object_TranslateMessage|Перевод Сообщений]] *zc_Object_TranslateMessage*
+
+* [[zc_Object_TranslateObject|Перевод Справочников]] *zc_Object_TranslateObject*
+
+-
+-
