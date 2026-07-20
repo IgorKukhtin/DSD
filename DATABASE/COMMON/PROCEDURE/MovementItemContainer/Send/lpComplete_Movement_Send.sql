@@ -2516,57 +2516,76 @@ END IF;
                                                                                  )
                                        )
                 -- нашли с/с если нет для ContainerId_Goods
-              , tmpHistoryCost_find AS (SELECT Container_Summ.ContainerId_GoodsFrom
-                                             , Container_Summ.ContainerId_Summ
-                                             , MAX (HistoryCost.Price) AS Price
-                                        FROM -- нашли у каких ContainerId_GoodsFrom ВСЕ цены = 0
-                                             (SELECT tmpHistoryCost_find_all.ContainerId_GoodsFrom FROM tmpHistoryCost_find_all
-                                              GROUP BY tmpHistoryCost_find_all.ContainerId_GoodsFrom
-                                              HAVING MAX (tmpHistoryCost_find_all.Price) = 0
-                                             ) AS tmpHistoryCost_list
-                                             -- для всех ContainerId_Summ надо найти альтернативную цену
-                                             JOIN tmpHistoryCost_find_all AS Container_Summ ON Container_Summ.ContainerId_GoodsFrom = tmpHistoryCost_list.ContainerId_GoodsFrom
+              , tmpHistoryCost_find_1 AS (SELECT tmpHistoryCost_find_all.ContainerId_GoodsFrom FROM tmpHistoryCost_find_all
+                                          GROUP BY tmpHistoryCost_find_all.ContainerId_GoodsFrom
+                                          HAVING MAX (tmpHistoryCost_find_all.Price) = 0
+                                         )
+                -- нашли с/с если нет для ContainerId_Goods
+              , tmpHistoryCost_find_2 AS (SELECT Container_Summ.ContainerId_GoodsFrom
+                                               , Container_Summ.ContainerId_Summ
+                                               , Container_Summ_new.Id AS ContainerId_new
+                                               , Container_Summ.GoodsKindId
+                                               , CLO_InfoMoney.ObjectId         AS InfoMoneyId
+                                               , CLO_InfoMoneyDetail.ObjectId   AS InfoMoneyId_Detail
+                                               , CLO_JuridicalBasis.ObjectId    AS JuridicalId_Basis
+                                          FROM -- нашли у каких ContainerId_GoodsFrom ВСЕ цены = 0
+                                               tmpHistoryCost_find_1 AS tmpHistoryCost_list
+                                               -- для всех ContainerId_Summ надо найти альтернативную цену
+                                               JOIN tmpHistoryCost_find_all AS Container_Summ ON Container_Summ.ContainerId_GoodsFrom = tmpHistoryCost_list.ContainerId_GoodsFrom
+  
+                                               -- св-ва ContainerId_Summ, где нет цены
+                                               LEFT JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = Container_Summ.ContainerId_Summ
+                                                                                             AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                               LEFT JOIN ContainerLinkObject AS CLO_InfoMoneyDetail ON CLO_InfoMoneyDetail.ContainerId = Container_Summ.ContainerId_Summ
+                                                                                                   AND CLO_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
+                                               LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis ON CLO_JuridicalBasis.ContainerId = Container_Summ.ContainerId_Summ
+                                                                                                  AND CLO_JuridicalBasis.DescId      = zc_ContainerLinkObject_JuridicalBasis()
+                                                 
+                                               -- альтернатива
+                                               JOIN Container AS Container_Count_new ON Container_Count_new.ObjectId = Container_Summ.GoodsId
+                                                                                    AND Container_Count_new.DescId   = zc_Container_Count()
+                                               JOIN Container AS Container_Summ_new ON Container_Summ_new.ParentId = Container_Count_new.Id
+                                                                                   AND Container_Summ_new.ObjectId = Container_Summ.AccountId
+                                                                                   AND Container_Summ_new.DescId   = zc_Container_Summ()
+                                         )
 
-                                             -- св-ва ContainerId_Summ, где нет цены
-                                             LEFT JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = Container_Summ.ContainerId_Summ
-                                                                                           AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
-                                             LEFT JOIN ContainerLinkObject AS CLO_InfoMoneyDetail ON CLO_InfoMoneyDetail.ContainerId = Container_Summ.ContainerId_Summ
-                                                                                                 AND CLO_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
-                                             LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis ON CLO_JuridicalBasis.ContainerId = Container_Summ.ContainerId_Summ
-                                                                                                AND CLO_JuridicalBasis.DescId      = zc_ContainerLinkObject_JuridicalBasis()
-                                               
-                                             -- альтернатива
-                                             JOIN Container AS Container_Count_new ON Container_Count_new.ObjectId = Container_Summ.GoodsId
-                                                                                  AND Container_Count_new.DescId   = zc_Container_Count()
-                                             JOIN Container AS Container_Summ_new ON Container_Summ_new.ParentId = Container_Count_new.Id
-                                                                                 AND Container_Summ_new.ObjectId = Container_Summ.AccountId
-                                                                                 AND Container_Summ_new.DescId   = zc_Container_Summ()
-                                             INNER JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ_new.Id
-                                                                  AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
-                                                                  -- !!! есть цена !!!
-                                                                  AND HistoryCost.Price > 0
+                -- нашли с/с если нет для ContainerId_Goods
+              , tmpHistoryCost_find_3 AS (SELECT * FROM HistoryCost 
+                                          WHERE HistoryCost.ContainerId IN (SELECT DISTINCT tmpHistoryCost_find_2.ContainerId_new FROM tmpHistoryCost_find_2)
+                                            AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                                         )
+
+                -- нашли с/с если нет для ContainerId_Goods
+              , tmpHistoryCost_find AS (SELECT tmpHistoryCost_find_2.ContainerId_GoodsFrom
+                                             , tmpHistoryCost_find_2.ContainerId_Summ
+                                             , MAX (HistoryCost.Price) AS Price
+                                        FROM tmpHistoryCost_find_2
+                                             INNER JOIN tmpHistoryCost_find_3 AS HistoryCost
+                                                                              ON HistoryCost.ContainerId = tmpHistoryCost_find_2.ContainerId_new
+                                                                             AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                                                                             -- !!! есть цена !!!
+                                                                             AND HistoryCost.Price > 0
                                              -- св-ва
                                              INNER JOIN ContainerLinkObject AS CLO_Unit_new
-                                                                            ON CLO_Unit_new.ContainerId = Container_Summ_new.Id
+                                                                            ON CLO_Unit_new.ContainerId = tmpHistoryCost_find_2.ContainerId_new
                                                                            AND CLO_Unit_new.DescId      = zc_ContainerLinkObject_Unit()
                                                                            AND CLO_Unit_new.ObjectId    = vbWhereObjectId_Analyzer_From
-
-                                             INNER JOIN ContainerLinkObject AS CLO_InfoMoney_new ON CLO_InfoMoney_new.ContainerId = Container_Summ_new.Id
+                                             INNER JOIN ContainerLinkObject AS CLO_InfoMoney_new ON CLO_InfoMoney_new.ContainerId = tmpHistoryCost_find_2.ContainerId_new
                                                                                                 AND CLO_InfoMoney_new.DescId      = zc_ContainerLinkObject_InfoMoney()
-                                                                                                AND CLO_InfoMoney_new.ObjectId    = CLO_InfoMoney.ObjectId
-                                             INNER JOIN ContainerLinkObject AS CLO_InfoMoneyDetail_new ON CLO_InfoMoneyDetail_new.ContainerId = Container_Summ_new.Id
+                                                                                                AND CLO_InfoMoney_new.ObjectId    = tmpHistoryCost_find_2.InfoMoneyId
+                                             INNER JOIN ContainerLinkObject AS CLO_InfoMoneyDetail_new ON CLO_InfoMoneyDetail_new.ContainerId = tmpHistoryCost_find_2.ContainerId_new
                                                                                                       AND CLO_InfoMoneyDetail_new.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      AND CLO_InfoMoneyDetail_new.ObjectId    = CLO_InfoMoneyDetail.ObjectId
-                                             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_new ON CLO_GoodsKind_new.ContainerId = Container_Summ_new.Id
+                                                                                                      AND CLO_InfoMoneyDetail_new.ObjectId    = tmpHistoryCost_find_2.InfoMoneyId_Detail
+                                             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_new ON CLO_GoodsKind_new.ContainerId = tmpHistoryCost_find_2.ContainerId_new
                                                                                                AND CLO_GoodsKind_new.DescId      = zc_ContainerLinkObject_GoodsKind()
-                                             INNER JOIN ContainerLinkObject AS CLO_JuridicalBasis_new ON CLO_JuridicalBasis_new.ContainerId = Container_Summ_new.Id
+                                             INNER JOIN ContainerLinkObject AS CLO_JuridicalBasis_new ON CLO_JuridicalBasis_new.ContainerId = tmpHistoryCost_find_2.ContainerId_new
                                                                                                      AND CLO_JuridicalBasis_new.DescId      = zc_ContainerLinkObject_JuridicalBasis()
-                                                                                                     AND CLO_JuridicalBasis_new.ObjectId    = CLO_JuridicalBasis.ObjectId
+                                                                                                     AND CLO_JuridicalBasis_new.ObjectId    = tmpHistoryCost_find_2.JuridicalId_Basis
 
-                                        WHERE COALESCE (CLO_GoodsKind_new.ObjectId, 0) = COALESCE (Container_Summ.GoodsKindId, 0)
-                                        GROUP BY Container_Summ.ContainerId_GoodsFrom
-                                               , Container_Summ.ContainerId_Summ
-                                  )
+                                        WHERE COALESCE (CLO_GoodsKind_new.ObjectId, 0) = COALESCE (tmpHistoryCost_find_2.GoodsKindId, 0)
+                                        GROUP BY tmpHistoryCost_find_2.ContainerId_GoodsFrom
+                                               , tmpHistoryCost_find_2.ContainerId_Summ
+                                       )
         -- Результат
         SELECT
               _tmpItem.MovementItemId
