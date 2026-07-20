@@ -1,0 +1,24 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Документация Комплектующие+|
+|\4=.*zc_Object_GoodsDocument*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|null|||
+|ValueData|Название файла|||
+|zc_ObjectBlob_GoodsDocument_Data|Документ|||
+|zc_ObjectString_GoodsDocument_Comment|Примечание|||
+|zc_ObjectLink_GoodsDocument_Goods|[[zc_Object_Goods|Комплектующие]]|||
+|zc_ObjectLink_GoodsDocument_DocTag|[[zc_Object_DocTag|Категория Документация]]|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/2=.нет|/2=.наверно да|/2=.нет|/2=.нет|
+
+-
+-

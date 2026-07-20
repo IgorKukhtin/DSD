@@ -1,0 +1,33 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]] ->> [[Enum_справочники|Enum]]
+
+-
+-
+
+|\4=.Справочник +Тип внешнего Импорта/Экспорта+|
+|\4=.*zc_Object_EmailKind*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|17.02.2024|
+|ObjectCode|Код|_.+||
+|ValueData|Название|_.+||
+|zc_ObjectString_EmailKind_DropBox|Директория сохранения в DropBox|||
+|zc_ObjectString_EmailKind_CheckImport|Проверка Импорта||e-mail, с которых приходят письма с данными, через;|_=.NEW|
+|zc_ObjectString_Enum|Название функции|_.+||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_EmailSettings|Установки для внешнего Импорта/Экспорта]]||||
+
+-
+-
+
+|\2=.*Бизнес-логика*|
+|=.функция|=.Описание|
+|*zc_Enum_EmailKind_DropBox_InvoiceKredit*|Исходящая, отправка входящих счетов в DropBox|
+|*zc_Enum_EmailKind_DropBox_InvoiceDebet*|Исходящая, отправка исходящих счетов в DropBox|
+|*zc_Enum_EmailKind_Mail_InvoiceKredit*|Входящая, загрузка входящих счетов из GetMail|
+|*zc_Enum_EmailKind_HTTP_OrderClient*|Входящая, загрузка [[zc_Movement_OrderClient|Заказ Клиента]]|
+
+-
+-

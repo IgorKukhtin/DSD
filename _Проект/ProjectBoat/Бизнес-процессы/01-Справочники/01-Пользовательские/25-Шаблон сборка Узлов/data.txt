@@ -1,0 +1,32 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Шаблон сборка Узла+|
+|\4=.*zc_Object_ReceiptGoods*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|11.12.20|22.12.22|30.06.23|30.11.23|
+|ObjectCode|Код|_.+||
+|ValueData|Название|_.+|Артикул+Примечание+Пользовательский Код|
+|zc_ObjectBoolean_ReceiptGoods_Main|Признак главный|||
+|zc_ObjectString_ReceiptGoods_Code|Пользовательский Код|_.+/-|если пусто - берем код Артикула|
+|zc_ObjectString_ReceiptGoods_Comment|Примечание|||
+|zc_ObjectLink_ReceiptGoods_Object|[[zc_Object_Goods|Комплектующие]]|||
+|zc_ObjectLink_ReceiptGoods_ColorPattern|[[zc_Object_ColorPattern|Шаблон Boat Structure ]]||_=.NEW|
+|zc_ObjectLink_ReceiptGoods_Unit|[[zc_Object_Unit|Участок сборки]]||||_=.NEW|
+|zc_ObjectLink_ReceiptGoods_UnitChild|[[zc_Object_Unit|Участок сборки (Узел ПФ)]]||||||_=.NEW|
+|-zc_ObjectLink_ReceiptGoods_Model-|-[[zc_Object_Model|Модель]]-|||||_=.NEW|
+|zc_ObjectLink_Protocol_Insert|[[zc_Object_User|Пользователь (создание)]]|_.+||
+|zc_ObjectLink_Protocol_Update|[[zc_Object_User|Пользователь (корректировка)]]|_.+||
+|zc_ObjectDate_Protocol_Insert|Дата создания|_.+||
+|zc_ObjectDate_Protocol_Update|Дата корректировки|_.+||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_ReceiptGoodsChild|Элементы для сборки Узлов]]|/4=.да, надо заполнить|[[zc_Movement_ProductionUnion#zc_MI_Master|Производство - сборка]]|/4=.да, надо заполнить|
+
+-
+-

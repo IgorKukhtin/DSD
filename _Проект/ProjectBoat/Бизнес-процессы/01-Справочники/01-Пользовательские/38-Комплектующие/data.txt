@@ -1,0 +1,65 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\5=.Справочник +Комплектующие+|
+|\5=.*zc_Object_Goods*|
+|=.Ключ|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|12.04.2021|10.04.2022|22.12.2022|01.10.2025|
+|_.*|ObjectCode|Внутренний Код|_.+||
+||ValueData|Название|||
+||zc_ObjectLink_Goods_GoodsGroup|[[zc_Object_GoodsGroup|Группа]]|||
+||zc_ObjectLink_Goods_Measure|[[zc_Object_Measure|Единицы измерения]]|||
+||zc_ObjectLink_Goods_GoodsTag|[[zc_Object_GoodsTag|Категория]]|||
+||zc_ObjectLink_Goods_GoodsType|[[zc_Object_GoodsType|Тип детали]]|||
+||zc_ObjectLink_Goods_GoodsSize|[[zc_Object_GoodsSize|Размер]]|||
+||zc_ObjectLink_Goods_ProdColor|[[zc_Object_ProdColor|Цвет]]|||
+||zc_ObjectLink_Goods_Partner|*[[zc_Object_Partner|Поставщик]]*|_.+|информативно...|
+||zc_ObjectLink_Goods_Unit|*[[zc_Object_Unit|Склад]]*|_.+|информативно...|
+||zc_ObjectLink_Goods_DiscountPartner|[[zc_Object_DiscountPartner|группа скидки у поставщика]]||наша скидка у поставщика|
+||zc_ObjectLink_Goods_TaxKind|[[zc_Object_TaxKind|Тип НДС]]|||
+||zc_ObjectLink_Goods_Engine|[[zc_Object_Engine|Мотор]]|||_=.NEW|
+||zc_ObjectDate_Goods_PartnerDate|последняя дата прихода|_.+|информативно...|
+||zc_ObjectFloat_Goods_Min|мин кол-во на складе|||
+||zc_ObjectFloat_Goods_Refer|рекомендов кол-во закупки|||
+||zc_ObjectFloat_Goods_EKPrice|*Закупочная цена без ндс*|||
+||zc_ObjectFloat_Goods_Weight|Weight||||||_=.NEW|
+||-zc_ObjectFloat_Goods_Feet-|Feet||||_=.NEW|
+||-zc_ObjectFloat_Goods_Metres-|Metres||||_=.NEW|
+||zc_ObjectFloat_Goods_EmpfPrice|*Рекомендуемая цена без ндс*|||
+||zc_ObjectBoolean_Goods_Arc|Архив|||
+||zc_ObjectString_Article|Артикул|||
+||zc_ObjectString_ArticleVergl|Артикул (альтернативный)|||
+||zc_ObjectString_EAN|Код EAN|||
+||zc_ObjectString_ASIN|ASIN код|||
+||zc_ObjectString_MatchCode|Код соответствия||информативно, присылает поставщик|
+||zc_ObjectString_Goods_FeeNumber|номер таможенной декларации|||
+||zc_ObjectString_Goods_GroupNameFull|Полное название группы|_.+||
+||zc_ObjectLink_Goods_InfoMoney|[[zc_Object_InfoMoney|Статьи назначения]]|_.+|берется из ближайшей группы|
+||zc_ObjectLink_Goods_Unit|[[zc_Object_Unit|Место учета]]||куда осуществляется приход и потом откуда происходит перемещение для сборки||_=.NEW|
+||-zc_ObjectLink_Goods_ModelEtiketen-|-[[zc_Object_ModelEtiketen|Модель печати этикетки]]-|_.+|берется из ближайшей группы|
+||zc_ObjectString_Goods_Comment|Примечание|||
+
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_PartionGoods|Партии Комплектующие]]|/24=.нет|[[zc_Movement_Income#zc_MI_Master|Приход от Поставщика]]|/24=.да, надо заполнить|
+|[[zc_Object_GoodsDocument|Документация Комплектующие]]|[[zc_Movement_OrderClient#zc_MI_Master|Заказ Клиента]]|
+|[[zc_Object_GoodsPhoto|Фото Комплектующие]]|/22=.да, надо заполнить|
+|[[zc_Object_GoodsArticle|Артикул Комплектующие]]|
+|[[zc_Object_PriceListItem|Элемент прайс-листа]]|
+|[[zc_Object_ProdColorItems|Элементы Boat Structure(Лодка)]]|
+|[[zc_Object_ProdOptItems|Элементы Опций (Лодка)]]|
+|*[[zc_Object_ProdColorPattern|Boat Structure]]*|
+|[[zc_Object_ReceiptProdModelChild|Элементы для сборки Модели]]|
+|[[zc_Object_ReceiptGoods|Шаблон сборка Узлов]]|
+|[[zc_Object_ReceiptGoodsChild|Элементы для сборки Узлов]]|
+|[[zc_Object_ProdOptions|Опции]]|
+|[[zc_Object_TranslateObject|Перевод Справочников]]|
+
+
+-
+-

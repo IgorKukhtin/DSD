@@ -1,0 +1,24 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Документ Расчетный счет, скан документов+|
+|\4=.*zc_Object_BankAccountPdf*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|null|||
+|ValueData|Название файла|||
+|zc_ObjectBlob_BankAccountPdf_Data|PDF|||
+|zc_ObjectString_BankAccountPdf_Comment|Примечание|||
+|zc_ObjectFloat_BankAccountPdf_MovmentItemId|zc_MI_Child - [[zc_Movement_BankAccount|документ Расчетный счет, приход/расход]]|||
+|zc_ObjectLink_BankAccountPdf_DocTag|[[zc_Object_DocTag|Категория Документация]]|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/2=.нет|/2=.наверно да|/2=.нет|/2=.нет|
+
+-
+-

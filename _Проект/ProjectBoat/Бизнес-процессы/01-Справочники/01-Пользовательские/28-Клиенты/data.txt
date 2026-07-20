@@ -1,0 +1,42 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Клиенты+|
+|\4=.*zc_Object_Client*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|02.02.2021|11.02.21|14.06.2021|14.11.2023|
+|ObjectCode|Код|_.+||
+|ValueData|Название|||
+|zc_ObjectFloat_Client_DiscountTax|% скидки|||_=.NEW|
+|zc_ObjectString_Client_Comment|Примечание|||
+|zc_ObjectString_Client_Fax|Факс||||_=.NEW|
+|zc_ObjectString_Client_Phone|Тел номер||||_=.NEW|
+|zc_ObjectString_Client_Mobile|Мобильный||||_=.NEW|
+|zc_ObjectString_Client_IBAN|р/сч||||_=.NEW|
+|zc_ObjectString_Client_Street|Улица||||_=.NEW|
+|zc_ObjectString_Client_Street_add|Улица (дополнительно)||||||_=.NEW|
+|zc_ObjectString_Client_Member|Контанктное лицо||||_=.NEW|
+|zc_ObjectString_Client_WWW|Адрес сайта||||_=.NEW|
+|zc_ObjectString_Client_Email|Электронная почта||||_=.NEW|
+|zc_ObjectString_Client_CodeDB|наш код в их базе||||_=.NEW|
+|zc_ObjectString_Client_TaxNumber|Налоговый номер||||_=.NEW|
+|zc_ObjectFloat_Client_DayCalendar|Отсрочка в календарных днях||||_=.NEW|
+|zc_ObjectFloat_Client_Bank|Отсрочка в банковских днях||||_=.NEW|
+|zc_ObjectLink_Client_PLZ|[[zc_Object_PLZ|Почтовый адрес]]||||_=.NEW|
+|zc_ObjectLink_Client_Bank|[[zc_Object_Bank|Банк]]||||_=.NEW|
+|zc_ObjectLink_Client_InfoMoney|[[zc_Object_InfoMoney|InfoMoney]]||||_=.NEW|
+|zc_ObjectLink_Client_TaxKind|[[zc_Object_TaxKind|Тип НДС]]||||_=.NEW|
+|zc_ObjectLink_Client_PaidKind|[[zc_Object_PaidKind|PaidKind]]|||||_=.NEW|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/4=.да|[[zc_Movement_Invoice|Счета]]|/4=.нет|/4=.нет|
+|[[zc_Movement_BankAccount|Расчетный счет, приход/расход]]|
+|[[zc_Movement_OrderClient|Заказ Клиента]]|
+
+-
+-

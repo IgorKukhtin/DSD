@@ -1,0 +1,31 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+
+|\4=.Справочник +Работы/Услуги+|
+|\4=.*zc_Object_ReceiptService*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|24.07.23|25.07.23|19.03.24|
+|ObjectCode|Код|_.+/-||
+|ValueData|Название|||
+|zc_ObjectString_Article|Артикул|||
+|zc_ObjectString_ReceiptService_Comment|Примечание|||
+|zc_ObjectFloat_ReceiptService_EKPrice|Вх. цена без ндс||если нам оказывали услуги либо выполнили для нас работы с оплатой за час|
+|zc_ObjectFloat_ReceiptService_NPP|№ п/п|||||_=.NEW|
+|zc_ObjectString_ReceiptService_NumReplace|Замена сырья||1 или 1+2 или 2|||_=.NEW|
+|zc_ObjectFloat_ReceiptService_SalePrice|Цена продажи без ндс||если мы оказываем услуги|
+|-zc_ObjectLink_ReceiptService_TaxKind-|-[[zc_Object_TaxKind|Тип НДС]]-||информативно либо у Поставщика услуг либо *zc_Enum_TaxKind_WithVAT*||_=.DELETE|
+|zc_ObjectLink_ReceiptService_Partner|[[zc_Object_Partner|Поставщик услуг]]|||_=.NEW|
+|zc_ObjectLink_ReceiptService_ReceiptServiceGroup|[[zc_Object_ReceiptServiceGroup|Группа Работы/Услуги]]|||||_=.NEW|
+|zc_ObjectLink_ReceiptService_ReceiptServiceModel|[[zc_Object_ReceiptServiceModel|Работы/Услуги (модель)]]||Модель лодки?|||_=.NEW|
+|zc_ObjectLink_ReceiptService_ReceiptServiceMaterial|[[zc_Object_ReceiptServiceMaterial|Работы/Услуги (Сырье)]]||Комплектующие?|||_=.NEW|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_ReceiptProdModelChild|Элементы для сборки Модели]]|/4=.да, надо заполнить|[[zc_Movement_OrderClient#zc_MI_Master|Заказ Клиента]]|/4=.да, надо заполнить| 
+|[[zc_Object_ReceiptGoodsChild|Элементы для сборки Узлов]]|[[zc_Movement_ProductionUnion#zc_MI_Detail|Производство - сборка]]| 
+
+
+-
+-

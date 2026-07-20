@@ -1,0 +1,29 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Склад/Участок сборки+|
+|\4=.*zc_Object_Unit*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|22.09.2021|10.05.2022|
+|ObjectCode|Код|_.+||
+|ValueData|Название|||
+|zc_ObjectString_Unit_Address|Адрес|||
+|zc_ObjectString_Unit_Phone|Телефон|||
+|zc_ObjectString_Unit_Comment|Примечание|||
+|zc_ObjectLink_Unit_AccountDirection|[[zc_Object_AccountDirection|Аналитики управленческих счетов - направление]]|||_=.NEW|
+|zc_ObjectLink_Unit_ProfitLossDirection|[[zc_Object_ProfitLossDirection|Аналитики статей отчета о прибылях и убытках - направление]]||||_=.NEW|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_InfoMoney|InfoMoney]]|[[zc_Movement_Invoice|Счета]]|[[zc_Movement_OrderClient#zc_MI_Master|Заказ Клиента]]|/4=.да, надо заполнить|
+||[[zc_Movement_Income|Приход от Поставщика]]|/3=.да, надо заполнить|
+||[[zc_Movement_OrderClient|Заказ Клиента]]|
+
+
+
+-
+-

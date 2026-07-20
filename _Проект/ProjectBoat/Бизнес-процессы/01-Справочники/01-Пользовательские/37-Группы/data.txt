@@ -1,0 +1,27 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Группы+|
+|\4=.*zc_Object_GoodsGroup*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|Код|_.+||
+|ValueData|Наименование|||
+|zc_ObjectLink_GoodsGroup_Parent|[[zc_Object_GoodsGroup|Группа (главная)]]|||
+|zc_ObjectLink_GoodsGroup_InfoMoney|[[zc_Object_InfoMoney|Статьи назначения]]|||
+|zc_ObjectLink_GoodsGroup_ModelEtiketen|[[zc_Object_ModelEtiketen|Модель печати этикетки]]|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_GoodsGroup|Группы]]|/10=.нет|/10=.нет|/10=.нет|
+|[[zc_Object_Goods|Комплектующие]]|
+|[[zc_Object_PartionGoods|Партии Комплектующие]]|
+
+-
+-
+
+
