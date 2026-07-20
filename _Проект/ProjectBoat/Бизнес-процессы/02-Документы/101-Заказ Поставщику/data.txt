@@ -1,0 +1,57 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Документ +Заказ Поставщику+|
+|\4=.*zc_Movement_OrderPartner*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|27.05.21|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Типы статусов]]|_.+||
+|ParentId|NULL|||
+|zc_MovementDate_OperDatePartner|Дата поставки||Плановая|
+|zc_MovementString_InvNumberPartner|Номер документа (внешний)||External Nr|
+|zc_MovementBoolean_PriceWithVAT|Цена с НДС (да/нет)|||
+|zc_MovementFloat_VATPercent|% НДС|||
+|zc_MovementFloat_DiscountTax|% скидки (основной)||применяется к сумме без НДС|
+|zc_MovementFloat_DiscountNextTax|% скидки (дополнительный||применяется к сумме без НДС, после учета основной скидки|
+|zc_MovementFloat_TotalCount|Итого количество|_.+||
+|zc_MovementFloat_TotalSummMVAT|Итого сумма по документу (без НДС)|_.+|без учета скидки zc_MovementFloat_DiscountTax...|
+|zc_MovementFloat_TotalSummPVAT|Итого сумма по документу (с учетом НДС и скидки)|_.+||
+|zc_MovementFloat_TotalSumm|Итого сумма по документу (без НДС, с учетом скидки)|_.+||
+|/1<.zc_MovementLinkObject_From|[[zc_Object_Unit|Подразделение]]|||
+|/1<.zc_MovementLinkObject_To|[[zc_Object_Partner|Partner]]|||
+|zc_MovementLinkObject_PaidKind|[[zc_Object_PaidKind|PaidKind]]|||
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementLinkMovement_Invoice|[[zc_Movement_Invoice|Invoice]]|_.+/-|т.к. счетов может быть несколько, здесь "информативно" первый|_=.NEW|
+|zc_MovementLinkObject_Insert|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Insert|Дата/время создания документа|_.+||
+|zc_MovementLinkObject_Update|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Update|Дата/время корректировки документа|_.+||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_OrderPartner#zc_Movement|документа]] +Главный Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|NULL|||
+|/2<.ObjectId|[[zc_Object_Goods|Комплектующие]]|||
+|[[zc_Object_ReceiptService|Работы/Услуги]]|||
+|*PartionId*|*NULL*|||
+|Amount|Количество|||
+|zc_MIFloat_OperPrice|Цена||без НДС|
+|zc_MIFloat_CountForPrice|Цена за количество|||
+
+-
+-
+
+|\3=.Ссылки на документ|
+|_.справочники|_.документы|_.строчная часть документов|
+|||[[zc_Movement_OrderClient#zc_MI_Child|Заказ Клиента]] |
+
+-
+-

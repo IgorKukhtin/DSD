@@ -1,0 +1,86 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+p>(#zc_Movement). _
+
+|\4=.Документ +Заказ производство+|
+|\4=.*zc_Movement_OrderInternal*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|InvNumber|Номер документа|||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|NULL|||
+|zc_MovementFloat_TotalCount|Итого количество|_.+||
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementLinkObject_Insert|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Insert|Дата/время создания документа|_.+||
+|zc_MovementLinkObject_Update|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Update|Дата/время корректировки документа|_.+||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_OrderInternal#zc_Movement|документа]] +Главный Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|NULL|||
+|/2<.ObjectId|[[zc_Object_Product|Лодка]]|||
+|[[zc_Object_Goods|Комплектующие (Узел)]]|||
+|*PartionId*|*NULL*|||
+|Amount|Количество|||
+|zc_MIFloat_MovementId|[[zc_Movement_OrderClient|Заказ Клиента]]|||
+|zc_MILinkObject_Unit|[[zc_Object_Unit|Место сборки]]|_.+|zc_ObjectLink_ReceiptGoods_Unit или zc_ObjectLink_ReceiptProdModel_Unit|
+
+-
+-
+
+p>(#zc_MI_Child). _
+
+|\4=.Строчная часть [[zc_Movement_OrderInternal#zc_Movement|документа]] +Элементы документа (сборка узла)+|
+|\4=.*zc_MI_Child*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|24.12.22|27.12.22|27.01.23|
+|ParentId|[[zc_Movement_OrderInternal#zc_MI_Master|Главный Элемент документа]]|||
+|ObjectId|[[zc_Object_Goods|Комплектующие]]|_.+||
+|*PartionId*|*NULL*|||
+|Amount|Количество (шаблон сборки)|_.+||
+|zc_MIFloat_AmountReserv|Кол-во резерв|_.+|на участке сборки - zc_MI_Master.zc_MILinkObject_Unit|
+|zc_MIFloat_AmountSend|Кол-во приход от поставщ./перемещение|_.+|приход на участок zc_MI_Child.zc_MILinkObject_Unit или перемещение с zc_MI_Child.zc_MILinkObject_Unit|
+|zc_MIFloat_ForCount|Для кол-во|_.+|||_=.NEW|
+|zc_MIFloat_AmountReserv|*Кол-во провели резерв*|_.+|||_=.NEW|
+|zc_MILinkObject_Unit|[[zc_Object_Unit|Место учета]]|_.+|с какого подразделения будет перемещение: zc_ObjectLink_ReceiptGoods_Unit или zc_ObjectLink_Goods_Unit|
+|-zc_MILinkObject_GoodsBasis-|-[[zc_Object_Goods|Комплектующие ("Виртуальный" Узел)]]-|_.+|-какой "Виртуальный" узел собирается-|_=.NEW|
+|zc_MILinkObject_ReceiptLevel|[[zc_Object_ReceiptLevel|Этап сборки]]|_.+||_=.NEW|
+|zc_MILinkObject_ColorPattern|[[zc_Object_ColorPattern|Шаблон Boat Structure]]|_.+||_=.NEW|
+|zc_MILinkObject_ProdColorPattern|[[zc_Object_ProdColorPattern|Boat Structure]]|_.+||_=.NEW|
+|zc_MILinkObject_ProdOptions|[[zc_Object_ProdOptions|Опция]]|_.+||||_=.NEW|
+
+
+-
+-
+
+p>(#zc_MI_Detail). _
+
+|\4=.Строчная часть [[zc_Movement_ProductionUnion#zc_Movement|документа]] +работы/часы Сотрудников+|
+|\4=.*zc_MI_Detail*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|[[zc_Movement_ProductionUnion#zc_MI_Master|Главный элемент документа]]|_.+||
+|ObjectId|[[zc_Object_ReceiptService|Название работ]]|||
+|*PartionId*|*NULL*|||
+|Amount|Сумма (расчет)|_.+|затраты = часы*цену часа или сумма (ввод)|
+|zc_MIFloat_OperPrice|Цена за ч.|_.+/-||
+|zc_MIFloat_Hours|Кол-во часов|||
+|zc_MIFloat_Summ|Сумма (ввод)||если введена сумма, тогда она в приоритете попадает в Сумма (расчет), а OperPrice - расчетное|
+|zc_MILinkObject_Personal|[[zc_Object_Personal|Сотрудники]]|||
+|zc_MIString_Comment|Примечание|||
+
+-
+-
+
+|\3=.Ссылки на документ|
+|_.справочники|_.документы|_.строчная часть документов|
+|/1=.нет|/1=.нет|/1=.нет|
+
+-
+-
+

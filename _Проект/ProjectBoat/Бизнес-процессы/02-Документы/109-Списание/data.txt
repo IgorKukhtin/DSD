@@ -1,0 +1,42 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+p>(#zc_Movement). _
+
+|\4=.Документ +Списание+|
+|\4=.*zc_Movement_Loss*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|InvNumber|Номер документа|||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|NULL|||
+|zc_MovementFloat_TotalCount|Итого количество|_.+||
+|zc_MovementFloat_TotalSumm|Итого сумма вх. по документу|_.+||
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementLinkObject_From|[[zc_Object_Unit|Склад]]|||
+|zc_MovementLinkObject_To|[[zc_Object_Unit|Склад]]|||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_Send#zc_Movement|документа]] +Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Товары]]|||
+|*PartionId*|*NULL*|||
+|Amount|Количество|||
+|zc_MIFloat_OperPrice|Цена|_.*ПП|/2<.берем из партии в табл. Object_PartionGoods|
+|zc_MIFloat_CountForPrice|Цена за количество|_.*ПП|
+
+-
+-
+
+
+|\3=.Ссылки на документ|
+|_.справочники|_.документы|_.строчная часть документов|
+|/1=.нет|/1=.нет|/1=.нет|
+
+-
+-

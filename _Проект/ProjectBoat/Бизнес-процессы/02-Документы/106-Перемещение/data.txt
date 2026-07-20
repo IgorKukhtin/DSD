@@ -1,0 +1,82 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+
+p>(#zc_Movement). _
+
+|\4=.Документ +Перемещение+|
+|\4=.*zc_Movement_Send*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|24.07.23|05.08.23|
+|InvNumber|Номер документа|||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|[[zc_Movement_OrderClient|Заказ Клиента]]||||_=.NEW|
+|zc_MovementFloat_TotalCount|Итого количество|_.+||
+|zc_MovementFloat_TotalSumm|Итого сумма вх. по документу|_.+||
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementString_InvNumberInvoice|Номер Счета|||_=.NEW|
+|zc_MovementLinkObject_From|[[zc_Object_Unit|Склад]]|||
+|zc_MovementLinkObject_To|[[zc_Object_Unit|Склад]]|||
+|zc_MovementLinkObject_Insert|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Insert|Дата/время создания документа|_.+||
+|zc_MovementLinkObject_Update|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Update|Дата/время корректировки документа|_.+||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_Send#zc_Movement|документа]] +Главный Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|04.10.2021|15.12.2022|06.01.2024|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Товары]]|||
+|*PartionId*|NULL|||
+|Amount|Количество|||
+|zc_MIFloat_OperPrice|Цена|_.*ПП|/2<.берем среднее из партиий в zc_MI_Child|
+|zc_MIFloat_CountForPrice|Цена за количество|_.*ПП|
+|-zc_MIFloat_AmountSecond-|-Кол-во расчет-|_.+|*???*|_=.NEW|
+|zc_MIString_PartNumber|№ по тех паспорту|||_=.NEW|
+|zc_MIFloat_MovementId|[[zc_Movement_OrderClient|Заказ Клиента]]||||_=.NEW|
+|zc_MILinkObject_PartionCell|[[zc_Object_PartionCell|Ячейка хранения (Партия учета)]]||пока только на Складе Основном|||_=.NEW|
+
+-
+-
+
+p>(#zc_MI_Child). _
+
+|\4=.Строчная часть [[zc_Movement_Send#zc_Movement|документа]] +Элементы документа (*партии*)+|
+|\4=.*zc_MI_Child*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|[[zc_Movement_Send#zc_MI_Master|Главный Элемент документа]]|||
+|ObjectId|[[zc_Object_Goods|Комплектующие]]|_.+||
+|*PartionId*|[[zc_Object_PartionGoods|Партии товаров]]|_.+||
+|Amount|Количество резерв|_.+||
+|zc_MIFloat_MovementId|[[zc_Movement_OrderClient|Заказ Клиента]]|_.+||
+
+-
+-
+
+p>(#zc_MI_Scan). _
+
+|\4=.Строчная часть [[zc_Movement_Inventory#zc_Movement|документа]] +Элементы документа (сканирования на мобильных устройствах)+|
+|\4=.*zc_MI_Scan*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Комплектующие]]||
+|*PartionId*|*NULL*||
+|Amount|Количество||
+|zc_MIString_PartNumber|№ по тех паспорту||
+|zc_MILinkObject_PartionCell|[[zc_Object_PartionCell|Ячейка хранения (Партия учета)]]||пока только на Складе Основном|
+|zc_MIFloat_MovementId|[[zc_Movement_OrderClient|Заказ Клиента]]||||_=.NEW|
+
+-
+-
+
+|\3=.Ссылки на документ|
+|_.справочники|_.документы|_.строчная часть документов|
+|/1=.нет|/1=.нет|/1=.нет|
+
+-
+-
+

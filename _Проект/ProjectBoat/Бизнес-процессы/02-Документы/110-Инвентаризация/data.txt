@@ -1,0 +1,72 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+
+p>(#zc_Movement). _
+
+|\4=.Документ +Инвентаризация+|
+|\4=.*zc_Movement_Inventory*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|10.05.22|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Типы статусов]]|_.+||
+|ParentId|NULL|||
+|zc_MovementFloat_TotalCount|Итого количество|||
+|zc_MovementLinkObject_Unit|[[zc_Object_Unit|Подразделение]]|||
+|zc_MovementBoolean_List|Только для выбранных|||_=.NEW|
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_Inventory#zc_Movement|документа]] +Главный Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|21.02.2022|10.05.2023|12.05.2023|06.01.2024|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Комплектующие]]|||
+|*PartionId*|*NULL*|||
+|Amount|Факт. остаток|||
+|zc_MIFloat_Price|Цена вх. без НДС|_.+||
+|zc_MIString_PartNumber|№ по тех паспорту|||_=.NEW|
+|zc_MILinkObject_Partner|Поставщик||||_=.NEW|
+|zc_MIFloat_MovementId|[[zc_Movement_OrderClient|Заказ Клиента]]|||||_=.NEW|
+|zc_MILinkObject_PartionCell|[[zc_Object_PartionCell|Ячейка хранения (Партия учета)]]||пока только на Складе Основном||||_=.NEW|
+
+
+-
+-
+
+p>(#zc_MI_Child). _
+
+|\4=.Строчная часть [[zc_Movement_Inventory#zc_Movement|документа]] +Элементы документа (партии)+|
+|\4=.*zc_MI_Child*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|[[zc_Movement_Inventory#zc_MI_Master|Главный элемент документа]]|||
+|ObjectId|[[zc_Object_Goods|Комплектующие]]|_.+||
+|*PartionId*|*[[zc_Object_PartionGoods|Партии товаров]]*|_.+||
+|Amount|Количество|_.+||
+
+-
+-
+
+p>(#zc_MI_Scan). _
+
+|\4=.Строчная часть [[zc_Movement_Inventory#zc_Movement|документа]] +Элементы документа (сканирования на мобильных устройствах)+|
+|\4=.*zc_MI_Scan*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Комплектующие]]||
+|*PartionId*|*NULL*||
+|Amount|Количество||
+|zc_MIString_PartNumber|№ по тех паспорту||
+|zc_MILinkObject_PartionCell|[[zc_Object_PartionCell|Ячейка хранения (Партия учета)]]||пока только на Складе Основном|
+
+-
+-
+
+|\3=.Ссылки на документ|
+|_.справочники|_.документы|_.строчная часть документов|
+|/1=.нет|/1=.нет|/1=.нет|
+
+-
+-

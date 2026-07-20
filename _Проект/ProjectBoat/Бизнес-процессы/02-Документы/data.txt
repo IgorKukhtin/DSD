@@ -1,0 +1,74 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]]
+
+h3. [[Пользовательские_справочники|Справочники]]
+[[Документы]]
+[[Проводки]]
+
+
+
+p>(#MovementDesc_Goods). _
+
+h3. Товарный Учет
+
+
+1.1. [[zc_Movement_OrderPartner|Заказ Поставщику]] *zc_Movement_OrderPartner*
+
+1.2. [[zc_Movement_OrderClient|Заказ Клиента]] *zc_Movement_OrderClient*
+
+1.3. [[zc_Movement_OrderInternal|Заказ производство]] *zc_Movement_OrderInternal*
+
+
+
+2.1. [[zc_Movement_Income|Приход от Поставщика]] *zc_Movement_Income*
+
+
+2.2. [[zc_Movement_ReturnOut|Возврат поставщику]] *zc_Movement_ReturnOut*
+
+
+2.3. [[zc_Movement_Sale|Продажа Клиенту]]  *zc_Movement_Sale*
+
+
+2.4. [[zc_Movement_ReturnIn|Возврат от Клиента]]  *zc_Movement_ReturnIn*
+
+
+2.5. [[zc_Movement_Send|Перемещение]]  *zc_Movement_Send*
+
+
+2.6. [[zc_Movement_Loss|Списание]]  *zc_Movement_Loss*
+
+
+2.7. [[zc_Movement_Inventory|Инвентаризация]] *zc_Movement_Inventory*
+
+
+p>(#MovementDesc_Production). _
+
+h3. Учет Производства
+
+3.1. [[zc_Movement_ProductionUnion|Производство - сборка]] *zc_Movement_ProductionUnion*
+
+3.2. [[zc_Movement_ProductionPersonal|Производство - часы Сотрудников]] *zc_Movement_ProductionPersonal*
+
+
+p>(#MovementDesc_Money). _
+
+h3. Финансовый Учет
+
+
+1.1. [[zc_Movement_Cash|Касса, приход/расход]] *zc_Movement_Cash*
+
+1.2. [[zc_Movement_BankAccount|Расчетный счет, приход/расход]] *zc_Movement_BankAccount*
+
+2. -[[zc_Movement_Currency|Курсы валют (Курсовая разница)]]- *zc_Movement_Currency*
+
+3. [[zc_Movement_Invoice|Счета]] *zc_Movement_Invoice*
+
+
+p>(#MovementDesc_Other). _
+
+h3. Другое
+
+1.1. [[zc_Movement_PriceList|Прайс-лист (цены поставщика)]] *zc_Movement_PriceList*
+
+
+-
+-
