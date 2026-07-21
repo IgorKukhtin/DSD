@@ -24,8 +24,6 @@ object PriceListItemForm: TPriceListItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 8
-    ExplicitTop = 73
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1130,7 +1128,6 @@ object PriceListItemForm: TPriceListItemForm
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1072#1074' '#1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
       Hint = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1072#1074' '#1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
       ImageIndex = 77
-      InfoAfterExecute = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1072#1074' '#1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
     end
     object actInsertUpdate_Zero: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1144,7 +1141,6 @@ object PriceListItemForm: TPriceListItemForm
       Caption = #1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
       Hint = #1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
       ImageIndex = 77
-      InfoAfterExecute = #1086#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091
     end
     object macUpdate_Zero_list: TMultiAction
       Category = 'DSDLib'
@@ -1224,9 +1220,9 @@ object PriceListItemForm: TPriceListItemForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = 'O'#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1042#1057#1045#1052' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084'?'
-      Caption = 'O'#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084
-      Hint = 'O'#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084
+      QuestionBeforeExecute = 'O'#1073#1085#1091#1083#1080#1090#1100'/'#1059#1076#1072#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1042#1057#1045#1052' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084'?'
+      Caption = 'O'#1073#1085#1091#1083#1080#1090#1100'/'#1059#1076#1072#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084
+      Hint = 'O'#1073#1085#1091#1083#1080#1090#1100'/'#1059#1076#1072#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084
       ImageIndex = 77
     end
     object actInsertRecordTradeMark: TInsertRecord
@@ -1601,7 +1597,7 @@ object PriceListItemForm: TPriceListItemForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1648,38 +1644,6 @@ object PriceListItemForm: TPriceListItemForm
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outStartDate'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'StartDate'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outEndDate'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'EndDate'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPriceNoVAT'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'PriceNoVAT'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPriceWVAT'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'PriceWVAT'
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns:xdb="http://www.borland.com/schemas/delphi/10.0/XMLDataBinding">
+	<xs:element name="DESADV">
+		<xs:complexType>
+			<xs:annotation>
+        <xs:appinfo xdb:docElement="DESADV"/>
+      </xs:annotation>
+      <xs:sequence>
+				<!-- Основні реквізити документа -->
+				<xs:element name="NUMBER" type="xs:string" minOccurs="1"/>
+				<xs:element name="DATE" type="xs:date" minOccurs="1"/>
+				<xs:element name="TIME" type="xs:time" minOccurs="0"/>
+				<xs:element name="DELIVERYDATE" type="xs:date" minOccurs="0"/>
+				<xs:element name="DELIVERYTIME" type="xs:time" minOccurs="0"/>
+				<xs:element name="ORDERNUMBER" type="xs:string" minOccurs="0"/>
+				<xs:element name="ORDERDATE" type="xs:date" minOccurs="0"/>
+				<xs:element name="ORDRSPNUMBER" type="xs:string" minOccurs="0"/>
+				<xs:element name="ORDRSPDATE" type="xs:date" minOccurs="0"/>
+				<xs:element name="DELIVERYNOTENUMBER" type="xs:string" minOccurs="1"/>
+				<xs:element name="DELIVERYNOTEDATE" type="xs:date" minOccurs="1"/>
+				<xs:element name="RECIPIENTCODE" type="xs:string" minOccurs="0"/>
+				<xs:element name="CURRENCY" type="xs:string" minOccurs="0"/>
+				<xs:element name="INFO" type="xs:string" minOccurs="0"/>
+				<xs:element name="TAXID" type="xs:string" minOccurs="0"/>
+				<xs:element name="CAMPAIGNNUMBER" type="xs:string" minOccurs="0"/>
+				<xs:element name="CAMPAIGNNUMBERDATE" type="xs:date" minOccurs="0"/>
+				<xs:element name="TRANSPORTQUANTITY" type="xs:integer" minOccurs="0"/>
+				<xs:element name="TRANSPORTID" type="xs:integer" minOccurs="0"/>
+				<xs:element name="TRANSPORTNUMBER" type="xs:string" minOccurs="0"/>
+				<xs:element name="TRANSPORTERNAME" type="xs:string" minOccurs="0"/>
+				<xs:element name="PACKAGEWIGHT" type="xs:string" minOccurs="0"/>
+				<!-- Блок HEAD -->
+				<xs:element name="HEAD">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="SUPPLIER" type="xs:string" minOccurs="1"/>
+							<xs:element name="BUYER" type="xs:string" minOccurs="1"/>
+							<xs:element name="BUYERCODE" type="xs:string" minOccurs="0"/>
+							<xs:element name="DELIVERYPLACE" type="xs:string" minOccurs="1"/>
+							<xs:element name="FINALRECIPIENT" type="xs:string" minOccurs="0"/>
+							<xs:element name="SENDER" type="xs:string" minOccurs="0"/>
+							<xs:element name="RECIPIENT" type="xs:string" minOccurs="0"/>
+							<xs:element name="EDIINTERCHANGEID" type="xs:string" minOccurs="0"/>
+							<!-- Блок PACKINGSEQUENCE -->
+							<xs:element name="PACKINGSEQUENCE">
+								<xs:complexType>
+									<xs:sequence>
+										<!-- Послідовність POSITION (Товарні позиції) -->
+										<xs:element name="POSITION" minOccurs="1" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:annotation>
+                          <xs:appinfo xdb:repeated="True"/>
+                        </xs:annotation>
+                        <xs:sequence>
+													<xs:element name="POSITIONNUMBER" type="xs:integer" minOccurs="1"/>
+													<xs:element name="PRODUCT" type="xs:string" minOccurs="1"/>
+													<xs:element name="PRODUCTIDBUYER" type="xs:string" minOccurs="1"/>
+													<xs:element name="PRODUCTIDSUPPLIER" type="xs:string" minOccurs="0"/>
+													<xs:element name="PRICEWITHVAT" type="xs:decimal" minOccurs="0"/>
+													<xs:element name="DELIVEREDUNIT" type="xs:string" minOccurs="0"/>
+													<xs:element name="ORDEREDQUANTITY" type="xs:decimal" minOccurs="0"/>
+													<xs:element name="AMOUNT" type="xs:decimal" minOccurs="0"/>
+													<xs:element name="DELIVEREDQUANTITY" type="xs:decimal" minOccurs="1"/>
+													<xs:element name="AMOUNTWITHVAT" type="xs:decimal" minOccurs="0"/>
+													<xs:element name="CUSTOMSTARIFFNUMBER" type="xs:string" minOccurs="0"/>
+													<xs:element name="PRICE" type="xs:decimal" minOccurs="0"/>
+													<xs:element name="TAXRATE" type="xs:decimal" minOccurs="0"/>
+													<xs:element name="DESCRIPTION" type="xs:string" minOccurs="1"/>
+													<xs:element name="MINIMUMORDERQUANTITY" type="xs:decimal" minOccurs="0"/>
+													<xs:element name="PRODUCTTYPE" type="xs:string" minOccurs="0"/>
+													<xs:element name="BATCHNUMBER" type="xs:string" minOccurs="0"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<!-- Послідовність CERTIFICATES (Сертифікати/партії) -->
+										<xs:element name="CERTIFICATES" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:annotation>
+                          <xs:appinfo xdb:repeated="True"/>
+                        </xs:annotation>
+                        <xs:sequence>
+													<xs:element name="BATCHNUMBER" type="xs:string" minOccurs="0"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
