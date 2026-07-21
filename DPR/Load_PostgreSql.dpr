@@ -91,7 +91,8 @@ uses
   invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas',
   UtilScale in '..\Scale\Util\UtilScale.pas',
   UtilPrint in '..\Scale\Util\UtilPrint.pas' {UtilPrintForm},
-  FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas';
+  FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
+  DesadvXML_vch in '..\SOURCE\EDI\DesadvXML_vch.pas';
 
 {$R *.res}
 

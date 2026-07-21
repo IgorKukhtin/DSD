@@ -196,6 +196,7 @@
 				<Form>UtilPrintForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\FastReportAddOn.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DesadvXML_vch.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

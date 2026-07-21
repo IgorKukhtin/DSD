@@ -3971,6 +3971,9 @@ begin
      except ShowMessage('Err - ' + mySql);
      end;
      //
+     myLogMemo_add('-');
+     myLogMemo_add('-');
+     myLogMemo_add('start pLoadGoodsListSale');
      //
      mySql:= 'select * from gpInsertUpdate_Object_GoodsListIncome_byReport (12, 0, zc_Enum_InfoMoneyDestination_10200(), ' + chr(39) + '5' + chr(39) + ')';
      try
@@ -4006,7 +4009,7 @@ begin
      tmpDate2:=NOw;
      DecodeTime(tmpDate2-tmpDate1, Hour, Min, Sec, MSec);
      //
-     myLogMemo_add(IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec)+':Doc' + '  ' + ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2));
+     myLogMemo_add('end pLoadFillSoldTable_curr ' + IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec)+':Doc' + '  ' + ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2));
      OKPOEdit.Text:= IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec)+':Doc' + '  ' + ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4031,7 +4034,7 @@ begin
           if Date2 = fromSqlZQuery.FieldByName('RetV').AsDateTime
           then Date2:= Date-2;
           //
-          myLogMemo_add(trim(ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2)));
+          myLogMemo_add('start ' + trim(ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2)));
           OKPOEdit.Text:= trim(OKPOEdit.Text + ' ' + ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2));
      end
      else
@@ -4039,7 +4042,7 @@ begin
           Date1:= StrToDate (StartDateEdit.Text);
           Date2:= StrToDate (EndDateEdit.Text);
           //
-          myLogMemo_add(trim('pLoadFillSoldTable' + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2)));
+          myLogMemo_add(trim('start pLoadFillSoldTable' + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2)));
           OKPOEdit.Text:= trim(OKPOEdit.Text + ' ' + 'pLoadFillSoldTable' + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2));
      end;
      //
@@ -4062,7 +4065,7 @@ begin
          // CURRENT_DATE - 1 MONTH
          myLogMemo_add('');
          myLogMemo_add('');
-         myLogMemo_add('RemainsOLAPTable_peresort - CURRENT_DATE - 1 MONTH');
+         myLogMemo_add('start RemainsOLAPTable_peresort - CURRENT_DATE - 1 MONTH');
          fOpenSqToQuery ('SELECT *, gpInsert_RemainsOLAPTable_peresort(DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '1 MONTH' + chr(39) + ')'
                       +                                             ', DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '1 MONTH' + chr(39) + ')'
                       +                                             ', ObjectId, zfCalc_UserAdmin()'
@@ -4081,7 +4084,7 @@ begin
      // CURRENT_DATE
      myLogMemo_add('');
      myLogMemo_add('');
-     myLogMemo_add('RemainsOLAPTable_peresort - CURRENT_DATE');
+     myLogMemo_add('start RemainsOLAPTable_peresort - CURRENT_DATE');
      fOpenSqToQuery ('SELECT *, gpInsert_RemainsOLAPTable_peresort(DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE)'
                   +                                             ', DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE)'
                   +                                             ', ObjectId, zfCalc_UserAdmin()'
@@ -4113,7 +4116,7 @@ begin
      // 15 MONTH
      myLogMemo_add('');
      myLogMemo_add('');
-     myLogMemo_add(trim('gpUpdate_Object_Goods_In' + ' ' + DateToStr(Date) + ' - 15 MONTH'));
+     myLogMemo_add(trim('start gpUpdate_Object_Goods_In' + ' ' + DateToStr(Date) + ' - 15 MONTH'));
      fOpenSqToQuery ('select * from gpUpdate_Object_Goods_In (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL' +  chr(39) + '15 MONTH' + chr(39) + ')'
                                                          + ', CURRENT_DATE'
                                                          + ','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
@@ -4122,7 +4125,7 @@ begin
      // 15 MONTH
      myLogMemo_add('');
      myLogMemo_add('');
-     myLogMemo_add(trim('gpUpdate_Object_ReportCollation_RemainsCalc' + ' ' + DateToStr(Date) + ' - 15 MONTH'));
+     myLogMemo_add(trim('start gpUpdate_Object_ReportCollation_RemainsCalc' + ' ' + DateToStr(Date) + ' - 15 MONTH'));
      fOpenSqToQuery ('select * from gpUpdate_Object_ReportCollation_RemainsCalc'
                                                          + ' (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '15 MONTH' + chr(39) + ')'
                                                          + ', CURRENT_DATE'
@@ -4141,7 +4144,7 @@ begin
      // 15 DAY
      myLogMemo_add('');
      myLogMemo_add('');
-     myLogMemo_add(trim('gpInsertUpdate_ObjectHistory_PriceListItem_Separate' + ' ' + DateToStr(Date) + ' - 15 DAY'));
+     myLogMemo_add(trim('start gpInsertUpdate_ObjectHistory_PriceListItem_Separate' + ' ' + DateToStr(Date) + ' - 15 DAY'));
      fOpenSqToQuery ('select * from gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
                                                          + ' (CURRENT_DATE -INTERVAL ' + chr(39) + '15 DAY' + chr(39)
                                                          + ','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
@@ -4150,7 +4153,7 @@ begin
      //CURRENT_DATE
      myLogMemo_add('');
      myLogMemo_add('');
-     myLogMemo_add(trim('gpInsertUpdate_ObjectHistory_PriceListItem_Separate' + ' ' + DateToStr(Date)));
+     myLogMemo_add(trim('start  gpInsertUpdate_ObjectHistory_PriceListItem_Separate' + ' ' + DateToStr(Date)));
      fOpenSqToQuery ('select * from gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
                                                          + ' (CURRENT_DATE'
                                                          + ','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
