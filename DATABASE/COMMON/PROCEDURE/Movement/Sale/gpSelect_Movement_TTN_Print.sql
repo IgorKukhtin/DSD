@@ -672,6 +672,9 @@ BEGIN
                   ELSE '' -- 'м.ƒнiпро'
                   END  :: TVarChar   AS PlaceOf
 
+          , CASE WHEN COALESCE (ObjectString_PlaceCar.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceCar.ValueData, '')
+                  ELSE '' -- 'м.ƒнiпро'
+                  END  :: TVarChar   AS PlaceCar
         --, tmpCar_param.Length :: TVarChar  AS Length
         --, tmpCar_param.Width  :: TVarChar  AS Width
         --, tmpCar_param.Height :: TVarChar  AS Height
@@ -816,6 +819,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_PlaceOf
                                    ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                                   AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()
+            LEFT JOIN ObjectString AS ObjectString_PlaceCar
+                                   ON ObjectString_PlaceCar.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                                  AND ObjectString_PlaceCar.DescId = zc_objectString_Branch_PlaceCar()
 
             LEFT JOIN ObjectString AS ObjectString_ShortName
                                    ON ObjectString_ShortName.ObjectId = 11216101 -- MovementLinkObject_To.ObjectId
