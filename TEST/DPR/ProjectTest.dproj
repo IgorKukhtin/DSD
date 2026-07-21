@@ -5950,6 +5950,7 @@
 				<Form>Report_CommercBonusForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\EDI\DesadvXML_vch.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

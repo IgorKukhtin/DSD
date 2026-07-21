@@ -1682,7 +1682,8 @@ uses
   NotBudgPromo in '..\..\Forms\Guides\NotBudgPromo.pas' {NotBudgPromoForm: TParentForm},
   NotBudgPromoEdit in '..\..\Forms\Guides\NotBudgPromoEdit.pas' {NotBudgPromoEditForm: TParentForm},
   Report_CommercBonusDialog in '..\..\Forms\Report\Report_CommercBonusDialog.pas' {Report_CommercBonusDialogForm: TParentForm},
-  Report_CommercBonus in '..\..\Forms\Report\Report_CommercBonus.pas' {Report_CommercBonusForm: TParentForm};
+  Report_CommercBonus in '..\..\Forms\Report\Report_CommercBonus.pas' {Report_CommercBonusForm: TParentForm},
+  DesadvXML_vch in '..\..\SOURCE\EDI\DesadvXML_vch.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
