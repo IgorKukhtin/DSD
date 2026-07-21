@@ -1,0 +1,16 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Истории]]
+
+-
+-
+
+|\3=.Историческая сущность +Элементы прайс-листов+|
+|\3=.*zc_ObjectHistory_PriceListItem*|
+|=.Поле *ObjectHistory* или функция *DescId*|_.Свойство|=.Описание|24.02.2020|03.08.2021|
+|ObjectId|[[zc_Object_PriceListItem|Элемент прайс-листа]]||
+|zc_ObjectHistoryFloat_PriceListItem_Value|Цена||
+|zc_ObjectHistoryLink_PriceListItem_Currency|[[zc_Object_Currency|Валюта]]||_=.NEW|
+|zc_ObjectHistoryFloat_PriceListItem_isDiscount|Цена со скидкой (да/нет)|1-Да, 0 - НЕТ||_=.NEW|
+
+-
+-
+

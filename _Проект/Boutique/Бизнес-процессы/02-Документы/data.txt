@@ -1,0 +1,52 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]]
+
+h3. [[Пользовательские_справочники|Справочники]]
+[[Документы]]
+[[Проводки]]
+
+
+
+p>(#MovementDesc_Goods). _
+
+h3. Товарный Учет
+
+
+2.1. [[zc_Movement_Income|Приход]] *zc_Movement_Income*
+
+
+2.2. [[zc_Movement_ReturnOut|Возврат поставщику]] *zc_Movement_ReturnOut*
+
+
+2.3. [[zc_Movement_Sale|Продажа покупателю]]  *zc_Movement_Sale*
+
+
+2.4. [[zc_Movement_ReturnIn|Возврат от покупателя]]  *zc_Movement_ReturnIn*
+
+
+2.5. [[zc_Movement_Send|Перемещение]]  *zc_Movement_Send*
+
+
+2.6. [[zc_Movement_Loss|Списание]]  *zc_Movement_Loss*
+
+
+2.7. [[zc_Movement_Inventory|Инвентаризация]] *zc_Movement_Inventory*
+
+
+2.8. [[zc_Movement_Change|Пересортица]] *zc_Movement_Change*
+
+
+p>(#MovementDesc_Money). _
+
+h3. Финансовый Учет
+
+
+1.1. [[zc_Movement_GoodsAccount|Расчеты покупателей]] *zc_Movement_GoodsAccount*
+
+1.2. [[zc_Movement_Cash|Касса, приход/расход]] *zc_Movement_Cash*
+
+1.3. [[zc_Movement_BankAccount|Расчетный счет, приход/расход]] *zc_Movement_BankAccount*
+
+2. [[zc_Movement_Currency|Курсы валют (Курсовая разница)]] *zc_Movement_Currency*
+
+-
+-

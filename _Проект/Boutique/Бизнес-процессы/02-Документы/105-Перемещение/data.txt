@@ -1,0 +1,49 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]]
+
+p>(#zc_Movement). _
+
+|\4=.Документ +Перемещение+|
+|\4=.*zc_Movement_Send*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|26.04.17|08.05.17|10.04.20|
+|InvNumber|Номер документа|||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|NULL|||
+|zc_MovementFloat_TotalCount|Итого количество|_.+||
+|zc_MovementFloat_TotalSummBalance|Итого сумма вх. по документу (в *ГРН*)|_.*ПП|||_=.NEW|
+|zc_MovementFloat_TotalSummPriceList|Итого сумма перемещения (расход) по PriceList (в *ГРН*)|_.+|/3<.здесь разные валюты, поэтому надо по курсу...|_=.NEW|
+|zc_MovementFloat_TotalSummPriceListTo_start|Итого сумма печать цеников по PriceList (в *ГРН*)|_.+|||_=.NEW|
+|zc_MovementFloat_TotalSummPriceListTo|Итого сумма перемещения по PriceList (в *ГРН*)|_.+|||_=.NEW|
+|zc_MovementString_Comment|Примечание|||_=.NEW|
+|zc_MovementLinkObject_From|[[zc_Object_Unit|Подразделения]]|||
+|zc_MovementLinkObject_To|[[zc_Object_Unit|Подразделения]]|||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_Send#zc_Movement|документа]] +Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|08.05.17|27.01.20|10.04.20|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Товары]]|||
+|PartionId|[[zc_Object_PartionGoods|Партии товаров]]|||
+|Amount|Количество|||
+|zc_MIFloat_OperPrice|Цена|_.*ПП|/2<.берем из партии в табл. Object_PartionGoods|_=.NEW|
+|zc_MIFloat_CountForPrice|Цена за количество|_.*ПП|_=.NEW|
+|zc_MIFloat_OperPriceList|Цена Прайс (для магазина отправителя)|_.+|берем из прайса на дату документа|
+|zc_MIFloat_OperPriceListTo_start|Цена Прайс (для магазина получателя)||по этой цене печатаем ценник|||_=.NEW|
+|zc_MIFloat_OperPriceListTo|Цена Прайс (для магазина получателя)||потом делаем переоценку и по этой цене перемещаем||_=.NEW|
+|zc_MIFloat_CurrencyValue|Курс для перевода из валюты партии в *ГРН*|_.+||_=.NEW|
+|zc_MIFloat_ParValue|Номинал для перевода из валюты партии в *ГРН*|_.+||_=.NEW|
+
+-
+-
+
+|\3=.Ссылки на документ|
+|_.справочники|_.документы|_.строчная часть документов|
+|/1=.нет|/1=.нет|/1=.нет|
+
+-
+-

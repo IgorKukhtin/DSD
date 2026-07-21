@@ -1,0 +1,116 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]]
+
+
+p>(#zc_Movement). _
+
+|\4=.Документ +Продажа покупателю+|
+|\4=.*zc_Movement_Sale*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|=.05.07.17|=.15.05.20|=.20.04.21|=.08.05.21|=.01.06.21|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|NULL|||
+|zc_MovementBoolean_Offer|Примерка|||||_.NEW|
+|zc_MovementBoolean_DisableSMS|Отключена проверка SMS|||||||_.NEW|
+|zc_MovementFloat_KeySMS|Пароль для SMS|_.+|показываем только Админу|||||_.NEW|
+|zc_MovementFloat_DiscountTaxSMS|Скидка клиента|_.+|если надо было подтверждать через SMS|||||_.NEW|
+|zc_MovementString_PhoneSMS|№ телефона для SMS|_.+||||||_.NEW|
+|zc_MovementFloat_TotalCount|Итого количество|_.+||
+|zc_MovementFloat_TotalSummBalance|Итого сумма вх. по документу (в *ГРН*)|_.*ПП||
+|zc_MovementFloat_TotalSummPriceList|Итого сумма по PriceList (в *ГРН*)|_.+||
+|zc_MovementFloat_TotalSummChange|Итого сумма скидки в *ГРН*|_.+|в текущем документе по *TotalChangePercent*|
+|zc_MovementFloat_TotalSummChangePay|Итого сумма скидки в *ГРН*|_.+|в текущем документе по *TotalChangePercentPay*|
+|zc_MovementFloat_TotalSummPay|Итого сумма оплаты (в *ГРН*)|_.+|в текущем документе по *TotalPay*|
+|zc_MovementFloat_TotalSumm_curr|Итого сумма вх. по документу (в *валюте*)|_.+|/5<.суммы в валюте формируются всегда, проводки - только если долг покупателя будет в валюте|
+|zc_MovementFloat_TotalSummPriceList_curr|Итого сумма по PriceList (в *валюте*)|_.+||_.NEW|
+|zc_MovementFloat_TotalSummChange_curr|Итого сумма скидки в *валюте*|_.+||_.NEW|
+|zc_MovementFloat_TotalSummChangePay_curr|Итого сумма скидки в *валюте*|_.+||_.NEW|
+|zc_MovementFloat_TotalSummPay_curr|Итого сумма оплаты (в *валюте*)|_.+||_.NEW|
+|-zc_MovementFloat_TotalSummPayOth-|-Итого сумма оплаты (в *ГРН*)-|_.+|-в текущем документе по *TotalPayOth*-|
+|-zc_MovementFloat_TotalCountReturn-|-Итого количество возврата-|_.+|-в текущем документе по *TotalCountReturn*-|
+|-zc_MovementFloat_TotalSummReturn-|-Итого сумма возврата со скидкой (в *ГРН*)-|_.+|-в текущем документе по *TotalReturn*-|
+|-zc_MovementFloat_TotalSummPayReturn-|-Итого сумма возврата оплаты (в *ГРН*)-|_.+|-в текущем документе по *TotalPayReturn*-|
+|zc_MovementFloat_CurrencyCrossValue|Кросс-курс|_.+/-|||||_.NEW|
+|zc_MovementFloat_ParCrossValue|Номинал для Кросс-курса|_.+/-|||||_.NEW|
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementLinkObject_From|[[zc_Object_Unit|Подразделение]]|||
+|zc_MovementLinkObject_To|[[zc_Object_Client|Покупатель]]|||
+|zc_MovementLinkObject_CurrencyClient|[[zc_Object_Currency|Валюта (покупателя)]]||||_.NEW|
+|zc_MovementDate_Insert|Дата/время создания|_.+||_.NEW|
+|zc_MovementLinkObject_Insert|[[zc_Object_User|Пользователь создал]]|_.+||_.NEW|
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_Sale#zc_Movement|документа]] +Главный Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|=.06.07.17|=.05.03.18|=.04.02.20|=.10.05.20|=.15.05.20|=.15.07.21|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Товары]]|||
+|PartionId|[[zc_Object_PartionGoods|Партии товаров]]|||
+|Amount|Количество|||
+|zc_MIBoolean_Checked|Разрешить Возврат за > 31 день||||_.NEW|
+|zc_MIFloat_OperPrice|Цена вх.|_.*ПП|/2<.берем из партии в табл. Object_PartionGoods|
+|zc_MIFloat_CountForPrice|Цена за количество|_.*ПП|
+|zc_MIFloat_OperPriceList|Цена Прайс (в *ГРН*)|_.+||
+|zc_MIFloat_OperPriceListReal|Цена Прайс(факт) (в *ГРН*)|||||_.NEW|
+|zc_MIFloat_OperPriceList_curr|Цена Прайс (в *валюте*)|_.+||||||_.NEW|
+|zc_MIFloat_CurrencyValue|Курс для перевода из валюты партии в *ГРН*|_.*ПП|/2<.по нему же переводим из валюты прайса в грн или из грн в прайсе в валюту|
+|zc_MIFloat_ParValue|Номинал для перевода из валюты партии в *ГРН*|_.*ПП|
+|zc_MIFloat_ChangePercent|% Скидки|||
+|zc_MIFloat_ChangePercentNext|% скидки (дополнительный)||||||||_.NEW|
+|zc_MIFloat_SummChangePercent|Сумма дополнительной Скидки (в *ГРН*)|||
+|zc_MIFloat_SummRounding|Сумма округления (в *ГРН*)|||
+|zc_MIFloat_TotalChangePercent|Итого сумма Скидки (в *ГРН*)|_.+|*только для "текущего" документа Продажи* - суммируется 1)по %скидки + 2)дополнительная|
+|zc_MIFloat_TotalChangePercentPay|Итого сумма скидки (в *ГРН*)|_.++|"сложно" загрузится из [[zc_Movement_GoodsAccount#zc_MI_Master|Расчеты покупателей]]|
+|zc_MIFloat_TotalPay|Итого сумма оплаты (в *ГРН*)|_.+|в текущем документе по zc_MI_Child|
+|zc_MIFloat_TotalPayOth|Итого сумма оплаты (в *ГРН*)|_.++|"сложно" загрузится из [[zc_Movement_GoodsAccount#zc_MI_Master|Расчеты покупателей]]|
+|zc_MIFloat_TotalCountReturn|Итого количество возврата|_.++|"сложно" загрузится из [[zc_Movement_ReturnIn#zc_MI_Master|Возврат от покупателя]]|
+|zc_MIFloat_TotalReturn|Итого сумма возврата *со скидкой* (в *ГРН*)|_.++|"сложно" загрузится из [[zc_Movement_ReturnIn#zc_MI_Master|Возврат от покупателя]]|
+|zc_MIFloat_TotalPayReturn|Итого сумма возврата оплаты (в *ГРН*)|_.++|"сложно" загрузится из [[zc_Movement_ReturnIn#zc_MI_Child|Возврат от покупателя]] + [[zc_Movement_GoodsAccount#zc_MI_Master|Расчеты покупателей]]|
+|zc_MIFloat_SummChangePercent_curr|Сумма дополнительной Скидки (в *валюте*)|||||||_.NEW|
+|zc_MIFloat_SummRounding_curr|Сумма округления (в *валюте*)|||||||_.NEW|
+|zc_MIFloat_TotalChangePercent_curr|Итого сумма Скидки (в *валюте*)|_.+|*только для "текущего" документа Продажи* - суммируется 1)по %скидки + 2)дополнительная|||||_.NEW|
+|zc_MIFloat_TotalChangePercentPay_curr|Итого сумма скидки (в *валюте*)|_.++|"сложно" загрузится из [[zc_Movement_GoodsAccount#zc_MI_Master|Расчеты покупателей]]|||||_.NEW|
+|zc_MIFloat_TotalPay_curr|Итого сумма оплаты (в *валюте*)|_.+|в текущем документе по zc_MI_Child|||||_.NEW|
+|zc_MIFloat_TotalPayOth_curr|Итого сумма оплаты (в *валюте*)|_.++|"сложно" загрузится из [[zc_Movement_GoodsAccount#zc_MI_Master|Расчеты покупателей]]|||||_.NEW|
+|zc_MIFloat_TotalReturn_curr|Итого сумма возврата *со скидкой* (в *валюте*)|_.++|"сложно" загрузится из [[zc_Movement_ReturnIn#zc_MI_Master|Возврат от покупателя]]|||||_.NEW|
+|zc_MIFloat_TotalPayReturn_curr|Итого сумма возврата оплаты (в *валюте*)|_.++|"сложно" загрузится из [[zc_Movement_ReturnIn#zc_MI_Child|Возврат от покупателя]] + [[zc_Movement_GoodsAccount#zc_MI_Master|Расчеты покупателей]]|||||_.NEW|
+|zc_MIString_BarCode|Штрих-код поставщика|||
+|zc_MIString_Comment|Примечание|||_.NEW|
+|zc_MIBoolean_Close|Закрыта операция|_.*ПП|т.е. по элементу нет долга и сформирована проводка по продаже|_.NEW|
+|zc_MILinkObject_DiscountSaleKind|[[zc_Object_DiscountSaleKind|Вид скидки при продаже]]|_.+||
+|zc_MILinkObject_Currency_pl|[[zc_Object_Currency|Валюта (цена прайса)]]|_.+|в какой валюте была цена прайса, что б обратным счетом не получать ошибку на округлениях||||_.NEW|
+
+-
+-
+
+p>(#zc_MI_Child). _
+
+|\4=.Строчная часть [[zc_Movement_Sale#zc_Movement|документа]] +Подчиненный Элемент документа (оплата от покупателя)+|
+|\4=.*zc_MI_Child*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|[[zc_Movement_Sale#zc_MI_Master|Главный Элемент документа]]|_.+|здесь будет NULL - для записи с обменом|
+|/2<.ObjectId|[[zc_Object_Cash|Касса]]|_.+||
+|[[zc_Object_BankAccount|Расчетный счет]]|_.+||
+|PartionId|NULL|||
+|Amount|Сумма||для обмена - здесь сумма прихода в валюте оплаты, а сумма расхода в *ГРН* будет расчетной|
+|zc_MIFloat_CurrencyValue|Курс для перевода из валюты оплаты в *ГРН*||/2<. ???а еще - это курс обмена??? ???а еще - как принять оплату по "другому" курсу???|
+|zc_MIFloat_CurrencyValueIn|Курс покупки||
+|zc_MIFloat_ParValue|Номинал для перевода из валюты оплаты в *ГРН*||
+|zc_MIFloat_AmountExchange|Сумма обмена в *ГРН*||
+|zc_MILinkObject_Currency|[[zc_Object_Currency|Валюта (оплаты)]]|_.+||
+|zc_MILinkObject_Cash|[[zc_Object_Cash|Касса]]|_.+|только когда есть обмен|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/3<.[[zc_Object_PartionMI|Партии элементов продажи/возврата]]|/3=.нет|[[zc_Movement_ReturnIn#zc_MI_Master|Возврат от покупателя]]|/3=.нет|
+|[[zc_Movement_GoodsAccount#zc_MI_Master|Расчеты покупателей]]|
+
+-
+-

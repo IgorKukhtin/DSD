@@ -1,0 +1,58 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Автоматические_справочники|Автоматические]]
+
+-
+-
+
+|\5=.Справочник +Партии товаров+|
+|\5=.!!! +Отдельная таблица+ !!! - *Object_PartionGoods*|
+|Ключ|Название поля|Тип поля|Описание поля|Примечание|23.04.17|05.07.17|
+|_.*|MovementItemId|Integer|Ключ партии|/2<.из документа [[zc_Movement_Income|Приход от поставщика]]|
+||MovementId|Integer|Ключ Документа|
+||SybaseId|Integer|Ключ партии в Sybase|поле BillItemsIncomeId, нужен при сканировании ценника сформированного там|
+||JuridicalId|Integer|[[zc_Object_Juridical|Юр.лицо(наше)]]|формируется в элементе прихода|_=.NEW|
+||PartnerId|Integer|[[zc_Object_Partner|Поcтавщики]]|/7<.дублируем + синхронизируем из документа [[zc_Movement_Income|Приход от поставщика]]|
+||UnitId|Integer|[[zc_Object_Unit|Подразделение]](прихода)|
+||OperDate|TDateTime|Дата прихода|
+||GoodsId|Integer|[[zc_Object_Goods|Товары]]|
+||GoodsItemId|Integer|[[zc_Object_GoodsItem|Товары с размерами]]|
+||CurrencyId|Integer|[[zc_Object_Currency|Валюта]] для цены прихода|
+||Amount|TFloat|Кол-во приход|
+||OperPrice|TFloat|Цена прихода|
+||CountForPrice|TFloat|Цена за количество (в приходе)|
+||OperPriceList -PriceSale-|TFloat|Цена продажи, !!!грн!!!|*последняя из истории* [[zc_ObjectHistory_PriceListItem|Цены прайс-листа]]|
+||-DiscountPeriod-|-TFloat-|-Сезонная скидка, %-|-*последняя из истории* [[zc_ObjectHistory_DiscountPeriodItem|Сезонные скидки]]- передумал, т.к. по магазинам может быть разная||_=.NEW|
+||BrandId|Integer|[[zc_Object_Brand|Торговая марка]]|/4<.дублируем + синхронизируем из справочника [[zc_Object_Partner|Поcтавщики]]|
+||PeriodId|Integer|[[zc_Object_Period|Сезон]]|
+||PeriodYear|Integer|Год|
+||FabrikaId|Integer|[[zc_Object_Fabrika|Фабрика производитель]]|
+||GoodsGroupId|Integer|[[zc_Object_GoodsGroup|Группы товаров]]|/6<.дублируем + синхронизируем из справочника [[zc_Object_Goods|Товары]]|
+||MeasureId|Integer|[[zc_Object_Measure|Единицы измерения]]|
+||CompositionId|Integer|[[zc_Object_Composition|Состав товара]]|
+||GoodsInfoId|Integer|[[zc_Object_GoodsInfo|Описание товара]]|
+||LineFabricaId|Integer|[[zc_Object_LineFabrica|Линия коллекции]]|
+||LabelId|Integer|[[zc_Object_Label|Название для ценника]]|
+||CompositionGroupId|Integer|[[zc_Object_CompositionGroup|Группа для состава товара]]|дублируем + синхронизируем из справочника [[zc_Object_Composition|Состав товара]]|
+||GoodsSizeId|Integer|[[zc_Object_GoodsSize|Размер товара]]|дублируем + синхронизируем из справочника [[zc_Object_GoodsItem|Товары с размерами]]|
+||isErased|Boolean|Удален (да/нет)|отмечаем - если приход удалены, что б избежать физического удаления|
+||isArc|Boolean|Архивный (да/нет)|будем отмечать "старые" элементы, по которым движение завершилось давнооо ...|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_GoodsPrint|Товары для печати ценников]]|[[zc_Movement_Income#zc_MI_Master|Приход от поставщика]]|/10=.да, надо заполнить|
+|/9=.|[[zc_Movement_Income#zc_MI_Master|Приход]]|
+|[[zc_Movement_ReturnOut#zc_MI_Master|Возврат поставщику]]|
+|[[zc_Movement_Sale#zc_MI_Master|Продажа покупателю]]|
+|[[zc_Movement_ReturnIn#zc_MI_Master|Возврат от покупателя]]|
+|[[zc_Movement_Send#zc_MI_Master|Перемещение]]|
+|[[zc_Movement_Loss#zc_MI_Master|Списание]]|
+|[[zc_Movement_Inventory#zc_MI_Master|Инвентаризация]]|
+|[[zc_Movement_Change#zc_MI_Master|Пересортица]]|
+|[[zc_Movement_GoodsAccount#zc_MI_Master|Расчеты покупателей]]|
+
+
+
+-
+-

@@ -1,0 +1,52 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]]
+
+|\4=.Документ +Приход+|
+|\4=.*zc_Movement_Income*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|08.05.2017|05.06.2017|05.02.2019|22.02.2020|
+|InvNumber|Номер документа|_.+/-|BillNumber|
+|OperDate|Дата документа||BillDate|
+|StatusId|[[zc_Object_StatusKind|Типы статусов]]|_.+||
+|ParentId|NULL|||
+|zc_MovementFloat_TotalCount|Итого количество|_.+|BillSummOperCount|
+|zc_MovementFloat_TotalSumm|Итого сумма по документу (в валюте документа)|_.+||
+|zc_MovementFloat_TotalSummBalance|Итого сумма по документу (в *ГРН*)|_.*ПП|НЕ удалил, т.к. расчет в запросе НЕ учитывает "округления"|_=.NEW|
+|zc_MovementFloat_TotalSummPriceList|Итого сумма по PriceList|_.+||
+|zc_MovementFloat_TotalSummJur|сумма без ск.|||||_=.NEW|
+|zc_MovementFloat_ChangePercent|(-)% Скидки (+)% Наценки|||||_=.NEW|
+|zc_MovementFloat_CurrencyValue|Курс для перевода из валюты *документа* в *ГРН*|_.*ПП||
+|zc_MovementFloat_ParValue|Номинал для перевода из валюты *документа* в *ГРН*|_.*ПП||
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementLinkObject_CurrencyDocument|[[zc_Object_Currency|Валюта (документа)]]||в Sybase - ValutaIDIn|
+|-zc_MovementLinkObject_CurrencyPriceList-|-[[zc_Object_Currency|Валюта (цены продажи)]]-||||||_=.NEW|
+|/1<.zc_MovementLinkObject_From|[[zc_Object_Partner|Контрагент]]|||
+|/1<.zc_MovementLinkObject_To|[[zc_Object_Unit|Подразделение]]|||
+|-zc_MovementLinkObject_CurrencyPartner-|-[[zc_Object_Currency|Валюта (контрагента)]]-||глобально не нужен т.к. долг будет в валюте документа, в Sybase - ValutaID|
+|-zc_MovementFloat_CurrencyPartnerValue-|-Курс для перевода из вал. док. в валюту контрагента-||/2<.глобально не нужен т.к. долг будет в валюте документа|
+|-zc_MovementFloat_ParPartnerValue-|-Номинал для перевода из вал. док. в валюту контрагента-||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_Income#zc_Movement|документа]] +Главный Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|05.02.2019|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Товары]]|||
+|PartionId|[[zc_Object_PartionGoods|Партии товаров]]|||
+|Amount|Количество|||
+|zc_MIFloat_OperPrice|Цена|||
+|zc_MIFloat_CountForPrice|Цена за количество|||
+|zc_MIFloat_OperPriceList|Цена Прайс|_.+||
+|zc_MIFloat_PriceJur|цена без ск.|||_=.NEW|
+
+-
+-
+
+|\3=.Ссылки на документ|
+|_.справочники|_.документы|_.строчная часть документов|
+|[[zc_Object_PartionGoods|Партии товаров]]|/1=.нет|/1=.нет|
+
+-
+-

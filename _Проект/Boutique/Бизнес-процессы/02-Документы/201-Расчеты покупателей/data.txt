@@ -1,0 +1,70 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]]
+
+p>(#zc_Movement). _
+
+|\4=.Документ +Расчеты покупателей+|
+|\4=.*zc_Movement_GoodsAccount*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|=.05.07.17|=.13.07.17|=.15.04.20|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|NULL|||
+|zc_MovementFloat_TotalSummPay|Итого сумма по документу (в *ГРН*)|_.*ПП||
+|zc_MovementFloat_TotalSummChange|Итого сумма скидки (в *ГРН*)|_.+|в текущем документе по *TotalChangePercent*|
+|zc_MovementFloat_TotalSummPay_curr|Итого сумма по документу (в *валюте*)|_.*ПП|/2<.суммы в валюте формируются всегда, проводки - только если долг покупателя был в валюте|||_.NEW|
+|zc_MovementFloat_TotalSummChange_curr|Итого сумма скидки (в *валюте*)|_.+|||_.NEW|
+|zc_MovementString_Comment|Примечание|||
+|/2=<.zc_MovementLinkObject_From|[[zc_Object_Client|Покупатель]]||/4=<. для оплаты ПРОДАЖИ от кого = Покупатель кому = магазин а для ВОЗВРАТА ОПЛАТЫ -  НАОБОРОТ|/2=<.|
+|[[zc_Object_Unit|Подразделение]]||_.NEW|
+|/2=<.zc_MovementLinkObject_To|[[zc_Object_Unit|Подразделение]]|/2=<.|/2=<.|
+|[[zc_Object_Client|Покупатель]]|_.*NEW*|
+|zc_MovementDate_Insert|Дата/время создания|_.+||_.NEW|
+|zc_MovementLinkObject_Insert|[[zc_Object_User|Пользователь создал]]|_.+||_.NEW|
+|zc_MovementLinkObject_CurrencyClient|[[zc_Object_Currency|Валюта (покупателя)]]|_.+||||_.NEW|
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_GoodsAccount#zc_Movement|документа]] +Главный Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|=.06.07.17|=.15.04.20|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Товары]]|||
+|PartionId|[[zc_Object_PartionGoods|Партии товаров]]|||
+|Amount|Количество|||
+|zc_MIFloat_SummChangePercent|Сумма дополнительной Скидки (в *ГРН*)|||
+|zc_MIFloat_TotalPay|Итого сумма оплаты (в *ГРН*)|_.+|в текущем документе по zc_MI_Child|
+|zc_MIFloat_SummChangePercent_curr|Сумма дополнительной Скидки (в *валюте*)||||_.NEW|
+|zc_MIFloat_TotalPay_curr|Итого сумма оплаты (в *валюте*)|_.+|в текущем документе по zc_MI_Child||_.NEW|
+|zc_MIString_Comment|Примечание|||_.NEW|
+|zc_MILinkObject_PartionMI|[[zc_Object_PartionMI|Партия элемента продажа/возврат]]||здесь *ВСЕГДА* элемент [[zc_Movement_Sale#zc_MI_Master|Продажа покупателю]] или [[zc_Movement_ReturnIn#zc_MI_Master|Возврат от покупателя]], по которому происходит оплата или возврат оплаты|
+
+-
+-
+
+p>(#zc_MI_Child). _
+
+|\4=.Строчная часть [[zc_Movement_GoodsAccount#zc_Movement|документа]] +Подчиненный Элемент документа (оплата или возврат оплаты Покупателю)+|
+|\4=.*zc_MI_Child*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|[[zc_Movement_GoodsAccount#zc_MI_Master|Главный Элемент документа]]|_.+|здесь будет NULL - для записи с обменом|
+|/2<.ObjectId|[[zc_Object_Cash|Касса]]|_.+||
+|[[zc_Object_BankAccount|Расчетный счет]]|_.+||
+|PartionId|NULL|||
+|Amount|Сумма - с минусом, значит мы вернули оплату||для обмена - здесь сумма прихода/расхода(если возвр.) в валюте оплаты, а сумма расхода/прихода(если возвр.) в *ГРН* будет расчетной|
+|zc_MIFloat_CurrencyValue|Курс для перевода из валюты оплаты в *ГРН*||/2<. ???а еще - это курс обмена??? ???а еще - как принять оплату по "другому" курсу???|
+|zc_MIFloat_ParValue|Номинал для перевода из валюты оплаты в *ГРН*||
+|zc_MILinkObject_Currency|[[zc_Object_Currency|Валюта (оплаты)]]|_.+||
+|zc_MILinkObject_Cash|[[zc_Object_Cash|Касса]]|_.+|только когда есть обмен|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_PartionMI|Партии элементов продажи/возврата]]|/3=.нет|/3=.нет|/3=.нет|
+
+-
+-

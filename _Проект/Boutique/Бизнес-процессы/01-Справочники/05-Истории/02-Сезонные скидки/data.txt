@@ -1,0 +1,15 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Истории]]
+
+-
+-
+
+|\2=.Историческая сущность +Сезонные скидки+|
+|\2=.*zc_ObjectHistory_DiscountPeriodItem*|
+|\2=.Поле *Object* или функция *DescId*|15.07.2021|
+|ObjectId|[[zc_Object_DiscountPeriodItem|Элемент Сезонных скидок]]|
+|zc_ObjectHistoryFloat_DiscountPeriodItem_Value|% скидки|
+|zc_ObjectHistoryFloat_DiscountPeriodItem_ValueNext|% скидки (дополнительный)|_=.NEW|
+
+-
+-
+
