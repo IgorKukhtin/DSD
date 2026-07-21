@@ -1,0 +1,24 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Периоды сезонных скидок+|
+|\4=.*zc_Object_DiscountPeriod*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|Код|_.+||
+|ValueData|NULL|||
+|zc_ObjectLink_DiscountPeriod_Unit|[[zc_Object_Unit|Подразделение]]|||
+|zc_ObjectLink_DiscountPeriod_Period|[[zc_Object_Period|Сезон]]|||
+|zc_ObjectDate_DiscountPeriod_StartDate|Дата с ...|||
+|zc_ObjectDate_DiscountPeriod_EndDate|Дата по ...|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/4=.нет|/4=.нет|/4=.да, надо заполнить|/4=.да, надо заполнить|
+
+-
+-

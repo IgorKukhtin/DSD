@@ -1,0 +1,28 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+
+|\4=.Справочник +Юридические лица+|
+|\4=.*zc_Object_Juridical*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|Код|_.+||
+|ValueData|Название|||
+|zc_ObjectBoolean_Juridical_isCorporate|Признак главное юридическое лицо (наша ли собственность это юр.лицо)|||
+|zc_ObjectString_Juridical_FullName|Юр. лицо полное название|||
+|zc_ObjectString_Juridical_Address|Юридический адрес|||
+|zc_ObjectString_Juridical_OKPO|ОКПО|||
+|zc_ObjectString_Juridical_INN|ИНН|||
+|zc_ObjectLink_Juridical_JuridicalGroup|[[zc_Object_JuridicalGroup|Группы юридических лиц]]|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_Unit|Подразделения]]|/20=.да, надо заполнить|/20=.нет|/20=.да, надо заполнить|
+|[[zc_Object_Bank|Банк]]|
+|[[zc_Object_BankAccount|Расчетный счет]]|
+|[[zc_Object_PartionGoods|Партии товаров]]|
+
+
+-
+-

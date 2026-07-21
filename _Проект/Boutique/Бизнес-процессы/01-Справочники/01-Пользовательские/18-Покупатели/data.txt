@@ -1,0 +1,46 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Покупатели+|
+|\4=.*zc_Object_Client*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|06.05.2017|22.04.2018|01.12.2018|07.02.2020|
+|ObjectCode|Код|_.+||
+|ValueData|Название|||
+|-zc_ObjectBoolean_Client_Outlet-|-Это покупатель магазина Outlet...-|_.+|-т.е. добавлен в соответствующем магазине-|||_=.NEW|
+|zc_ObjectBoolean_Client_Outlet|Этого покупателя показать в магазинах Outlet...|_.+/-|т.е. это покупатель "основных" магазинов|||_=.NEW|
+|zc_ObjectString_Client_DiscountCard|Номер карты|||
+|zc_ObjectFloat_Client_DiscountTax|Процент скидки|||
+|zc_ObjectFloat_Client_DiscountTaxTwo|Процент скидки дополнительно||для группы товаров "Детская обувь"|
+|zc_ObjectFloat_Client_TotalCount|Итого количество|_.+||
+|zc_ObjectFloat_Client_TotalSumm|Итого Сумма|_.+||
+|zc_ObjectFloat_Client_TotalSummDiscount|Итого Сумма скидки|_.+||
+|zc_ObjectFloat_Client_TotalSummPay|Итого Сумма оплаты|_.+||
+|zc_ObjectFloat_Client_LastCount|Количество в последней покупке|_.+||
+|zc_ObjectFloat_Client_LastSumm|Сумма последней покупки|_.+||
+|zc_ObjectFloat_Client_LastSummDiscount|Сумма скидки в последней покупке|_.+||
+|zc_ObjectDate_Client_LastDate|Последняя дата покупки|_.+||
+|zc_ObjectString_Client_Address|Адрес|||
+|zc_ObjectDate_Client_HappyDate|День рождения|||
+|zc_ObjectString_Client_PhoneMobile|Мобильный телефон|||
+|zc_ObjectString_Client_Phone|Телефон|||
+|zc_ObjectString_Client_Mail|Электронная почта|||
+|zc_ObjectString_Client_Comment|Примечание|||
+|zc_ObjectLink_Client_Currency|[[zc_Object_Currency|Валюта]]||||||_=.NEW|
+|zc_ObjectLink_Client_City|[[zc_Object_City|Населенный пункт]]|||
+|zc_ObjectLink_Client_DiscountKind|[[zc_Object_DiscountKind|Вид накопительной скидки]]|_.+/*-||
+|zc_ObjectLink_Client_LastUser|[[zc_Object_User|Пользователь]]|_.+|кто формировал последнюю покупку|_=.NEW|
+|zc_ObjectLink_Client_InsertUnit|[[zc_Object_Unit|Подразделение (создание)]]|_.+|||_=.NEW|
+|zc_ObjectLink_Protocol_Insert|[[zc_Object_User|Пользователь (создание)]]|_.+|||_=.NEW|
+|zc_ObjectDate_Protocol_Insert|Дата создания|_.+|||_=.NEW|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/4=.нет|/4=.да, надо заполнить|/4=.да, надо заполнить|/4=.да, надо заполнить|
+
+-
+-

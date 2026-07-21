@@ -1,0 +1,124 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]]
+
+h3. [[Пользовательские_справочники|Пользовательские]]
+[[Автоматические_справочники|Автоматические]]
+[[Служебные_справочники|Служебные]]
+[[Enum_справочники|Enum]]
+[[Истории]]
+[[Справочники_Управленческий_Учет|Управленческий Учет]]
+
+-
+-
+
+h1. Пользовательские справочники
+
+* + * [[zc_Object_GoodsGroup|Группы товаров]] *zc_Object_GoodsGroup*
+* + * * * [[zc_Object_Goods|Товары]] *zc_Object_Goods*
+* + * [[zc_Object_CompositionGroup|Группа для состава товара]] *zc_Object_CompositionGroup*
+* + * * * [[zc_Object_Composition|Состав товара]] *zc_Object_Composition*
+* + * * * [[zc_Object_LineFabrica|Линия коллекции]] *zc_Object_LineFabrica*
+* + * * * [[zc_Object_GoodsInfo|Описание товара]] *zc_Object_GoodsInfo*
+* + * * * [[zc_Object_GoodsSize|Размер товара]] *zc_Object_GoodsSize*
+* + * * * [[zc_Object_GoodsTag|Категория товара]] *zc_Object_GoodsTag*
+* + * [[zc_Object_Measure|Единицы измерения]] *zc_Object_Measure*
+* + * * * [[zc_Object_Label|Название для ценника]] *zc_Object_Label*
+
+* + * [[zc_Object_PriceList|Прайс листы]] *zc_Object_PriceList*
+
+* + * [[zc_Object_Partner|Поcтавщики]] *zc_Object_Partner*     -- *!!!* +select * from Unit where KindUnit = zc_kuIncome()+
+* + * [[zc_Object_Brand|Торговая марка]] *zc_Object_Brand*
+* + * [[zc_Object_Period|Сезон]] *zc_Object_Period*
+* + * [[zc_Object_Fabrika|Фабрика производитель]] *zc_Object_Fabrika*
+* + * [[zc_Object_CountryBrand|Страна производитель]] *zc_Object_CountryBrand*
+* + * [[zc_Object_ReportOLAP|Выбор ограничений для отчета OLAP]] *zc_Object_ReportOLAP*
+
+* + * [[zc_Object_Client|Покупатели]] *zc_Object_Client*    -- *!!!* +select DiscountKlient.* from Unit join DiscountKlient ... where KindUnit = zc_kuClient()+
+* + * [[zc_Object_Unit|Подразделения]] *zc_Object_Unit*     -- *!!!* +select * from Unit where KindUnit = zc_kuUnit()+
+
+* - - [[zc_Object_Bank|Банки]] *zc_Object_Bank*
+* - - [[zc_Object_BankAccount|Расчетные счета]] *zc_Object_BankAccount*
+* - - -[[zc_Object_Kassa|Касса]]- -*zc_Object_Kassa*-
+* + ??? [[zc_Object_Cash|Касса]] *zc_Object_Cash*
+* - - -[[zc_Object_Valuta|Валюта]]- -*zc_Object_Valuta*-
+* + * [[zc_Object_Currency|Валюта]] *zc_Object_Currency*     -- *!!!* +select * from Valuta+
+
+* + * [[zc_Object_Discount|Названия накопительных скидок]] *zc_Object_Discount*
+* + * [[zc_Object_DiscountTools|Настройка процентов по накопительным скидкам]] *zc_Object_DiscountTools*
+* + * [[zc_Object_DiscountPeriod|Периоды сезонных скидок]] *zc_Object_DiscountPeriod*
+
+* + - [[zc_Object_JuridicalGroup|Группы юридических лиц]] *zc_Object_JuridicalGroup*
+* + * [[zc_Object_Juridical|Юридические лица]] *zc_Object_Juridical*
+* + * [[zc_Object_City|Населенный пункт]] *zc_Object_City*
+
+* + * [[zc_Object_Member|Физические лица]] *zc_Object_Member*
+* + - [[zc_Object_Position|Должности]] *zc_Object_Position*
+* + - [[zc_Object_Personal|Сотрудники]] *zc_Object_Personal*
+
+* + + [[zc_Object_SmsSettings|Установки для СМС]] *zc_Object_SmsSettings*
+
+h3. Список - ВСЕХ из базы Sybase
+
+* [[zc_Object_GoodsProperty|Партии товара]] *zc_Object_GoodsProperty*
+
+* [[zc_Movement_DiscountMovement|Документ - Продажа/Возврат Покупателя]] *DiscountMovement*
+* [[zc_Movement_DiscountMovement|Элементы - Продажа Покупателя]] *DiscountMovementItem_byBarCode*
+* [[zc_Movement_DiscountMovement|Элементы - Возврат Покупателя]] *DiscountMovementItemReturn_byBarCode*
+* [[zc_Movement_DiscountMovement|Элементы - обмены при расчетах]] *DiscountKassaMoveMoney*
+* [[zc_Movement_DiscountMovement|Элементы - расчеты Покупателя]] *DiscountKlientAccountMoney*
+* [[zc_Movement_Inventory|Документ - Инвентаризация]] *DiscountMovementInventory*
+* [[zc_Movement_Inventory|Элементы - Инвентаризация]] *DiscountMovementItemInventory_byBarCode*
+
+* [[zc_Movement_InOutMoney|Документ - Приход/Расход денег]] *InOutMoney*
+* -*InfoMoney*- - Статья Приход/Расход денег
+* -*InfoMoneyProperty*- - Элемент Статьи Приход/Расход денег
+* -*KindInfoMoney*- - Вид Статьи Приход/Расход денег
+
+* [[zc_Movement_KassaMoveMoney|Документ - Перемещение денег между счетами, кассами]] *KassaMoveMoney*
+* -*KassaMoveMoneyClientCard*- - Партия Перемещения денег между счетами, кассами
+
+* [[zc_Object_KassaProperty|Свойства кассы]] *zc_Object_KassaProperty*
+* [[zc_Object_KindMoney|Вид оплаты ]] *zc_Object_KindMoney*
+
+
+
+* [[zc_Object_DiscountTaxItems|Сезонные скидки по товарам]] *zc_Object_DiscountTaxItems* *ObjectHystory*
+* [[zc_Object_ValutaKursItems|Курс валют]] *zc_Object_ValutaKursItems*   *ObjectHystory*
+* [[zc_Object_PriceListItems|Товары в прайсе]] *zc_Object_PriceListItems*   *ObjectHystory*
+
+* [[zc_Object_UnitInformation|Реквизиты Юр лиц]] *zc_Object_UnitInformation*
+
+* [[zc_Object_ClientAccountMoney|Расчеты с поставщиками]] *zc_Object_ClientAccountMoney*
+* [[zc_Object_ClientAccountMoneyFromGoods|Расчеты с поставщиками по-товарно]] *zc_Object_ClientAccountMoneyFromGoods*
+
+* [[zc_Object_Bill|Документ]] *zc_Object_Bill*
+* [[zc_Object_BillSummChange|Документа]] *zc_Object_BillSummChange*
+* [[zc_Object_BillItemsIncome|Элементы документа - Приход]] *zc_Object_BillItemsIncome*
+* [[zc_Object_BillItems|Элементы документа - "остальные"]] *zc_Object_BillItems*
+
+* -*LastPriceListItems*-  - Текущие цены
+* -*LastPriceListItemsPrint*-  - Цены для печати
+
+* *Users* - Пользователи [[Служебные_справочники|Служебные]] -> [[zc_Object_User|zc_Object_User]]
+* -*UsersProtocol*- - Пользовательский протокол
+
+* -*Tools*- - Настройки - дефолты
+* -*ToolsProperty*- - Настройки - значения дефолтов
+
+* -*CommentClientAccount*-  - Комментарий клиентского счета
+* -*CommentInOutMoney*-  - Комментарий поступления/возврата средств
+* -*CommentMoveMoney*-  - Комментарий перемещения средств
+* -*CommentBillSummChange*-  - Комментарии
+
+* -*PriceListTools*-  - Настройка переоценок по прайс-листам
+* -*UnitBillNumberTools*-  - Счетчик №-ов накладных по подразделениям
+* -*Firma*-  - Внутренние фирмы - ЧП
+* -*Stylus*- Переводчик :)
+
+* -*DiscountItem_byBarCode*-  - Элементы в гриде - продажи
+* -*DiscountItemPay_byBarCode*-  - Элементы в гриде - оплаты
+* -*DiscountItemReturn_byBarCode*-  - Элементы в гриде - возвраты
+
+* -*GoodsCard*- - Товарные остатки *Container*
+
+-
+-
