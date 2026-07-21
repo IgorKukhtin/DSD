@@ -1,0 +1,56 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+p>(#zc_Movement). _
+
+|\4=.Документ +Продажа Клиенту+|
+|\4=.*zc_Movement_Sale*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|14.08.23|22.03.24|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|[[zc_Movement_OrderClient|Заказ Клиента]]|||
+|zc_MovementBoolean_PriceWithVAT|Цена с НДС (да/нет)|||_=.NEW|
+|zc_MovementFloat_VATPercent|% НДС|||_=.NEW|
+|zc_MovementFloat_TotalCount|Итого количество|_.+||
+|zc_MovementFloat_TotalSummMVAT|Итого сумма по документу (без НДС)|_.+|без учета скидки|
+|zc_MovementFloat_TotalSummPVAT|Итого сумма по документу (с учетом НДС и скидки)|_.+||
+|zc_MovementFloat_TotalSumm|Итого сумма по документу (без НДС, с учетом скидки)|_.+||
+|zc_MovementFloat_TransportSumm_load|Сумма транспорт с сайта|_.+|без НДС||_=.NEW|
+|zc_MovementFloat_DiscountTax|% скидки (основной)||применяется к сумме без НДС||_=.NEW|
+|zc_MovementFloat_DiscountNextTax|% скидки ()||применяется к сумме без НДС, после учета основной скидки||_=.NEW|
+|zc_MovementFloat_SummTax|Сумма ручной скидки (без НДС)||||_=.NEW|
+|zc_MovementFloat_SummTax_calc|расчет Сумма ручной скидки (без НДС)||||_=.NEW|
+|zc_MovementFloat_SummReal_calc|расчет Итого сумма факт (без НДС, с учетом скидки, без Транспорта)||||_=.NEW|
+|zc_MovementFloat_TransportSumm_load_calc|расчет Сумма транспорт с сайта||||_=.NEW|
+|zc_MovementFloat_VATPercent_calc|расчет % НДС||||_=.NEW|
+|zc_MovementFloat_Basis_summ_transport_calc|расчет Итого сумма по документу (без НДС, с учетом скидки, с Транспортом)||||_=.NEW|
+|zc_MovementFloat_BasisWVAT_summ_transport_calc|расчет Итого сумма по документу (с НДС, с учетом скидки, с Транспортом)||||_=.NEW|
+|zc_MovementLinkObject_From|[[zc_Object_Unit|Подразделение]]|||
+|zc_MovementLinkObject_To|[[zc_Object_Client|Client]]|||
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementLinkObject_Insert|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Insert|Дата/время создания документа|_.+||
+|zc_MovementLinkObject_Update|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Update|Дата/время корректировки документа|_.+||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_Sale#zc_Movement|документа]] +Главный элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|null|||
+|/3<.ObjectId|[[zc_Object_Goods|Комплектующие]]|||
+|[[zc_Object_ReceiptService|Работы/Услуги]]|||
+|[[zc_Object_Product|Product]]|||
+|*PartionId*|*NULL*|||
+|Amount|Количество|||
+|zc_MIFloat_OperPrice|Цена с учетом всех скидок|_.+|без НДС|
+|zc_MIFloat_CountForPrice|Цена за количество|_.+||
+|zc_MIFloat_OperPriceList|Цена без скидки|_.+||
+|zc_MIFloat_BasisPrice|базовая цена лодки без скидки|_.+||
+
+-
+-

@@ -1,0 +1,33 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Сотрудники+|
+|\4=.*zc_Object_Personal*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|Код|_.+/-||
+|ValueData|NULL|||
+|zc_ObjectBoolean_Personal_Official|Оформленный официально|
+|zc_ObjectBoolean_Personal_Main|Основное место работы||
+|zc_ObjectDate_Personal_In|Дата приема|||
+|zc_ObjectDate_Personal_Out|Дата увольнения|||
+|zc_ObjectLink_Personal_Member|[[zc_Object_Member|Физические лица]]|
+|zc_ObjectLink_Personal_Position|[[zc_Object_Position|Должности]]||
+|zc_ObjectLink_Personal_PositionLevel|[[zc_Object_PositionLevel|Разряд должности]]|
+|zc_ObjectLink_Personal_Unit|[[zc_Object_Unit|Подразделения]]|||
+|zc_ObjectLink_Personal_PersonalGroup|[[zc_Object_PersonalGroup|Группировки Сотрудников]]|
+|zc_ObjectLink_Personal_PersonalServiceList|[[zc_Object_PersonalServiceList|Ведомость начисления]](главная)|_.+/-|используется для распределения БН карточки|
+|zc_ObjectLink_Personal_PersonalServiceListOfficial|[[zc_Object_PersonalServiceList|Ведомость начисления]](БН)|||
+|zc_ObjectLink_Personal_PersonalServiceListCardSecond|[[zc_Object_PersonalServiceList|Ведомость начисления]](Карта Ф2)||
+|zc_ObjectString_Personal_Comment|Примечание|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+
+
+-
+-

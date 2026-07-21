@@ -1,0 +1,23 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Справочники_Управленческий_Учет|Управленческий Учет]]
+
+
+
+|\3=.Справочник +модель отчета для демо-версии+|
+|\3=.*zc_Object_ProfitLossDemo*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|
+|ObjectCode|NULL|_.-|
+|ValueData|NULL|_.-|
+|zc_ObjectLink_ProfitLossDemo_ProfitLoss|[[zc_Object_ProfitLoss|ProfitLoss]]||
+|zc_ObjectLink_ProfitLossDemo_Unit|[[zc_Object_Unit|Unit]]||
+|zc_ObjectFloat_ProfitLossDemo_Value|Коэффициент||
+
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/5=.нет|/5=.нет|/5=.нет|/5=.да, надо заполнить|
+
+-
+-

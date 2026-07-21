@@ -1,0 +1,155 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Документ +Заказ Клиента+|
+|\4=.*zc_Movement_OrderClient*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|23.02.21|26.02.21|22.03.21|21.07.22|02.02.23|15.05.23|15.03.24|06.04.24|13.04.24|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Типы статусов]]|_.+||
+|ParentId|NULL|||
+|zc_MovementString_InvNumberPartner|Номер документа (внешний)||External Nr|
+|zc_MovementBoolean_PriceWithVAT|Цена с НДС (да/нет)|||
+|zc_MovementFloat_VATPercent|% НДС|||
+|-zc_MovementFloat_ChangePercent-|-(-)% Скидки (+)% Наценки-||||_=.DELETE|
+|zc_MovementFloat_OperPrice_load|Цена продажи с сайта|_.+|без НДС, Basis+options+transport||||_=.NEW|
+|zc_MovementFloat_TransportSumm_load|Сумма транспорт (подготовка) с сайта|_.+|TransportPreparation без НДС||||_=.NEW|
+|zc_MovementFloat_TransportSumm|Сумма транспорт||без НДС||||||||_=.NEW|
+|zc_MovementFloat_DiscountTax|% скидки (основной)||применяется к сумме без НДС||_=.NEW|
+|zc_MovementFloat_DiscountNextTax|% скидки (дополнительный||применяется к сумме без НДС, после учета основной скидки||_=.NEW|
+|zc_MovementFloat_TotalCount|Итого количество|_.+||
+|zc_MovementFloat_TotalSummMVAT|Итого сумма по документу (без НДС)|_.+|без учета скидки zc_MovementFloat_DiscountTax... и Транспорта|
+|zc_MovementFloat_TotalSummPVAT|Итого сумма по документу (с учетом НДС и скидки, без Транспорта)|_.+||
+|zc_MovementFloat_TotalSumm|Итого сумма по документу (без НДС, с учетом скидки, без Транспорта)|_.+||
+|-zc_MovementFloat_SummReal-|ручной ввод Итоговой суммы (без НДС, с учетом скидки, без Транспорта) по документу||||||_=.NEW|
+|zc_MovementFloat_SummTax|Сумма ручной скидки (без НДС)||ручной ввод суммы заказа пользователем, вегда расчет если заполнен SummReal|_.+/-|||||_=.NEW|
+|zc_MovementFloat_NPP||_.+/-|Очередность сборки|||||_=.NEW|
+|zc_MovementFloat_SummTax_calc|расчет Сумма ручной скидки (без НДС)|||||||||_=.NEW|
+|zc_MovementFloat_SummReal_calc|расчет Итого сумма факт (без НДС, с учетом скидки, без Транспорта)|||||||||_=.NEW|
+|zc_MovementFloat_TransportSumm_load_calc|расчет Сумма транспорт (подготовка) с сайта||TransportPreparation без НДС|||||||_=.NEW|
+|zc_MovementFloat_TransportSumm_calc|расчет Сумма транспорт||без НДС||||||||_=.NEW|
+|zc_MovementFloat_VATPercent_calc|расчет % НДС|||||||||_=.NEW|
+|zc_MovementFloat_Basis_summ_transport_calc|расчет Итого сумма по документу (без НДС, с учетом скидки, с Транспортом)|||||||||_=.NEW|
+|zc_MovementFloat_BasisWVAT_summ_transport_calc|расчет Итого сумма по документу (с НДС, с учетом скидки, с Транспортом)|||||||||_=.NEW|
+|/1<.zc_MovementLinkObject_From|[[zc_Object_Client|Client]]|||
+|/1<.zc_MovementLinkObject_To|[[zc_Object_Unit|Подразделение]]|||
+|zc_MovementLinkObject_PaidKind|[[zc_Object_PaidKind|PaidKind]]|||
+|zc_MovementLinkObject_TaxKind|[[zc_Object_TaxKind|Тип НДС]]|||||||||||_=.NEW|
+|zc_MovementLinkObject_Product|[[zc_Object_Product|Product]]||указывается Лодка, всегда: 1)заказали сделать лодку 2)заказали комплектующие/работы для существующей лодки|_=.NEW|
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementBlob_Info1|Информация 1|||||_=.NEW|
+|zc_MovementBlob_Info2|Информация 2|||||_=.NEW|
+|zc_MovementBlob_Info3|Информация 3|||||_=.NEW|
+|zc_MovementLinkMovement_Invoice|[[zc_Movement_Invoice|Invoice]]|_.+/-|т.к. счетов может быть несколько, здесь "информативно" первый|
+|zc_MovementLinkObject_Insert|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Insert|Дата/время создания документа|_.+||
+|zc_MovementLinkObject_Update|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Update|Дата/время корректировки документа|_.+||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_OrderClient#zc_Movement|документа]] +Главный Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|05.04.21|06.04.21|21.07.22|
+|ParentId|NULL|||
+|/3<.ObjectId|[[zc_Object_Goods|Комплектующие]]|||
+|[[zc_Object_ReceiptService|Работы/Услуги]]|||
+|[[zc_Object_Product|Product]]||Лодка, которую необходимо сделать|
+|*PartionId*|*NULL*|||
+|Amount|Количество заказ|||
+|-zc_MIFloat_AmountPartner-|-Количество заказ поставщику-|_.+||
+|zc_MIFloat_OperPrice|Цена с учетом всех скидок|_.+|без НДС|
+|zc_MIFloat_CountForPrice|Цена за количество|||
+|zc_MIFloat_OperPriceList|Цена без скидки|||_=.NEW|
+|zc_MIFloat_BasisPrice|базовая цена лодки без скидки||||_=.NEW|
+|zc_MIFloat_OperPrice_load|Цена продажи с сайта|_.+|без НДС, Basis+options|||_=.NEW|
+|zc_MIFloat_BasisPrice_load|Базовая цена продажи модели с сайта|_.+|без НДС|||_=.NEW|
+|zc_MILinkObject_Partner|[[zc_Object_Partner|Поставщик]]|_.+|кому уходит заказ поставщика|_=.NEW|
+
+-
+-
+
+p>(#zc_MI_Child). _
+
+|\4=.Строчная часть [[zc_Movement_OrderClient#zc_Movement|документа]] +Элементы документа (шаблон)+|
+|\4=.*zc_MI_Child*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|11.04.21|16.04.21|20.07.21|19.12.22|15.01.23|
+|ParentId*|NULL|||
+|/2<.ObjectId|[[zc_Object_Goods|Комплектующие]]|/2=.+|/2<.|
+|[[zc_Object_ReceiptService|Работы/Услуги]]|_=.NEW|
+|*PartionId*|*NULL*|||
+|Amount|Количество шаблон сборки|_.+||
+|zc_MIFloat_ForCount|Для кол-во|_.+|для шаблон сборки||||_=.NEW|
+|zc_MIFloat_AmountPartner|Количество заказ поставщику|_.+||
+|zc_MIFloat_OperPrice|Цена вх без НДС|_.+|для заказа поставщику|
+|zc_MIFloat_CountForPrice|Цена за количество|_.+||_=.NEW|
+|zc_MILinkObject_Partner|[[zc_Object_Partner|Поставщик]]|_.+|кому уходит заказ поставщика|_=.NEW|
+|zc_MILinkObject_GoodsBasis|[[zc_Object_Goods|Узел (базовый)]]|_.+|какой узел был в ReceiptProdModel, заполняется если была замена|||_=.NEW|
+|zc_MILinkObject_ReceiptGoods|[[zc_Object_ReceiptGoods|Шаблон сборка Узла]]|_.+||||||_=.NEW|
+|zc_MILinkObject_ProdOptions|[[zc_Object_ProdOptions|Опция]]|_.+||_=.NEW|
+|zc_MIFloat_MovementId|[[zc_Movement_OrderPartner|Заказ поставщику]]|_.+||_=.NEW|
+
+-
+-
+
+p>(#zc_MI_Detail). _
+
+|\4=.Строчная часть [[zc_Movement_OrderClient#zc_Movement|документа]] +Комплектующие(сборка узла)+|
+|\4=.*zc_MI_Detail*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|11.04.21|16.04.21|20.07.21|12.12.22|19.12.22|
+|ParentId|zc_MI_Child|_.+|какой узел собирается|
+|/3<.ObjectId|[[zc_Object_Goods|Комплектующие]]|/3=.+|/3<.|
+|[[zc_Object_ReceiptService|Работы/Услуги]]|_=.NEW|
+|[[zc_Object_ProdColorPattern|Boat Structure]]|_=.NEW|
+|*PartionId*|*NULL*|||
+|Amount|Количество для сборки Узла|_.+||
+|zc_MIFloat_ForCount|Для кол-во|_.+|для сборки Узла|||||_=.NEW|
+|zc_MIFloat_AmountPartner|Количество заказ поставщику|_.+||
+|zc_MIFloat_OperPrice|Цена вх без НДС|_.+|для заказа поставщику|
+|zc_MIFloat_CountForPrice|Цена за количество|_.+||_=.NEW|
+|zc_MILinkObject_Partner|[[zc_Object_Partner|Поставщик]]|_.+|кому уходит заказ поставщика, ParentId НЕ заполнен|_=.NEW|
+|zc_MILinkObject_Goods|[[zc_Object_Goods|Комплектующие (Узел)]]|_.+|какой узел собирается - zc_MI_Child.ObjectId, всегда заполнен|_=.NEW|
+|zc_MILinkObject_GoodsBasis|[[zc_Object_Goods|Комплектующие ("ПФ" Узел)]]|_.+|какой "ПФ" узел собирается||||_=.NEW|
+|zc_MILinkObject_ReceiptLevel|[[zc_Object_ReceiptLevel|Этап сборки]]|_.+||||||_=.NEW|
+|zc_MILinkObject_ColorPattern|[[zc_Object_ColorPattern|Шаблон Boat Structure]]|_.+||_=.NEW|
+|zc_MILinkObject_ProdColorPattern|[[zc_Object_ProdColorPattern|Boat Structure]]|_.+||_=.NEW|
+|zc_MILinkObject_ProdOptions|[[zc_Object_ProdOptions|Опция]]|_.+||_=.NEW|
+|zc_MIFloat_MovementId|[[zc_Movement_OrderPartner|Заказ Поставщику]]|_.+||_=.NEW|
+
+
+-
+-
+
+p>(#zc_MI_Reserv). _
+
+|\4=.Строчная часть [[zc_Movement_OrderClient#zc_Movement|документа]] +Элементы документа (резерв)+|
+|\4=.*zc_MI_Reserv*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|11.04.21|16.04.21|20.07.21|
+|ParentId|zc_MI_Child or zc_MI_Detail|_.+|смотря что будем резервировать|
+|/2<.ObjectId|[[zc_Object_Goods|Комплектующие]]|/1=.+|/1<.|
+|Amount|Количество резерв|_.+|с остатка|
+|*PartionId*|*[[zc_Object_PartionGoods|Партии товаров]]*|_.+|партия для резерва|
+|zc_MIFloat_OperPrice|Цена вх без НДС|_.+|из Object_PartionGoods|
+|zc_MIFloat_CountForPrice|Цена за количество|_.+||_=.NEW|
+|zc_MILinkObject_Unit|[[zc_Object_Unit|Подразделение]]|_.+|на котором происходит резерв|
+|zc_MILinkObject_Goods|[[zc_Object_Goods|Комплектующие]]|_.+|какой узел собирается - zc_MI_Child.ObjectId or zc_MI_Detail.zc_MILinkObject_Goods|_=.NEW|
+|zc_MILinkObject_ColorPattern|[[zc_Object_ColorPattern|Шаблон Boat Structure]]|_.+||_=.NEW|
+|zc_MILinkObject_ProdColorPattern|[[zc_Object_ProdColorPattern|Boat Structure]]|_.+|заполняется только для реальных Goods|_=.NEW|
+
+-
+-
+
+|\3=.Ссылки на документ|
+|_.справочники|_.документы|_.строчная часть документов|
+|[[zc_Object_ProdColorItems|Элементы Boat Structure (Лодка)]]|[[zc_Movement_Invoice|Счета]]|[[zc_Movement_Income#zc_MI_Child|Приход от Поставщика]]|
+|[[zc_Object_ProdOptItems|Элементы Опций (Лодка) ]]|[[zc_Movement_ProductionUnion|ProductionUnion]]|[[zc_Movement_Send#zc_MI_Child|Перемещение]]|
+||[[zc_Movement_Sale#zc_MI_Child|Продажа Клиенту]]|[[zc_Movement_ProductionPersonal#zc_MI_Child|Производство - часы Сотрудников]]|
+
+
+-
+-

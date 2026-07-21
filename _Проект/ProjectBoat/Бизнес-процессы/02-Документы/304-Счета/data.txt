@@ -1,0 +1,74 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+p>(#zc_Movement). _
+
+
+|\4=.Документ +Счета+|
+|\4=.*zc_Movement_Invoice*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|04.03.21|09.03.21|17.03.21|27.05.21|05.12.23|11.02.24|03.03.24|11.04.24|
+|InvNumber|Номер документа|_.+|Internal Nr|
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|/3<.ParentId|-[[zc_Movement_Income|Приход от Поставщика]]-|/3<.|/3<.|/3<.|/3<.|_=.NEW|
+|[[zc_Movement_OrderClient|Заказ Клиента]]|_=.NEW|
+|[[zc_Movement_OrderPartner|Заказ Поставщику]]||_=.NEW|
+|zc_MovementDate_Plan|Дата оплаты|||
+|zc_MovementBoolean_Auto|Автоматически|_.+||||||_=.NEW|
+|/2<.zc_MovementLinkObject_Object|[[zc_Object_Client|Client]]|||
+|[[zc_Object_Partner|Partner]]|||
+|zc_MovementLinkObject_Unit|[[zc_Object_Unit|Unit]]||Direction|
+|zc_MovementLinkObject_InfoMoney|[[zc_Object_InfoMoney|InfoMoney]]||Название назначения|
+|zc_MovementLinkObject_InvoiceKind|[[zc_Object_InvoiceKind|Тип Счета]]|||||||_=.NEW|
+|-zc_MovementLinkObject_Product-|-[[zc_Object_Product|Product]]-||||_=.DELETE|
+|zc_MovementLinkObject_PaidKind|[[zc_Object_PaidKind|PaidKind]]|||
+|zc_MovementLinkObject_TaxKind|[[zc_Object_TaxKind|Тип НДС]]||||||||||_=.NEW|
+|zc_MovementFloat_Amount|Сумма||сумма всегда с НДС|
+|zc_MovementFloat_VATPercent|% НДС|||_=.NEW|
+|zc_MovementFloat_ReceiptNumber|Официальный номер квитанции|_.+|Quittung Nr, формируется только для Amount>0|
+|zc_MovementString_InvNumberPartner|Номер документа (внешний)||External Nr|
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementLinkObject_Insert|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Insert|Дата/время создания документа|_.+||
+|zc_MovementLinkObject_Update|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Update|Дата/время корректировки документа|_.+||
+|zc_MovementBoolean_GetMail|Загружен из GetMail|_.+|||||||_=.NEW|
+|zc_MovementBoolean_FilesNotUploaded|Отложить отправку в DropBox||||||||_=.NEW|
+|zc_MovementBoolean_PostedToDropBox|Отправлено в DropBox|||||||||_=.NEW|
+|zc_MovementDate_GetMailLoad|Дата/время загрузки из GetMail документа|_.+|||||||_=.NEW|
+|zc_MovementDate_GetMailSend|Дата/время отправки документа в GetMail|_.+|||||||_=.NEW|
+|zc_MovementDate_DropBoxSend|Дата/время отправки документа в DropBox|_.+|||||||_=.NEW|
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_Invoice#zc_Movement|документа]] +Главный Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|11.04.24|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Комплектующие]]|||
+|*PartionId*|*NULL*|||
+|Amount|Кол-во|||
+|zc_MIFloat_OperPrice|Цена без НДС|||
+|zc_MIFloat_SummMVAT|Сумма без НДС|||_=.NEW|
+|zc_MIFloat_SummPVAT|Сумма с НДС|||_=.NEW|
+|zc_MIFloat_OperPrice_calc|Цена без НДС|||_=.NEW|
+|zc_MIFloat_SummMVAT_calc|Сумма без НДС|||_=.NEW|
+|zc_MIFloat_SummPVAT_calc|Сумма с НДС|||_=.NEW|
+|zc_MIString_Comment|Примечание|||
+
+-
+-
+
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_InvoicePdf|Документ Счет, скан документов]]|[[zc_Movement_OrderPartner|Заказ Поставщику]]|/4=.нет|/4=.нет|
+|/3=.|[[zc_Movement_OrderClient|Заказ Клиента]]|
+|[[zc_Movement_BankAccount|Расчетный счет, приход/расход]]|
+|[[zc_Movement_Income#zc_Movement_IncomeCost|Документ Затраты в приходе ]]|
+ 
+-
+-
+

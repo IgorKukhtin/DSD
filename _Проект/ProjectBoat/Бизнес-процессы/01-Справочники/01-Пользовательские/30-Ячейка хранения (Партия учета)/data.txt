@@ -1,0 +1,25 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Ячейка хранения (Партия учета)+|
+|\4=.*zc_Object_PartionCell*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|Код|_.+||
+|ValueData|Название|||
+|zc_ObjectString_PartionCell_Comment|Примечание|||
+|zc_ObjectFloat_PartionCell_Level|Уровень стелажа|||
+|-zc_ObjectLink_PartionCell_Unit-|-[[zc_Object_Unit|Склад/Участок сборки]]-||-всегда на Складе основном-|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/3=.нет|/3=.нет|[[zc_Movement_Income#zc_MI_Master|Income]]|/3=.нет|
+|[[zc_Movement_Send#zc_MI_Master|Send]]|
+|[[zc_Movement_Inventory#zc_MI_Master|Inventory]]|
+
+-
+-

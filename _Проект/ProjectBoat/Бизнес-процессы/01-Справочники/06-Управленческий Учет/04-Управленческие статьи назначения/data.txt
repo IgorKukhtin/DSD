@@ -1,0 +1,27 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Справочники_Управленческий_Учет|Управленческий Учет]]
+
+
+|\4=.Справочник +УП статьи назначения+|
+|\4=.*zc_Object_InfoMoney*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|02.02.2021|
+|ObjectCode|Код|_.-||
+|ValueData|Название|_.+/-||
+|zc_ObjectBoolean_InfoMoney_ProfitLoss|затраты по оплате||оплата по этой статье отразится сразу в затратах через проводку "начисления" в том же документе "опата"|
+|zc_ObjectLink_InfoMoney_InfoMoneyGroup|[[zc_Object_InfoMoneyGroup|Группы управленческих назначений]]|||
+|zc_ObjectLink_InfoMoney_Destination|[[zc_Object_InfoMoneyDestination|Управленческие назначения]]|||
+|zc_ObjectLink_InfoMoney_Unit|[[zc_Object_Unit|Unit]]||Direction|_=.NEW|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_Account|Счета]]|[[zc_Movement_Invoice|Счета]]|/21=.да, надо заполнить|/21=.да, надо заполнить|
+|[[zc_Object_ProfitLoss|Статьи отчета о прибылях и убытках]]|/20=.да, надо заполнить|
+|[[zc_Object_GoodsGroup|Группы]]|
+|[[zc_Object_Goods|Комплектующие]]|
+|[[zc_Object_Partner|Поставщики]]|
+|[[zc_Object_Client|Клиенты]]|
+
+-
+-

@@ -1,0 +1,61 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+p>(#zc_Movement). _
+
+
+|\4=.Документ +Расчетный счет, приход/расход+|
+|\4=.*zc_Movement_BankAccount*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|null|||
+|zc_MovementString_InvNumberPartner|Номер документа (внешний)||External Nr|
+|zc_MovementLinkMovement_Invoice|[[zc_Movement_Invoice|Счет]]|||
+|zc_MovementLinkObject_Insert|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Insert|Дата/время создания документа|_.+||
+|zc_MovementLinkObject_Update|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Update|Дата/время корректировки документа|_.+||
+|zc_MovementBlob_11|Примечание (Цель использования)|||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_BankAccount#zc_Movement|документа]] +Главный Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|null|||
+|ObjectId|[[zc_Object_BankAccount|Расчетный счет]]|||
+|Amount|Сумма|||
+|zc_MIString_Comment|Примечание|_.+|дублирует zc_MovementBlob_11 - только 255 символов|
+|/4<.zc_MILinkObject_MoneyPlace|[[zc_Object_Cash|Касса]]|||
+|[[zc_Object_BankAccount|Расчетный счет]]|||
+|[[zc_Object_Partner|Partner]]|||
+|[[zc_Object_Client|Client]]|||
+
+-
+-
+
+p>(#zc_MI_Child). _
+
+|\4=.Строчная часть [[zc_Movement_BankAccount#zc_Movement|документа]] +Элемент документа+|
+|\4=.*zc_MI_Child*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|[[zc_Movement_BankAccount#zc_MI_Master|Главный элемент документа]]|||
+|/2<.ObjectId|[[zc_Object_Partner|Partner]]|/2<.|/2<.|
+|[[zc_Object_Client|Client]]|
+|Amount|Сумма оплаты по счету|||
+|zc_MIString_Comment|Примечание|||
+|zc_MIFloat_MovementId|[[zc_Movement_Invoice|Счет]]|||
+
+-
+-
+
+|\3=.Ссылки на документ|
+|_.справочники|_.документы|_.строчная часть документов|
+|[[zc_Object_BankAccountPdf|Документ Расчетный счет, скан документов]]|||
+
+-
+-

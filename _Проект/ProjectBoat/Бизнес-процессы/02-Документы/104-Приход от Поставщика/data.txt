@@ -1,0 +1,112 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Документ +Приход+|
+|\4=.*zc_Movement_Income*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|26.02.2021|27.05.2021|09.06.2021|12.10.2021|28.06.2023|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Типы статусов]]|_.+||
+|ParentId|NULL|||
+|zc_MovementString_InvNumberPack|Номер Упаковочный лист|||||||_=.NEW|
+|zc_MovementString_InvNumberInvoice|Номер Счета|||||||_=.NEW|
+|zc_MovementString_InvNumberPartner|Номер документа (у поставщика)||External Nr|
+|zc_MovementDate_OperDatePartner|Дата документа (у поставщика)||External Dt|
+|zc_MovementBoolean_PriceWithVAT|Цена с НДС (да/нет)|||
+|zc_MovementFloat_VATPercent|% НДС|||
+|zc_MovementFloat_DiscountTax_calc|1.1.Rabbat %||% скидки|_=.RENAME|
+|zc_MovementFloat_DiscountTax|1.1.Rabbat %||% скидки|_=.RENAME|
+|zc_MovementFloat_SummTaxPVAT_calc|1.2.Rabbat Brutto||Сумма скидки с НДС||||_=.NEW|
+|zc_MovementFloat_SummTaxPVAT|1.2.Rabbat Brutto||Сумма скидки с НДС||||_=.NEW|
+|zc_MovementFloat_SummTaxMVAT_calc|1.3.Rabbat Netto||Сумма скидки без НДС||||_=.NEW|
+|zc_MovementFloat_SummTaxMVAT|1.3.Rabbat Netto||Сумма скидки без НДС||||_=.NEW|
+|zc_MovementFloat_SummPost_calc|2.1.Porto Netto||Почтовые расходы, без НДС||||_=.NEW|
+|zc_MovementFloat_SummPost|2.1.Porto Netto||Почтовые расходы, без НДС||||_=.NEW|
+|zc_MovementFloat_SummPack_calc|2.2.Verpackung Netto||Упаковка расходы, без НДС||||_=.NEW|
+|zc_MovementFloat_SummPack|2.2.Verpackung Netto||Упаковка расходы, без НДС||||_=.NEW|
+|zc_MovementFloat_SummInsur_calc|2.3.Versicherung Netto||Страховка расходы, без НДС||||_=.NEW|
+|zc_MovementFloat_SummInsur|2.3.Versicherung Netto||Страховка расходы, без НДС||||_=.NEW|
+|zc_MovementFloat_TotalDiscountTax_calc|3.1.Scontobetr %||% скидки итого||||_=.NEW|
+|zc_MovementFloat_TotalDiscountTax|3.1.Scontobetr %||% скидки итого||||_=.NEW|
+|zc_MovementFloat_TotalSummTaxPVAT_calc|3.2.Scontobetr Brutto||Сумма скидки с НДС  итого||||_=.NEW|
+|zc_MovementFloat_TotalSummTaxPVAT|3.2.Scontobetr Brutto||Сумма скидки с НДС  итого||||_=.NEW|
+|zc_MovementFloat_TotalSummTaxMVAT_calc|3.3.Scontobetr Netto||Сумма скидки без НДС  итого||||_=.NEW|
+|zc_MovementFloat_TotalSummTaxMVAT|3.3.Scontobetr Netto||Сумма скидки без НДС  итого||||_=.NEW|
+|zc_MovementFloat_TotalCount|Итого количество|_.+||
+|zc_MovementFloat_TotalSummMVAT|Итого сумма по документу (без НДС)|_.+|с учетом скидок по элементам|
+|zc_MovementFloat_TotalSummPVAT|Итого сумма по документу (с НДС)|_.+|с учетом ВСЕХ скидок и расходов|
+|zc_MovementFloat_TotalSumm|Итого сумма по документу (без НДС и с учетом всех расходов и скидок)|_.+||
+|zc_MovementFloat_TotalSummCost|Итого сумма затрат (без НДС)|_.+||||_=.NEW|
+|/1<.zc_MovementLinkObject_From|[[zc_Object_Partner|Поставщик]]|||
+|/1<.zc_MovementLinkObject_To|[[zc_Object_Unit|Подразделение]]|||
+|zc_MovementLinkObject_PaidKind|[[zc_Object_PaidKind|Форма оплаты]]|||
+|zc_MovementString_Comment|Примечание|||
+|-zc_MovementLinkMovement_Invoice-|-[[zc_Movement_Invoice|Invoice]]-|_.+/-|-т.к. счетов может быть несколько, здесь "информативно" первый-||_=.DELETE|
+|zc_MovementLinkObject_Insert|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Insert|Дата/время создания документа|_.+||
+|zc_MovementLinkObject_Update|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Update|Дата/время корректировки документа|_.+||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_Income#zc_Movement|документа]] +Главный Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|19.09.2021|12.10.2021|06.01.2024|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Комплектующие]]|||
+|*PartionId*|*[[zc_Object_PartionGoods|Партии товаров]]*||всегда zc_MI_Master.MovementItemId|
+|Amount|Количество|||
+|zc_MIFloat_OperPrice_orig|EK Netto||Цена вх.||_=.NEW|
+|zc_MIFloat_DiscountTax|zus.Rabbat in %||% скидки||_=.NEW|
+|zc_MIFloat_OperPrice|Buchungs EK||Цена вх. с учетом скидки в элементе||_=.RENAME|
+|zc_MIFloat_SummIn|Gesamt EK||Сумма вх. с учетом скидки||_=.NEW|
+|zc_MIFloat_CountForPrice|Цена за количество||пока не используется|
+|zc_MIFloat_OperPriceList|Цена прайс|||_=.NEW|
+|zc_MIString_PartNumber|№ по тех паспорту|||
+|zc_MILinkObject_PartionCell|[[zc_Object_PartionCell|Ячейка хранения (Партия учета)]]||пока только на Складе Основном|||_=.NEW|
+
+-
+-
+
+p>(#zc_MI_Child). _
+
+|\4=.Строчная часть [[zc_Movement_Income#zc_Movement|документа]] +Элементы документа (резерв)+|
+|\4=.*zc_MI_Child*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|[[zc_Movement_Income#zc_MI_Master|Главный элемент документа]]|||
+|ObjectId|[[zc_Object_Goods|Комплектующие]]|_.+||
+|*PartionId*|*[[zc_Object_PartionGoods|Партии товаров]]*|_.+||
+|Amount|Количество резерв|_.+||
+|zc_MIFloat_MovementId|[[zc_Movement_OrderClient|Заказ Клиента]]|_.+||
+
+-
+-
+
+p>(#zc_Movement_IncomeCost). _
+
+|\4=.Документ +Затраты в приходе+|
+|\4=.*zc_Movement_IncomeCost*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|_.+|Из главного документа, хотя не важно т.к. использоваться не будет|
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]||используется zc_Enum_StatusCode_Erased, для понимания удален или нет|
+|ParentId|[[zc_Movement_Income#zc_Movement|Приход]]||zc_Movement_Income|
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementFloat_AmountCost|Сумма затрат|_.+|автоматически распределяется сумма затрат|
+|zc_MovementFloat_MovementId|№ документа "затраты"||делаем новую форму для выбора, там пока будет только [[zc_Movement_Invoice|zc_Movement_Invoice]]|
+
+-
+-
+
+|\3=.Ссылки на документ|
+|_.справочники|_.документы|_.строчная часть документов|
+|[[zc_Object_PartionGoods|Партии товаров]]|-[[zc_Movement_Invoice|Счета]]-|/1=.нет|
+
+-
+-
+

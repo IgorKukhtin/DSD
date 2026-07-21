@@ -1,0 +1,37 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Элементы сборки Узлов+|
+|\4=.*zc_Object_ReceiptGoodsChild*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|11.12.20|23.04.22|07.10.22|11.10.22|19.12.22|13.04.23|19.03.24|
+|ObjectCode|null|||
+|ValueData|Примечание/Цвет||*всегда Цвет*, здесь может быть замена для ProdColorPattern|
+|zc_ObjectFloat_ReceiptGoodsChild_Value|Значение|||
+|zc_ObjectFloat_ReceiptGoodsChild_ForCount|Для кол-во|_.+||||||_=.NEW|
+|zc_ObjectFloat_ReceiptGoodsChild_NPP|№ п/п в загрузке из экселя|_.+|||||||_=.NEW|
+|zc_ObjectFloat_ReceiptGoodsChild_NPP_service|№ п/п - очередность работ|||||||||_=.NEW|
+|zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods|[[zc_Object_ReceiptGoods|ReceiptGoods]]|||
+|-zc_ObjectLink_ReceiptGoodsChild_Goods-|-[[zc_Object_Goods|Комплектующие]]-|||_=.DEL|
+|/2<.zc_ObjectLink_ReceiptGoodsChild_Object|[[zc_Object_Goods|Комплектующие]]||да, здесь может быть замена для ProdColorPattern|
+|[[zc_Object_ReceiptService|Работы/Услуги]]|||_=.NEW|
+|zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern|[[zc_Object_ProdColorPattern|Boat Structure ]]|||_=.NEW|
+|zc_ObjectLink_ReceiptGoodsChild_MaterialOptions|[[zc_Object_MaterialOptions|Категория Опций]]||||_=.NEW|
+|zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel|[[zc_Object_ReceiptLevel|Этап сборки]]|||||_=.NEW|
+|zc_ObjectLink_ReceiptGoodsChild_GoodsChild|[[zc_Object_Goods|Комплектующие]]||если по факту это сначала сборка Узел-ПФ||||_=.NEW|
+|zc_ObjectLink_Protocol_Insert|[[zc_Object_User|Пользователь (создание)]]|_.+||
+|zc_ObjectLink_Protocol_Update|[[zc_Object_User|Пользователь (корректировка)]]|_.+||
+|zc_ObjectDate_Protocol_Insert|Дата создания|_.+||
+|zc_ObjectDate_Protocol_Update|Дата корректировки|_.+||
+
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/4=.да|/4=.да, надо заполнить|/4=.да, надо заполнить|/4=.да, надо заполнить|
+
+-
+-

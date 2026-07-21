@@ -1,0 +1,42 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+p>(#zc_Movement_PriceList). _
+
+|\4=.Документ +Прайс-лист (цены поставщика)+|
+|\4=.*zc_Movement_PriceList*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.Описание|=.расчет|Описание|
+|InvNumber|Номер документа|||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|null|||
+|zc_MovementLinkObject_Partner|[[zc_Object_Partner|Поставщик]]|||
+|zc_MovementDate_Insert|zc_MovementDate_Insert|_.+||
+|zc_MovementLinkObject_Insert|zc_MovementLinkObject_Insert|_.+||
+|zc_MovementLinkObject_Update|[[zc_Object_User|Пользователи]]|_.+||
+|zc_MovementDate_Update|Дата/время корректировки документа|_.+||
+
+-
+-
+
+p>(#zc_MI_Master). _ 
+
+|\4=.Строчная часть [[zc_Movement_PriceList#zc_Movement_PriceList|документа]] +Элемент документа+| 
+|\4=.*zc_MI_Master*| 
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|Описание|
+|ObjectId|[[zc_Object_Goods|Комплектующие]]|||
+|Amount|Цена без ндс||Dealer_Price или Price per Base U.M. или Trade Unit Price|
+|ParentId|null|||
+|zc_MILinkObject_DiscountParner|[[zc_Object_DiscountParner|группа скидки у поставщика]]||наша скидка у поставщика|
+|zc_MILinkObject_Measure|[[zc_Object_Measure|Ед.изм]]|||
+|zc_MILinkObject_MeasureParent|[[zc_Object_Measure|Ед.изм (упакови)]]|||
+|zc_MIFloat_MeasureMult|Вложенность|||
+|zc_MIFloat_PriceParent|Цена без ндс (упакови)||Dealer_Price или Price per Base U.M.|
+|zc_MIFloat_EmpfPriceParent|Рекомендованная цена без ндс (упакови)|||
+|zc_MIFloat_MinCount|мин кол-во закупки|||
+|zc_MIFloat_MinCountMult|рекомендуемое кол-во закупки|||
+|zc_MIBoolean_Outlet|Outlet|||
+|zc_MIString_CatalogPage|CatalogPage|||
+|zc_MIFloat_WeightParent|WeightParent|||
+
+-
+-

@@ -1,0 +1,59 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]]
+
+h3. [[Пользовательские_справочники|Пользовательские]]
+[[Автоматические_справочники|Автоматические]]
+[[Служебные_справочники|Служебные]]
+[[Enum_справочники|Enum]]
+[[Истории]]
+[[Справочники_Управленческий_Учет|Управленческий Учет]]
+
+-
+-
+
+h1. Справочники - Управленческий Учет
+
+-
+-
+
+* -[[zc_Object_AnalyzerId|Типы аналитик (проводки)]]- *-zc_Object_AnalyzerId-*
+
+-
+-
+
+* [[zc_Object_InfoMoneyGroup|Управленческие группы назначения]] *zc_Object_InfoMoneyGroup*
+
+* [[zc_Object_InfoMoneyDestination|Управленческие назначения]] *zc_Object_InfoMoneyDestination*
+
+* [[zc_Object_InfoMoney|Управленческие статьи назначения]] *zc_Object_InfoMoney*
+
+-
+-
+
+* [[zc_Object_AccountGroup|Группы счетов]]  *zc_Object_AccountGroup*
+
+* [[zc_Object_AccountDirection|Аналитики счетов - направления]]  *zc_Object_AccountDirection*
+
+* [[zc_Object_Account|Счета]]  *zc_Object_Account*
+
+-
+-
+
+* [[zc_Object_ProfitLossGroup|Группы статей отчета о прибылях и убытках]]  *zc_Object_ProfitLossGroup*
+
+* [[zc_Object_ProfitLossDirection|Аналитики статей отчета о прибылях и убытках - направления]]  *zc_Object_ProfitLossDirection*
+
+* [[zc_Object_ProfitLoss|Статьи отчета о прибылях и убытках]]  *zc_Object_ProfitLoss*
+
+* [[zc_Object_ProfitLossDemo|модель отчета для демо-версии]]  *zc_Object_ProfitLossDemo*
+
+-
+-
+
+* [[zc_Object_CashFlowGroup|Группы статей отчета ДДС]]  *zc_Object_CashFlowGroup* !!! ПОКА НЕ ДЕЛАЕМ !!!
+
+* [[zc_Object_CashFlowDirection|Аналитики статей отчета ДДС - направления]]  *zc_Object_CashFlowDirection* !!! ПОКА НЕ ДЕЛАЕМ !!!
+
+* [[zc_Object_CashFlow|Статьи отчета ДДС]]  *zc_Object_CashFlow* !!! ПОКА НЕ ДЕЛАЕМ !!!
+
+-
+-

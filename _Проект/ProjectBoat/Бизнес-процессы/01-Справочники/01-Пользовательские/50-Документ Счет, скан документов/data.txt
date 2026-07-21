@@ -1,0 +1,25 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Документ Счет, скан документов+|
+|\4=.*zc_Object_InvoicePdf*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|null|||
+|ValueData|Название файла|||
+|zc_ObjectBlob_InvoicePdf_Data|PDF|||
+|zc_ObjectString_InvoicePdf_Comment|Примечание|||
+|zc_ObjectFloat_InvoicePdf_MovementId|[[zc_Movement_Invoice|Документ Счет]]|||
+|zc_ObjectLink_InvoicePdf_DocTag|[[zc_Object_DocTag|Категория Документация]]|||
+|zc_ObjectDate_InvoicePdf_DateUnloading|Дата и время выгрузки в DropBox|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/2=.нет|/2=.наверно да|/2=.нет|/2=.нет|
+
+-
+-

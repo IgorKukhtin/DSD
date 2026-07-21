@@ -1,0 +1,34 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]] ->> [[Пользовательские справочники|Пользовательские]]
+
+p>(#zc_Movement). _
+
+|\4=.Документ +Производство - часы Сотрудников+|
+|\4=.*zc_Movement_ProductionPersonal*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|null|||
+|zc_MovementLinkObject_Unit|[[zc_Object_Unit|Подразделение]]|_.+||
+|zc_MovementString_Comment|Примечание|||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_ProductionPersonal#zc_Movement|документа]] +Главный элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|27.12.22|
+|ParentId|null|||
+|ObjectId|[[zc_Object_Personal|Personal]]|_.+/-||
+|Amount|Количество часов|_.+/-||
+|zc_MILinkObject_Product|[[zc_Object_Product|Product]]|_.+||
+|zc_MILinkObject_Goods|[[zc_Object_Goods|Узел сборки]]|||_=.NEW|
+|zc_MIFloat_MovementId|[[zc_Movement_OrderClient|Заказ Клиента]]|_.+/-||
+|zc_MIDate_StartBegin|Дата/время начало|_.+||
+|zc_MIDate_EndBegin|Дата/время завершение|_.+||
+|zc_MIString_Comment|Примечание|||_=.NEW|
+
+-
+-

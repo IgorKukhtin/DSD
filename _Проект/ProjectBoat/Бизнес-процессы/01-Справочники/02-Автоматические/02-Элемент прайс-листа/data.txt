@@ -1,0 +1,25 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Автоматические_справочники|Автоматические]]
+
+|\4=.Справочник +Элемент прайс-листа+|
+|\4=.*zc_Object_PriceListItem*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|09.02.2021|17.03.2024|
+|ObjectCode|NULL|||
+|ValueData|NULL|||
+|zc_ObjectLink_PriceListItem_PriceList|[[zc_Object_PriceList|Прайс-лист]]|||
+|/3<.zc_ObjectLink_PriceListItem_Goods|[[zc_Object_Goods|Комплектующие]]|||
+|[[zc_Object_ReceiptProdModel|Шаблон сборка Модели]]|||_=.NEW|
+|[[zc_Object_ProdOptions|Опции]]||||_=.NEW|
+|zc_ObjectLink_Protocol_Insert|[[zc_Object_User|Пользователь (создание)]]|||
+|zc_ObjectLink_Protocol_Update|[[zc_Object_User|Пользователь (корректировка)]]|||
+|zc_ObjectDate_Protocol_Insert|Дата создания|||
+|zc_ObjectDate_Protocol_Update|Дата корректировки|||
+
+-
+-
+
+|\5=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|_.истории|
+|/1=.нет|/1=.нет|/1=.нет|/1=.нет|/1=.[[zc_ObjectHistory_PriceListItem|Элементы прайс-листов]]|
+
+-
+-

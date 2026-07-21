@@ -1,0 +1,27 @@
+[[wiki]] ->> [[Справочники]] ->> [[Служебные_справочники|Служебные]]
+
+-
+-
+|\4=.Справочник +Перевод Справочников+|
+|\4=.*zc_Object_TranslateObject*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|26.04.24|
+|ObjectCode|Код|_.+||
+|ValueData|Значение||Перевод элемента справочника|
+|zc_ObjectLink_TranslateObject_Language|[[zc_Object_Language|Язык перевода]]||на каком языке|
+|zc_ObjectString_TranslateObject_Comment|Перевод "примечания" справочника|||_=.NEW|
+|/6<.zc_ObjectLink_TranslateObject_Object|[[zc_Object_Goods|Комплектующие]]|/6<.|/6<.какой элемент перевели|
+|[[zc_Object_Measure|Единицы измерения]]|
+|[[zc_Object_MeasureCode|Сокращенный код ед. изм.]]|
+|[[zc_Object_ProdOptions|Опции]]|
+|[[zc_Object_ProdColor|Цвета]]|
+|[[zc_Object_TaxKind|Тип НДС]]|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/2=.вроде нет|/2=.нет|/2=.нет|/2=.нет|
+
+-
+-

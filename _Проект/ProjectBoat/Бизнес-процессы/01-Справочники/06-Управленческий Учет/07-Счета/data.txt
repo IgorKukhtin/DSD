@@ -1,0 +1,25 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Справочники_Управленческий_Учет|Управленческий Учет]]
+
+
+
+|\3=.Справочник +Счета+|
+|\3=.*zc_Object_Account*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|
+|ObjectCode|Код|_.-|
+|ValueData|Наименование|_.+/-|
+|zc_ObjectBoolean_Account_onComplete|Создан при проведении|_.+|
+|zc_ObjectLink_Account_AccountGroup|[[zc_Object_AccountGroup|Группы счетов]]||
+|zc_ObjectLink_Account_AccountDirection|[[zc_Object_AccountDirection|Аналитики счетов - направления]]||
+|zc_ObjectLink_Account_InfoMoneyDestination|[[zc_Object_InfoMoneyDestination|Управленческие назначения]]||
+|zc_ObjectLink_Account_InfoMoney|[[zc_Object_InfoMoney|Статьи назначения]]||
+|zc_ObjectLink_Account_AccountKind|[[zc_Object_AccountKind|Типы Счетов]]|_.+|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/5=.нет|/5=.нет|/5=.нет|/5=.да, надо заполнить|
+
+-
+-

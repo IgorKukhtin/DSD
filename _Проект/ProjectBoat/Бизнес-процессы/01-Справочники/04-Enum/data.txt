@@ -1,0 +1,39 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]]
+
+h3. [[Пользовательские_справочники|Пользовательские]]
+[[Автоматические_справочники|Автоматические]]
+[[Служебные_справочники|Служебные]]
+[[Enum_справочники|Enum]]
+[[Истории]]
+[[Справочники_Управленческий_Учет|Управленческий Учет]]
+
+-
+-
+
+h1. Enum справочники
+
+Эти справочники содержат Бизнес-логику. Соответственно для них не может быть процедуры gpInsertUpdate_... и gpGet_...
+На уровне метамодели они ничем не отличаются от обычных справочников.
+Элементы справочников создаются сразу после создания базы данных. Общее описание элементов таких справочников: "9.2. Принципы создания/использования...":https://corp.alan.dp.ua/redmine/projects/project-acs/wiki/%D0%9E%D0%B1%D1%89%D0%B8%D0%B5_%D0%BF%D1%80%D0%B8%D0%BD%D1%86%D0%B8%D0%BF%D1%8B#%D0%9E%D0%B1%D1%89%D0%B8%D0%B5_%D0%BF%D1%80%D0%B8%D0%BD%D1%86%D0%B8%D0%BF%D1%8B_9_2
+
+-
+-
+
+* + + [[zc_Object_ProdColorKind|Виды Boat Structure]] *zc_Object_ProdColorKind*
+
+* + - [[zc_Object_PaidKind|Виды форм оплаты]] *zc_Object_PaidKind*
+
+* + + [[zc_Object_StatusKind|Типы статусов]] *zc_Object_StatusKind*
+
+* + + [[zc_Object_TaxKind|Тип НДС]] *zc_Object_TaxKind*
+
+* + + [[zc_Object_InvoiceKind|Тип Счета]] *zc_Object_InvoiceKind*
+
+* - - [[zc_Object_AccountKind|Типы уп-счетов]] *zc_Object_AccountKind*
+
+* + + [[zc_Object_EmailKind|Тип внешнего Импорта/Экспорта]] *zc_Object_EmailKind*
+
+* + + [[zc_Object_EmailTools|Параметры подключения к внешнему Импорту/Экспорту]] *zc_Object_EmailTools*
+
+-
+-
