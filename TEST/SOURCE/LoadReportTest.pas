@@ -670,7 +670,7 @@ begin
    exit;
 
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');
-   }
+
   LoadReportFromFile('PrintMovement_Sale38017026', ReportPath + '\Товарный Учет\PrintMovement_Sale38017026.fr3');
   //exit;
 
@@ -683,15 +683,15 @@ begin
   LoadReportFromFile('PrintMovement_Sale2PriceWithVAT', ReportPath + '\Товарный Учет\PrintMovement_Sale2PriceWithVAT.fr3');
   //exit;
 
-  {
+
   LoadReportFromFile('PrintMovement_SalePackWeightTotal', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeightTotal.fr3');
   //exit;
 
   LoadReportFromFile('PrintMovement_SalePackWeight', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeight.fr3');
   LoadReportFromFile('PrintMovement_SalePackWeight_Fozzy', ReportPath + '\Товарный Учет\PrintMovement_SalePackWeight_Fozzy.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_Sale2_3683763', ReportPath + '\Товарный Учет\PrintMovement_Sale2_3683763.fr3');
- { exit;
+  exit;
 
   LoadReportFromFile('PrintMovement_SaleInvoice', ReportPath + '\Товарный Учет\PrintMovement_SaleInvoice.fr3');
   LoadReportFromFile('PrintMovement_SaleSpec', ReportPath + '\Товарный Учет\PrintMovement_SaleSpec.fr3');
@@ -791,7 +791,11 @@ begin
 
   LoadReportFromFile('PrintMovement_TTN_03012025_Fora', ReportPath + '\Товарный Учет\PrintMovement_TTN_03012025_Fora.fr3');
   LoadReportFromFile('PrintMovement_TTN_03012025_Metro', ReportPath + '\Товарный Учет\PrintMovement_TTN_03012025_Metro.fr3');
+  }
+  LoadReportFromFile('PrintMovement_TTN_36313601_03012025', ReportPath + '\Товарный Учет\PrintMovement_TTN_36313601_03012025.fr3');
   exit;
+  {
+
 
   LoadReportFromFile('PrintMovement_TTN_071021', ReportPath + '\Товарный Учет\PrintMovement_TTN_071021.fr3');
 
