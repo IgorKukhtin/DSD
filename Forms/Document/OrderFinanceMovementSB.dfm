@@ -1,7 +1,7 @@
 object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1057#1095#1077#1090#1072')*'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1057#1095#1077#1090#1072')**'
   ClientHeight = 612
   ClientWidth = 1164
   Color = clBtnFace
@@ -1921,9 +1921,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -5281,8 +5278,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 344
-    Top = 264
+    Left = 352
+    Top = 352
     object N1: TMenuItem
       Action = actRefresh
     end

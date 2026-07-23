@@ -225,7 +225,7 @@ BEGIN
                                                   , inMovementId            := inMovementId          ::Integer
                                                   , inJuridicalId           := CASE WHEN vbObjectId > 0 THEN vbObjectId ELSE vbInfoMoneyId END
                                                   , inContractId            := vbContractId          ::Integer
-                                                  , inPersonalId            := 0                     ::Integer
+                                                  --, inPersonalId            := 0                     ::Integer
                                                   , inCashId                := vbCashId              ::Integer
                                                   , inAmount                := 0
                                                   , inAmount_next           := 0
@@ -246,6 +246,7 @@ BEGIN
      vbId_child := lpInsertUpdate_MovementItem_OrderFinance_child (ioId                    := 0
                                                                  , inMovementId            := inMovementId
                                                                  , inParentId              := vbId
+                                                                 , inPersonalId            := 0    ::Integer
                                                                  , inAmount                := inAmount
                                                                  , inAmount_next           := inAmount
                                                                  , inOperDate_Amount_next  := inOperDate

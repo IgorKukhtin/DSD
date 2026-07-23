@@ -137,7 +137,7 @@ BEGIN
                                                   , inMovementId           := inMovementId
                                                   , inJuridicalId          := inJuridicalId
                                                   , inContractId           := inContractId
-                                                  , inPersonalId           := inPersonalId
+                                                  --, inPersonalId           := inPersonalId
                                                   , inCashId               := inCashId
                                                   , inAmount               := 0
                                                   , inAmount_next          := 0
@@ -159,6 +159,7 @@ BEGIN
      ioId_child := lpInsertUpdate_MovementItem_OrderFinance_child (ioId                    := ioId_child
                                                                  , inMovementId            := inMovementId
                                                                  , inParentId              := ioId
+                                                                 , inPersonalId            := inPersonalId
                                                                  , inAmount                := inAmount
                                                                  , inAmount_next           := ioAmountPlan_next
                                                                  , inOperDate_Amount_next  := ioOperDate_Amount
