@@ -51,6 +51,8 @@ BEGIN
 
    -- Проверка
    IF COALESCE (inValue, 0) = 0
+  AND inUserId <> 6604558   -- Голота К.О.
+  AND inUserId <> 11750040  -- Комісарова О.О.
   AND EXISTS (SELECT 1
               FROM ObjectLink AS OL_Goods_InfoMoney
                   INNER JOIN Object_InfoMoney_View AS View_InfoMoney
