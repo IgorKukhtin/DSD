@@ -381,6 +381,9 @@ begin
   actVchasnoEDIDesadv.ShowErrorMessages.Value:= FALSE;
   actVchasnoEDIDelnot.ShowErrorMessages.Value:= FALSE;
   actVchasnoEDIComDoc.ShowErrorMessages.Value:= FALSE;
+  //actVchasno_SendCondra.ShowErrorMessages.Value:= FALSE;
+  //actVchasnoEDISignCondra.ShowErrorMessages.Value:= FALSE;
+  actVchasno_SendQuality.ShowErrorMessages.Value:= FALSE;
   //
   cbEmailExcel.Checked:= ParamStr(3) <> 'Effie';//TRUE; // ParamStr(3) = 'Excel';
   cbLoad.Checked:=  ParamStr(3) <> 'Effie';//TRUE; // ParamStr(3) = '';

@@ -6493,11 +6493,11 @@ begin
     // Номер сертифікату (1-128 символів)
     if FMetadata_number_Quality_vchParam.Value <> '' then Stream.AddFormField('number', FMetadata_number_Quality_vchParam.Value);
     // Дата видачі сертифікату
-    Stream.AddFormField('date_of_issue', FMetadata_date_of_issueParam.Value);
+    Stream.AddFormField('date_of_issue', FormatDateTime('YYYY.MM.DD', (FMetadata_date_of_issueParam.Value)));
     // Дата початку дії сертифікату
-    Stream.AddFormField('active_from', FMetadata_active_fromParam.Value);
+    Stream.AddFormField('active_from', FormatDateTime('YYYY.MM.DD', (FMetadata_active_fromParam.Value)));
     // Дата закінчення дії сертифікату
-    Stream.AddFormField('active_to', FMetadata_active_toParam.Value);
+    Stream.AddFormField('active_to', FormatDateTime('YYYY.MM.DD', (FMetadata_active_toParam.Value)));
     // time_limited or batch_limited
     Stream.AddFormField('domain', FMetadata_domainParam.Value);
     // № партии
@@ -7659,11 +7659,11 @@ begin
   // Номер сертифікату (1-128 символів)
   FMetadata_number_Quality_vchParam.Value:= HeaderDataSet.FieldByName('number_Quality_vch').AsString;
   // Дата видачі сертифікату
-  FMetadata_date_of_issueParam.Value:= HeaderDataSet.FieldByName('date_of_issue').AsString;
+  FMetadata_date_of_issueParam.Value:= HeaderDataSet.FieldByName('date_of_issue').AsDateTime;
   // Дата початку дії сертифікату
-  FMetadata_active_fromParam.Value:= HeaderDataSet.FieldByName('active_from').AsString;
+  FMetadata_active_fromParam.Value:= HeaderDataSet.FieldByName('active_from').AsDateTime;
   // Дата закінчення дії сертифікату
-  FMetadata_active_toParam.Value:= HeaderDataSet.FieldByName('active_to').AsString;
+  FMetadata_active_toParam.Value:= HeaderDataSet.FieldByName('active_to').AsDateTime;
   // time_limited or batch_limited
   FMetadata_domainParam.Value:= HeaderDataSet.FieldByName('domain').AsString;
   // № партии

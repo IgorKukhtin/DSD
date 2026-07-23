@@ -11774,7 +11774,7 @@ object MainForm: TMainForm
       KeyUserName.ComponentItem = 'UserNameKey'
       KeyUserName.DataType = ftString
       KeyUserName.MultiSelectSeparator = ','
-      ShowErrorMessages.Value = True
+      ShowErrorMessages.Value = False
       ShowErrorMessages.DataType = ftBoolean
       ShowErrorMessages.MultiSelectSeparator = ','
       ErrorText.Value = ''
