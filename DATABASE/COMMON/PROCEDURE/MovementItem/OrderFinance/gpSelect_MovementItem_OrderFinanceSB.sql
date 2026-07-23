@@ -663,6 +663,7 @@ BEGIN
                             , COALESCE (MIString_InvNumber_Invoice.ValueData, '')          AS InvNumber_Invoice
                             , COALESCE (MIString_Comment.ValueData, '')                    AS Comment
                             , COALESCE (MIString_Comment_SB.ValueData, '')                 AS Comment_SB
+                            , MILinkObject_Personal.ObjectId                               AS PersonalId
 
                               --
                             , COALESCE (MIBoolean_Sign.ValueData, FALSE) AS isSign
@@ -756,6 +757,11 @@ BEGIN
                                                              ON MILO_Update.MovementItemId = MovementItem.Id
                                                             AND MILO_Update.DescId = zc_MILinkObject_Update()
                             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+
+                            -- 23.07.2026 - это свойство Child
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Personal
+                                                             ON MILinkObject_Personal.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Personal.DescId         = zc_MILinkObject_Personal()
                       )
       -- Detail - Согласовано к оплате
     , tmpMI_Detail AS (SELECT MovementItem.ParentId AS MovementItemId_parent
@@ -812,7 +818,7 @@ BEGIN
                          , COALESCE (tmpMI_Child.MovementItemId, 0) AS MovementItemId_child
                          , tmpMI.ObjectId                           AS ObjectId
                          , tmpMI.ContractId                         AS ContractId
-                         , COALESCE (MILinkObject_Personal_child.ObjectId, MILinkObject_Personal.ObjectId) AS PersonalId
+                         , COALESCE (tmpMI_Child.PersonalId, MILinkObject_Personal.ObjectId) AS PersonalId
                          , tmpMI.isErased                           AS isErased
 
                          , tmpMI_Child.GoodsName                    AS GoodsName_Child
@@ -924,15 +930,10 @@ BEGIN
                                                              ON MILO_Update.MovementItemId = tmpMI.Id
                                                             AND MILO_Update.DescId = zc_MILinkObject_Update()
                          LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
- 
+
                          LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Personal
                                                              ON MILinkObject_Personal.MovementItemId = tmpMI.Id
                                                             AND MILinkObject_Personal.DescId = zc_MILinkObject_Personal()
-                         --23.07.2026 - это свойство Child
-                         LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Personal_child
-                                                             ON MILinkObject_Personal_child.MovementItemId = tmpMI_Child.MovementItemId
-                                                            AND MILinkObject_Personal_child.DescId = zc_MILinkObject_Personal()
-
                   )
 
        -- Результат
