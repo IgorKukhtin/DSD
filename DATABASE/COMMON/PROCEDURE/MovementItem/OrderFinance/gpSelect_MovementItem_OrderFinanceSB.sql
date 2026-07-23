@@ -812,7 +812,7 @@ BEGIN
                          , COALESCE (tmpMI_Child.MovementItemId, 0) AS MovementItemId_child
                          , tmpMI.ObjectId                           AS ObjectId
                          , tmpMI.ContractId                         AS ContractId
-                         , MILinkObject_Personal.ObjectId           AS PersonalId
+                         , COALESCE (MILinkObject_Personal_child.ObjectId, MILinkObject_Personal.ObjectId) AS PersonalId
                          , tmpMI.isErased                           AS isErased
 
                          , tmpMI_Child.GoodsName                    AS GoodsName_Child
@@ -928,6 +928,11 @@ BEGIN
                          LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Personal
                                                              ON MILinkObject_Personal.MovementItemId = tmpMI.Id
                                                             AND MILinkObject_Personal.DescId = zc_MILinkObject_Personal()
+                         --23.07.2026 - это свойство Child
+                         LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Personal_child
+                                                             ON MILinkObject_Personal_child.MovementItemId = tmpMI_Child.MovementItemId
+                                                            AND MILinkObject_Personal_child.DescId = zc_MILinkObject_Personal()
+
                   )
 
        -- Результат

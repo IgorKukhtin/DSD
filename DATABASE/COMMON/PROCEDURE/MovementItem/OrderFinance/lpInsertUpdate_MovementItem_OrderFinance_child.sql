@@ -1,11 +1,13 @@
 -- Function: lpInsertUpdate_MovementItem_OrderFinance_child()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance_child (Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance_child (Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderFinance_child(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inParentId              Integer   , --
+    IN inPersonalId            Integer   , --
     IN inAmount                TFloat    , --
     IN inAmount_next           TFloat    , --
     IN inOperDate_Amount_next  TDateTime , --
@@ -118,6 +120,8 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Personal(), ioId, inPersonalId);
 
      IF vbIsInsert = TRUE
      THEN
