@@ -408,6 +408,34 @@ BEGIN
                        )
 
        --
+     -- документ Взвешивания
+     , tmpWeighingPartner AS (WITH
+                              tmp AS (SELECT Movement.*
+                                      FROM Movement
+                                      WHERE Movement.ParentId IN (SELECT DISTINCT _tmpMovement.MovementId_Sale FROM _tmpMovement)
+                                        AND Movement.DescId   = zc_Movement_WeighingPartner()
+                                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                      )
+                            , tmpMI AS (SELECT MovementItem.*
+                                        FROM MovementItem
+                                        WHERE MovementItem.MovementId IN (SELECT DISTINCT tmp.Id FROM tmp)
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.isErased   = FALSE
+                                        )
+                            , tmpMI_Float AS (SELECT MovementItemFloat.*
+                                              FROM MovementItemFloat
+                                              WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                AND MovementItemFloat.DescId = zc_MIFloat_CountTare() 
+                                              )
+                              SELECT SUM (COALESCE (MIFloat_CountTare.ValueData, 0))   AS CountTare
+                              FROM tmp AS Movement
+                                  INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+                                  
+                                  LEFT JOIN tmpMI_Float AS MIFloat_CountTare
+                                                        ON MIFloat_CountTare.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CountTare.DescId = zc_MIFloat_CountTare()
+                             )
+
         --          
        SELECT 
              ''::TVarChar /* Movement.InvNumber*/                         AS InvNumber_Sale  
@@ -552,6 +580,11 @@ BEGIN
           , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
                   ELSE '' -- 'м.Днiпро'
                   END  :: TVarChar   AS PlaceOf
+
+          , CASE WHEN COALESCE (ObjectString_PlaceCar.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceCar.ValueData, '')
+                  ELSE '' -- 'м.Днiпро'
+                  END  :: TVarChar   AS PlaceCar
+
           , (select tmpCar_param.Length  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: Integer  AS Length
           , (select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId)  :: Integer  AS Width 
           , (select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId)  :: Integer  AS Height
@@ -602,6 +635,9 @@ BEGIN
 
            --надпись в шапке док. Продажи
           , vbDocHeadeName_sale  ::TVarChar AS DocHeadeName_sale         
+
+          --кол. тары
+          , tmpWeighingPartner.CountTare ::TFloat AS TotalCountTare
        FROM Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
 
@@ -669,6 +705,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_PlaceOf                           
                                    ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                                   AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()
+            LEFT JOIN ObjectString AS ObjectString_PlaceCar                           
+                                   ON ObjectString_PlaceCar.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                                  AND ObjectString_PlaceCar.DescId = zc_objectString_Branch_PlaceCar()
 
             LEFT JOIN ObjectString AS ObjectString_ShortName
                                    ON ObjectString_ShortName.ObjectId = 11216101 -- MovementLinkObject_To.ObjectId
@@ -727,6 +766,9 @@ BEGIN
                                    ON ObjectString_Member1_INN.ObjectId = OL_Member1_Member.ChildObjectId
                                   AND ObjectString_Member1_INN.DescId = zc_ObjectString_Member_INN()
                                   
+            --кол. тары из взвешивания
+            LEFT JOIN tmpWeighingPartner ON 1 = 1
+
        WHERE Movement.Id = vbMovementId_Sale
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
@@ -844,6 +886,50 @@ BEGIN
                         , MIFloat_Price.ValueData
                         , MIFloat_CountForPrice.ValueData
                 )
+
+            -- документ Взвешивания
+            , tmpMI_WeighingPartner AS (WITH
+                                        tmp AS (SELECT Movement.*
+                                                FROM Movement
+                                                WHERE Movement.ParentId IN (SELECT DISTINCT _tmpMovement.MovementId_Sale FROM _tmpMovement)
+                                                  AND Movement.DescId   = zc_Movement_WeighingPartner()
+                                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                )
+                                      , tmpMI AS (SELECT MovementItem.*
+                                                  FROM MovementItem
+                                                  WHERE MovementItem.MovementId IN (SELECT DISTINCT tmp.Id FROM tmp)
+                                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                                   AND MovementItem.isErased   = FALSE
+                                                  )
+                                      , tmpMI_Float AS (SELECT MovementItemFloat.*
+                                                        FROM MovementItemFloat
+                                                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                          AND MovementItemFloat.DescId = zc_MIFloat_CountTare() 
+                                                        )
+                                      , tmpMI_LO AS (SELECT MovementItemLinkObject.*
+                                                     FROM MovementItemLinkObject
+                                                     WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                       AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind() 
+                                                     )
+                                        SELECT MovementItem.ObjectId                             AS GoodsId
+                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)     AS GoodsKindId
+                                             , SUM (COALESCE (MIFloat_CountTare.ValueData, 0))   AS CountTare
+                                        FROM tmp AS Movement
+                                            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+                                            LEFT JOIN tmpMI_LO AS MILinkObject_GoodsKind
+                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                            LEFT JOIN tmpMI_Float AS MIFloat_CountTare
+                                                                  ON MIFloat_CountTare.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_CountTare.DescId = zc_MIFloat_CountTare()
+
+                                        WHERE Movement.ParentId IN (SELECT DISTINCT _tmpMovement.MovementId_Sale FROM _tmpMovement)
+                                          AND Movement.DescId   = zc_Movement_WeighingPartner()
+                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                        GROUP BY MovementItem.ObjectId
+                                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                       )
+
       -- Результат
       SELECT Object_Goods.ObjectCode         AS GoodsCode
            , (CASE WHEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) <> '' THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) ELSE Object_Goods.ValueData END
@@ -935,6 +1021,9 @@ BEGIN
            , Object_GoodsGroupProperty.ValueData :: TVarChar AS GoodsGroupPropertyName  
             --надпись в шапке док. Продажи
            , vbDocHeadeName_sale  ::TVarChar AS DocHeadeName_sale
+
+           --кол-во тары
+           , tmpMI_WeighingPartner.CountTare ::TFloat
        FROM tmpMI
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -986,6 +1075,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_QualityINN
                                  ON ObjectString_QualityINN.ObjectId = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
                                 And ObjectString_QualityINN.DescId = zc_ObjectString_GoodsGroupProperty_QualityINN()
+
+          --
+          LEFT JOIN tmpMI_WeighingPartner ON tmpMI_WeighingPartner.GoodsId     = tmpMI.GoodsId
+                                         AND tmpMI_WeighingPartner.GoodsKindId = tmpMI.GoodsKindId
           --
        WHERE tmpMI.AmountPartner <> 0
          AND tmpMI.Price <> 0

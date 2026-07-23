@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Branch(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , InvNumber TVarChar, PlaceOf TVarChar
+             , InvNumber TVarChar, PlaceOf TVarChar, PlaceCar TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , PersonalStoreId Integer, PersonalStoreName TVarChar
              , PersonalBookkeeperId Integer, PersonalBookkeeperName TVarChar
@@ -42,6 +42,7 @@ BEGIN
         
         , ObjectString_InvNumber.ValueData  AS InvNumber
         , ObjectString_PlaceOf.ValueData    AS PlaceOf
+        , ObjectString_PlaceCar.ValueData ::TVarChar AS PlaceCar
 
         , Object_Personal_View.PersonalId    AS PersonalId
         , Object_Personal_View.PersonalName  AS PersonalName 
@@ -91,6 +92,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
                                ON ObjectString_PersonalBookkeeper.ObjectId = Object_Branch.Id
                               AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()   
+
+        LEFT JOIN ObjectString AS ObjectString_PlaceCar
+                               ON ObjectString_PlaceCar.ObjectId = Object_Branch.Id
+                              AND ObjectString_PlaceCar.DescId = zc_objectString_Branch_PlaceCar()
                               
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Medoc
                                 ON ObjectBoolean_Medoc.ObjectId = Object_Branch.Id
@@ -163,6 +168,7 @@ BEGIN
         
         , ObjectString_InvNumber.ValueData  AS InvNumber
         , ObjectString_PlaceOf.ValueData    AS PlaceOf
+        , ObjectString_PlaceCar.ValueData ::TVarChar AS PlaceCar
 
         , Object_Personal_View.PersonalId    AS PersonalId
         , Object_Personal_View.PersonalName  AS PersonalName 
@@ -213,6 +219,9 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_PersonalBookkeeper
                                ON ObjectString_PersonalBookkeeper.ObjectId = Object_Branch.Id
                               AND ObjectString_PersonalBookkeeper.DescId = zc_objectString_Branch_PersonalBookkeeper()   
+        LEFT JOIN ObjectString AS ObjectString_PlaceCar
+                               ON ObjectString_PlaceCar.ObjectId = Object_Branch.Id
+                              AND ObjectString_PlaceCar.DescId = zc_objectString_Branch_PlaceCar()
                               
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Medoc
                                 ON ObjectBoolean_Medoc.ObjectId = Object_Branch.Id
@@ -284,6 +293,7 @@ ALTER FUNCTION gpSelect_Object_Branch(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.07.26         *
  12.03.21         * PersonalBookkeeper
  21.12.15         * add Unit, UnitReturn
  20.12.15         * add Personal, PersonalStore, PlaceOf

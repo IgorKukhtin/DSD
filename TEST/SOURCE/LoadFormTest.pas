@@ -49,7 +49,6 @@ type
     procedure LoadClientKindFormTest;
     procedure LoadCommercLocalFormTest;
     procedure LoadCommercRetailFormTest;
-
     procedure LoadConditionPromoFormTest;
     procedure LoadContractKindFormTest;
     procedure LoadContractFormTest;

@@ -1,0 +1,30 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\5=.Справочник +Товары+|
+|\5=.*zc_Object_Goods*|
+|=.Ключ|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|06.06.17|
+|_.*|ObjectCode|Код|_.+||
+||ValueData|Название|||
+||zc_ObjectLink_Goods_GoodsGroup|[[zc_Object_GoodsGroup|Группы товаров]]|||
+||zc_ObjectLink_Goods_Measure|[[zc_Object_Measure|Единицы измерения]]|||
+||zc_ObjectLink_Goods_Composition|[[zc_Object_Composition|Состав товара]]|||
+||zc_ObjectLink_Goods_GoodsInfo|[[zc_Object_GoodsInfo|Описание товара]]|||
+||zc_ObjectLink_Goods_LineFabrica|[[zc_Object_LineFabrica|Линия коллекции]]|||
+||zc_ObjectLink_Goods_Label|[[zc_Object_Label|Название для ценника]]|||
+||zc_ObjectString_Goods_GroupNameFull|Полное название группы|_.+||
+||zc_ObjectLink_Goods_InfoMoney|[[zc_Object_InfoMoney|Статьи назначения]]|_.+|берется из ближайшей группы|_=.NEW|
+
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_GoodsItem|Товары с размерами]]|/4=.нет|/4=.да, надо заполнить|/4=.да, надо заполнить|
+|[[zc_Object_PartionGoods|Партии товаров]]|
+
+-
+-

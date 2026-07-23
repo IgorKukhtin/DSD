@@ -1,0 +1,22 @@
+[[wiki]] ->> [[Справочники]] ->> [[Служебные_справочники|Служебные]]
+
+-
+-
+|\4=.Справочник +TranslateWord+|
+|\4=.*zc_Object_TranslateWord*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|Код|_.+||
+|ValueData|Название|||
+|zc_ObjectLink_TranslateWord_Language|[[zc_Object_Language|Language]]|на каком языке||
+|zc_ObjectLink_TranslateWord_Parent|[[zc_Object_TranslateWord|TranslateWord]]|условно "главный" язык, через него получим перевод на разных языках||
+|zc_ObjectLink_TranslateWord_Form|[[zc_Object_Form|Form]]|информативно форма - в которой встречется "русское значение", потом его переводим||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/2=.вроде нет|/2=.нет|/2=.нет|/2=.нет|
+
+-
+-

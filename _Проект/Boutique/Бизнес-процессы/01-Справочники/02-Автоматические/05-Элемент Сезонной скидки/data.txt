@@ -1,0 +1,23 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Автоматические_справочники|Автоматические]]
+
+|\4=.Справочник +Элемент Сезонной скидки+|
+|\4=.*zc_Object_DiscountPeriodItem*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|NULL|||
+|ValueData|NULL|||
+|zc_ObjectLink_DiscountPeriodItem_Unit|[[zc_Object_Unit|Подразделение]]|||
+|zc_ObjectLink_DiscountPeriodItem_Goods|[[zc_Object_Goods|Товар]]|||
+|zc_ObjectLink_Protocol_Insert|[[zc_Object_User|Пользователь (создание)]]|||
+|zc_ObjectLink_Protocol_Update|[[zc_Object_User|Пользователь (корректировка)]]|||
+|zc_ObjectDate_Protocol_Insert|Дата создания|||
+|zc_ObjectDate_Protocol_Update|Дата корректировки|||
+
+-
+-
+
+|\5=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|_.истории|
+|/1=.нет|/1=.нет|/1=.нет|/1=.нет|/1=.[[zc_ObjectHistory_DiscountPeriodItem|Сезонные скидки]]|
+
+-
+-

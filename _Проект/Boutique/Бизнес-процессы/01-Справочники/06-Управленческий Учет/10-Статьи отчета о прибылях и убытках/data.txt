@@ -1,0 +1,24 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Справочники_Управленческий_Учет|Управленческий Учет]]
+
+
+
+|\3=.Справочник +Статьи отчета о прибылях и убытках+|
+|\3=.*zc_Object_ProfitLoss*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|
+|ObjectCode|Код|_.-|
+|ValueData|Наименование|_.+/-|
+|zc_ObjectBoolean_ProfitLoss_onComplete|Создан при проведении|_.+|
+|zc_ObjectLink_ProfitLoss_ProfitLossGroup|[[zc_Object_ProfitLossGroup|Группы статей отчета о прибылях и убытках]]||
+|zc_ObjectLink_ProfitLoss_ProfitLossDirection|[[zc_Object_ProfitLossDirection|Аналитики статей отчета о прибылях и убытках - направления]]||
+|zc_ObjectLink_ProfitLoss_InfoMoneyDestination|[[zc_Object_InfoMoneyDestination|Управленческие назначения]]||
+|zc_ObjectLink_ProfitLoss_InfoMoney|[[zc_Object_InfoMoney|Статьи назначения]]||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/5=.нет|/5=.нет|/5=.нет|/5=.да, надо заполнить|
+
+-
+-

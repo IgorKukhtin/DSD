@@ -1,0 +1,42 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]]
+
+
+
+p>(#zc_Movement). _
+
+|\4=.Документ +Касса, приход/расход+|
+|\4=.*zc_Movement_Cash*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|NULL|||
+|zc_MovementFloat_CurrencyValue|Курс для перевода в валюту баланса|_.+|/2<.курс для формирования курс.разницы, изменения долга "контрагента" здесь используется "информативно"|
+|zc_MovementFloat_ParValue|Номинал для перевода в валюту баланса|_.+|
+|zc_MovementFloat_CurrencyPartnerValue|Курс для расчета суммы операции (обмена)|||
+|zc_MovementFloat_ParPartnerValue|Номинал для расчета суммы операции (обмена)|||
+|zc_MovementDate_Insert|Дата/время создания документа|_.+||
+|zc_MovementLinkObject_Insert|[[zc_Object_User|Пользователь создал]]|_.+||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_Cash#zc_Movement|документа]] +Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Cash|Касса]]|||
+|Amount|Сумма|||
+|zc_MIString_Comment|Примечание|||
+|/3<.zc_MILinkObject_MoneyPlace|[[zc_Object_Cash|Касса]]|||
+|[[zc_Object_BankAccount|расчетный счет]]|||
+|[[zc_Object_Member|Физ лицо]]|||
+|zc_MILinkObject_InfoMoney|[[zc_Object_InfoMoney|Статьи назначения]]|||
+|zc_MILinkObject_Unit|[[zc_Object_Unit|Подразделение]]|_.+/-|надо для ОПиУ что бы показать аналитику затрат - при создании брать из zc_ObjectLink_User_Unit|
+
+
+
+-
+-

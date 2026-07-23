@@ -1,0 +1,51 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]]
+
+
+p>(#zc_Movement_ReturnOut). _
+
+|\4=.Документ +Возврат поставщику+|
+|\4=.*zc_Movement_ReturnOut*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|26.04.17|08.05.2017|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|NULL|||
+|zc_MovementFloat_TotalCount|Итого количество|_.+|BillSummOperCount|
+|zc_MovementFloat_TotalSumm|Итого сумма по документу (в валюте документа)|_.+||
+|zc_MovementFloat_TotalSummBalance|Итого сумма по документу (в *ГРН*)|_.*ПП|||_=.NEW|
+|zc_MovementFloat_TotalSummPriceList|Итого сумма по PriceList|_.+||
+|zc_MovementFloat_CurrencyValue|Курс для перевода из валюты документа в *ГРН*|_.*ПП|/2<.понадобился, делаем проводки в валюте баланса|
+|zc_MovementFloat_ParValue|Номинал для перевода из валюты документа в *ГРН*|_.*ПП|
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementLinkObject_CurrencyDocument|[[zc_Object_Currency|Валюта (документа)]]|_.+|*по ней - ограничиваем партии для возврата*, в Sybase - ValutaIDIn|_=.NEW|
+|/1<.zc_MovementLinkObject_From|[[zc_Object_Unit|Подразделения]]|||
+|/1<.zc_MovementLinkObject_To|[[zc_Object_Partner|Контрагенты]]|||
+|-zc_MovementLinkObject_CurrencyPartner-|-[[zc_Object_Currency|Валюта (контрагента)]]-||глобально не нужен т.к. долг будет в валюте документа, в Sybase - ValutaID|_=.NEW|
+|-zc_MovementFloat_CurrencyPartnerValue-|-Курс для перевода из вал. док. в валюту контрагента-||/2<.глобально не нужен т.к. долг будет в валюте документа|
+|-zc_MovementFloat_ParPartnerValue-|-Номинал для перевода из вал. док. в валюту контрагента-||
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_ReturnOut#zc_Movement_ReturnOut|документа]] +Элемент документа+|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Товары]]|||
+|PartionId|[[zc_Object_PartionGoods|Партии товаров]]|||
+|Amount|Количество|||
+|zc_MIFloat_OperPrice|Цена|_.*ПП|/2<.берем из партии в табл. Object_PartionGoods|
+|zc_MIFloat_CountForPrice|Цена за количество|_.*ПП|
+|zc_MIFloat_OperPriceList|Цена Прайс|_.+||
+
+-
+-
+
+|\3=.Ссылки на документ|
+|_.справочники|_.документы|_.строчная часть документов|
+|/1=.нет|/1=.нет|/1=.нет|
+
+-
+-

@@ -1,0 +1,43 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+-
+-
+
+|\4=.Справочник +Подразделения+|
+|\4=.*zc_Object_Unit*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|07.05.2017|08.05.2017|06.06.2017|23.02.2018|28.02.2018|05.03.2018|22.03.2018|22.01.2020|17.04.2020|
+|ObjectCode|Код|_.+||
+|ValueData|Название|||
+|zc_ObjectBoolean_Unit_PartnerBarCode|Ш/К поставщика||В каких магазинах обязательно сканирование Ш/К поставщика||||||_=.NEW|
+|zc_ObjectString_Unit_Print|Название при печати||Название Магазина в печати чека - выводится в самом верхнем углу|||||_=.NEW|
+|zc_ObjectString_Unit_Address|Адрес|||_=.NEW|
+|zc_ObjectString_Unit_Phone|Телефон|||_=.NEW|
+|zc_ObjectString_Unit_Printer|Принтер (печать чеков)||||||_=.NEW|
+|zc_ObjectFloat_Unit_DiscountTax|% скидки OUTLET||только для "стоковых" магазинов, т.е. здесь максимальная скидка - больше сезонной и больше клиентской|_=.NEW|
+|zc_ObjectLink_Unit_Juridical|[[zc_Object_Juridical|Юридические лица]]|||
+|zc_ObjectLink_Unit_Parent|[[zc_Object_Unit|Подразделение (Группа)]]||это группа, пока будет 1 уровень - поэтому деревом *НЕ ДЕЛАЕМ*|_=.NEW|
+|zc_ObjectLink_Unit_Child|[[zc_Object_Unit|Подразделение (Склад)]]||для некоторых магазинов нужна связь с их складом, т.е. здесь линейная зависимость|_=.NEW|
+|zc_ObjectLink_Unit_BankAccount|[[zc_Object_BankAccount|Расчетный счет]]||используется при расчетах в магазине||_=.NEW|
+|zc_ObjectLink_Unit_AccountDirection|[[zc_Object_AccountDirection|Аналитики управленческих счетов - направление]]|||||_=.NEW|
+|zc_ObjectLink_Unit_GoodsGroup|[[zc_Object_GoodsGroup|Группа товаров]]||где используется zc_ObjectFloat_Client_DiscountTaxTwo|||||||_=.NEW|
+|-zc_ObjectLink_Unit_Currency-|-[[zc_Object_Currency|Валюта (для цены продажи)]]-||-по умолчанию тянется в приходе для цен продажи-||||||||_=.NEW|
+|zc_ObjectLink_Unit_PriceList|[[zc_Object_PriceList|Прайс листы]]||для формирования продажи||||||||_=.NEW|
+|zc_ObjectLink_Unit_GoodsTag|[[zc_Object_GoodsTag|Категория товара]]||/4<.эта категория автоматом будет проставляться при проведении прихода, начиная с такого >= сезона|||||||||_=.NEW|
+|zc_ObjectLink_Unit_PeriodTag|[[zc_Object_Period|Сезон (для категории тов.)]]||||||||||_=.NEW|
+|zc_ObjectFloat_Unit_PeriodYearTag|Год(для категории тов.)||||||||||_=.NEW|
+
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_Personal|Сотрудники]]|/8=.да, надо заполнить|/8=.нет|/8=.да, надо заполнить|
+|[[zc_Object_Cash|Касса]]|
+|[[zc_Object_BankAccount|Расчетные счета]]|
+|[[zc_Object_PartionGoods|Партии товаров]]|
+|[[zc_Object_GoodsPrint|Товары для печати ценников]]|
+|[[zc_Object_DiscountPeriod|Периоды сезонных скидок]]|
+
+-
+-

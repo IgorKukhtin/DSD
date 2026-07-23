@@ -152,9 +152,13 @@ BEGIN
                     UNION
                      SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit() AND inFromId = 0 AND vbIsBranch = FALSE -- AND vbIsGroup = TRUE
                     UNION
-                     SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Member() AND vbIsBranch = FALSE AND (inIsMO_all = TRUE OR Id = inFromId) AND inFromId = 0 AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_SendAsset())
+                     SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Member() AND vbIsBranch = FALSE AND Id = inFromId AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_SendAsset())
                     UNION
-                     SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND vbIsBranch = FALSE AND (inIsMO_all = TRUE OR Id = inFromId) AND inFromId = 0 AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_SendAsset())
+                     SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND vbIsBranch = FALSE AND Id = inFromId AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_SendAsset()) 
+                    UNION
+                     SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Member() AND inIsMO_all = TRUE AND inDescId IN (zc_Movement_Loss())
+                    UNION
+                     SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND inIsMO_all = TRUE AND inDescId IN (zc_Movement_Loss()) 
                     )
          , tmpTo AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect WHERE inToId > 0
                     UNION

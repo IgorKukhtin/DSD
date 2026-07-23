@@ -1,0 +1,23 @@
+[[Разработка]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники]]
+
+-
+-
+
+|\4=.Справочник +Установки для СМС+|
+|\4=.*zc_Object_SmsSettings*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|Код|_.+||
+|ValueData|Значение для сервиса||https://smsc.ua/sys/send.php|
+|zc_ObjectString_SmsSettings_Login|Login|||
+|zc_ObjectString_SmsSettings_Password|Password|||
+|zc_ObjectString_SmsSettings_Message|Message|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/4=.нет|/4=.нет|/4=.нет|/4=.нет|
+
+-
+-

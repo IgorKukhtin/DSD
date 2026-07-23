@@ -1,0 +1,22 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]]
+
+
+|\4=.Справочник +Расчетные счета+|
+|\4=.*zc_Object_BankAccount*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|Код|_.+||
+|ValueData|Номер счета|||
+|zc_ObjectLink_BankAccount_Juridical|[[zc_Object_Juridical|Юридическое лицо]]|||
+|zc_ObjectLink_BankAccount_Bank|[[zc_Object_Bank|Банк]]|||
+|zc_ObjectLink_BankAccount_Currency|[[zc_Object_Currency|Валюта]]|||
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_Unit|Подразделение]]|[[zc_Movement_BankAccount|Расчетный счет, приход/расход]]|/2=.нет|/2=.нет|
+||[[zc_Movement_Cash|Касса, приход/расход]]|
+
+-
+-

@@ -1,0 +1,47 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Документы]]
+
+p>(#zc_Movement). _
+
+|\4=.Документ +Инвентаризация+|
+|\4=.*zc_Movement_Inventory*|
+|=.Поле *Movement* или функция *DescId*|_.Свойство|=.расчет|=.Описание|07.05.17|08.05.17|
+|InvNumber|Номер документа|_.+||
+|OperDate|Дата документа|||
+|StatusId|[[zc_Object_StatusKind|Виды статусов]]|||
+|ParentId|NULL|||
+|zc_MovementFloat_TotalCount|Итого количество - факт. остаток|_.+|/4<.Магазин + Склад|
+|zc_MovementFloat_TotalCountRemains|Итого количество - Расчетный остаток|_.+|
+|zc_MovementFloat_TotalSummPriceList|Итого сумма по PriceList - факт. остаток|_.+|
+|zc_MovementFloat_TotalSummRemainsPriceList|Итого сумма по PriceList - Расчетный остаток|_.+|
+|zc_MovementFloat_TotalSummBalance|Итого сумма по документу - факт. остаток  (в валюте баланса)|_.*ПП|||_=.NEW|
+|zc_MovementFloat_TotalSummRemainsBalance|Итого сумма по документу - Расчетный остаток (в валюте баланса)|_.*ПП|||_=.NEW|
+|zc_MovementString_Comment|Примечание|||
+|zc_MovementLinkObject_From|[[zc_Object_Unit|Подразделения]]||здесь Магазин|
+|zc_MovementLinkObject_To|[[zc_Object_Unit|Подразделения]]||здесь Склад|_=.NEW|
+
+-
+-
+
+p>(#zc_MI_Master). _
+
+|\4=.Строчная часть [[zc_Movement_Inventory#zc_Movement|документа]] +Элемент документа+|07.05.17|08.05.17|10.05.17|
+|\4=.*zc_MI_Master*|
+|=.Поле *MovementItem* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ParentId|NULL|||
+|ObjectId|[[zc_Object_Goods|Товары]]|||
+|PartionId|[[zc_Object_PartionGoods|Партии товаров]]|||
+|Amount|Количество маг. - факт. остаток|||
+|zc_MIFloat_AmountSecond|Количество склад - факт. остаток|||_=.NEW|
+|zc_MIFloat_AmountRemains|Количество маг. - Расчетный остаток|_.+|на конец дня|
+|zc_MIFloat_AmountSecondRemains|Количество склад - Расчетный остаток|_.+|на конец дня|_=.NEW|
+|zc_MIFloat_AmountClient|Количество у покупателя - Расчетный остаток|_.+|информативно - на конец дня|||_=.NEW|
+|zc_MIFloat_OperPrice|Цена|_.*ПП|/2<.берем из партии в табл. Object_PartionGoods|
+|zc_MIFloat_CountForPrice|Цена за количество|_.*ПП|
+|zc_MIFloat_OperPriceList|Цена Прайс|_.+|берем из прайса на дату документа|
+|zc_MIFloat_CurrencyValue|Курс для перевода из валюты партии в валюту баланса|_.*ПП|||_=.NEW|
+|zc_MIFloat_ParValue|Номинал для перевода из валюты партии в валюту баланса|_.*ПП|||_=.NEW|
+|zc_MIString_Comment|Примечание|||_=.NEW|
+
+-
+-
+

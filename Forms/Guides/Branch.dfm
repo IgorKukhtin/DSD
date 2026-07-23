@@ -74,6 +74,14 @@ object BranchForm: TBranchForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object PlaceCar: TcxGridDBColumn
+        Caption = #1052#1110#1089#1094#1077' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1072#1074#1090#1086#1084#1086#1073#1110#1083#1103
+        DataBinding.FieldName = 'PlaceCar'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1052#1110#1089#1094#1077' '#1076#1077' '#1079#1073#1077#1088#1110#1075#1072#1108#1090#1100#1089#1103' '#1072#1074#1090#1086#1084#1086#1073#1110#1083#1100
+        Width = 120
+      end
       object PersonalName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1041#1091#1093#1075#1072#1083#1090#1077#1088' '#1088#1072#1089#1093'. '#1085#1072#1082#1083'.'
         DataBinding.FieldName = 'PersonalName'
@@ -840,11 +848,13 @@ object BranchForm: TBranchForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 224
     Top = 272
@@ -900,6 +910,15 @@ object BranchForm: TBranchForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'PlaceOf'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPlaceCar'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PlaceCar'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

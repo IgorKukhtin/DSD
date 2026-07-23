@@ -1144,7 +1144,7 @@ AS
                                           , '45606092' -- Гелері Фудз
                                           , '32294897' -- Фора
                                           , '32049199' -- Metro
-
+                                          , '36313601' -- "ТОВ Пирятинський делікатес"
                                            )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
@@ -1233,7 +1233,22 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('32049199' 
                                        )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-
+     UNION
+      -- Печать ТТН для ОКПО 36313601 c 03.01.2025
+      SELECT
+             zc_Movement_TransportGoods()
+           , CAST ('TransportGoods' AS TVarChar)
+           , CAST ('03.01.2025' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TTN_36313601_03012025' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('36313601' --   "ТОВ Пирятинський делікатес"
+                                       )
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
 
 --   ORDER BY 1,2,4
