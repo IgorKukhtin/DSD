@@ -195,6 +195,7 @@ END IF;*/
   --AND inMovementId <> 24732446 --
     AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
     AND inUserId <> 8159525 -- Парфеєвець Н.В.
+  --AND 1=0
      THEN
          -- если есть хоть 1 товар у которого кол > на vbPersent_check% чем в заявка выдаем сообщение
          SELECT tmp.GoodsId
@@ -1208,7 +1209,7 @@ end if;
                                 , CLO_PartionGoods.ObjectId AS PartionGoodsId
                                   -- !!!на всякий случай!!!
                                 , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementItemId ORDER BY Container.Id ASC) AS Ord
-                           FROM tmpMI
+                           FROM tmpMI_all AS tmpMI
                                 INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
                                                     AND Container.DescId   = zc_Container_Count()
                                                     -- есть остаток
