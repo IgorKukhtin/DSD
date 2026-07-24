@@ -2,12 +2,13 @@
 
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SaleCommerc_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>   
     IN inParentId            Integer   , -- Ключ
-    IN inMovementId          Integer   , -- Ключ объекта <Документ Возврат покупателя>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ >
     IN inGoodsId             Integer   , -- Товар
     IN inGoodsKindId         Integer   , -- Вид Товар
     IN inAmount              TFloat    , --
@@ -16,8 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SaleCommerc_Child(
     IN inSummPromo           TFloat    , --
     IN inAmountNoPromo       TFloat    , --
     IN inSummNoPromo         TFloat    , --
-    IN inBonus               TFloat    , --
-    IN inPrice               TFloat    , --
+   --OUT outBonus              TFloat    , --
+   OUT outPrice              TFloat    , --
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD AS
@@ -32,7 +33,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
@@ -44,10 +45,26 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNoPromo(), ioId, inAmountNoPromo);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNoPromo(), ioId, inSummNoPromo);
+
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Bonus(), ioId, inBonus);
+     --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Bonus(), ioId, outBonus);
+     
+                 -- Цены из прайса базового прайса
+     outPrice := (WITH
+                  tmp AS (SELECT lfSelect.GoodsKindId AS GoodsKindId
+                               , lfSelect.ValuePrice  AS Price
+                          FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_BasisComerc()
+                                                                   , inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                                    ) AS lfSelect
+                          WHERE lfSelect.GoodsId = inGoodsId
+                          )
+                  SELECT COALESCE ( (SELECT tmp.Price FROM tmp WHERE COALESCE (tmp.GoodsKindId,0) = COALESCE (inGoodsKindId,0))
+                                  , (SELECT tmp.Price FROM tmp WHERE tmp.GoodsKindId IS NULL)
+                                  , 0 
+                                  ) ::TFloat AS Price
+                 ) ::TFloat;
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, outPrice);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);

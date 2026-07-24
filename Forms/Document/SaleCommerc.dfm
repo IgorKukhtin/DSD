@@ -79,6 +79,17 @@ object SaleCommercForm: TSaleCommercForm
       TabOrder = 5
       Width = 157
     end
+    object cxLabel16: TcxLabel
+      Left = 487
+      Top = 5
+      Caption = #1050#1086#1084#1077#1085#1090#1072#1088
+    end
+    object ceComment: TcxTextEdit
+      Left = 487
+      Top = 23
+      TabOrder = 7
+      Width = 362
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -102,6 +113,7 @@ object SaleCommercForm: TSaleCommercForm
         Height = 151
         Align = alClient
         TabOrder = 0
+        ExplicitTop = -1
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -158,14 +170,22 @@ object SaleCommercForm: TSaleCommercForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object BranchName: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083
+            Caption = #1060#1110#1083#1110#1103
             DataBinding.FieldName = 'BranchName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actBranch_ObjectForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
           object ContractCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #1050#1086#1076' '#1076#1086#1075#1086#1074#1110#1088#1072
             DataBinding.FieldName = 'ContractCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -173,7 +193,7 @@ object SaleCommercForm: TSaleCommercForm
             Width = 73
           end
           object ContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
+            Caption = #1044#1086#1075#1086#1074#1110#1088
             DataBinding.FieldName = 'ContractName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -188,7 +208,7 @@ object SaleCommercForm: TSaleCommercForm
             Width = 200
           end
           object PaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1080
             DataBinding.FieldName = 'PaidKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -256,6 +276,8 @@ object SaleCommercForm: TSaleCommercForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 7
+    ExplicitLeft = -8
+    ExplicitTop = 262
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -320,6 +342,16 @@ object SaleCommercForm: TSaleCommercForm
           Format = ',0.####'
           Kind = skSum
           Column = chSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chSummPromo
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chSummNoPromo
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -384,6 +416,16 @@ object SaleCommercForm: TSaleCommercForm
           Format = ',0.####'
           Kind = skSum
           Column = chSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chSummPromo
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chSummNoPromo
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -410,17 +452,31 @@ object SaleCommercForm: TSaleCommercForm
       object chGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actGoodsChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 200
       end
       object chGoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actGoodsKindChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
       end
       object chAmount: TcxGridDBColumn
@@ -443,26 +499,6 @@ object SaleCommercForm: TSaleCommercForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object chBonus: TcxGridDBColumn
-        Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
-        DataBinding.FieldName = 'Bonus'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object chPrice: TcxGridDBColumn
-        Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
-        DataBinding.FieldName = 'Price'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
       object chAmountPromo: TcxGridDBColumn
         Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1050#1110#1083'-'#1089#1090#1100' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
         DataBinding.FieldName = 'AmountPromo'
@@ -471,7 +507,6 @@ object SaleCommercForm: TSaleCommercForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
       end
       object chSummPromo: TcxGridDBColumn
@@ -482,7 +517,6 @@ object SaleCommercForm: TSaleCommercForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
       end
       object chAmountNoPromo: TcxGridDBColumn
@@ -493,7 +527,6 @@ object SaleCommercForm: TSaleCommercForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
       end
       object chSummNoPromo: TcxGridDBColumn
@@ -505,6 +538,29 @@ object SaleCommercForm: TSaleCommercForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
+      end
+      object chPrice: TcxGridDBColumn
+        Caption = #1062#1110#1085#1072' '#1089'/'#1074', '#1075#1088#1085
+        DataBinding.FieldName = 'Price'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1110#1085#1072' '#1057#1086#1073#1110#1074#1072#1088#1090#1110#1089#1090#1100' - '#1079' '#1087#1088#1072#1081#1089#1091' "'#1041#1072#1079#1086#1074#1110' '#1094#1110#1085#1080'"'
+        Options.Editing = False
+        Width = 80
+      end
+      object chBonus: TcxGridDBColumn
+        Caption = '% '#1073#1086#1085#1091#1089#1091
+        DataBinding.FieldName = 'Bonus'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object chisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -535,8 +591,8 @@ object SaleCommercForm: TSaleCommercForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 14
-    Top = 375
+    Left = 38
+    Top = 391
   end
   object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_SaleCommerc'
@@ -639,6 +695,10 @@ object SaleCommercForm: TSaleCommercForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'bbSetErasedChild'
         end
         item
@@ -660,7 +720,11 @@ object SaleCommercForm: TSaleCommercForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -669,6 +733,10 @@ object SaleCommercForm: TSaleCommercForm
         item
           Visible = True
           ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -804,6 +872,14 @@ object SaleCommercForm: TSaleCommercForm
     end
     object bb: TdxBarButton
       Action = actShowErasedChild
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actInsertRecordChild
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = mactLoadExcel
       Category = 0
     end
   end
@@ -984,8 +1060,8 @@ object SaleCommercForm: TSaleCommercForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_EntryAsset'
-      ReportNameParam.Value = 'PrintMovement_EntryAsset'
+      ReportName = 'PrintMovement_SaleCommerc'
+      ReportNameParam.Value = 'PrintMovement_SaleCommerc'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1190,6 +1266,7 @@ object SaleCommercForm: TSaleCommercForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView1
+      Action = actGoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
@@ -1386,6 +1463,19 @@ object SaleCommercForm: TSaleCommercForm
         end>
       isShowModal = True
     end
+    object InsertRecordGoods: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView1
+      Action = actGoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ShortCut = 45
+      ImageIndex = 0
+    end
     object actAddMask: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1420,6 +1510,128 @@ object SaleCommercForm: TSaleCommercForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actGoodsKindChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsKindForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object mactLoadExcel: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDelete_MI
+        end
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
+      ImageIndex = 27
+    end
+    object actDelete_MI: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_MI
+      StoredProcList = <
+        item
+          StoredProc = spDelete_MI
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1090#1088#1086#1082#1080
     end
   end
   object MasterDS: TDataSource
@@ -1533,7 +1745,7 @@ object SaleCommercForm: TSaleCommercForm
     Top = 287
   end
   object spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_EntryAsset'
+    StoredProcName = 'gpInsertUpdate_Movement_SaleCommerc'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1560,6 +1772,14 @@ object SaleCommercForm: TSaleCommercForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 746
@@ -1577,33 +1797,13 @@ object SaleCommercForm: TSaleCommercForm
       end
       item
         Control = edOperDate
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end>
     GetStoredProc = spGet
     Left = 520
     Top = 17
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_EntryAsset'
+    StoredProcName = 'gpGet_Movement_SaleCommerc'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1649,6 +1849,13 @@ object SaleCommercForm: TSaleCommercForm
         Value = ''
         Component = StatusGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1743,7 +1950,7 @@ object SaleCommercForm: TSaleCommercForm
     Top = 8
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_EntryAsset'
+    StoredProcName = 'gpUpdate_Status_SaleCommerc'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2011,17 +2218,17 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId'
+        Name = 'inParentId'
         Value = Null
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParentId'
+        Name = 'inMovementId'
         Value = Null
-        Component = MasterCDS
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2097,21 +2304,20 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBonus'
+        Name = 'outBonus'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Bonus'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
+        Name = 'outPrice'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Price'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2195,5 +2401,54 @@ object SaleCommercForm: TSaleCommercForm
     PackSize = 1
     Left = 590
     Top = 336
+  end
+  object spGetImportSetting: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TSaleCommercJournalForm;zc_Object_ImportSetting_SaleCommerc'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 888
+    Top = 136
+  end
+  object spDelete_MI: TdsdStoredProc
+    StoredProcName = 'gpDelete_MI_OrderFinanceSB'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 48
   end
 end

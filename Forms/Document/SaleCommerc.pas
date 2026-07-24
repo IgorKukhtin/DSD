@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, dsdCommon;
+  cxImageComboBox, cxSplitter, dsdCommon, ExternalLoad;
 
 type
   TSaleCommercForm = class(TParentForm)
@@ -138,6 +138,19 @@ type
     chSummPromo: TcxGridDBColumn;
     actShowErasedChild: TBooleanStoredProcAction;
     bb: TdxBarButton;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
+    actGoodsKindChoice: TOpenChoiceForm;
+    actGoodsChoiceForm: TOpenChoiceForm;
+    InsertRecordGoods: TInsertRecord;
+    dxBarButton1: TdxBarButton;
+    spGetImportSetting: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    mactLoadExcel: TMultiAction;
+    spDelete_MI: TdsdStoredProc;
+    actDelete_MI: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
   private
   public
   end;

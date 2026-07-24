@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SaleCommerc(
     IN inComment             TVarChar   , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN

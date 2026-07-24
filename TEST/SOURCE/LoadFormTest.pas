@@ -218,7 +218,7 @@ type
     procedure LoadSaleExternalFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendAssetFormTest;
-    procedure LoadSaleCommercJournalFormTest;
+    procedure LoadSaleCommercDocumentFormTest;
     procedure LoadSendDebtFormTest;
     procedure LoadSendMemberFormTest;
     procedure LoadSendOnPriceFormTest;
@@ -1332,7 +1332,7 @@ begin
 end;
 
 
-procedure TLoadFormTest.LoadSaleCommercJournalFormTest;
+procedure TLoadFormTest.LoadSaleCommercDocumentFormTest;
 begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleCommercForm'));

@@ -11,10 +11,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SaleCommerc(
     IN inPaidKindId           Integer   , -- 
     IN inSession              TVarChar    -- сессия пользователя
 )
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+           vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SaleCommerc());

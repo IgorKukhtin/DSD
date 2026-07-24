@@ -1684,8 +1684,8 @@ uses
   Report_CommercBonusDialog in '..\..\Forms\Report\Report_CommercBonusDialog.pas' {Report_CommercBonusDialogForm: TParentForm},
   Report_CommercBonus in '..\..\Forms\Report\Report_CommercBonus.pas' {Report_CommercBonusForm: TParentForm},
   DesadvXML_vch in '..\..\SOURCE\EDI\DesadvXML_vch.pas',
-  SaleCommerc in '..\..\Forms\Document\SaleCommerc.pas' {SaleCommercForm: TParentForm},
-  SaleCommercJournal in '..\..\Forms\Document\SaleCommercJournal.pas' {SaleCommercJournalForm: TParentForm};
+  SaleCommercJournal in '..\..\Forms\Document\SaleCommercJournal.pas' {SaleCommercJournalForm: TParentForm},
+  SaleCommerc in '..\..\Forms\Document\SaleCommerc.pas' {SaleCommercForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

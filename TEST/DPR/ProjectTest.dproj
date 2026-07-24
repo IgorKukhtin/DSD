@@ -5951,12 +5951,12 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\EDI\DesadvXML_vch.pas"/>
-			<DCCReference Include="..\..\Forms\Document\SaleCommerc.pas">
-				<Form>SaleCommercForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SaleCommercJournal.pas">
 				<Form>SaleCommercJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SaleCommerc.pas">
+				<Form>SaleCommercForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

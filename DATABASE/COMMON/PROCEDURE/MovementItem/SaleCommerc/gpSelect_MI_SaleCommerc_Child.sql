@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_SaleCommerc_Child(
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , Amount TFloat, Summ TFloat
@@ -27,9 +27,12 @@ BEGIN
      RETURN QUERY 
        SELECT
              MovementItem.Id
+           , MovementItem.ParentId
            , Object_Goods.Id                                        AS GoodsId
            , Object_Goods.ObjectCode                                AS GoodsCode
            , Object_Goods.ValueData                                 AS GoodsName
+           , Object_GoodsKind.Id                                    AS GoodsKindId
+           , Object_GoodsKind.ValueData                             AS GoodsKindName           
            , MovementItem.Amount                           ::TFloat AS Amount
            , COALESCE (MIFloat_Summ.ValueData, 0)          ::TFloat AS Summ
            , COALESCE (MIFloat_AmountPromo.ValueData, 0)   ::TFloat AS AmountPromo
@@ -46,6 +49,11 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Child()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id =  MovementItem.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
