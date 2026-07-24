@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_SB_3 (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinance_SB_3 (
+CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinance_SB_3(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inBankMainId        Integer , -- банк  Плательщик
@@ -31,6 +31,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, PersonalName_contract TVarChar
+             , PersonalId Integer, PersonalName TVarChar
              , PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
 
@@ -147,6 +148,18 @@ BEGIN
                                 AND MovementItemBoolean.DescId IN (zc_MIBoolean_Sign()
                                                                   )
                              )
+     , tmpMILO_Personal_child AS (SELECT *
+                                  FROM MovementItemLinkObject
+                                  WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                                    AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Personal()
+                                                                         )
+                                  )
+     , tmpMILO_Personal_master AS (SELECT *
+                                   FROM MovementItemLinkObject
+                                   WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Child.ParentId FROM tmpMI_Child)
+                                     AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Personal()
+                                                                          )
+                                   )
    /*, tmpMovementItemDate AS (SELECT *
                                FROM MovementItemDate
                                WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
@@ -177,7 +190,7 @@ BEGIN
                                  , MIString_Comment.ValueData            AS Comment
                                  , MIString_Comment_SB.ValueData         AS Comment_SB
                                  , MIBoolean_Sign.ValueData              AS isSign
-
+                                 , COALESCE (MILinkObject_Personal.ObjectId, MILinkObject_Personal_master.ObjectId)  AS PersonalId
                             FROM tmpMI_Child AS MovementItem
                                  -- Платежный план на неделю
                                  LEFT JOIN tmpMIFloat_Child AS MIFloat_AmountPlan_next
@@ -209,6 +222,13 @@ BEGIN
                                  LEFT JOIN tmpMIBoolean_Child AS MIBoolean_Sign
                                                               ON MIBoolean_Sign.MovementItemId = MovementItem.Id
                                                              AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()
+                                 -- 23.07.2026 - это свойство Child
+                                 LEFT JOIN tmpMILO_Personal_child AS MILinkObject_Personal
+                                                                  ON MILinkObject_Personal.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_Personal.DescId         = zc_MILinkObject_Personal()
+                                 LEFT JOIN tmpMILO_Personal_master AS MILinkObject_Personal_master
+                                                                   ON MILinkObject_Personal_master.MovementItemId = MovementItem.ParentId
+                                                                  AND MILinkObject_Personal_master.DescId         = zc_MILinkObject_Personal()
                            )
        -- мастер у которого есть чайлд + чайлд
      , tmpMI AS (SELECT tmpMI_Master.Id
@@ -229,6 +249,7 @@ BEGIN
                       , tmpMI_Child.Comment            AS Comment_Child
                       , tmpMI_Child.Comment_SB         AS Comment_SB_Child
                       , tmpMI_Child.isSign             AS isSign_Child
+                      , tmpMI_Child.PersonalId         AS PersonalId_Child
                       -- План оплат на день недели
                       -- , tmp.AmountPlan_day
                      FROM tmpMI_Master
@@ -242,7 +263,12 @@ BEGIN
                               AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Contract()
                                                                    )
                             )
-
+     , tmpMILO_Personal AS (SELECT *
+                            FROM MovementItemLinkObject
+                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                              AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Personal()
+                                                                   )
+                            )
      , tmpContractCondition AS (SELECT Object_ContractCondition_View.ContractId
                                      , (Object_ContractCondition_View.Value::Integer
                                        ||' '|| CASE WHEN Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendar()
@@ -285,8 +311,9 @@ BEGIN
                             , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
                                  || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
                               ) ::TVarChar AS EndDate
-                            , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
-
+                            , Object_Personal_Contract.ValueData ::TVarChar AS PersonalName_contract
+                            , Object_Personal.Id         AS PersonalId
+                            , Object_Personal.ValueData  AS PersonalName
 
                              -- строки для согласования СБ
                             , MovementItem.MovementItemId_Child
@@ -326,7 +353,9 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                                   ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
                                                  AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-                             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
+                             LEFT JOIN Object AS Object_Personal_Contract ON Object_Personal_Contract.Id = ObjectLink_Contract_Personal.ChildObjectId
+
+                             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = COALESCE (MovementItem.PersonalId_Child, ObjectLink_Contract_Personal.ChildObjectId)
                      )
        --
      , tmpMovement_Data AS (SELECT
@@ -446,6 +475,8 @@ BEGIN
         , tmpMI.ContractCode
         , tmpMI.ContractName
         , tmpMI.PersonalName_contract  ::TVarChar
+        , tmpMI.PersonalId             ::Integer
+        , tmpMI.PersonalName           ::TVarChar
         , tmpMI.PaidKindName
         , tmpMI.InfoMoneyId
         , tmpMI.InfoMoneyCode

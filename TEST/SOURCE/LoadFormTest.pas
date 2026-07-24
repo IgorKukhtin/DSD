@@ -218,6 +218,7 @@ type
     procedure LoadSaleExternalFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendAssetFormTest;
+    procedure LoadSaleCommercJournalFormTest;
     procedure LoadSendDebtFormTest;
     procedure LoadSendMemberFormTest;
     procedure LoadSendOnPriceFormTest;
@@ -484,14 +485,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionPartnerValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionPartnerValueForm');
    exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
    exit;
-  {
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
@@ -500,7 +501,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
   exit;
@@ -1098,10 +1099,10 @@ end;
 
 procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementSBForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementSBForm');
-  //exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceJournalForm');
@@ -1113,10 +1114,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceSBJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementSBForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementSBForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_SBForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_SBForm');
-
+  exit;
 
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanForm'));
@@ -1328,6 +1329,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendAssetJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendAssetJournalForm');
+end;
+
+
+procedure TLoadFormTest.LoadSaleCommercJournalFormTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleCommercForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleCommercForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleCommercJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleCommercJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSendMemberFormTest;

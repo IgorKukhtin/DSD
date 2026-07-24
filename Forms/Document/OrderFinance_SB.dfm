@@ -268,6 +268,16 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Options.Editing = False
             Width = 119
           end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1079#1072#1082#1091#1087#1082#1091'/'#1086#1087#1083#1072#1090#1091
+            DataBinding.FieldName = 'PersonalName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            Options.Editing = False
+            Width = 119
+          end
           object Condition: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077
             DataBinding.FieldName = 'Condition'

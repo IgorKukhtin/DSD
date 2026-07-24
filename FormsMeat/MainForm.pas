@@ -1650,6 +1650,9 @@ type
     miProductionUnionTechPF: TMenuItem;
     miProductionUnionTechReceiptPF: TMenuItem;
     miOrderInternalBasisPF: TMenuItem;
+    actSaleCommercJournal: TdsdOpenForm;
+    N284: TMenuItem;
+    miSaleCommercJournal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

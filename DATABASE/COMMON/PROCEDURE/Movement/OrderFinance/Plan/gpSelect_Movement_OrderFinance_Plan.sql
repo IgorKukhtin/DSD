@@ -329,6 +329,34 @@ BEGIN
                                                                   )
                               )
 
+     , tmpMILO_Personal_child AS (SELECT *
+                                  FROM MovementItemLinkObject
+                                  WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                                    AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Personal()
+                                                                         )
+                                  )
+     , tmpMILO_Personal_master AS (SELECT *
+                                   FROM MovementItemLinkObject
+                                   WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Child.ParentId FROM tmpMI_Child)
+                                     AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Personal()
+                                                                          )
+                                   )
+     , tmpMILO_child AS (SELECT *
+                         FROM MovementItemLinkObject
+                         WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Update()
+                                                               , zc_MovementLinkObject_Insert()
+                                                               )
+                         )
+
+     , tmpMIData_child AS (SELECT *
+                           FROM MovementItemDate
+                           WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                             AND MovementItemDate.DescId IN (zc_MIDate_Insert()
+                                                           , zc_MIDate_Update()
+                                                           )
+                           )
+
      , tmpMI_Data_Child AS (SELECT MovementItem.Id          AS MovementItemId
                                  , MovementItem.ParentId    AS MovementItemId_parent
                                  , MovementItem.MovementId
@@ -362,6 +390,7 @@ BEGIN
                                  , MIDate_Insert.ValueData          AS InsertDate
                                  , MIDate_Update.ValueData          AS UpdateDate
 
+                                 , COALESCE (MILinkObject_Personal.ObjectId, MILinkObject_Personal_master.ObjectId)  AS PersonalId
                             FROM tmpMI_Child AS MovementItem
                                  LEFT JOIN tmpMIFloat_Child AS MIFloat_AmountPlan_next
                                                             ON MIFloat_AmountPlan_next.MovementItemId = MovementItem.Id
@@ -403,21 +432,29 @@ BEGIN
                                                               ON MIBoolean_AmountPlan_5.MovementItemId = MovementItem.Id
                                                              AND MIBoolean_AmountPlan_5.DescId = zc_MIBoolean_AmountPlan_5()
                                                        
-                                 LEFT JOIN MovementItemDate AS MIDate_Insert
+                                 LEFT JOIN tmpMIData_child AS MIDate_Insert
                                                             ON MIDate_Insert.MovementItemId = MovementItem.Id
                                                            AND MIDate_Insert.DescId = zc_MIDate_Insert()
-                                 LEFT JOIN MovementItemDate AS MIDate_Update
+                                 LEFT JOIN tmpMIData_child AS MIDate_Update
                                                             ON MIDate_Update.MovementItemId = MovementItem.Id
                                                            AND MIDate_Update.DescId = zc_MIDate_Update()
      
-                                 LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                 LEFT JOIN tmpMILO_child AS MILO_Insert
                                                                   ON MILO_Insert.MovementItemId = MovementItem.Id
                                                                  AND MILO_Insert.DescId = zc_MILinkObject_Insert()
                                  LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
-                                 LEFT JOIN MovementItemLinkObject AS MILO_Update
+                                 LEFT JOIN tmpMILO_child AS MILO_Update
                                                                   ON MILO_Update.MovementItemId = MovementItem.Id
                                                                  AND MILO_Update.DescId = zc_MILinkObject_Update()
                                  LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+
+                                 -- 23.07.2026 - это свойство Child
+                                 LEFT JOIN tmpMILO_Personal_child AS MILinkObject_Personal
+                                                                  ON MILinkObject_Personal.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_Personal.DescId         = zc_MILinkObject_Personal()
+                                 LEFT JOIN tmpMILO_Personal_master AS MILinkObject_Personal_master
+                                                                   ON MILinkObject_Personal_master.MovementItemId = MovementItem.ParentId
+                                                                  AND MILinkObject_Personal_master.DescId         = zc_MILinkObject_Personal()
                             )
       -- Detail - Согласовано к оплате
     , tmpMI_Detail AS (SELECT MovementItem.ParentId AS MovementItemId_parent
@@ -482,7 +519,8 @@ BEGIN
                          , tmpMI_Child.InvNumber                    AS InvNumber_Child
                          , tmpMI_Child.InvNumber_Invoice            AS InvNumber_Invoice_Child 
                          , tmpMI_Child.Comment                      AS Comment_Child
-                         , tmpMI_Child.isSign                       AS isSign_Child
+                         , tmpMI_Child.isSign                       AS isSign_Child 
+                         , tmpMI_Child.PersonalId                   AS PersonalId_Child
                            -- Detail
                          , COALESCE (tmpMI_Detail_1.MovementItemId_Detail_1, tmpMI_Detail_2.MovementItemId_Detail_1) AS MovementItemId_Detail_1
                          , COALESCE (tmpMI_Detail_1.MovementItemId_Detail_2, tmpMI_Detail_2.MovementItemId_Detail_2) AS MovementItemId_Detail_2
@@ -736,10 +774,7 @@ BEGIN
                                                  AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
                              --LEFT JOIN Object AS Object_Personal_Contract ON Object_Personal_Contract.Id = ObjectLink_Contract_Personal.ChildObjectId
 
-                             LEFT JOIN tmpMILO_Contract AS MILinkObject_Personal
-                                                        ON MILinkObject_Personal.MovementItemId = MovementItem.Id
-                                                       AND MILinkObject_Personal.DescId = zc_MILinkObject_Personal()
-                             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = COALESCE (MILinkObject_Personal.ObjectId,ObjectLink_Contract_Personal.ChildObjectId) 
+                             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = COALESCE (MovementItem.PersonalId_Child,ObjectLink_Contract_Personal.ChildObjectId) 
                       -- Только БН
                       WHERE View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
                      )
