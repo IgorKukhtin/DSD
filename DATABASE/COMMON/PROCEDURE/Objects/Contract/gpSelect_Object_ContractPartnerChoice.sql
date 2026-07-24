@@ -37,7 +37,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PrepareDayCount TFloat, DocumentDayCount TFloat
              , AmountDebet TFloat
              , AmountKredit TFloat
-             , BranchName TVarChar, ContainerId Integer
+             , BranchId Integer, BranchName TVarChar, ContainerId Integer
              , CurrencyId Integer, CurrencyName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , VATPercent TFloat, PriceWithVAT Boolean
@@ -300,6 +300,7 @@ BEGIN
        , Container_Partner_View.AmountDebet
        , Container_Partner_View.AmountKredit
 
+       , Object_Branch.Id        AS BranchId
        , Object_Branch.ValueData AS BranchName
        , Container_Partner_View.ContainerId
 
@@ -788,6 +789,7 @@ BEGIN
        , Container_Partner_View.AmountDebet
        , Container_Partner_View.AmountKredit
 
+       , Object_Branch.Id        AS BranchId
        , Object_Branch.ValueData AS BranchName
        , Container_Partner_View.ContainerId
 
