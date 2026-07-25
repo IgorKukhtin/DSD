@@ -10,6 +10,10 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_SaleCommerc_Child(
 RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
+             , MeasureName TVarChar, TradeMarkName TVarChar
+             , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , GoodsGroupPropertyName TVarChar, GoodsGroupPropertyName_Parent TVarChar
+           
              , Amount TFloat, Summ TFloat
              , AmountPromo TFloat, SummPromo TFloat
              , AmountNoPromo TFloat, SummNoPromo TFloat
@@ -28,11 +32,19 @@ BEGIN
        SELECT
              MovementItem.Id
            , MovementItem.ParentId
-           , Object_Goods.Id                                        AS GoodsId
-           , Object_Goods.ObjectCode                                AS GoodsCode
-           , Object_Goods.ValueData                                 AS GoodsName
-           , Object_GoodsKind.Id                                    AS GoodsKindId
-           , Object_GoodsKind.ValueData                             AS GoodsKindName           
+           , Object_Goods.Id                             AS GoodsId
+           , Object_Goods.ObjectCode                     AS GoodsCode
+           , Object_Goods.ValueData                      AS GoodsName
+           , Object_GoodsKind.Id                         AS GoodsKindId
+           , Object_GoodsKind.ValueData                  AS GoodsKindName 
+
+           , Object_Measure.ValueData                    AS MeasureName
+           , Object_TradeMark.ValueData                  AS TradeMarkName           
+           , Object_GoodsGroup.ValueData                 AS GoodsGroupName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_GoodsGroupProperty.ValueData         AS GoodsGroupPropertyName
+           , Object_GoodsGroupPropertyParent.ValueData   AS GoodsGroupPropertyName_Parent
+
            , MovementItem.Amount                           ::TFloat AS Amount
            , COALESCE (MIFloat_Summ.ValueData, 0)          ::TFloat AS Summ
            , COALESCE (MIFloat_AmountPromo.ValueData, 0)   ::TFloat AS AmountPromo
@@ -76,6 +88,36 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+            --
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                 ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+            LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                                 ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+            LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                                 ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                                AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+            LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
       ;
 
 END;
@@ -91,4 +133,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_SaleCommerc_Child (inMovementId:= 25173, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_SaleCommerc_Child (inMovementId:= 34853167 , inIsErased:= false, inSession:= '2')

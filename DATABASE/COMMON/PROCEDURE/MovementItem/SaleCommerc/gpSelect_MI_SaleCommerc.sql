@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
+             , JuridicalName TVarChar, RetailName TVarChar, SectionName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , isErased Boolean
               )
@@ -38,6 +39,10 @@ BEGIN
            , Object_Partner.Id                    AS PartnerId
            , Object_Partner.ObjectCode            AS PartnerCode
            , Object_Partner.ValueData             AS PartnerName
+           
+           , Object_Juridical.ValueData           AS JuridicalName
+           , Object_Retail.ValueData              AS RetailName
+           , Object_Section.ValueData             AS SectionName
 
            , Object_PaidKind.Id                   AS PaidKindId
            , Object_PaidKind.ValueData            AS PaidKindName
@@ -64,6 +69,22 @@ BEGIN
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+
+            --
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId      = Object_Partner.Id
+                                AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Section
+                                 ON ObjectLink_Juridical_Section.ObjectId = Object_Juridical.Id
+                                AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
+            LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
           ; 
 
 END;
@@ -77,4 +98,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_SaleCommerc (0, FALSE, zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MI_SaleCommerc (34853167, FALSE, zfCalc_UserAdmin());
