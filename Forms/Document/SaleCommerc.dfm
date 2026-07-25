@@ -113,7 +113,6 @@ object SaleCommercForm: TSaleCommercForm
         Height = 151
         Align = alClient
         TabOrder = 0
-        ExplicitTop = -1
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -276,8 +275,6 @@ object SaleCommercForm: TSaleCommercForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 7
-    ExplicitLeft = -8
-    ExplicitTop = 262
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -1163,10 +1160,6 @@ object SaleCommercForm: TSaleCommercForm
       StoredProcList = <
         item
           StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -1181,10 +1174,6 @@ object SaleCommercForm: TSaleCommercForm
       StoredProcList = <
         item
           StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -1199,10 +1188,6 @@ object SaleCommercForm: TSaleCommercForm
       StoredProcList = <
         item
           StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
@@ -2435,7 +2420,7 @@ object SaleCommercForm: TSaleCommercForm
     Top = 136
   end
   object spDelete_MI: TdsdStoredProc
-    StoredProcName = 'gpDelete_MI_OrderFinanceSB'
+    StoredProcName = 'gpDelete_MI_SaleCommerc'
     DataSets = <>
     OutputType = otResult
     Params = <
