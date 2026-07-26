@@ -465,7 +465,8 @@ BEGIN
               -- джейсон - Товары
              , ('{"products": ['
               || (SELECT STRING_AGG ('{' || '"ean_code": ' || '"' || tmpDataMI.BarCodeGLN_Juridical || '",'
-                                         || '"title": '    || '"' || REPLACE (tmpDataMI.GoodsName, '"', '\"') || '"}'
+                                         || '"title": '    || '"' || REPLACE (REPLACE (tmpDataMI.GoodsName, '\', '/'), '"', '\"')
+                                         || '"}'
                                    , ',' 
                                     ) 
                   FROM tmpDataMI

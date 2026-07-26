@@ -1,11 +1,13 @@
 -- Function: lpSelect_TaxFromTaxCorrective()
 
 DROP FUNCTION IF EXISTS lpSelect_TaxFromTaxCorrective (Integer);
-DROP FUNCTION IF EXISTS lpSelect_TaxFromTaxCorrective (Integer, TDateTime);
+-- DROP FUNCTION IF EXISTS lpSelect_TaxFromTaxCorrective (Integer, TDateTime);
+DROP FUNCTION IF EXISTS lpSelect_TaxFromTaxCorrective (Integer, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpSelect_TaxFromTaxCorrective(
     IN inMovementId             Integer,    -- Ключ объекта <Документ> - Налоговая
-    IN inOperDate_TaxCorrective TDateTime
+    IN inOperDate_TaxCorrective TDateTime,
+    IN inMovementId_corr        Integer -- DEFAULT 0
 )
 RETURNS TABLE (MovementId         Integer
              , Kind               Integer
@@ -59,6 +61,7 @@ BEGIN
                               WHERE Movement.OperDate <= inOperDate_TaxCorrective
                                 AND Movement.DescId   = zc_Movement_TaxCorrective()
                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                                AND Movement.Id      <> inMovementId_corr
                              )
 
    , tmpMITax AS (SELECT MovementItem.ObjectId                                             AS GoodsId

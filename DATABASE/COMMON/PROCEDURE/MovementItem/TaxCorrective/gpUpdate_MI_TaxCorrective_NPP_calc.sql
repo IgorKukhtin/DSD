@@ -1,4 +1,4 @@
--- Function: gpUpdate_MI_TaxCorrective_NPP_calc (Integer, Integer, TVarChar)
+ -- Function: gpUpdate_MI_TaxCorrective_NPP_calc (Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_TaxCorrective_NPP_calc (Integer, TVarChar);
 
@@ -578,7 +578,7 @@ BEGIN
                  )
 
              -- Строчная часть налоговой с № п/п
-           , tmpMI_tax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective (vbMovementId_tax, vbOperDate))
+           , tmpMI_tax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective (vbMovementId_tax, vbOperDate, inMovementId))
               -- ТЕКУЩАЯ ОДНА - корректировка + № п/п из налоговой
             , tmpMI_Corr_curr AS
                  (SELECT tmpMI_Corr_curr_all.Id
@@ -847,7 +847,7 @@ BEGIN
      -- Проверка
      IF EXISTS (SELECT 1 FROM _tmpRes WHERE _tmpRes.NPPTax_calc IS NULL)
      THEN
-         RAISE EXCEPTION 'Ошибка.<%>.', (SELECT COUNT(*) FROM _tmpRes WHERE _tmpRes.NPPTax_calc IS NULL);
+         RAISE EXCEPTION 'Ошибка.Не найден №п/п налоговой.<%>.', (SELECT COUNT(*) FROM _tmpRes WHERE _tmpRes.NPPTax_calc IS NULL);
      END IF;
 
      -- РЕЗУЛЬТАТ - сохранили ВСЕ что расчитали для № п/п
