@@ -1301,6 +1301,30 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 --INSERT INTO MovementItemFloatDesc (Code, ItemName)
 --  SELECT 'zc_MIFloat_AmountPlan_fin', 'Согласовано к оплате' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountPlan_fin');
  
+  
+ CREATE OR REPLACE FUNCTION zc_MIFloat_AmountPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_AmountPromo', 'Відвантаження, Кіл-сть (ПЛАН (акційний))' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountPromo');
+ 
+ CREATE OR REPLACE FUNCTION zc_MIFloat_AmountNoPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountNoPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_AmountNoPromo', 'Відвантаження, Кіл-сть (ПЛАН (без акційний))' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountNoPromo');
+
+ CREATE OR REPLACE FUNCTION zc_MIFloat_SummPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummPromo', 'Відвантаження, грн (ПЛАН (акційний))' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummPromo');
+
+ CREATE OR REPLACE FUNCTION zc_MIFloat_SummNoPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummNoPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummNoPromo', 'Відвантаження, грн (ПЛАН (без акційний))' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummNoPromo');
+ 
+ CREATE OR REPLACE FUNCTION zc_MIFloat_Bonus() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Bonus'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Bonus', '% бонусу' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Bonus');
+  
+
+ 
+  
  
  
 ----!!!!!!Farmacy
