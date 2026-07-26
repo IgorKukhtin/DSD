@@ -828,7 +828,7 @@ BEGIN
                                       ELSE ''
                                  END
                               --  цукри
-                              || CASE WHEN Sticker_Value6.ValueData > 0
+                              || CASE WHEN Sticker_Value7.ValueData > 0
                                            THEN ' з них цукри' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value7.ValueData, 0)) || tmpLanguageParam.Value12
                                       ELSE ''
                                  END
@@ -848,7 +848,7 @@ BEGIN
                                       ELSE ''
                                  END
                               --  сіль
-                              || CASE WHEN Sticker_Value6.ValueData > 0
+                              || CASE WHEN Sticker_Value8.ValueData > 0
                                            THEN ', сіль' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value8.ValueData, 0)) || tmpLanguageParam.Value12
                                       ELSE ''
                                  END ||''

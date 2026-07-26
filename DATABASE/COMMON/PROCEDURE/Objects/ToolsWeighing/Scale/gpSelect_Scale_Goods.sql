@@ -923,6 +923,36 @@ BEGIN
                                        AND ObjectString_GoodsKind.ValueData <> '0'
             WHERE Object_GoodsListSale.DescId   = zc_Object_GoodsListSale()
               AND Object_GoodsListSale.isErased = FALSE
+
+         /*UNION ALL
+            SELECT DISTINCT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
+                 , COALESCE (ObjectLink_GoodsListSale_GoodsKind.ChildObjectId, zc_Enum_GoodsKind_Main()) AS GoodsKindId_max
+                 , COALESCE (ObjectString_GoodsKind.ValueData, zc_Enum_GoodsKind_Main() :: TVarChar)       AS WordList
+            FROM Object AS Object_GoodsListSale
+                 INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                       ON ObjectLink_GoodsListSale_Partner.ObjectId      = Object_GoodsListSale.Id
+                                      AND ObjectLink_GoodsListSale_Partner.DescId        = zc_ObjectLink_GoodsListSale_Partner()
+                                      -- !!!ограничение по контрагенту!!!
+                                      -- AND ObjectLink_GoodsListSale_Partner.ChildObjectId = CASE WHEN inMovementId < 0 THEN -1 * inMovementId END :: Integer
+                 INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Contract
+                                       ON ObjectLink_GoodsListSale_Contract.ObjectId      = Object_GoodsListSale.Id
+                                      AND ObjectLink_GoodsListSale_Contract.DescId        = zc_ObjectLink_GoodsListSale_Contract()
+                                      -- !!!ограничение по договору!!!
+                                      AND ObjectLink_GoodsListSale_Contract.ChildObjectId = CASE WHEN inOrderExternalId < 0 THEN -1 * inOrderExternalId ELSE ObjectLink_GoodsListSale_Contract.ChildObjectId END :: Integer
+                 LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
+                                      ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
+                                     AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                 LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_GoodsKind
+                                      ON ObjectLink_GoodsListSale_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                                     AND ObjectLink_GoodsListSale_GoodsKind.DescId = zc_ObjectLink_GoodsListSale_GoodsKind()
+                 LEFT JOIN ObjectString AS ObjectString_GoodsKind
+                                        ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                                       AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+                                       AND ObjectString_GoodsKind.ValueData <> '0'
+            WHERE Object_GoodsListSale.DescId   = zc_Object_GoodsListSale()
+              AND Object_GoodsListSale.isErased = FALSE
+              AND ObjectLink_GoodsListSale_Goods.ChildObjectId = 587549*/
+
            UNION ALL
             -- Поставщики - Склад Специй
             SELECT DISTINCT ObjectLink_GoodsListIncome_Goods.ChildObjectId AS GoodsId
