@@ -1,33 +1,23 @@
 -- Function: gpInsertUpdate_MI_SaleCommerc()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SaleCommerc(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_SaleCommerc(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId           Integer   , -- Ключ объекта <Документ>
     IN inContractId           Integer   , -- 
     IN inBranchId             Integer   , --
     IN inPartnerId            Integer   , --
-    IN inPaidKindId           Integer   , --
-    IN inGoodsId             Integer   , -- Товар
-    IN inGoodsKindId         Integer   , -- Вид Товар
-    IN inAmount              TFloat    , --
-    IN inSumm                TFloat    , --
-    IN inAmountPromo         TFloat    , --
-    IN inSummPromo           TFloat    , --
-    IN inAmountNoPromo       TFloat    , --
-    IN inSummNoPromo         TFloat    , --
-   OUT outPrice               TFloat    , -- 
-    IN inSession              TVarChar    -- сессия пользователя
+    IN inPaidKindId           Integer   , -- 
+    IN inUserId               Integer    -- сессия пользователя
 )
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-           vbIsInsert Boolean;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SaleCommerc());
+     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SaleCommerc());
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -44,7 +34,7 @@ BEGIN
      
 
      -- сохранили протокол !!!после изменений!!!
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -54,7 +44,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.07.26         *
+ 27.07.26         *
 */
 
 -- тест

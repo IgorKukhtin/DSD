@@ -94,7 +94,6 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
-    spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
     actPaidKindChoiceForm: TOpenChoiceForm;
@@ -110,15 +109,7 @@ type
     actContractChoicePartnerForm: TOpenChoiceForm;
     actShowAll: TBooleanStoredProcAction;
     cxSplitter1: TcxSplitter;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    chAmount: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    ChildDS: TDataSource;
     DBViewChildAddOn: TdsdDBViewAddOn;
-    ChildCDS: TClientDataSet;
-    spInsertUpdateMIChild: TdsdStoredProc;
-    spSelectMIChild: TdsdStoredProc;
     actUpdateChildDS: TdsdUpdateDataSet;
     actInsertRecordChild: TInsertRecord;
     bbInsertRecordChild: TdxBarButton;
@@ -129,13 +120,7 @@ type
     bbSetErasedChild: TdxBarButton;
     bbSetUnErasedChild: TdxBarButton;
     bbUpdateAsset_toGoods: TdxBarButton;
-    chisErased: TcxGridDBColumn;
-    chGoodsCode: TcxGridDBColumn;
-    chAmountPromo: TcxGridDBColumn;
-    chGoodsName: TcxGridDBColumn;
     ContractCode: TcxGridDBColumn;
-    chAmountNoPromo: TcxGridDBColumn;
-    chSummPromo: TcxGridDBColumn;
     actShowErasedChild: TBooleanStoredProcAction;
     bb: TdxBarButton;
     cxLabel16: TcxLabel;

@@ -25,7 +25,6 @@ object SaleCommercJournalForm: TSaleCommercJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 984
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -64,7 +63,6 @@ object SaleCommercJournalForm: TSaleCommercJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 984
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -124,11 +122,13 @@ object SaleCommercJournalForm: TSaleCommercJournalForm
         Width = 85
       end
       object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072
+        Caption = #1052#1077#1089#1103#1094' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103
         DataBinding.FieldName = 'OperDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'mmmm yyyy'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 83
+        Width = 97
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
