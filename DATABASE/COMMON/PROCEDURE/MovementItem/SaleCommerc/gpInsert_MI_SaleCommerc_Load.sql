@@ -33,6 +33,7 @@ $BODY$
            vbGoodsKindId  Integer;
            vbId           Integer;
            vbId_child     Integer;
+           vbPrice        TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SaleCommerc());
@@ -164,13 +165,13 @@ BEGIN
      THEN 
          SELECT tmp.ioId
                 INTO vbId
-         FROM gpInsertUpdate_MI_SaleCommerc (ioId           := COALESCE (vbId,0)          ::Integer
+         FROM lpInsertUpdate_MI_SaleCommerc (ioId           := COALESCE (vbId,0)          ::Integer
                                            , inMovementId   := inMovementId   ::Integer
                                            , inContractId   := vbContractId   ::Integer
                                            , inBranchId     := vbBranchId     ::Integer
                                            , inPartnerId    := inPartnerId    ::Integer
                                            , inPaidKindId   := vbPaidKindId   ::Integer 
-                                           , inSession      := inSession
+                                           , inUserId       := vbUserId
                                              ) AS tmp;
      END IF;
 /*
@@ -187,11 +188,25 @@ BEGIN
                          ;
                          
 */
+     -- Цены из прайса базового прайса
+     vbPrice := (WITH
+                  tmp AS (SELECT lfSelect.GoodsKindId AS GoodsKindId
+                               , lfSelect.ValuePrice  AS Price
+                          FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_BasisComerc()
+                                                                   , inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                                    ) AS lfSelect
+                          WHERE lfSelect.GoodsId = vbGoodsId
+                          )
+                  SELECT COALESCE ( (SELECT tmp.Price FROM tmp WHERE COALESCE (tmp.GoodsKindId,0) = COALESCE (vbGoodsKindId,0))
+                                  , (SELECT tmp.Price FROM tmp WHERE tmp.GoodsKindId IS NULL)
+                                  , 0 
+                                  ) ::TFloat AS Price
+                 ) ::TFloat;
 
      -- 2.сохраняем Child - Первичный план на неделю
      SELECT tmp.ioId
       INTO vbId_child
-         FROM  gpInsertUpdate_MI_SaleCommerc_Child (ioId             := 0                 ::Integer
+         FROM  lpInsertUpdate_MI_SaleCommerc_Child (ioId             := 0                 ::Integer
                                                   , inParentId       := vbId              ::Integer
                                                   , inMovementId     := inMovementId      ::Integer
                                                   , inGoodsId        := vbGoodsId         ::Integer
@@ -202,7 +217,8 @@ BEGIN
                                                   , inSummPromo      := inSummPromo       ::TFloat
                                                   , inAmountNoPromo  := inAmountNoPromo   ::TFloat
                                                   , inSummNoPromo    := inSummNoPromo     ::TFloat
-                                                  , inSession        := inSession
+                                                  , inPrice          := vbPrice           ::TFloat
+                                                  , inUserId         := vbUserId
                                                    ) AS tmp;
 
     -- тест

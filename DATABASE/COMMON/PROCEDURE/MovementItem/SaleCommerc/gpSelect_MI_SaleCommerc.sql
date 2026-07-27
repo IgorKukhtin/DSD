@@ -189,7 +189,7 @@ BEGIN
            , Object_Goods.GoodsGroupPropertyName  AS GoodsGroupPropertyName
            , Object_Goods.GoodsGroupPropertyName_Parent AS GoodsGroupPropertyName_Parent
 
-           , MovementItem.Amount                           ::TFloat AS Amount
+           , tmpMI_Child.Amount                            ::TFloat AS Amount
            , COALESCE (MIFloat_Summ.ValueData, 0)          ::TFloat AS Summ
            , COALESCE (MIFloat_AmountPromo.ValueData, 0)   ::TFloat AS AmountPromo
            , COALESCE (MIFloat_SummPromo.ValueData, 0)     ::TFloat AS SummPromo
@@ -221,7 +221,7 @@ BEGIN
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
 
             --child
-            LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
+            INNER JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
             LEFT JOIN tmpParams_Goods AS Object_Goods ON Object_Goods.GoodsId = tmpMI_Child.ObjectId
             
             LEFT JOIN tmpMILO_Child AS MILinkObject_GoodsKind

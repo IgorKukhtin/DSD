@@ -17,12 +17,14 @@ BEGIN
      UPDATE MovementItem  SET isErased = TRUE 
      WHERE MovementItem.MovementId    = inMovementId
        AND MovementItem.isErased      = FALSE
+       AND MovementItem.DescId        = zc_MI_Child()
     ;
      
      -- Протокол
      PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, TRUE)
      FROM MovementItem
-     WHERE MovementItem.MovementId = inMovementId;
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Child();
 
                                                  
     -- тест

@@ -17,6 +17,10 @@ BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     -- расчет - 1-ое число месяца
+     inOperDate:= DATE_TRUNC ('MONTH', inOperDate);
+
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SaleCommerc(), inInvNumber, inOperDate, NULL, NULL);
 

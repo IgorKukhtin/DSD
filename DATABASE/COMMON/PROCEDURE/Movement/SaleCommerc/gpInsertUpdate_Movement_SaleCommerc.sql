@@ -19,12 +19,12 @@ BEGIN
 
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_SaleCommerc (ioId               := ioId
-                                                 , inInvNumber        := inInvNumber
-                                                 , inOperDate         := inOperDate
-                                                 , inComment          := inComment
-                                                 , inUserId           := vbUserId
-                                                  );
+     ioId := lpInsertUpdate_Movement_SaleCommerc (ioId          := ioId
+                                                , inInvNumber  := inInvNumber
+                                                , inOperDate   := inOperDate
+                                                , inComment    := inComment
+                                                , inUserId     := vbUserId
+                                                 );
 
 END;
 $BODY$

@@ -114,6 +114,7 @@ object SaleCommercForm: TSaleCommercForm
         Height = 414
         Align = alClient
         TabOrder = 0
+        ExplicitTop = -6
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -632,21 +633,9 @@ object SaleCommercForm: TSaleCommercForm
           ItemName = 'bbInsertRecord'
         end
         item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -675,7 +664,7 @@ object SaleCommercForm: TSaleCommercForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'bbLoadExcel'
         end
         item
           Visible = True
@@ -684,6 +673,10 @@ object SaleCommercForm: TSaleCommercForm
         item
           Visible = True
           ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChildProtocolOpenForm'
         end
         item
           Visible = True
@@ -767,45 +760,6 @@ object SaleCommercForm: TSaleCommercForm
       Action = actInsertRecord
       Category = 0
     end
-    object bbCompleteCost: TdxBarButton
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivNever
-      ImageIndex = 12
-    end
-    object bbactUnCompleteCost: TdxBarButton
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivNever
-      ImageIndex = 11
-    end
-    object bbactSetErasedCost: TdxBarButton
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivNever
-      ImageIndex = 13
-    end
-    object bbShowErasedCost: TdxBarButton
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Category = 0
-      Enabled = False
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Visible = ivAlways
-      ImageIndex = 64
-    end
-    object bbInsertRecordChild: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
-      Category = 0
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
-      Visible = ivAlways
-      ImageIndex = 0
-    end
     object bbSetErasedChild: TdxBarButton
       Action = SetErasedChild
       Category = 0
@@ -814,24 +768,23 @@ object SaleCommercForm: TSaleCommercForm
       Action = SetUnErasedChild
       Category = 0
     end
-    object bbUpdateAsset_toGoods: TdxBarButton
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1057
-      Category = 0
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1057
-      Visible = ivAlways
-      ImageIndex = 28
-    end
-    object bb: TdxBarButton
+    object bbShowErasedChild: TdxBarButton
       Action = actShowErasedChild
       Category = 0
     end
-    object dxBarButton1: TdxBarButton
-      Action = actInsertRecordChild
-      Category = 0
-    end
-    object dxBarButton2: TdxBarButton
+    object bbLoadExcel: TdxBarButton
       Action = mactLoadExcel
       Category = 0
+    end
+    object bbChildProtocolOpenForm: TdxBarButton
+      Action = MovementItemChildProtocolOpenForm
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -907,19 +860,6 @@ object SaleCommercForm: TSaleCommercForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
-    object actUpdateChildDS: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end>
-      Caption = 'actUpdateMasterDS'
-      DataSource = ChildDS
-    end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -928,11 +868,6 @@ object SaleCommercForm: TSaleCommercForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end
-        item
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -1032,12 +967,12 @@ object SaleCommercForm: TSaleCommercForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = ChildDS
+      DataSource = MasterDS
     end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1054,7 +989,6 @@ object SaleCommercForm: TSaleCommercForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1070,13 +1004,13 @@ object SaleCommercForm: TSaleCommercForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = ChildDS
+      DataSource = MasterDS
     end
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1093,7 +1027,6 @@ object SaleCommercForm: TSaleCommercForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -1111,6 +1044,36 @@ object SaleCommercForm: TSaleCommercForm
       ImageIndex = 11
       Status = mtUncomplete
       Guides = StatusGuides
+    end
+    object MovementItemChildProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1058#1086#1074#1072#1088#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1058#1086#1074#1072#1088#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id_child'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'Complete'
@@ -1184,7 +1147,7 @@ object SaleCommercForm: TSaleCommercForm
           Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsName'
+          ComponentItem = 'ContractName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1931,8 +1894,8 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 350
-    Top = 176
+    Left = 238
+    Top = 208
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_SaleCommerc_SetUnErased'
@@ -1956,8 +1919,8 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 278
-    Top = 152
+    Left = 302
+    Top = 208
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'

@@ -18,7 +18,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_SaleCommerc_Child(
     IN inPrice               TFloat    , --
     IN inUserId              Integer    -- сессия пользователя
 )                              
-RETURNS RECORD AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
@@ -45,22 +46,8 @@ BEGIN
      -- сохранили свойство <>
      --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Bonus(), ioId, outBonus);
      
-                 -- Цены из прайса базового прайса
-     outPrice := (WITH
-                  tmp AS (SELECT lfSelect.GoodsKindId AS GoodsKindId
-                               , lfSelect.ValuePrice  AS Price
-                          FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_BasisComerc()
-                                                                   , inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
-                                                                    ) AS lfSelect
-                          WHERE lfSelect.GoodsId = inGoodsId
-                          )
-                  SELECT COALESCE ( (SELECT tmp.Price FROM tmp WHERE COALESCE (tmp.GoodsKindId,0) = COALESCE (inGoodsKindId,0))
-                                  , (SELECT tmp.Price FROM tmp WHERE tmp.GoodsKindId IS NULL)
-                                  , 0 
-                                  ) ::TFloat AS Price
-                 ) ::TFloat;
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, outPrice);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
