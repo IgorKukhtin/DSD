@@ -21,9 +21,29 @@ RETURNS TABLE (Id Integer
              , MeasureName TVarChar, TradeMarkName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsGroupPropertyName TVarChar, GoodsGroupPropertyName_Parent TVarChar
-             , Amount TFloat, Summ TFloat
-             , AmountPromo TFloat, SummPromo TFloat
-             , AmountNoPromo TFloat, SummNoPromo TFloat
+             
+             , Amount                TFloat
+             , Amount_sh             TFloat
+             , Amount_weight         TFloat
+             , Summ                  TFloat
+             , Summ_Basis            TFloat   --Собівартість відвантаження, грн
+             , Summ_Bonus            TFloat   --Бонуси, грн  - % бонусу * Відвантаження, грн
+             , Summ_diff             TFloat   --націнка, грн
+             , AmountPromo           TFloat
+             , AmountPromo_sh        TFloat
+             , AmountPromo_weight    TFloat
+             , SummPromo             TFloat
+             , SummPromo_Basis       TFloat   --Собівартість відвантаження, грн
+             , SummPromo_Bonus       TFloat   --Бонуси, грн  - % бонусу * Відвантаження, грн
+             , SummPromo_diff        TFloat   --націнка, грн
+             , AmountNoPromo         TFloat
+             , AmountNoPromo_sh      TFloat
+             , AmountNoPromo_weight  TFloat
+             , SummNoPromo           TFloat
+             , SummNoPromo_Basis     TFloat   --Собівартість відвантаження, грн 
+             , SummNoPromo_Bonus     TFloat   --Бонуси, грн  - % бонусу * Відвантаження, грн
+             , SummNoPromo_diff      TFloat   --націнка, грн   
+             
              , Bonus TFloat, Price TFloat
              , isErased_child Boolean
              , isErased Boolean
@@ -113,7 +133,9 @@ BEGIN
                                  , Object_Goods.ObjectCode                     AS GoodsCode
                                  , Object_Goods.ValueData                      AS GoodsName
                      
+                                 , Object_Measure.Id                           AS MeasureId
                                  , Object_Measure.ValueData                    AS MeasureName
+                                 , ObjectFloat_Weight.ValueData                AS Weight
                                  , Object_TradeMark.ValueData                  AS TradeMarkName           
                                  , Object_GoodsGroup.ValueData                 AS GoodsGroupName
                                  , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -150,8 +172,12 @@ BEGIN
                                                       ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
                                                      AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
                                  LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
-                            )
 
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                       ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                            )
+        --
         SELECT
              MovementItem.Id                      AS Id
            , Object_Contract.Id                   AS ContractId
@@ -189,19 +215,54 @@ BEGIN
            , Object_Goods.GoodsGroupPropertyName  AS GoodsGroupPropertyName
            , Object_Goods.GoodsGroupPropertyName_Parent AS GoodsGroupPropertyName_Parent
 
-           , tmpMI_Child.Amount                            ::TFloat AS Amount
-           , COALESCE (MIFloat_Summ.ValueData, 0)          ::TFloat AS Summ
-           , COALESCE (MIFloat_AmountPromo.ValueData, 0)   ::TFloat AS AmountPromo
-           , COALESCE (MIFloat_SummPromo.ValueData, 0)     ::TFloat AS SummPromo
-           , COALESCE (MIFloat_AmountNoPromo.ValueData, 0) ::TFloat AS AmountNoPromo
-           , COALESCE (MIFloat_SummNoPromo.ValueData, 0)   ::TFloat AS SummNoPromo
+            -- CASE WHEN tmpParams_Goods.MeasureId = zc_Measure_Sh() THEN COALESCE (tmpParams_Goods.Weight,1) ELSE 1 END
+           , tmpMI_Child.Amount                                                                           ::TFloat AS Amount
+           , CASE WHEN Object_Goods.MeasureId = zc_Measure_Sh() THEN tmpMI_Child.Amount ELSE 0 END        ::TFloat AS Amount_sh
+           , (tmpMI_Child.Amount 
+              * CASE WHEN Object_Goods.MeasureId = zc_Measure_Sh() THEN COALESCE (Object_Goods.Weight,1) ELSE 1 END)       ::TFloat AS Amount_weight
+           , COALESCE (MIFloat_Summ.ValueData, 0)                                                         ::TFloat AS Summ
+           , (COALESCE (tmpMI_Child.Amount,0) * COALESCE (MIFloat_Price.ValueData, 0))                    ::TFloat AS Summ_Basis               --Собівартість відвантаження, грн
+           , (COALESCE (MIFloat_Summ.ValueData, 0) * COALESCE (MIFloat_Bonus.ValueData, 0) / 100)         ::TFloat AS Summ_Bonus               --Бонуси, грн  - % бонусу * Відвантаження, грн
+
+           , (COALESCE (MIFloat_Summ.ValueData, 0) 
+             - (COALESCE (MIFloat_Summ.ValueData, 0) * COALESCE (MIFloat_Bonus.ValueData, 0) / 100)
+             - (COALESCE (tmpMI_Child.Amount,0) * COALESCE (MIFloat_Price.ValueData, 0)))                 ::TFloat AS Summ_diff --націнка, грн
+
+           , COALESCE (MIFloat_AmountPromo.ValueData, 0)                                                  ::TFloat AS AmountPromo
+           , CASE WHEN Object_Goods.MeasureId = zc_Measure_Sh() THEN COALESCE (MIFloat_AmountPromo.ValueData, 0) ELSE 0 END   ::TFloat AS AmountPromo_sh
+           , (COALESCE (MIFloat_AmountPromo.ValueData, 0) 
+              * CASE WHEN Object_Goods.MeasureId = zc_Measure_Sh() THEN COALESCE (Object_Goods.Weight,1) ELSE 1 END)       ::TFloat AS AmountPromo_weight
+           , COALESCE (MIFloat_SummPromo.ValueData, 0)                                                    ::TFloat AS SummPromo
+           , (COALESCE (MIFloat_AmountPromo.ValueData, 0) * COALESCE (MIFloat_Price.ValueData, 0))        ::TFloat AS SummPromo_Basis          --Собівартість відвантаження, грн
+           , (COALESCE (MIFloat_SummPromo.ValueData, 0) * COALESCE (MIFloat_Bonus.ValueData, 0) / 100)    ::TFloat AS SummPromo_Bonus          --Бонуси, грн  - % бонусу * Відвантаження, грн
+
+           , (COALESCE (MIFloat_SummPromo.ValueData, 0) 
+             - (COALESCE (MIFloat_SummPromo.ValueData, 0) * COALESCE (MIFloat_Bonus.ValueData, 0) / 100)
+             - (COALESCE (MIFloat_AmountPromo.ValueData,0) * COALESCE (MIFloat_Price.ValueData, 0)))      ::TFloat AS SummPromo_diff --націнка, грн
+
+           , COALESCE (MIFloat_AmountNoPromo.ValueData, 0)                                                ::TFloat AS AmountNoPromo
+           , CASE WHEN Object_Goods.MeasureId = zc_Measure_Sh() THEN COALESCE (MIFloat_AmountNoPromo.ValueData, 0) ELSE 0 END ::TFloat AS AmountNoPromo_sh
+           , (COALESCE (MIFloat_AmountNoPromo.ValueData, 0)
+              * CASE WHEN Object_Goods.MeasureId = zc_Measure_Sh() THEN COALESCE (Object_Goods.Weight,1) ELSE 1 END)       ::TFloat AS AmountNoPromo_weight
+           , COALESCE (MIFloat_SummNoPromo.ValueData, 0)                                                  ::TFloat AS SummNoPromo
+           , (COALESCE (MIFloat_AmountNoPromo.ValueData, 0) * COALESCE (MIFloat_Price.ValueData, 0))      ::TFloat AS SummNoPromo_Basis        --Собівартість відвантаження, грн 
+           , (COALESCE (MIFloat_SummNoPromo.ValueData, 0) * COALESCE (MIFloat_Bonus.ValueData, 0) / 100)  ::TFloat AS SummNoPromo_Bonus        --Бонуси, грн  - % бонусу * Відвантаження, грн
+           
+           , (COALESCE (MIFloat_SummNoPromo.ValueData, 0) 
+             - (COALESCE (MIFloat_SummNoPromo.ValueData, 0) * COALESCE (MIFloat_Bonus.ValueData, 0) / 100)
+             - (COALESCE (MIFloat_AmountNoPromo.ValueData,0) * COALESCE (MIFloat_Price.ValueData, 0)))    ::TFloat AS SummNoPromo_diff --націнка, грн
+
            , COALESCE (MIFloat_Bonus.ValueData, 0)         ::TFloat AS Bonus
            , COALESCE (MIFloat_Price.ValueData, 0)         ::TFloat AS Price
                                                   
-           , tmpMI_Child.isErased                AS isErased_child
-           
+           , tmpMI_Child.isErased                                                                           AS isErased_child
            , CASE WHEN MovementItem.isErased = TRUE OR tmpMI_Child.isErased = TRUE THEN TRUE ELSE FALSE END AS isErased
 
+           , Color_1 --желтый
+           , Color_2 --голубой
+           , Color_1 --розовый 
+           , Color_1 --зеленый
+            
        FROM tmpMI_Master AS MovementItem
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementItem.ObjectId
 

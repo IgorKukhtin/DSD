@@ -131,6 +131,7 @@ type
     MovementItemChildProtocolOpenForm: TdsdOpenForm;
     bbChildProtocolOpenForm: TdxBarButton;
     dxBarButton1: TdxBarButton;
+    PartnerId: TcxGridDBColumn;
   private
   public
   end;

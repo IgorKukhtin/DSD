@@ -166,6 +166,81 @@ object SaleCommercForm: TSaleCommercForm
               Format = ',0.####'
               Kind = skSum
               Column = SummNoPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Basis
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Bonus
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPromo_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPromo_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPromo_Basis
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPromo_Bonus
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPromo_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNoPromo_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNoPromo_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNoPromo_Basis
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNoPromo_Bonus
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNoPromo_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -216,6 +291,81 @@ object SaleCommercForm: TSaleCommercForm
               Format = ',0.####'
               Kind = skSum
               Column = SummNoPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Basis
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Bonus
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPromo_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPromo_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPromo_Basis
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPromo_Bonus
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPromo_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNoPromo_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNoPromo_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNoPromo_Basis
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNoPromo_Bonus
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNoPromo_diff
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -283,6 +433,13 @@ object SaleCommercForm: TSaleCommercForm
             HeaderAlignmentVert = vaCenter
             Width = 130
           end
+          object PartnerId: TcxGridDBColumn
+            Caption = #1050#1083#1102#1095'-2'
+            DataBinding.FieldName = 'PartnerId'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
             DataBinding.FieldName = 'PartnerCode'
@@ -306,7 +463,7 @@ object SaleCommercForm: TSaleCommercForm
             Width = 191
           end
           object JuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'. '#1083#1080#1094#1077
+            Caption = #1070#1088'. '#1086#1089#1086#1073#1072
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -328,6 +485,14 @@ object SaleCommercForm: TSaleCommercForm
             Options.Editing = False
             Width = 80
           end
+          object GoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -336,14 +501,6 @@ object SaleCommercForm: TSaleCommercForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
-          end
-          object GoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -431,9 +588,54 @@ object SaleCommercForm: TSaleCommercForm
             Options.Editing = False
             Width = 172
           end
+          object Bonus: TcxGridDBColumn
+            Caption = '% '#1073#1086#1085#1091#1089#1091
+            DataBinding.FieldName = 'Bonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1110#1085#1072' '#1089'/'#1074', '#1075#1088#1085
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1110#1085#1072' '#1057#1086#1073#1110#1074#1072#1088#1090#1110#1089#1090#1100' - '#1079' '#1087#1088#1072#1081#1089#1091' "'#1041#1072#1079#1086#1074#1110' '#1094#1110#1085#1080'"'
+            Options.Editing = False
+            Width = 80
+          end
           object Amount: TcxGridDBColumn
             Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1050#1110#1083'-'#1089#1090#1100' - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Amount_sh: TcxGridDBColumn
+            Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1096#1090' - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
+            DataBinding.FieldName = 'Amount_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object Amount_weight: TcxGridDBColumn
+            Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1082#1075' - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
+            DataBinding.FieldName = 'Amount_weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -451,6 +653,37 @@ object SaleCommercForm: TSaleCommercForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object Summ_Basis: TcxGridDBColumn
+            Caption = #1057'/'#1074' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
+            DataBinding.FieldName = 'Summ_Basis'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1073#1110#1074#1072#1088#1090#1110#1089#1090#1100' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
+            Width = 99
+          end
+          object Summ_Bonus: TcxGridDBColumn
+            Caption = #1041#1086#1085#1091#1089#1080', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
+            DataBinding.FieldName = 'Summ_Bonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Summ_diff: TcxGridDBColumn
+            Caption = #1053#1072#1094#1110#1085#1082#1072', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
+            DataBinding.FieldName = 'Summ_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object AmountPromo: TcxGridDBColumn
             Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1050#1110#1083'-'#1089#1090#1100' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
             DataBinding.FieldName = 'AmountPromo'
@@ -459,6 +692,38 @@ object SaleCommercForm: TSaleCommercForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object AmountPromo_sh: TcxGridDBColumn
+            Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1096#1090' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'AmountPromo_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object AmountPromo_weight: TcxGridDBColumn
+            Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1082#1075' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'AmountPromo_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object SummPromo_Basis: TcxGridDBColumn
+            Caption = #1057'/'#1074' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'SummPromo_Basis'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1073#1110#1074#1072#1088#1090#1110#1089#1090#1100' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
             Width = 100
           end
           object SummPromo: TcxGridDBColumn
@@ -471,9 +736,50 @@ object SaleCommercForm: TSaleCommercForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object SummPromo_Bonus: TcxGridDBColumn
+            Caption = #1041#1086#1085#1091#1089#1080', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'SummPromo_Bonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object SummPromo_diff: TcxGridDBColumn
+            Caption = #1053#1072#1094#1110#1085#1082#1072', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'SummPromo_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object AmountNoPromo: TcxGridDBColumn
             Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1050#1110#1083'-'#1089#1090#1100' - '#1055#1051#1040#1053' ('#1073#1077#1079' '#1072#1082#1094#1110#1081#1085#1080#1081')'
             DataBinding.FieldName = 'AmountNoPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object AmountNoPromo_sh: TcxGridDBColumn
+            Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1096#1090' - '#1055#1051#1040#1053' ('#1073#1077#1079' '#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'AmountNoPromo_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object AmountNoPromo_weight: TcxGridDBColumn
+            Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1082#1075' - '#1055#1051#1040#1053' ('#1073#1077#1079' '#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'AmountNoPromo_weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -491,28 +797,36 @@ object SaleCommercForm: TSaleCommercForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1110#1085#1072' '#1089'/'#1074', '#1075#1088#1085
-            DataBinding.FieldName = 'Price'
+          object SummNoPromo_Basis: TcxGridDBColumn
+            Caption = #1057'/'#1074' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1073#1077#1079' '#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'SummNoPromo_Basis'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1110#1085#1072' '#1057#1086#1073#1110#1074#1072#1088#1090#1110#1089#1090#1100' - '#1079' '#1087#1088#1072#1081#1089#1091' "'#1041#1072#1079#1086#1074#1110' '#1094#1110#1085#1080'"'
-            Options.Editing = False
-            Width = 80
+            HeaderHint = #1057#1086#1073#1110#1074#1072#1088#1090#1110#1089#1090#1100' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1073#1077#1079' '#1072#1082#1094#1110#1081#1085#1080#1081')'
+            Width = 100
           end
-          object Bonus: TcxGridDBColumn
-            Caption = '% '#1073#1086#1085#1091#1089#1091
-            DataBinding.FieldName = 'Bonus'
+          object SummNoPromo_Bonus: TcxGridDBColumn
+            Caption = #1041#1086#1085#1091#1089#1080', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1073#1077#1079' '#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'SummNoPromo_Bonus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
+            Width = 100
+          end
+          object SummNoPromo_diff: TcxGridDBColumn
+            Caption = #1053#1072#1094#1110#1085#1082#1072', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1073#1077#1079' '#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'SummNoPromo_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -989,6 +1303,7 @@ object SaleCommercForm: TSaleCommercForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1004,8 +1319,8 @@ object SaleCommercForm: TSaleCommercForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -1027,6 +1342,7 @@ object SaleCommercForm: TSaleCommercForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS

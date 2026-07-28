@@ -636,6 +636,9 @@ CREATE OR REPLACE FUNCTION zc_Movement_SaleCommerc() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_SaleCommerc', 'Планирование Продаж (коммерция)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SaleCommerc');
 
+CREATE OR REPLACE FUNCTION zc_Movement_PromoSale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoSale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoSale', 'Рост Продаж' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoSale');
 
 
 
@@ -644,6 +647,7 @@ INSERT INTO MovementDesc (Code, ItemName)
  ИСТОР
  ИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 27.07.26         * zc_Movement_PromoSale
  22.07.26         * zc_Movement_SaleCommerc
  25.09.25         * Закрытие периода, Штатное расписание
  20.08.25         * zc_Movement_StaffList
