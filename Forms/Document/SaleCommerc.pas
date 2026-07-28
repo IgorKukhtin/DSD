@@ -132,6 +132,10 @@ type
     bbChildProtocolOpenForm: TdxBarButton;
     dxBarButton1: TdxBarButton;
     PartnerId: TcxGridDBColumn;
+    Color_yellow: TcxGridDBColumn;
+    Color_blue: TcxGridDBColumn;
+    Color_rose: TcxGridDBColumn;
+    Color_green: TcxGridDBColumn;
   private
   public
   end;

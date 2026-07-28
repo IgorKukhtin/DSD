@@ -1,6 +1,7 @@
 -- Function: gpInsert_MI_SaleCommerc_Load ()
 
 DROP FUNCTION IF EXISTS gpInsert_MI_SaleCommerc_Load (Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_MI_SaleCommerc_Load (Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MI_SaleCommerc_Load(
     IN inMovementId            Integer   , -- ключ Документа
@@ -13,27 +14,34 @@ CREATE OR REPLACE FUNCTION gpInsert_MI_SaleCommerc_Load(
     IN inGoodsCode             Integer  , -- 
     IN inGoodsName             TVarChar  , -- 
     IN inGoodsKindName         TVarChar  , -- 
-    IN inAmount                TFloat    , -- 
+    IN inAmount                TFloat    , -- шт
+    IN inAmount_weight         TFloat    , -- кг
     IN inSumm                  TFloat    , --
-    IN inAmountPromo           TFloat    , --
+    IN inAmountPromo           TFloat    , -- шт
+    IN inAmountPromo_weight    TFloat    , -- кг
     IN inSummPromo             TFloat    , --
-    IN inAmountNoPromo         TFloat    , --
+    IN inAmountNoPromo         TFloat    , -- шт
+    IN inAmountNoPromo_weight  TFloat    , -- кг
     IN inSummNoPromo           TFloat    , --    
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId       Integer;
-   DECLARE vbGoodsId      Integer;
-           vbBranchId     Integer;
-           vbJuridicalId  Integer;
-           vbContractId   Integer;
-           vbPaidKindId   Integer;
-           vbGoodsKindId  Integer;
-           vbId           Integer;
-           vbId_child     Integer;
-           vbPrice        TFloat;
+   DECLARE vbUserId        Integer;
+   DECLARE vbGoodsId       Integer;
+           vbBranchId      Integer;
+           vbJuridicalId   Integer;
+           vbContractId    Integer;
+           vbPaidKindId    Integer;
+           vbGoodsKindId   Integer;
+           vbId            Integer;
+           vbId_child      Integer;
+           vbPrice         TFloat;
+           vbAmount        TFloat;
+           vbAmountPromo   TFloat;
+           vbAmountNoPromo TFloat;
+           
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SaleCommerc());
@@ -43,27 +51,38 @@ BEGIN
      --проверка
      IF COALESCE (vbPaidKindId,0) = 0 AND TRIM (inPaidKindName) <> ''
      THEN
-         RAISE EXCEPTION 'Ошибка.Не найдена Форма оплаты <%> для <%> договор <%> .', inPaidKindName, inJuridicalName, inContractName;
+         RAISE EXCEPTION 'Ошибка.Не найдена Форма оплаты <%> в справочнике <Форм оплаты> .', inPaidKindName;
      END IF;
      
 
      -- 2 Поиск - Контргагент
+     IF COALESCE(inPartnerId,0) <> 0 AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.Id = inPartnerId AND Object.isErased = FALSE) 
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не найден ключ-2 <%> для <%> в справочнике <Контрагенты>.', inPartnerId, inPartnerName;
+     END IF;
+          
      IF COALESCE(inPartnerId,0) = 0
      THEN
          inPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ValueData ILIKE inPartnerName AND Object.isErased = FALSE);
          --проверка
          IF COALESCE (inPartnerId,0) = 0 AND TRIM (inPartnerName) <> ''
          THEN
-             RAISE EXCEPTION 'Ошибка.Не найден контрагент <%> для <%> договор <%>.', inPartnerName, inJuridicalName, inContractName;
+             RAISE EXCEPTION 'Ошибка.Не найден контрагент <%> в справочнике <Контрагенты>.', inPartnerName, inPartnerId;
          END IF;
+     
      END IF;
 
-     -- 3 Поиск договор
-     vbJuridicalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.ValueData ILIKE inJuridicalName AND Object.isErased = FALSE);
+     -- 3 Поиск договор по контрагенту
+     vbJuridicalId := (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                       FROM ObjectLink AS ObjectLink_Partner_Juridical
+                       WHERE ObjectLink_Partner_Juridical.ObjectId = inPartnerId
+                         AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                      ); 
+ 
      --проверка
      IF COALESCE (vbJuridicalId,0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не найдено Юр.дицо <%> для <%> договор <%> .', inJuridicalName, inPartnerName, inContractName;
+     THEN   
+         RAISE EXCEPTION 'Ошибка.Не найдено Юр.дицо <%> для контрагента <%> ключ-2 <%> .', inJuridicalName, inPartnerName, inPartnerId;
      END IF;
      
      SELECT Object_Contract.Id  AS ContractId
@@ -83,14 +102,14 @@ BEGIN
      WHERE ObjectLink_Contract_Juridical.ChildObjectId = vbJuridicalId
        AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
        AND ObjectLink_Contract_PaidKind.ChildObjectId  = vbPaidKindId
-       AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close()
+    --   AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close()
      LIMIT 1;   --
 
      -- проверка
      IF COALESCE (vbContractId, 0) = 0 AND TRIM (inContractName) <> ''
      THEN
          --
-         RAISE EXCEPTION 'Ошибка.Не найден Договор <%> для <%>.', inContractName, inJuridicalName;
+         RAISE EXCEPTION 'Ошибка.Не найден Договор <%> для <%>.', inContractName, inPartnerName;
      END IF;
 
      -- 4 Филиал
@@ -100,7 +119,7 @@ BEGIN
          -- проверка
          IF COALESCE (vbBranchId,0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Не найден Филиал <%> для <%> договор <%>.', inBranchName, inPartnerName, inContractName;
+             RAISE EXCEPTION 'Ошибка.Не найден Филиал <%> в справочнике.', inBranchName;
          END IF;
      END IF;
 
@@ -112,7 +131,7 @@ BEGIN
          -- проверка
          IF COALESCE (vbGoodsId,0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Не найден товар Код = <%> <%> для <%> договор <%> .', zfConvert_StringToNumber (inGoodsCode), inGoodsName, inPartnerName, inContractName;
+             RAISE EXCEPTION 'Ошибка.Не найден товар Код = <%> <%> в справочнике <Товаров>.', zfConvert_StringToNumber (inGoodsCode), inGoodsName;
          END IF;
 
      ELSE
@@ -122,7 +141,7 @@ BEGIN
          -- проверка
          IF COALESCE (vbGoodsId,0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Не найден Товар <%> для <%> договора <%> .', inGoodsName, inPartnerName, inContractName;
+             RAISE EXCEPTION 'Ошибка.Не найден Товар <%> в справочнике <Товаров>.', inGoodsName;
          END IF;
 
      END IF;
@@ -132,7 +151,7 @@ BEGIN
 
      IF COALESCE (vbGoodsKindId,0) = 0 AND TRIM (inGoodsKindName) <> ''
      THEN
-        RAISE EXCEPTION 'Ошибка. Вид товара <%> не найден для <%> договор <%>.', inGoodsKindName, inPartnerName, inContractName;
+        RAISE EXCEPTION 'Ошибка. Вид товара <%> не найден в справочнике <Виды товара>.', inGoodsKindName;
      END IF;
 
 
@@ -204,22 +223,62 @@ BEGIN
                  ) ::TFloat;
 
      -- 2.сохраняем Child - Первичный план на неделю
+     -- если товар шт - берем эту колонку, если там 0 а есть кг, то переводим в шт, весовой - всегда в кг
+     SELECT CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()       
+                 THEN CASE WHEN COALESCE (inAmount,0) <> 0
+                           THEN inAmount
+                           ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                     THEN inAmount_weight / COALESCE (ObjectFloat_Weight.ValueData,0)
+                                     ELSE 0
+                                END
+                      END
+                 ELSE COALESCE (inAmount_weight,0)
+            END ::TFloat AS Amount
+          , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()       
+                 THEN CASE WHEN COALESCE (inAmountPromo,0) <> 0
+                           THEN inAmountPromo
+                           ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                     THEN inAmountPromo_weight / COALESCE (ObjectFloat_Weight.ValueData,0)
+                                     ELSE 0
+                                END
+                      END
+                 ELSE COALESCE (inAmountPromo_weight,0)
+            END ::TFloat AS AmountPromo
+          , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()       
+                 THEN CASE WHEN COALESCE (inAmountNoPromo,0) <> 0
+                           THEN inAmountNoPromo
+                           ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                     THEN inAmountNoPromo_weight / COALESCE (ObjectFloat_Weight.ValueData,0)
+                                     ELSE 0
+                                END
+                      END
+                 ELSE COALESCE (inAmountNoPromo_weight,0)
+            END ::TFloat AS AmountNoPromo
+   INTO vbAmount, vbAmountPromo, vbAmountNoPromo
+     FROM ObjectLink AS ObjectLink_Goods_Measure
+          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                ON ObjectFloat_Weight.ObjectId = ObjectLink_Goods_Measure.ObjectId
+                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+     WHERE ObjectLink_Goods_Measure.ObjectId = vbGoodsId
+       AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure();
+                                                      
+     --                                                  
      SELECT tmp.ioId
       INTO vbId_child
-         FROM  lpInsertUpdate_MI_SaleCommerc_Child (ioId             := 0                 ::Integer
-                                                  , inParentId       := vbId              ::Integer
-                                                  , inMovementId     := inMovementId      ::Integer
-                                                  , inGoodsId        := vbGoodsId         ::Integer
-                                                  , inGoodsKindId    := vbGoodsKindId     ::Integer
-                                                  , inAmount         := inAmount          ::TFloat
-                                                  , inSumm           := inSumm            ::TFloat
-                                                  , inAmountPromo    := inAmountPromo     ::TFloat
-                                                  , inSummPromo      := inSummPromo       ::TFloat
-                                                  , inAmountNoPromo  := inAmountNoPromo   ::TFloat
-                                                  , inSummNoPromo    := inSummNoPromo     ::TFloat
-                                                  , inPrice          := vbPrice           ::TFloat
-                                                  , inUserId         := vbUserId
-                                                   ) AS tmp;
+         FROM lpInsertUpdate_MI_SaleCommerc_Child (ioId             := 0                 ::Integer
+                                                 , inParentId       := vbId              ::Integer
+                                                 , inMovementId     := inMovementId      ::Integer
+                                                 , inGoodsId        := vbGoodsId         ::Integer
+                                                 , inGoodsKindId    := vbGoodsKindId     ::Integer
+                                                 , inAmount         := vbAmount          ::TFloat
+                                                 , inSumm           := inSumm            ::TFloat
+                                                 , inAmountPromo    := vbAmountPromo     ::TFloat
+                                                 , inSummPromo      := inSummPromo       ::TFloat
+                                                 , inAmountNoPromo  := vbAmountNoPromo   ::TFloat
+                                                 , inSummNoPromo    := inSummNoPromo     ::TFloat
+                                                 , inPrice          := vbPrice           ::TFloat
+                                                 , inUserId         := vbUserId
+                                                  ) AS tmp;
 
     -- тест
     --if vbUserId IN (9457) then RAISE EXCEPTION 'Админ.Test Ok. '; end if;

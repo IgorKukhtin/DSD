@@ -47,6 +47,11 @@ RETURNS TABLE (Id Integer
              , Bonus TFloat, Price TFloat
              , isErased_child Boolean
              , isErased Boolean
+
+             , Color_yellow          Integer--желтый
+             , Color_blue            Integer--голубой
+             , Color_rose            Integer--розовый 
+             , Color_green           Integer--зеленый
               )
 AS
 $BODY$
@@ -121,12 +126,13 @@ BEGIN
                              FROM MovementItemFloat
                              WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
                                AND MovementItemFloat.DescId IN (zc_MIFloat_Summ()
-                                                                   , zc_MIFloat_SummPromo()
-                                                                   , zc_MIFloat_AmountNoPromo()
-                                                                   , zc_MIFloat_SummNoPromo()
-                                                                   , zc_MIFloat_Bonus()
-                                                                   , zc_MIFloat_Price()
-                                                                    )
+                                                              , zc_MIFloat_SummPromo()
+                                                              , zc_MIFloat_SummNoPromo()
+                                                              , zc_MIFloat_AmountPromo() 
+                                                              , zc_MIFloat_AmountNoPromo()
+                                                              , zc_MIFloat_Bonus()
+                                                              , zc_MIFloat_Price()
+                                                               )
                              )
 
       , tmpParams_Goods AS (SELECT Object_Goods.Id                             AS GoodsId
@@ -258,10 +264,10 @@ BEGIN
            , tmpMI_Child.isErased                                                                           AS isErased_child
            , CASE WHEN MovementItem.isErased = TRUE OR tmpMI_Child.isErased = TRUE THEN TRUE ELSE FALSE END AS isErased
 
-           , Color_1 --желтый
-           , Color_2 --голубой
-           , Color_1 --розовый 
-           , Color_1 --зеленый
+           , 12582911 ::Integer AS Color_yellow --желтый
+           , 16777166 ::Integer AS Color_blue   --голубой
+           , 11053311 ::Integer AS Color_rose   --розовый 
+           , 14614223 ::Integer AS Color_green  --зеленый
             
        FROM tmpMI_Master AS MovementItem
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementItem.ObjectId

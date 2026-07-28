@@ -2,6 +2,7 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SaleCommerc(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа master>
@@ -13,13 +14,19 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SaleCommerc(
     IN inPaidKindId           Integer   , --
     IN inGoodsId              Integer   , -- Товар
     IN inGoodsKindId          Integer   , -- Вид Товар
-    IN inAmount               TFloat    , --
+ INOUT ioAmount_sh            TFloat    , --
+ INOUT ioAmount_weight        TFloat    , --
     IN inSumm                 TFloat    , --
-    IN inAmountPromo          TFloat    , --
+ INOUT ioAmountPromo_sh       TFloat    , --
+ INOUT ioAmountPromo_weight   TFloat    , --
     IN inSummPromo            TFloat    , --
-    IN inAmountNoPromo        TFloat    , --
+ INOUT ioAmountNoPromo_sh     TFloat    , --
+ INOUT ioAmountNoPromo_weight TFloat    , --
     IN inSummNoPromo          TFloat    , --
-   OUT outPrice               TFloat    , -- 
+   OUT outPrice               TFloat    , --
+   OUT outAmount              TFloat    , --
+   OUT outAmountPromo         TFloat    , --
+   OUT outAmountNoPromo       TFloat    , -- 
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -63,6 +70,47 @@ BEGIN
                  ) ::TFloat;
 
 
+     -- если товар шт - берем эту колонку, если там 0 а есть кг, то переводим в шт, весовой - всегда в кг
+     SELECT CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()       
+                 THEN CASE WHEN COALESCE (ioAmount_sh,0) <> 0
+                           THEN ioAmount_sh
+                           ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                     THEN ioAmount_weight / COALESCE (ObjectFloat_Weight.ValueData,0)
+                                     ELSE 0
+                                END
+                      END
+                 ELSE COALESCE (ioAmount_weight,0)
+            END ::TFloat AS Amount
+
+          , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()       
+                 THEN CASE WHEN COALESCE (ioAmountPromo_sh,0) <> 0
+                           THEN ioAmountPromo_sh
+                           ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                     THEN ioAmountPromo_weight / COALESCE (ObjectFloat_Weight.ValueData,0)
+                                     ELSE 0
+                                END
+                      END
+                 ELSE COALESCE (ioAmountPromo_weight,0)
+            END ::TFloat AS AmountPromo
+
+          , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()       
+                 THEN CASE WHEN COALESCE (ioAmountNoPromo_sh,0) <> 0
+                           THEN ioAmountNoPromo_sh
+                           ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                     THEN ioAmountNoPromo_weight / COALESCE (ObjectFloat_Weight.ValueData,0)
+                                     ELSE 0
+                                END
+                      END
+                 ELSE COALESCE (ioAmountNoPromo_weight,0)
+            END ::TFloat AS AmountNoPromo
+   INTO outAmount, outAmountPromo, outAmountNoPromo
+     FROM ObjectLink AS ObjectLink_Goods_Measure
+          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                ON ObjectFloat_Weight.ObjectId = ObjectLink_Goods_Measure.ObjectId
+                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+     WHERE ObjectLink_Goods_Measure.ObjectId = inGoodsId
+       AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure();
+
      -- сохранили <Элемент документа>
      SELECT tmp.ioId
    INTO ioId_Child
@@ -71,11 +119,11 @@ BEGIN
                                              , inMovementId     := inMovementId           ::Integer
                                              , inGoodsId        := inGoodsId              ::Integer
                                              , inGoodsKindId    := inGoodsKindId          ::Integer
-                                             , inAmount         := inAmount               ::TFloat
+                                             , inAmount         := outAmount              ::TFloat
                                              , inSumm           := inSumm                 ::TFloat
-                                             , inAmountPromo    := inAmountPromo          ::TFloat
+                                             , inAmountPromo    := outAmountPromo         ::TFloat
                                              , inSummPromo      := inSummPromo            ::TFloat
-                                             , inAmountNoPromo  := inAmountNoPromo        ::TFloat
+                                             , inAmountNoPromo  := outAmountNoPromo       ::TFloat
                                              , inSummNoPromo    := inSummNoPromo          ::TFloat
                                              , inPrice          := outPrice               ::TFloat
                                              , inUserId         := vbUserId               ::Integer
@@ -93,4 +141,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- 
+--

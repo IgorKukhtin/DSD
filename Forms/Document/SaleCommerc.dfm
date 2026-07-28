@@ -30,6 +30,7 @@ object SaleCommercForm: TSaleCommercForm
       Left = 177
       Top = 23
       Properties.ReadOnly = True
+      Style.Color = clWindow
       TabOrder = 0
       Width = 157
     end
@@ -114,7 +115,6 @@ object SaleCommercForm: TSaleCommercForm
         Height = 414
         Align = alClient
         TabOrder = 0
-        ExplicitTop = -6
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -662,6 +662,7 @@ object SaleCommercForm: TSaleCommercForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1086#1073#1110#1074#1072#1088#1090#1110#1089#1090#1100' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
+            Options.Editing = False
             Width = 99
           end
           object Summ_Bonus: TcxGridDBColumn
@@ -672,6 +673,7 @@ object SaleCommercForm: TSaleCommercForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Summ_diff: TcxGridDBColumn
@@ -682,6 +684,7 @@ object SaleCommercForm: TSaleCommercForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object AmountPromo: TcxGridDBColumn
@@ -715,17 +718,6 @@ object SaleCommercForm: TSaleCommercForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object SummPromo_Basis: TcxGridDBColumn
-            Caption = #1057'/'#1074' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
-            DataBinding.FieldName = 'SummPromo_Basis'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1086#1073#1110#1074#1072#1088#1090#1110#1089#1090#1100' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
-            Width = 100
-          end
           object SummPromo: TcxGridDBColumn
             Caption = #1042#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
             DataBinding.FieldName = 'SummPromo'
@@ -736,6 +728,18 @@ object SaleCommercForm: TSaleCommercForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object SummPromo_Basis: TcxGridDBColumn
+            Caption = #1057'/'#1074' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'SummPromo_Basis'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1073#1110#1074#1072#1088#1090#1110#1089#1090#1100' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
+            Options.Editing = False
+            Width = 100
+          end
           object SummPromo_Bonus: TcxGridDBColumn
             Caption = #1041#1086#1085#1091#1089#1080', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
             DataBinding.FieldName = 'SummPromo_Bonus'
@@ -744,6 +748,7 @@ object SaleCommercForm: TSaleCommercForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object SummPromo_diff: TcxGridDBColumn
@@ -754,6 +759,7 @@ object SaleCommercForm: TSaleCommercForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object AmountNoPromo: TcxGridDBColumn
@@ -806,6 +812,7 @@ object SaleCommercForm: TSaleCommercForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1086#1073#1110#1074#1072#1088#1090#1110#1089#1090#1100' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1073#1077#1079' '#1072#1082#1094#1110#1081#1085#1080#1081')'
+            Options.Editing = False
             Width = 100
           end
           object SummNoPromo_Bonus: TcxGridDBColumn
@@ -816,6 +823,7 @@ object SaleCommercForm: TSaleCommercForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object SummNoPromo_diff: TcxGridDBColumn
@@ -826,7 +834,39 @@ object SaleCommercForm: TSaleCommercForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
+          end
+          object Color_yellow: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_yellow'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 30
+          end
+          object Color_blue: TcxGridDBColumn
+            Caption = 'Color '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
+            DataBinding.FieldName = 'Color_blue'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 30
+          end
+          object Color_rose: TcxGridDBColumn
+            Caption = 'Color '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'Color_rose'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 30
+          end
+          object Color_green: TcxGridDBColumn
+            Caption = 'Color '#1055#1051#1040#1053' ('#1073#1077#1079' '#1072#1082#1094#1110#1081#1085#1080#1081')'
+            DataBinding.FieldName = 'Color_green'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 30
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -1182,6 +1222,9 @@ object SaleCommercForm: TSaleCommercForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -1936,12 +1979,21 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount_sh'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Amount'
+        ComponentItem = 'Amount_sh'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmount_weight'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_weight'
+        DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1954,12 +2006,21 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPromo'
+        Name = 'ioAmountPromo_sh'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountPromo'
+        ComponentItem = 'AmountPromo_sh'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmountPromo_weight'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPromo_weight'
+        DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1972,12 +2033,21 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountNoPromo'
+        Name = 'ioAmountNoPromo_sh'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountNoPromo'
+        ComponentItem = 'AmountNoPromo_sh'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmountNoPromo_weight'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountNoPromo_weight'
+        DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2022,7 +2092,122 @@ object SaleCommercForm: TSaleCommercForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Price
+        BackGroundValueColumn = Color_yellow
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Bonus
+        BackGroundValueColumn = Color_yellow
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount
+        BackGroundValueColumn = Color_blue
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount_sh
+        BackGroundValueColumn = Color_blue
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount_weight
+        BackGroundValueColumn = Color_blue
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ
+        BackGroundValueColumn = Color_blue
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_Basis
+        BackGroundValueColumn = Color_blue
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_Bonus
+        BackGroundValueColumn = Color_blue
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_diff
+        BackGroundValueColumn = Color_blue
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountPromo
+        BackGroundValueColumn = Color_rose
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountPromo_sh
+        BackGroundValueColumn = Color_rose
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountPromo_weight
+        BackGroundValueColumn = Color_rose
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummPromo
+        BackGroundValueColumn = Color_rose
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummPromo_Basis
+        BackGroundValueColumn = Color_rose
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummPromo_Bonus
+        BackGroundValueColumn = Color_rose
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummPromo_diff
+        BackGroundValueColumn = Color_rose
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountNoPromo
+        BackGroundValueColumn = Color_green
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountNoPromo_sh
+        BackGroundValueColumn = Color_green
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountNoPromo_weight
+        BackGroundValueColumn = Color_green
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummNoPromo
+        BackGroundValueColumn = Color_green
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummNoPromo_Basis
+        BackGroundValueColumn = Color_green
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummNoPromo_Bonus
+        BackGroundValueColumn = Color_green
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummNoPromo_diff
+        BackGroundValueColumn = Color_green
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <
@@ -2346,10 +2531,7 @@ object SaleCommercForm: TSaleCommercForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <
-      item
-        ColorValueList = <>
-      end>
+    ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <
