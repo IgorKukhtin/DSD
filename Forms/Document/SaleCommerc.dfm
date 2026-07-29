@@ -600,7 +600,7 @@ object SaleCommercForm: TSaleCommercForm
             Width = 80
           end
           object Price: TcxGridDBColumn
-            Caption = #1062#1110#1085#1072' '#1089'/'#1074', '#1075#1088#1085
+            Caption = #1062#1110#1085#1072' '#1089'/'#1074', '#1075#1088#1085'  ('#1079' '#1055#1044#1042')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -654,7 +654,7 @@ object SaleCommercForm: TSaleCommercForm
             Width = 80
           end
           object Summ_Basis: TcxGridDBColumn
-            Caption = #1057'/'#1074' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
+            Caption = #1057'/'#1074' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' ('#1079' '#1055#1044#1042') - '#1055#1051#1040#1053' ('#1079#1072#1075#1072#1083#1100#1085#1080#1081')'
             DataBinding.FieldName = 'Summ_Basis'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -729,7 +729,7 @@ object SaleCommercForm: TSaleCommercForm
             Width = 100
           end
           object SummPromo_Basis: TcxGridDBColumn
-            Caption = #1057'/'#1074' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
+            Caption = #1057'/'#1074' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' ('#1079' '#1055#1044#1042') - '#1055#1051#1040#1053' ('#1072#1082#1094#1110#1081#1085#1080#1081')'
             DataBinding.FieldName = 'SummPromo_Basis'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -804,7 +804,7 @@ object SaleCommercForm: TSaleCommercForm
             Width = 100
           end
           object SummNoPromo_Basis: TcxGridDBColumn
-            Caption = #1057'/'#1074' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' - '#1055#1051#1040#1053' ('#1073#1077#1079' '#1072#1082#1094#1110#1081#1085#1080#1081')'
+            Caption = #1057'/'#1074' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103', '#1075#1088#1085' ('#1079' '#1055#1044#1042') - '#1055#1051#1040#1053' ('#1073#1077#1079' '#1072#1082#1094#1110#1081#1085#1080#1081')'
             DataBinding.FieldName = 'SummNoPromo_Basis'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
