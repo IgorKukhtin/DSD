@@ -270,7 +270,7 @@ AS
                                     THEN -1 * MIContainer.Amount
                                ELSE 0
                           END
-                         ) :: TFloat AS Amount_promo_NotBudg_sh
+                         ) :: TFloat AS Amount_promo_sh_NotBudg
 
                      -- Вес Продажа у покупателя
                    , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     THEN -1 * MIContainer.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END

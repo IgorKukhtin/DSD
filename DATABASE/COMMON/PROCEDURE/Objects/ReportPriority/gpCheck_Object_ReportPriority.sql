@@ -64,6 +64,7 @@ BEGIN
                                         WHEN 0 < (SELECT tmpCount.Res FROM tmpCount)
                                              AND (inProcName ILIKE 'gpReport_MotionGoods'
                                                OR inProcName ILIKE 'gpUpdate_Movement_ReturnIn_Auto'
+                                               OR inProcName ILIKE 'gpReport_Send_PartionCell'
                                                  )
                                              -- Голота К.О.
                                              AND vbUserId <> 6604558
@@ -147,4 +148,4 @@ $BODY$
 -- тест
 -- WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state ILIKE 'active') SELECT COUNT(*) FROM tmpProcess WHERE query ILIKE ('%gpReport_MotionGoods%')
 -- SELECT * FROM gpCheck_Object_ReportPriority (inProcName:= 'Inventory', inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpCheck_Object_ReportPriority (inProcName:= 'gpReport_MotionGoods', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpCheck_Object_ReportPriority (inProcName:= 'gpReport_Send_PartionCell', inSession:= zfCalc_UserAdmin())

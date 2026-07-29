@@ -46,14 +46,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SaleCommerc());
 
-     -- 1 Поиск - Форма оплаты
-     vbPaidKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PaidKind() AND Object.ValueData ILIKE inPaidKindName AND Object.isErased = FALSE);
-     --проверка
-     IF COALESCE (vbPaidKindId,0) = 0 AND TRIM (inPaidKindName) <> ''
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не найдена Форма оплаты <%> в справочнике <Форм оплаты> .', inPaidKindName;
-     END IF;
-     
+    
 
      -- 2 Поиск - Контргагент
      IF COALESCE(inPartnerId,0) <> 0 AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.Id = inPartnerId AND Object.isErased = FALSE) 
@@ -72,7 +65,7 @@ BEGIN
      
      END IF;
 
-     -- 3 Поиск договор по контрагенту
+     -- 3 Поиск Juridical
      vbJuridicalId := (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                        FROM ObjectLink AS ObjectLink_Partner_Juridical
                        WHERE ObjectLink_Partner_Juridical.ObjectId = inPartnerId
@@ -85,32 +78,48 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не найдено Юр.дицо <%> для контрагента <%> ключ-2 <%> .', inJuridicalName, inPartnerName, inPartnerId;
      END IF;
      
-     SELECT Object_Contract.Id  AS ContractId
-            INTO vbContractId
-     FROM ObjectLink AS ObjectLink_Contract_Juridical
-          INNER JOIN Object AS Object_Contract ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
-                                              AND Object_Contract.isErased = FALSE
-                                              AND Object_Contract.ValueData ILIKE TRIM (inContractName)
 
-          LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
-                               ON ObjectLink_Contract_ContractStateKind.ObjectId      = Object_Contract.Id
-                              AND ObjectLink_Contract_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind()
-
-          LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
-                               ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id
-                              AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
-     WHERE ObjectLink_Contract_Juridical.ChildObjectId = vbJuridicalId
-       AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
-       AND ObjectLink_Contract_PaidKind.ChildObjectId  = vbPaidKindId
-    --   AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close()
-     LIMIT 1;   --
+     -- Поиск договор по Juridical
+     vbContractId:= (SELECT Object_Contract.Id  AS ContractId
+                     FROM ObjectLink AS ObjectLink_Contract_Juridical
+                          INNER JOIN Object AS Object_Contract ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
+                                                              AND Object_Contract.isErased = FALSE
+                                                              AND Object_Contract.ValueData ILIKE TRIM (inContractName)
+                
+                          LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                                               ON ObjectLink_Contract_ContractStateKind.ObjectId      = Object_Contract.Id
+                                              AND ObjectLink_Contract_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind()
+                        --LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                        --                     ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id
+                        --                    AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
+                     WHERE ObjectLink_Contract_Juridical.ChildObjectId = vbJuridicalId
+                       AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+                     --AND ObjectLink_Contract_PaidKind.ChildObjectId  = vbPaidKindId
+                     --AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close()
+                     ORDER BY CASE WHEN ObjectLink_Contract_ContractStateKind.ChildObjectId = zc_Enum_ContractStateKind_Close() THEN 1 ELSE 0 END ASC
+                     LIMIT 1
+                    );
 
      -- проверка
      IF COALESCE (vbContractId, 0) = 0 AND TRIM (inContractName) <> ''
      THEN
          --
-         RAISE EXCEPTION 'Ошибка.Не найден Договор <%> для <%>.', inContractName, inPartnerName;
+         RAISE EXCEPTION 'Ошибка.Не найден Договор № <%> для <%>.', inContractName, inPartnerName;
      END IF;
+
+
+     -- 1 Поиск - Форма оплаты
+     vbPaidKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PaidKind() AND Object.ValueData ILIKE inPaidKindName AND Object.isErased = FALSE AND TRIM (inPaidKindName) <> '');
+     --проверка
+     IF COALESCE (vbPaidKindId,0) = 0 -- AND TRIM (inPaidKindName) <> ''
+     THEN
+         vbPaidKindId := (SELECT OL_Contract_PaidKind.ChildObjectId FROM ObjectLink AS OL_Contract_PaidKind
+                          WHERE OL_Contract_PaidKind.ObjectId = vbContractId
+                            AND OL_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
+                         );
+
+     END IF;
+
 
      -- 4 Филиал
      IF TRIM (COALESCE (inBranchName,'')) <> ''

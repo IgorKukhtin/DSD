@@ -40,6 +40,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 */
 
   RAISE INFO  'START insert SoldTable';
+  RAISE INFO  '%', CLOCK_TIMESTAMP();
 
   --
   INSERT INTO SoldTable (OperDate
@@ -948,7 +949,8 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
    FROM Movement
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                   AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                  AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                  AND MovementItemContainer.OperDate BETWEEN ' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime
+                                                                         AND ' || CHR (39) || zfConvert_DateToString (inEndDate) ||  CHR (39) || ' :: TDateTime
         JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                       AND Container.DescId = zc_Container_Summ()
         INNER JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -1097,6 +1099,10 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                                                            , GoodsByGoodsKindId         Integer
                                                             )
    ;
+
+
+  RAISE INFO  'END insert SoldTable';
+  RAISE INFO  '%', CLOCK_TIMESTAMP();
 
 
     --
