@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_SaleCommerc(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Ord Integer, Id Integer
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
@@ -184,8 +184,8 @@ BEGIN
                                                       AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                             )
         --
-        SELECT
-             MovementItem.Id                      AS Id
+        SELECT ROW_NUMBER() OVER (ORDER BY MovementItem.Id) ::Integer AS Ord
+           , MovementItem.Id                      AS Id
            , Object_Contract.Id                   AS ContractId
            , Object_Contract.ObjectCode           AS ContractCode
            , Object_Contract.ValueData            AS ContractName

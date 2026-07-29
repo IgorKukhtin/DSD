@@ -34,6 +34,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
            vbIsInsert Boolean;
+           vbVATPercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SaleCommerc());
@@ -54,7 +55,7 @@ BEGIN
                                        , inUserId      := vbUserId         ::Integer
                                         ) AS tmp;
 
-     -- Цены из прайса базового прайса
+     -- Цены из прайса базового прайса без НДС
      outPrice := (WITH
                   tmp AS (SELECT lfSelect.GoodsKindId AS GoodsKindId
                                , lfSelect.ValuePrice  AS Price
@@ -68,7 +69,11 @@ BEGIN
                                   , 0 
                                   ) ::TFloat AS Price
                  ) ::TFloat;
-
+     -- zc_PriceList_BasisComerc() прайс без ндс, поэтому нужно к цене + НДС
+     -- НДС прайса
+     vbVATPercent:= 1 + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = zc_PriceList_BasisComerc() AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()), 0) / 100;
+     --пересчитываем цену с учетом НДС
+     outPrice := (outPrice * vbVATPercent) ::TFloat;
 
      -- если товар шт - берем эту колонку, если там 0 а есть кг, то переводим в шт, весовой - всегда в кг
      SELECT CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()       
