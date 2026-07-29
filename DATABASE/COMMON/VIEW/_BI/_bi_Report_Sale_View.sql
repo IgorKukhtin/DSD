@@ -57,6 +57,9 @@ Return_Amount
 -- Шт.
 Return_Amount_sh
 
+-- NotBudg
+Amount_promo_NotBudg, Amount_promo_sh_NotBudg, SummCost_promo_NotBudg, Summ_promo_NotBudg
+isNotBudg, PromoId_NotBudg
 
 -- Акция - Вес Продажа
 AmountPartner_promo
@@ -206,6 +209,11 @@ AS
                    , MIFloat_PromoMovement.ValueData  :: Integer AS MovementId_promo
                      -- Признак Акция да/нет
                    , CASE WHEN MIFloat_PromoMovement.ValueData > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
+                     -- Признак NotBudg - Promo
+                   , COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE) :: Boolean AS isNotBudg
+                     -- Признак NotBudg - Promo
+                   , COALESCE (MovementLinkObject_NotBudgPromo.ObjectId, 0)   :: Integer AS PromoId_NotBudg
+                   
 
                      -- Типы условия Бонус - нет
                    /*, 0  :: Integer  AS ContractConditionKindId
@@ -251,12 +259,25 @@ AS
                           END
                          ) :: TFloat AS AmountPartner_promo_sh
 
+                     -- Акция - NotBudg
+                   , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() AND MIFloat_PromoMovement.ValueData > 0 AND MovementBoolean_NotBudgPromo.ValueData = TRUE
+                                    THEN -1 * MIContainer.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                               ELSE 0
+                          END
+                         ) :: TFloat AS Amount_promo_NotBudg
+                     -- Шт.
+                   , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() AND MIFloat_PromoMovement.ValueData > 0 AND MovementBoolean_NotBudgPromo.ValueData = TRUE
+                                    THEN -1 * MIContainer.Amount
+                               ELSE 0
+                          END
+                         ) :: TFloat AS Amount_promo_NotBudg_sh
+
                      -- Вес Продажа у покупателя
                    , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     THEN -1 * MIContainer.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
                                ELSE 0
                           END) :: TFloat AS Sale_AmountPartner
                      -- Шт.
-                   , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() 
+                   , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                                                                                                       THEN -1 * MIContainer.Amount
                                ELSE 0
                           END) :: TFloat AS Sale_AmountPartner_sh
@@ -304,6 +325,9 @@ AS
 
                      -- Акция - Сумма Продажи
                    , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE AND MIFloat_PromoMovement.ValueData > 0 THEN 1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Sale_Summ_promo
+                     -- Акция - NotBudg
+                   , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE AND MIFloat_PromoMovement.ValueData > 0 AND MovementBoolean_NotBudgPromo.ValueData = TRUE THEN 1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Summ_promo_NotBudg
+
                      -- Сумма Продажи
                    , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Sale_Summ
                      -- Сумма Возврат
@@ -326,6 +350,12 @@ AS
                                     THEN -1 * COALESCE (MIContainer.Amount, 0)
                                ELSE 0
                           END) :: TFloat AS Sale_SummCost_promo
+
+                     -- Акция - Сумма с/с NotBudg
+                   , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() AND MIFloat_PromoMovement.ValueData > 0 AND MovementBoolean_NotBudgPromo.ValueData = TRUE
+                                    THEN -1 * COALESCE (MIContainer.Amount, 0)
+                               ELSE 0
+                          END) :: TFloat AS SummCost_promo_NotBudg
 
 
                      -- Сумма с/с Продажа
@@ -375,6 +405,13 @@ AS
                    LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                                ON MIFloat_PromoMovement.MovementItemId = MIContainer.MovementItemId
                                               AND MIFloat_PromoMovement.DescId         = zc_MIFloat_PromoMovementId()
+                   LEFT JOIN MovementBoolean AS MovementBoolean_NotBudgPromo
+                                             ON MovementBoolean_NotBudgPromo.MovementId = MIFloat_PromoMovement.ValueData :: Integer
+                                            AND MovementBoolean_NotBudgPromo.DescId = zc_MovementBoolean_NotBudgPromo()
+
+                   LEFT JOIN MovementLinkObject AS MovementLinkObject_NotBudgPromo
+                                                ON MovementLinkObject_NotBudgPromo.MovementId = MIFloat_PromoMovement.ValueData :: Integer
+                                               AND MovementLinkObject_NotBudgPromo.DescId = zc_MovementLinkObject_NotBudgPromo()
                    -- Документ
                    LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                    -- Вид Документа
@@ -429,6 +466,8 @@ AS
                      , Object_Measure.ObjectCode
                      , Object_Measure.ValueData
                      , MIFloat_PromoMovement.ValueData
+                     , MovementBoolean_NotBudgPromo.ValueData
+                     , MovementLinkObject_NotBudgPromo.ObjectId
                      , Movement_Order.Id
                      , Movement_Order.OperDate
                      , Movement_Order.InvNumber
@@ -490,30 +529,30 @@ AS
 
                      -- КОЛ-ВО Продажа - со склада
                    , 0 :: TFloat AS Sale_Amount
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
                      -- КОЛ-ВО Возврат - на склад
                    , 0 :: TFloat AS Return_Amount
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
 
                      -- Акция - КОЛ-ВО Продажа
                    , 0 :: TFloat AS AmountPartner_promo
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
                      -- КОЛ-ВО Продажа у покупателя
                    , 0 :: TFloat AS Sale_AmountPartner
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
                      -- КОЛ-ВО Возврат у покупателя
                    , 0 :: TFloat AS Return_AmountPartner
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
 
                      -- КОЛ-ВО Скидка за вес - Продажа
                    , 0 :: TFloat AS Sale_Amount_10500
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
                      -- КОЛ-ВО потери - Разница в весе - Продажа
                    , 0 :: TFloat AS Sale_Amount_40200
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
                      -- КОЛ-ВО потери - Разница в весе - Возврат
                    , 0 :: TFloat AS Return_Amount_40200
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
 
                      -- Акция - Сумма Продажи
                    , 0 :: TFloat AS Sale_Summ_promo
@@ -693,30 +732,30 @@ AS
 
                      -- КОЛ-ВО Продажа - со склада
                    , 0 :: TFloat AS Sale_Amount
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
                      -- КОЛ-ВО Возврат - на склад
                    , 0 :: TFloat AS Return_Amount
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
 
                      -- Акция - КОЛ-ВО Продажа
                    , 0 :: TFloat AS AmountPartner_promo
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
                      -- КОЛ-ВО Продажа у покупателя
                    , 0 :: TFloat AS Sale_AmountPartner
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
                      -- КОЛ-ВО Возврат у покупателя
                    , 0 :: TFloat AS Return_AmountPartner
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
 
                      -- КОЛ-ВО Скидка за вес - Продажа
                    , 0 :: TFloat AS Sale_Amount_10500
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
                      -- КОЛ-ВО потери - Разница в весе - Продажа
                    , 0 :: TFloat AS Sale_Amount_40200
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
                      -- КОЛ-ВО потери - Разница в весе - Возврат
                    , 0 :: TFloat AS Return_Amount_40200
-                   , 0 :: TFloat 
+                   , 0 :: TFloat
 
                      -- Акция - Сумма Продажи
                    , 0 :: TFloat AS Sale_Summ_promo
