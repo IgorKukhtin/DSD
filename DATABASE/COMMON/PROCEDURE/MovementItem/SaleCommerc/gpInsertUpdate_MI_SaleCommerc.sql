@@ -1,17 +1,35 @@
 -- Function: gpInsertUpdate_MI_SaleCommerc()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SaleCommerc(
- INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
+ INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа master>
+ INOUT ioId_Child             Integer   , -- Ключ объекта <Элемент документа child>
     IN inMovementId           Integer   , -- Ключ объекта <Документ>
     IN inContractId           Integer   , -- 
     IN inBranchId             Integer   , --
     IN inPartnerId            Integer   , --
-    IN inPaidKindId           Integer   , -- 
+    IN inPaidKindId           Integer   , --
+    IN inGoodsId              Integer   , -- Товар
+    IN inGoodsKindId          Integer   , -- Вид Товар
+ INOUT ioAmount_sh            TFloat    , --
+ INOUT ioAmount_weight        TFloat    , --
+    IN inSumm                 TFloat    , --
+ INOUT ioAmountPromo_sh       TFloat    , --
+ INOUT ioAmountPromo_weight   TFloat    , --
+    IN inSummPromo            TFloat    , --
+ INOUT ioAmountNoPromo_sh     TFloat    , --
+ INOUT ioAmountNoPromo_weight TFloat    , --
+    IN inSummNoPromo          TFloat    , --
+   OUT outPrice               TFloat    , --
+   OUT outAmount              TFloat    , --
+   OUT outAmountPromo         TFloat    , --
+   OUT outAmountNoPromo       TFloat    , -- 
     IN inSession              TVarChar    -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -23,20 +41,94 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inContractId, inMovementId, 0, NULL);
+     SELECT tmp.ioId
+   INTO ioId
+     FROM lpInsertUpdate_MI_SaleCommerc (ioId          := COALESCE(ioId,0) ::Integer
+                                       , inMovementId  := inMovementId     ::Integer
+                                       , inContractId  := inContractId     ::Integer
+                                       , inBranchId    := inBranchId       ::Integer
+                                       , inPartnerId   := inPartnerId      ::Integer
+                                       , inPaidKindId  := inPaidKindId     ::Integer
+                                       , inUserId      := vbUserId         ::Integer
+                                        ) AS tmp;
 
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), ioId, inBranchId);
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Partner(), ioId, inPartnerId);
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PaidKind(), ioId, inPaidKindId);
-     
+     -- Цены из прайса базового прайса
+     outPrice := (WITH
+                  tmp AS (SELECT lfSelect.GoodsKindId AS GoodsKindId
+                               , lfSelect.ValuePrice  AS Price
+                          FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_BasisComerc()
+                                                                   , inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                                    ) AS lfSelect
+                          WHERE lfSelect.GoodsId = inGoodsId
+                          )
+                  SELECT COALESCE ( (SELECT tmp.Price FROM tmp WHERE COALESCE (tmp.GoodsKindId,0) = COALESCE (inGoodsKindId,0))
+                                  , (SELECT tmp.Price FROM tmp WHERE tmp.GoodsKindId IS NULL)
+                                  , 0 
+                                  ) ::TFloat AS Price
+                 ) ::TFloat;
 
-     -- сохранили протокол !!!после изменений!!!
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
+     -- если товар шт - берем эту колонку, если там 0 а есть кг, то переводим в шт, весовой - всегда в кг
+     SELECT CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()       
+                 THEN CASE WHEN COALESCE (ioAmount_sh,0) <> 0
+                           THEN ioAmount_sh
+                           ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                     THEN ioAmount_weight / COALESCE (ObjectFloat_Weight.ValueData,0)
+                                     ELSE 0
+                                END
+                      END
+                 ELSE COALESCE (ioAmount_weight,0)
+            END ::TFloat AS Amount
+
+          , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()       
+                 THEN CASE WHEN COALESCE (ioAmountPromo_sh,0) <> 0
+                           THEN ioAmountPromo_sh
+                           ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                     THEN ioAmountPromo_weight / COALESCE (ObjectFloat_Weight.ValueData,0)
+                                     ELSE 0
+                                END
+                      END
+                 ELSE COALESCE (ioAmountPromo_weight,0)
+            END ::TFloat AS AmountPromo
+
+          , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()       
+                 THEN CASE WHEN COALESCE (ioAmountNoPromo_sh,0) <> 0
+                           THEN ioAmountNoPromo_sh
+                           ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                     THEN ioAmountNoPromo_weight / COALESCE (ObjectFloat_Weight.ValueData,0)
+                                     ELSE 0
+                                END
+                      END
+                 ELSE COALESCE (ioAmountNoPromo_weight,0)
+            END ::TFloat AS AmountNoPromo
+   INTO outAmount, outAmountPromo, outAmountNoPromo
+     FROM ObjectLink AS ObjectLink_Goods_Measure
+          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                ON ObjectFloat_Weight.ObjectId = ObjectLink_Goods_Measure.ObjectId
+                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+     WHERE ObjectLink_Goods_Measure.ObjectId = inGoodsId
+       AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure();
+
+     -- сохранили <Элемент документа>
+     SELECT tmp.ioId
+   INTO ioId_Child
+     FROM lpInsertUpdate_MI_SaleCommerc_Child (ioId             := COALESCE(ioId_Child,0) ::Integer
+                                             , inParentId       := ioId                   ::Integer
+                                             , inMovementId     := inMovementId           ::Integer
+                                             , inGoodsId        := inGoodsId              ::Integer
+                                             , inGoodsKindId    := inGoodsKindId          ::Integer
+                                             , inAmount         := outAmount              ::TFloat
+                                             , inSumm           := inSumm                 ::TFloat
+                                             , inAmountPromo    := outAmountPromo         ::TFloat
+                                             , inSummPromo      := inSummPromo            ::TFloat
+                                             , inAmountNoPromo  := outAmountNoPromo       ::TFloat
+                                             , inSummNoPromo    := inSummNoPromo          ::TFloat
+                                             , inPrice          := outPrice               ::TFloat
+                                             , inUserId         := vbUserId               ::Integer
+                                              ) AS tmp;
+                                        
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -49,4 +141,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- 
+--
