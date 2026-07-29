@@ -14,13 +14,56 @@ BEGIN
     -- inStartDate:='01.06.2014';
     --
 
-     IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) NOT IN (11) --OR 1=1
+     IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) NOT IN (11) OR 1=1
      THEN
          DELETE FROM _bi_Table_Remains WHERE OperDate BETWEEN DATE_TRUNC ('DAY', inOperDate) AND inOperDate + INTERVAL '1 DAY';
+
+         RAISE INFO  'end DELETE FROM _bi_Table_Remains';
+
      END IF;
 
 
-    WITH tmpUnit AS (-- Филиалы
+    RAISE INFO  'START insert _bi_Table_Remains';
+
+
+      -- РЕЗУЛЬТАТ
+      INSERT INTO _bi_Table_Remains ( -- Дата + время остатков
+                                      OperDate
+                                      -- Подразделение
+                                    , UnitId
+                                      -- Товар
+                                    , GoodsId
+                                      -- Вид Товара
+                                    , GoodsKindId
+                                      -- Партия Товара
+                                    , PartionId
+                                      -- Партия Товара - дата
+                                    , PartionDate
+                        
+                                      -- Вес Остатки
+                                    , Amount
+                                      -- Шт. Остатки
+                                    , Amount_sh
+                        
+                                      -- Сумма с/с
+                                    , SummCost
+                                      -- Сумма по ценам прайса
+                                    , SummPriceList
+                            )
+        SELECT CURRENT_TIMESTAMP AS OperDate
+             , gpSelect.UnitId
+             , gpSelect.GoodsId
+             , gpSelect.GoodsKindId
+             , gpSelect.PartionGoodsId
+             , gpSelect.PartionDate
+  
+             , gpSelect.Amount
+             , gpSelect.Amount_sh
+
+             , gpSelect.SummCost
+             , gpSelect.SummPriceList
+        FROM dblink('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL' :: Text
+  , ('WITH tmpUnit AS (-- Филиалы
                      SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
                      FROM ObjectLink AS ObjectLink_Unit_Branch
                            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
@@ -77,7 +120,7 @@ BEGIN
                                -- !!!
                                LEFT JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.ContainerId = Container.Id
-                                                              AND MIContainer.OperDate   >= inOperDate
+                                                              AND MIContainer.OperDate   >= ' || CHR (39) || zfConvert_DateToString (inOperDate) ||  CHR (39) || ' :: TDateTime
                           -- !!!без Товар в пути!!!
                           WHERE CLO_Account.ObjectId IS NULL
                           GROUP BY Container.Id
@@ -123,7 +166,7 @@ BEGIN
                                -- !!!
                                LEFT JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.ContainerId = Container.Id
-                                                              AND MIContainer.OperDate   >= inOperDate
+                                                              AND MIContainer.OperDate   >= ' || CHR (39) || zfConvert_DateToString (inOperDate) ||  CHR (39) || ' :: TDateTime
                           -- !!!без Товар в пути!!!
                           WHERE CLO_Account.ObjectId IS NULL
                           GROUP BY Container.Id
@@ -154,36 +197,10 @@ BEGIN
        , tmpPriceStart AS (SELECT lfObjectHistory_PriceListItem.GoodsId
                                 , lfObjectHistory_PriceListItem.GoodsKindId
                                 , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inOperDate) AS lfObjectHistory_PriceListItem
+                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= ' || CHR (39) || zfConvert_DateToString (inOperDate) ||  CHR (39) || ' :: TDateTime) AS lfObjectHistory_PriceListItem
                            WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                           )
-
-      -- РЕЗУЛЬТАТ
-      INSERT INTO _bi_Table_Remains ( -- Дата + время остатков
-                                      OperDate
-                                      -- Подразделение
-                                    , UnitId
-                                      -- Товар
-                                    , GoodsId
-                                      -- Вид Товара
-                                    , GoodsKindId
-                                      -- Партия Товара
-                                    , PartionId
-                                      -- Партия Товара - дата
-                                    , PartionDate
-                        
-                                      -- Вес Остатки
-                                    , Amount
-                                      -- Шт. Остатки
-                                    , Amount_sh
-                        
-                                      -- Сумма с/с
-                                    , SummCost
-                                      -- Сумма по ценам прайса
-                                    , SummPriceList
-                            )
-        SELECT CURRENT_TIMESTAMP AS OperDate
-             , tmpRemains_all.UnitId
+        SELECT tmpRemains_all.UnitId
              , tmpRemains_all.GoodsId
              , tmpRemains_all.GoodsKindId
              , tmpRemains_all.PartionGoodsId
@@ -193,7 +210,7 @@ BEGIN
              , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpRemains_all.Amount ELSE 0 END)                                AS Amount_sh
 
              , SUM (tmpRemains_all.SummCost)  AS SummCost
-             , SUM (tmpRemains_all.Amount * COALESCE (tmpPriceStart_kind.Price, tmpPriceStart.Price, 0)) AS Amount
+             , SUM (tmpRemains_all.Amount * COALESCE (tmpPriceStart_kind.Price, tmpPriceStart.Price, 0)) AS SummPriceList
   
         FROM tmpRemains_all
              LEFT JOIN ObjectDate AS ObjectDate_Value
@@ -217,8 +234,22 @@ BEGIN
                , tmpRemains_all.GoodsKindId
                , tmpRemains_all.PartionGoodsId
                , ObjectDate_Value.ValueData
+       ') :: Text
+
+                                              ) AS gpSelect (UnitId          Integer
+                                                           , GoodsId         Integer
+                                                           , GoodsKindId     Integer
+                                                           , PartionGoodsId  Integer
+                                                           , PartionDate     TDateTime
+                                                           , Amount          TFloat
+                                                           , Amount_sh       TFloat
+                                                           , SummCost        TFloat
+                                                           , SummPriceList   TFloat
+                                                            )
        ;
 
+
+         RAISE INFO  'end INSERT _bi_Table_Remains';
 
 END;
 $BODY$

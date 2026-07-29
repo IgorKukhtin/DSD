@@ -66,11 +66,14 @@ BEGIN
       WITH
       _tmpMovementTax AS (-- Если передан inMovementId <> 0 строим отчет по 1 документу
                           SELECT inMovementId AS MovementId --inMovementId
+                               , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) AS OperDate_TaxCorrective
                           WHERE COALESCE (inMovementId) <> 0
                        UNION 
                          -- Если inMovementId = 0 строим отчет за период: За период выбираются Корректировки , а к ним уже выбираются налоговые
                          SELECT MovementLinkMovement_Child.MovementChildId AS MovementId
+                              , Movement_TaxCorrective.OperDate            AS OperDate_TaxCorrective
                          FROM MovementLinkMovement AS MovementLinkMovement_Child
+                              LEFT JOIN Movemen AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = MovementLinkMovement_Child.MovementId
                          WHERE MovementLinkMovement_Child.MovementId IN (SELECT DISTINCT Movement.Id AS MovementId_Corr
                                                                          FROM Movement
                                                                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -84,7 +87,9 @@ BEGIN
       -- № п/п строк Налоговых
     , tmpMITax AS (SELECT tmp.MovementId, tmp.Kind, tmp.GoodsId, tmp.GoodsKindId, tmp.Price, tmp.LineNum
                    FROM _tmpMovementTax
-                        LEFT JOIN lpSelect_TaxFromTaxCorrective (inMovementId := _tmpMovementTax.MovementId) AS tmp ON tmp.MovementId = _tmpMovementTax.MovementId
+                        LEFT JOIN lpSelect_TaxFromTaxCorrective (inMovementId            := _tmpMovementTax.MovementId
+                                                               , inOperDate_TaxCorrective:= _tmpMovementTax.OperDate_TaxCorrective
+                                                                ) AS tmp ON tmp.MovementId = _tmpMovementTax.MovementId
                   )
      -- сначала выбираем все товары из Налоговых и корректировок, чтоб сделать Расчетный № п/п
      

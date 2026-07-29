@@ -26,7 +26,7 @@ BEGIN
             , Object_GoodsKindWeighingGroup.ObjectCode AS GroupCode
             , Object_GoodsKindWeighingGroup.ValueData  AS GroupName
             , Object_GoodsKind.Id                      AS GoodsKindId
-            , Object_GoodsKind.ObjectCode              AS GoodsKindCode
+            , CASE WHEN Object_GoodsKind.Id = zc_GoodsKind_WorkProgress() THEN 100 ELSE Object_GoodsKind.ObjectCode END :: Integer AS GoodsKindCode
             , Object_GoodsKind.ValueData               AS GoodsKindName
 
        FROM ObjectLink AS ObjectLink_GoodsKindWeighing_Group

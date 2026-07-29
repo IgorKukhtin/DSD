@@ -38,6 +38,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
   AND GoodsByGoodsKindId IS NULL
 
 */
+
+  RAISE INFO  'START insert SoldTable';
+
   --
   INSERT INTO SoldTable (OperDate
                        , AccountId
@@ -64,18 +67,123 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                        , GoodsByGoodsKindId
                         )
 
-   WITH tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
-      , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.* FROM Constant_ProfitLoss_AnalyzerId_View)
-      , tmpGoodsByGoodsKind AS (SELECT
-                                      ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS Id
-                                    , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
-                                    , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
-                                FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
-                                                     ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                                    AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                               )
+        SELECT gpSelect.OperDate
+             , gpSelect.AccountId
+             , gpSelect.BranchId
+             , gpSelect.JuridicalGroupId
+             , gpSelect.JuridicalId
+             , gpSelect.PartnerId
+             , gpSelect.InfoMoneyId
+             , gpSelect.PaidKindId
+             , gpSelect.PaidKindId_bonus
+             , gpSelect.RetailId
+             , gpSelect.RetailReportId
+             , gpSelect.AreaId
+             , gpSelect.PartnerTagId
+             , gpSelect.ContractId
+             , gpSelect.ContractTagId
+             , gpSelect.ContractTagGroupId
+             
+             , gpSelect.PersonalId
+             , gpSelect.UnitId_Personal
+             , gpSelect.BranchId_Personal
+             , gpSelect.PersonalTradeId
+             , gpSelect.UnitId_PersonalTrade
+             
+             , gpSelect.BusinessId
+             , gpSelect.GoodsPlatformId
+             , gpSelect.TradeMarkId
+             , gpSelect.GoodsGroupAnalystId
+             , gpSelect.GoodsTagId
+             , gpSelect.GoodsGroupId
+             , gpSelect.GoodsGroupStatId
+             , gpSelect.GoodsId
+             , gpSelect.GoodsKindId
+             , gpSelect.MeasureId
+             
+             , gpSelect.RegionId
+             , gpSelect.ProvinceId
+             , gpSelect.CityKindId
+             , gpSelect.CityId
+             , gpSelect.ProvinceCityId
+             , gpSelect.StreetKindId
+             , gpSelect.StreetId
+             
+             , gpSelect.Actions_Weight
+             , gpSelect.Actions_Sh
+             , gpSelect.Actions_SummCost
+             , gpSelect.Actions_Summ
+             
+             , gpSelect.Actions_Weight_NotBudg
+             , gpSelect.Actions_Sh_NotBudg
+             , gpSelect.Actions_SummCost_NotBudg
+             , gpSelect.Actions_Summ_NotBudg
+             
+             , gpSelect.Sale_Summ
+             , gpSelect.Sale_Summ_10200
+             , gpSelect.Sale_Summ_10250
+             , gpSelect.Sale_Summ_10300
+             , gpSelect.Sale_SummCost
+             , gpSelect.Sale_SummCost_10500
+             , gpSelect.Sale_SummCost_40200
+             
+             , gpSelect.Sale_Amount_Weight
+             , gpSelect.Sale_Amount_Sh
+             , gpSelect.Sale_AmountPartner_Weight
+             , gpSelect.Sale_AmountPartner_Sh
+             , gpSelect.Sale_Amount_10500_Weight
+             , gpSelect.Sale_Amount_40200_Weight
+             
+             , gpSelect.Return_Summ
+             , gpSelect.Return_Summ_10300
+             , gpSelect.Return_Summ_10700
+             , gpSelect.Return_SummCost
+             , gpSelect.Return_SummCost_40200
+             
+             , gpSelect.Return_Amount_Weight
+             , gpSelect.Return_Amount_Sh
+             , gpSelect.Return_AmountPartner_Weight
+             , gpSelect.Return_AmountPartner_Sh
+             , gpSelect.Return_Amount_40200_Weight
+             
+             , gpSelect.SaleReturn_Summ
+             , gpSelect.SaleReturn_Summ_10300
+             , gpSelect.SaleReturn_SummCost
+             , gpSelect.SaleReturn_SummCost_40200 -- !!!здесь сумма!!!
+             , gpSelect.SaleReturn_Amount_Weight
+             , gpSelect.SaleReturn_Amount_Sh
+             
+             , gpSelect.BonusBasis
+             , gpSelect.Bonus
+             
+             , gpSelect.Plan_Weight
+             , gpSelect.Plan_Summ
+             , gpSelect.Money_Summ
+             , gpSelect.SendDebt_Summ
+             , gpSelect.Money_SendDebt_Summ
+             
+             , gpSelect.Sale_SummIn_pav
+             , gpSelect.ReturnIn_SummIn_pav
+             
+             , gpSelect.ContractConditionKindId
+             , gpSelect.BonusKindId
+             , gpSelect.BonusTax
+             
+             , gpSelect.GoodsByGoodsKindId
+
+        FROM dblink('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL' :: Text
+, ('WITH tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
+        , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.* FROM Constant_ProfitLoss_AnalyzerId_View)
+        , tmpGoodsByGoodsKind AS (SELECT
+                                        ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS Id
+                                      , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
+                                      , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
+                                  FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                       JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                       ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                  WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                 )
 
       , tmpOperation_SaleReturn
                      AS (SELECT MIContainer.OperDate
@@ -127,7 +235,8 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                          FROM tmpAnalyzer
                               INNER JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
-                                                              AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                              AND MIContainer.OperDate BETWEEN ' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime
+                                                                                           AND ' || CHR (39) || zfConvert_DateToString (inEndDate) ||  CHR (39) || ' :: TDateTime
                               INNER JOIN ContainerLinkObject AS CLO_Juridical
                                                              ON CLO_Juridical.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -205,7 +314,8 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                          FROM Movement
                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                                               AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                                              AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                              AND MovementItemContainer.OperDate BETWEEN ' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime
+                                                                                                     AND ' || CHR (39) || zfConvert_DateToString (inEndDate) ||  CHR (39) || ' :: TDateTime
                               -- !!!Расходы будущих периодов + Услуги по маркетингу!!!
                               INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                                   AND Container.ObjectId = zc_Enum_Account_50401()
@@ -238,38 +348,6 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                                                           ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
                                                          AND MIFloat_BonusValue.DescId = zc_MIFloat_BonusValue()
 
-/*                            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                    AND MovementItem.DescId = zc_MI_Child()
-                                                    AND MovementItem.isErased = FALSE
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical
-                                                               ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
-                                                               ON MILinkObject_Partner.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                                               ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                                               ON MILinkObject_Branch.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-
-                              LEFT JOIN MovementItemDate AS MIDate_OperDate
-                                                         ON MIDate_OperDate.MovementItemId = MovementItem.Id
-                                                        AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
-                              LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                                          ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                                           ON MovementLinkObject_PaidKind.MovementId = MIFloat_MovementId.ValueData :: Integer
-                                                          AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                              LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
-                                                   ON ObjectLink_Contract_InfoMoney.ObjectId = MILinkObject_ContractChild.ObjectId
-                                                  AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()*/
 
                          WHERE Movement.DescId = zc_Movement_ProfitLossService()
                          GROUP BY MovementItemContainer.OperDate --,MIDate_OperDate.ValueData
@@ -315,7 +393,8 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                          FROM Movement
                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                                               AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                                              AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                              AND MovementItemContainer.OperDate BETWEEN ' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime
+                                                                                                     AND ' || CHR (39) || zfConvert_DateToString (inEndDate) ||  CHR (39) || ' :: TDateTime
                               -- !!! Услуги по маркетингу + Маркетинг
                               INNER JOIN Container ON Container.Id       = MovementItemContainer.ContainerId
                                                   AND Container.ObjectId = zc_Enum_Account_70301()
@@ -426,14 +505,6 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , 0          AS BonusKindId
                  , 0 ::TFloat AS BonusTax
             FROM tmpOperation_SaleReturn
-                 /*INNER JOIN ObjectLink AS ObjectLink_InfoMoneyDestination
-                                       ON ObjectLink_InfoMoneyDestination.ObjectId = tmpOperation_SaleReturn.InfoMoneyId
-                                      AND ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-                                      AND ObjectLink_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100() -- !!!Доходы + Продукция!!!
-                                                                                          , zc_Enum_InfoMoneyDestination_30200() -- !!!Доходы + Мясное сырье!!!
-                                                                                          , zc_Enum_InfoMoneyDestination_30300() -- !!!Доходы + Переработка!!!
-                                                                                          , zc_Enum_InfoMoneyDestination_30500() -- !!!Доходы + Прочие доходы!!!
-                                                                                           )*/
            UNION ALL
             SELECT tmpBonus.OperDate
 
@@ -492,7 +563,8 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , tmpBonus.BonusKindId
                  , tmpBonus.BonusTax  :: TFloat
 
-            FROM tmpBonus)
+            FROM tmpBonus
+           )
 
           , tmpOperation AS
            (SELECT tmpOperation_all.OperDate
@@ -919,6 +991,111 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
            , ObjectLink_Juridical_RetailReport.ChildObjectId
            , ObjectLink_Contract_ContractTag.ChildObjectId
            , ObjectLink_ContractTag_ContractTagGroup.ChildObjectId
+       ') :: Text
+                                              ) AS gpSelect (OperDate     TDateTime
+                                                           , AccountId    Integer
+                                                           , BranchId     Integer
+                                                           , JuridicalGroupId    Integer
+                                                           , JuridicalId    Integer
+                                                           , PartnerId    Integer
+                                                           , InfoMoneyId    Integer
+                                                           , PaidKindId    Integer
+                                                           , PaidKindId_bonus    Integer
+                                                           , RetailId    Integer
+                                                           , RetailReportId    Integer
+                                                           , AreaId    Integer
+                                                           , PartnerTagId    Integer
+                                                           , ContractId    Integer
+                                                           , ContractTagId    Integer
+                                                           , ContractTagGroupId    Integer
+                                                
+                                                           , PersonalId    Integer
+                                                           , UnitId_Personal    Integer
+                                                           , BranchId_Personal    Integer
+                                                           , PersonalTradeId    Integer
+                                                           , UnitId_PersonalTrade    Integer
+                                                
+                                                           , BusinessId    Integer
+                                                           , GoodsPlatformId    Integer
+                                                           , TradeMarkId    Integer
+                                                           , GoodsGroupAnalystId    Integer
+                                                           , GoodsTagId    Integer
+                                                           , GoodsGroupId    Integer
+                                                           , GoodsGroupStatId    Integer
+                                                           , GoodsId    Integer
+                                                           , GoodsKindId    Integer
+                                                           , MeasureId    Integer
+                                                
+                                                           , RegionId    Integer
+                                                           , ProvinceId    Integer
+                                                           , CityKindId    Integer
+                                                           , CityId    Integer
+                                                           , ProvinceCityId    Integer
+                                                           , StreetKindId    Integer
+                                                           , StreetId    Integer
+                                                
+                                                           , Actions_Weight    TFloat
+                                                           , Actions_Sh        TFloat
+                                                           , Actions_SummCost  TFloat
+                                                           , Actions_Summ      TFloat
+                                                
+                                                           , Actions_Weight_NotBudg    TFloat
+                                                           , Actions_Sh_NotBudg    TFloat
+                                                           , Actions_SummCost_NotBudg    TFloat
+                                                           , Actions_Summ_NotBudg    TFloat
+                                                
+                                                           , Sale_Summ    TFloat
+                                                           , Sale_Summ_10200    TFloat
+                                                           , Sale_Summ_10250    TFloat
+                                                           , Sale_Summ_10300    TFloat
+                                                           , Sale_SummCost    TFloat
+                                                           , Sale_SummCost_10500    TFloat
+                                                           , Sale_SummCost_40200    TFloat
+                                                
+                                                           , Sale_Amount_Weight          TFloat
+                                                           , Sale_Amount_Sh              TFloat
+                                                           , Sale_AmountPartner_Weight   TFloat
+                                                           , Sale_AmountPartner_Sh       TFloat
+                                                           , Sale_Amount_10500_Weight    TFloat
+                                                           , Sale_Amount_40200_Weight    TFloat
+                                                
+                                                           , Return_Summ           TFloat
+                                                           , Return_Summ_10300     TFloat
+                                                           , Return_Summ_10700     TFloat
+                                                           , Return_SummCost       TFloat
+                                                           , Return_SummCost_40200 TFloat
+                                                
+                                                           , Return_Amount_Weight        TFloat
+                                                           , Return_Amount_Sh            TFloat
+                                                           , Return_AmountPartner_Weight TFloat
+                                                           , Return_AmountPartner_Sh     TFloat
+                                                           , Return_Amount_40200_Weight  TFloat
+                                                
+                                                           , SaleReturn_Summ    TFloat
+                                                           , SaleReturn_Summ_10300    TFloat
+                                                           , SaleReturn_SummCost    TFloat
+                                                           , SaleReturn_SummCost_40200    TFloat -- !!!здесь сумма!!!
+                                                           , SaleReturn_Amount_Weight    TFloat
+                                                           , SaleReturn_Amount_Sh    TFloat
+                                                
+                                                           , BonusBasis    TFloat
+                                                           , Bonus    TFloat
+                                                
+                                                           , Plan_Weight    TFloat
+                                                           , Plan_Summ    TFloat
+                                                           , Money_Summ    TFloat
+                                                           , SendDebt_Summ    TFloat
+                                                           , Money_SendDebt_Summ    TFloat
+                                                
+                                                           , Sale_SummIn_pav    TFloat
+                                                           , ReturnIn_SummIn_pav    TFloat
+                                                
+                                                           , ContractConditionKindId    Integer
+                                                           , BonusKindId                Integer
+                                                           , BonusTax                   TFloat 
+                                                
+                                                           , GoodsByGoodsKindId         Integer
+                                                            )
    ;
 
 
@@ -939,7 +1116,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
     -- ***BI - REPORT - реплика на сервер 192.168.0.197
     IF inStartDate >= '01.01.2025'
        -- !!!временно отладка!!!
-       AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) <> 8
+       AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) < 8
     THEN
 
         -- 1. если запустили для предыдущего месяца - !!!считаем его ТОЛЬКО до 15 числа ВКЛЮЧИТЕЛЬНО!!!

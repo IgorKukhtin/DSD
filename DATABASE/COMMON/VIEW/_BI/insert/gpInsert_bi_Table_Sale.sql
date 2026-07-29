@@ -57,6 +57,9 @@ BEGIN
 
                       -- Документ Акция
                       MovementId_promo    ,
+                      -- NotBudg
+                      isNotBudg           ,
+                      PromoId_NotBudg     ,
 
 
                       -- Вес Продажа - со склада
@@ -74,6 +77,11 @@ BEGIN
                       AmountPartner_promo      ,
                       -- Шт.
                       AmountPartner_promo_sh   ,
+
+                      -- Акция - NotBudg
+                      Amount_promo_NotBudg     ,
+                      -- Шт.
+                      Amount_promo_sh_NotBudg  ,
 
                       -- Вес Продажа у покупателя
                       Sale_AmountPartner       ,
@@ -103,6 +111,8 @@ BEGIN
 
                       -- Акция - Сумма Продажи
                       Sale_Summ_promo       ,
+                      -- Акция - NotBudg
+                      Summ_promo_NotBudg    ,
                       -- Сумма Продажи
                       Sale_Summ             ,
                       -- Сумма Возврат
@@ -120,7 +130,8 @@ BEGIN
 
                       -- Акция - Сумма с/с Продажа
                       Sale_SummCost_promo   ,
-
+                      -- Акция - Сумма с/с NotBudg
+                      SummCost_promo_NotBudg,
 
                       -- Сумма с/с Продажа
                       Sale_SummCost         ,
@@ -170,6 +181,9 @@ BEGIN
 
                    -- Документ Акция
                    MovementId_promo    ,
+                   -- NotBudg
+                   isNotBudg           ,
+                   PromoId_NotBudg     ,
 
 
                    -- Вес Продажа - со склада
@@ -187,6 +201,12 @@ BEGIN
                    AmountPartner_promo      ,
                    -- Шт.
                    AmountPartner_promo_sh   ,
+
+                   -- Акция - NotBudg
+                   Amount_promo_NotBudg     ,
+                   -- Шт.
+                   Amount_promo_sh_NotBudg  ,
+
 
                    -- Вес Продажа у покупателя
                    Sale_AmountPartner       ,
@@ -216,6 +236,8 @@ BEGIN
 
                    -- Акция - Сумма Продажи
                    Sale_Summ_promo       ,
+                   -- Акция - NotBudg
+                   Summ_promo_NotBudg    ,
                    -- Сумма Продажи
                    Sale_Summ             ,
                    -- Сумма Возврат
@@ -233,6 +255,8 @@ BEGIN
 
                    -- Акция - Сумма с/с Продажа
                    Sale_SummCost_promo   ,
+                   -- Акция - Сумма с/с NotBudg
+                   SummCost_promo_NotBudg,
 
 
                    -- Сумма с/с Продажа
