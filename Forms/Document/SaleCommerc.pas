@@ -136,6 +136,7 @@ type
     Color_blue: TcxGridDBColumn;
     Color_rose: TcxGridDBColumn;
     Color_green: TcxGridDBColumn;
+    Ord: TcxGridDBColumn;
   private
   public
   end;
