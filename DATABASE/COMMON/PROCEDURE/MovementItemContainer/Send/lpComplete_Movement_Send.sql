@@ -1886,6 +1886,18 @@ end if;
                                                         THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate_From
                                                                                              , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
                                                                                               )
+
+                                                    -- + Основное сырье + Мясное сырье
+                                                    WHEN _tmpItem.isPartionDate_From = TRUE
+                                                     AND _tmpItem.PartionGoodsDate_From <> zc_DateEnd()
+                                                     -- ПФ-ГП
+                                                     AND _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress()
+                                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100()  -- Мясное сырье
+                                                                                            )
+                                                        THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate_From
+                                                                                             , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
+                                                                                              )
+
                                                     WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                            , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                            , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
@@ -2123,6 +2135,17 @@ end if;
                                                         THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate_To
                                                                                              , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
                                                                                               )
+                                                    -- + Основное сырье + Мясное сырье
+                                                    WHEN _tmpItem.isPartionDate_To = TRUE
+                                                     AND _tmpItem.PartionGoodsDate_To <> zc_DateEnd()
+                                                     -- ПФ-ГП
+                                                     AND _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress()
+                                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100()  -- Мясное сырье
+                                                                                            )
+                                                        THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate_To
+                                                                                             , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
+                                                                                              )
+
                                                     WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                            , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                            , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
