@@ -1121,4 +1121,4 @@ where tmp.GoodsId  = SoldTable .GoodsId
 */
 -- тест
 -- SELECT * FROM SoldTable where OperDate = '03.09.2015'
--- SELECT * FROM FillSoldTable ('28.07.2026', '28.07.2026', zfCalc_UserAdmin())
+-- SELECT * FROM FillSoldTable ('29.07.2026', '29.07.2026', zfCalc_UserAdmin())

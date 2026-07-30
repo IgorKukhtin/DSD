@@ -684,14 +684,12 @@ BEGIN
                    -- , ObjectString_Goods_GoodsGroupFull.ValueData
            ;
 
-   ELSEIF inOrderExternalId < 0 AND EXISTS (SELECT 1
-                                            FROM Movement
-                                                 INNER JOIN MovementLinkObject AS MLO_Contract
-                                                                               ON MLO_Contract.MovementId = Movement.Id
-                                                                              AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
-                                                                              AND MLO_Contract.ObjectId   = (-1 * inOrderExternalId) :: Integer
-                                            WHERE Movement.DescId    = zc_Movement_ContractGoods()
-                                              AND Movement.StatusId  = zc_Enum_Status_Complete()
+   ELSEIF inOrderExternalId < 0 AND EXISTS (WITH tmpMovement_ContractGoods AS (SELECT Movement.Id FROM Movement WHERE Movement.DescId = zc_Movement_ContractGoods() AND Movement.StatusId  = zc_Enum_Status_Complete())
+                                            SELECT 1
+                                            FROM MovementLinkObject AS MLO_Contract
+                                            WHERE MLO_Contract.MovementId IN (SELECT DISTINCT tmpMovement_ContractGoods.Id FROM tmpMovement_ContractGoods)
+                                              AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                              AND MLO_Contract.ObjectId   = (-1 * inOrderExternalId) :: Integer
                                            )
    THEN
 

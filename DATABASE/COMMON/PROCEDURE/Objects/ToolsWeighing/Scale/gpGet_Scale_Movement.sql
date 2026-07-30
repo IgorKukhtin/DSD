@@ -352,14 +352,12 @@ BEGIN
             , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec     , COALESCE (tmpJuridicalPrint.CountSpec, 0)      :: TFloat AS CountSpec
             , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax      , COALESCE (tmpJuridicalPrint.CountTax, 0)       :: TFloat AS CountTax
 
-            , EXISTS (SELECT 1
-                      FROM Movement
-                           INNER JOIN MovementLinkObject AS MLO_Contract
-                                                         ON MLO_Contract.MovementId = Movement.Id
-                                                        AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
-                                                        AND MLO_Contract.ObjectId   = View_Contract_InvNumber.ContractId
-                      WHERE Movement.DescId    = zc_Movement_ContractGoods()
-                        AND Movement.StatusId  = zc_Enum_Status_Complete()
+            , EXISTS (WITH tmpMovement_ContractGoods AS (SELECT Movement.Id FROM Movement WHERE Movement.DescId = zc_Movement_ContractGoods() AND Movement.StatusId  = zc_Enum_Status_Complete())
+                      SELECT 1
+                      FROM MovementLinkObject AS MLO_Contract
+                      WHERE MLO_Contract.MovementId IN (SELECT DISTINCT tmpMovement_ContractGoods.Id FROM tmpMovement_ContractGoods)
+                        AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                        AND MLO_Contract.ObjectId   = tmpMovement.ContractId
                      ) :: Boolean AS isContractGoods
 
               -- определили <Asset>
@@ -527,5 +525,5 @@ ALTER FUNCTION gpGet_Scale_Movement (Integer, TDateTime, Boolean, TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Movement (20258087, CURRENT_TIMESTAMP, TRUE,  1, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Movement (34888610 , CURRENT_TIMESTAMP, TRUE,  1, '6412444')
 -- SELECT * FROM gpGet_Scale_Movement (0, CURRENT_TIMESTAMP, FALSE, 1, zfCalc_UserAdmin())

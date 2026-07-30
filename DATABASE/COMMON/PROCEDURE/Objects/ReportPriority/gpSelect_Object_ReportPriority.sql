@@ -147,8 +147,11 @@ BEGIN
              , 'gpUpdate_Status_PersonalService'        :: TVarChar AS Name
              , FALSE                              :: Boolean  AS isErased
              
-             
-             
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 22                                 :: Integer  AS Code
+             , 'gpReport_Send_PartionCell'        :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
              
 
         ORDER BY 2
