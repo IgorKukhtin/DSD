@@ -33,6 +33,7 @@ $BODY$
            vbBranchId      Integer;
            vbJuridicalId   Integer;
            vbContractId    Integer;
+           vbContractCode  Integer;
            vbPaidKindId    Integer;
            vbGoodsKindId   Integer;
            vbId            Integer;
@@ -80,11 +81,15 @@ BEGIN
      
 
      -- Поиск договор по Juridical
+     vbContractCode:= zfConvert_StringToNumber (inContractName);
+     -- Поиск договор по Juridical
      vbContractId:= (SELECT Object_Contract.Id  AS ContractId
                      FROM ObjectLink AS ObjectLink_Contract_Juridical
                           INNER JOIN Object AS Object_Contract ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
                                                               AND Object_Contract.isErased = FALSE
-                                                              AND Object_Contract.ValueData ILIKE TRIM (inContractName)
+                                                              AND Object_Contract.ObjectCode = vbContractCode
+                                                              AND vbContractCode > 0
+                                                            --AND Object_Contract.ValueData ILIKE TRIM (inContractName)
                 
                           LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
                                                ON ObjectLink_Contract_ContractStateKind.ObjectId      = Object_Contract.Id
