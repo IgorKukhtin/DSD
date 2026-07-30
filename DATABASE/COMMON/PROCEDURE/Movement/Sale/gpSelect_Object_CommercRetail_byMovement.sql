@@ -43,7 +43,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-     WHERE Movement.Id = 34432173 -- inMovementId  ;
+     WHERE Movement.Id = inMovementId  ;
 
 --vbRetailId := 992487;
 

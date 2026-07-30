@@ -1374,21 +1374,35 @@ BEGIN
                                        )
 
           -- данные из налоговой
-          , tmpMI_Tax AS (SELECT DISTINCT
+          , tmpMI_Tax AS (WITH
+                          tmpMI AS (SELECT MovementItem.*
+                                    FROM MovementItem
+                                    WHERE MovementItem.MovementId = vbMovementId_tax
+                                      AND MovementItem.DescId     = zc_MI_Master()
+                                      AND MovementItem.isErased   = FALSE
+                                    )
+                        , tmpMILO_GoodsKind AS (SELECT MILinkObject_GoodsKind.*
+                                                FROM MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                WHERE MILinkObject_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                               )
+                        , tmpMIBoolean AS (SELECT MovementItemBoolean.*
+                                           FROM MovementItemBoolean
+                                           WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                             AND MovementItemBoolean.DescId = zc_MIBoolean_Goods_Name_new()
+                                          )
+                          SELECT DISTINCT
                                  MovementItem.ObjectId           AS GoodsId
                                , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                                , TRUE AS isName_new
-                          FROM MovementItem
-                               INNER JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
+                          FROM tmpMI AS MovementItem
+                               INNER JOIN tmpMIBoolean AS MIBoolean_Goods_Name_new
                                                               ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
                                                              AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
                                                              AND COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE
-                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                          WHERE MovementItem.MovementId = vbMovementId_tax
-                            AND MovementItem.DescId     = zc_MI_Master()
-                            AND MovementItem.isErased   = FALSE
+                               LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                           )
 
             -- Результат - tmp

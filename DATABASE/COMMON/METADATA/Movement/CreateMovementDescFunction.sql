@@ -640,6 +640,12 @@ CREATE OR REPLACE FUNCTION zc_Movement_PromoSale() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PromoSale', 'Рост Продаж' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoSale');
 
+CREATE OR REPLACE FUNCTION zc_Movement_PromoSalePartner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoSalePartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoSalePartner', 'Список покупателей для Рост Продаж' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoSalePartner');
+
+
+
 
 
 
