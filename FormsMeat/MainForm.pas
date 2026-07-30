@@ -1653,6 +1653,8 @@ type
     actSaleCommercJournal: TdsdOpenForm;
     N284: TMenuItem;
     miSaleCommercJournal: TMenuItem;
+    actPromoSaleJournal: TdsdOpenForm;
+    miPromoSaleJournal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
