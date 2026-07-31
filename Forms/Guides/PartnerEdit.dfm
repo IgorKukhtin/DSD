@@ -1,1050 +1,1275 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-  ClientHeight = 589
+  ClientHeight = 625
   ClientWidth = 1087
   ExplicitWidth = 1093
-  ExplicitHeight = 618
+  ExplicitHeight = 654
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 780
-    Top = 556
+    Left = 65
+    Top = 590
     TabOrder = 2
-    ExplicitLeft = 780
-    ExplicitTop = 556
+    ExplicitLeft = 65
+    ExplicitTop = 590
   end
   inherited bbCancel: TcxButton
-    Left = 937
-    Top = 556
-    ExplicitLeft = 937
-    ExplicitTop = 556
-  end
-  object edAddress: TcxTextEdit [2]
-    Left = 158
-    Top = 160
-    Properties.ReadOnly = True
+    Left = 237
+    Top = 592
     TabOrder = 0
-    Width = 195
+    ExplicitLeft = 237
+    ExplicitTop = 592
   end
-  object cxLabel1: TcxLabel [3]
-    Left = 15
-    Top = 161
-    Caption = #1040#1076#1088#1077#1089
-  end
-  object Код: TcxLabel [4]
-    Left = 15
+  object cxPageControl1: TcxPageControl [2]
+    Left = 4
     Top = 7
-    Caption = #1050#1086#1076
-  end
-  object ceCode: TcxCurrencyEdit [5]
-    Left = 45
-    Top = 6
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 3
-    Width = 54
-  end
-  object cxLabel2: TcxLabel [6]
-    Left = 117
-    Top = 7
-    Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
-  end
-  object edGLNCode: TcxTextEdit [7]
-    Left = 233
-    Top = 6
-    TabOrder = 5
-    Width = 120
-  end
-  object cxLabel3: TcxLabel [8]
-    Left = 15
-    Top = 101
-    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-  end
-  object edJuridical: TcxButtonEdit [9]
-    Left = 158
-    Top = 100
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 195
-  end
-  object cxLabel4: TcxLabel [10]
-    Left = 15
-    Top = 219
-    Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1085#1080#1084#1072#1077#1090#1089#1103' '#1079#1072#1082#1072#1079
-  end
-  object cxLabel5: TcxLabel [11]
-    Left = 15
-    Top = 189
-    Caption = #1063#1077#1088#1077#1079' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1086#1092#1086#1088#1084#1083#1103#1077#1090#1089#1103' '#1076#1086#1082#1091#1084#1077#1085#1090
-  end
-  object cxLabel6: TcxLabel [12]
-    Left = 15
-    Top = 247
-    Caption = #1052#1072#1088#1096#1088#1091#1090
-  end
-  object ceRoute: TcxButtonEdit [13]
-    Left = 158
-    Top = 246
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 11
-    Width = 195
-  end
-  object cxLabel7: TcxLabel [14]
-    Left = 961
-    Top = 412
-    Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
-    Visible = False
-  end
-  object ceRouteSorting: TcxButtonEdit [15]
-    Left = 1022
-    Top = 410
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 13
-    Visible = False
-    Width = 57
-  end
-  object cxLabel8: TcxLabel [16]
-    Left = 735
-    Top = 131
-    Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
-  end
-  object ceMemberTake: TcxButtonEdit [17]
-    Left = 878
-    Top = 130
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 15
-    Width = 195
-  end
-  object cePrepareDayCount: TcxCurrencyEdit [18]
-    Left = 253
-    Top = 218
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    Properties.EditFormat = '0'
-    TabOrder = 16
-    Width = 100
-  end
-  object ceDocumentDayCount: TcxCurrencyEdit [19]
-    Left = 253
-    Top = 188
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    Properties.EditFormat = '0'
-    TabOrder = 17
-    Width = 100
-  end
-  object cxLabel9: TcxLabel [20]
-    Left = 380
-    Top = 321
-    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
-  end
-  object cxLabel10: TcxLabel [21]
-    Left = 950
-    Top = 397
-    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
-    Visible = False
-  end
-  object cePriceList: TcxButtonEdit [22]
-    Left = 515
-    Top = 320
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 22
-    Width = 204
-  end
-  object cePriceListPromo: TcxButtonEdit [23]
-    Left = 995
-    Top = 397
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 23
-    Visible = False
-    Width = 54
-  end
-  object cxLabel11: TcxLabel [24]
-    Left = 380
-    Top = 380
-    Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
-  end
-  object cxLabel12: TcxLabel [25]
-    Left = 569
-    Top = 380
-    Caption = #1044#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1072#1082#1094#1080#1080
-  end
-  object edStartPromo: TcxDateEdit [26]
-    Left = 380
-    Top = 398
-    EditValue = 0d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    Properties.ValidateOnEnter = False
-    TabOrder = 26
-    Width = 120
-  end
-  object edEndPromo: TcxDateEdit [27]
-    Left = 569
-    Top = 397
-    EditValue = 0d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    Properties.ValidateOnEnter = False
-    TabOrder = 27
-    Width = 120
-  end
-  object cxLabel13: TcxLabel [28]
-    Left = 15
-    Top = 131
-    Caption = #1059#1089#1083#1086#1074#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
-  end
-  object edShortName: TcxTextEdit [29]
-    Left = 158
-    Top = 130
-    TabOrder = 29
-    Width = 195
-  end
-  object cxLabel14: TcxLabel [30]
-    Left = 380
-    Top = 221
-    Caption = #1059#1083#1080#1094#1072'/'#1087#1088#1086#1089#1087#1077#1082#1090
-  end
-  object cxLabel15: TcxLabel [31]
-    Left = 532
-    Top = 247
-    Caption = #1044#1086#1084':'
-  end
-  object cxLabel16: TcxLabel [32]
-    Left = 628
-    Top = 247
-    Caption = #1050#1086#1088#1087#1091#1089':'
-  end
-  object cxLabel17: TcxLabel [33]
-    Left = 458
-    Top = 271
-    Caption = #8470' '#1057#1082#1083#1072#1076#1072' '#1080#1083#1080' '#1082#1074'.:'
-  end
-  object ceStreet: TcxButtonEdit [34]
-    Left = 484
-    Top = 220
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 34
-    Width = 235
-  end
-  object edHouseNumber: TcxTextEdit [35]
-    Left = 562
-    Top = 246
-    TabOrder = 35
-    Width = 45
-  end
-  object edCaseNumber: TcxTextEdit [36]
-    Left = 674
-    Top = 246
-    TabOrder = 36
-    Width = 45
-  end
-  object edRoomNumber: TcxTextEdit [37]
-    Left = 562
-    Top = 270
-    TabOrder = 37
-    Width = 157
-  end
-  object cxLabel18: TcxLabel [38]
-    Left = 735
-    Top = 7
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
-  end
-  object cePersonal: TcxButtonEdit [39]
-    Left = 878
-    Top = 6
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 39
-    Width = 195
-  end
-  object cxLabel19: TcxLabel [40]
-    Left = 735
-    Top = 41
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
-  end
-  object cePersonalTrade: TcxButtonEdit [41]
-    Left = 878
-    Top = 40
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 41
-    Width = 195
-  end
-  object cxLabel20: TcxLabel [42]
-    Left = 15
-    Top = 333
-    Caption = #1056#1077#1075#1080#1086#1085
-  end
-  object ceArea: TcxButtonEdit [43]
-    Left = 158
-    Top = 332
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 43
-    Width = 195
-  end
-  object cxLabel21: TcxLabel [44]
-    Left = 15
-    Top = 390
-    Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
-  end
-  object cePartnerTag: TcxButtonEdit [45]
-    Left = 158
-    Top = 389
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 45
-    Width = 195
-  end
-  object cxLabel22: TcxLabel [46]
-    Left = 380
-    Top = 7
-    Caption = #1054#1073#1083#1072#1089#1090#1100
-  end
-  object ceRegion: TcxButtonEdit [47]
-    Left = 484
-    Top = 6
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 47
-    Width = 235
-  end
-  object cxLabel23: TcxLabel [48]
-    Left = 380
-    Top = 41
-    Caption = #1056#1072#1081#1086#1085
-  end
-  object ceProvince: TcxButtonEdit [49]
-    Left = 484
-    Top = 40
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 49
-    Width = 235
-  end
-  object cxLabel24: TcxLabel [50]
-    Left = 380
-    Top = 71
-    Caption = #1042#1080#1076' '#1085#1072#1089'.'#1087#1091#1085#1082#1090#1072
-  end
-  object ceCityKind: TcxButtonEdit [51]
-    Left = 484
-    Top = 70
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 51
-    Width = 235
-  end
-  object cxLabel25: TcxLabel [52]
-    Left = 380
-    Top = 101
-    Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
-  end
-  object ceCity: TcxButtonEdit [53]
-    Left = 485
-    Top = 100
-    Properties.AutoSelect = False
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = False
-    TabOrder = 53
-    Width = 235
-  end
-  object cxLabel26: TcxLabel [54]
-    Left = 380
-    Top = 131
-    Caption = #1052#1080#1082#1088#1086#1088#1072#1081#1086#1085
-  end
-  object ceProvinceCity: TcxButtonEdit [55]
-    Left = 484
-    Top = 130
-    Properties.AutoSelect = False
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = False
-    TabOrder = 55
-    Width = 235
-  end
-  object cxLabel27: TcxLabel [56]
-    Left = 380
-    Top = 191
-    Caption = #1042#1080#1076
-  end
-  object ceStreetKind: TcxButtonEdit [57]
-    Left = 484
-    Top = 190
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 57
-    Width = 235
-  end
-  object cxLabel28: TcxLabel [58]
-    Left = 380
-    Top = 161
-    Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
-  end
-  object edPostalCode: TcxTextEdit [59]
-    Left = 484
-    Top = 160
-    TabOrder = 59
-    Width = 235
-  end
-  object cbEdiOrdspr: TcxCheckBox [60]
-    Left = 15
-    Top = 30
-    Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
-    TabOrder = 60
-    Width = 134
-  end
-  object cbEdiDesadv: TcxCheckBox [61]
-    Left = 233
-    Top = 30
-    Caption = 'EDI - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
-    TabOrder = 61
-    Width = 120
-  end
-  object cbEdiInvoice: TcxCheckBox [62]
-    Left = 155
-    Top = 29
-    Caption = 'EDI - '#1057#1095#1077#1090
-    TabOrder = 62
-    Width = 76
-  end
-  object cxLabel29: TcxLabel [63]
-    Left = 130
-    Top = 54
-    Caption = 'GLN - '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100
-  end
-  object edGLNCodeJuridical: TcxTextEdit [64]
-    Left = 15
-    Top = 71
-    TabOrder = 64
-    Width = 100
-  end
-  object cxLabel30: TcxLabel [65]
-    Left = 15
-    Top = 54
-    Caption = 'GLN - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
-  end
-  object edGLNCodeRetail: TcxTextEdit [66]
-    Left = 130
-    Top = 71
-    TabOrder = 66
-    Width = 100
-  end
-  object edGLNCodeCorporate: TcxTextEdit [67]
-    Left = 253
-    Top = 71
-    TabOrder = 67
-    Width = 100
-  end
-  object cxLabel31: TcxLabel [68]
-    Left = 253
-    Top = 54
-    Caption = 'GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082
-  end
-  object cxLabel32: TcxLabel [69]
-    Left = 380
-    Top = 296
-    Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088'  '#1089#1074'-'#1074' '#1090#1086#1074'.'
-  end
-  object ceGoodsProperty: TcxButtonEdit [70]
-    Left = 515
-    Top = 295
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 70
-    Width = 204
-  end
-  object cbValue1: TcxCheckBox [71]
-    Left = 473
-    Top = 423
-    Caption = #1055#1085'.'
-    TabOrder = 71
-    Width = 39
-  end
-  object cbValue2: TcxCheckBox [72]
-    Left = 509
-    Top = 423
-    Caption = #1042#1090'.'
-    TabOrder = 72
-    Width = 38
-  end
-  object cbValue3: TcxCheckBox [73]
-    Left = 544
-    Top = 423
-    Caption = #1057#1088'.'
-    TabOrder = 73
-    Width = 39
-  end
-  object cbValue4: TcxCheckBox [74]
-    Left = 580
-    Top = 423
-    Caption = #1063#1090'.'
-    TabOrder = 74
-    Width = 40
-  end
-  object cbValue5: TcxCheckBox [75]
-    Left = 615
-    Top = 423
-    Caption = #1055#1090'.'
-    TabOrder = 75
-    Width = 39
-  end
-  object cbValue6: TcxCheckBox [76]
-    Left = 650
-    Top = 423
-    Caption = #1057#1073'.'
-    TabOrder = 76
-    Width = 39
-  end
-  object cbValue7: TcxCheckBox [77]
-    Left = 687
-    Top = 423
-    ParentCustomHint = False
-    Caption = #1042#1089'.'
-    TabOrder = 77
-    Width = 37
-  end
-  object cxLabel33: TcxLabel [78]
-    Left = 366
-    Top = 423
-    Caption = #1043#1088#1072#1092#1080#1082' '#1087#1086#1089#1077#1097#1077#1085#1080#1103':'
-  end
-  object cxLabel34: TcxLabel [79]
-    Left = 15
-    Top = 419
-    Caption = 'GPS ('#1096#1080#1088#1086#1090#1072')'
-  end
-  object edGPSN: TcxTextEdit [80]
-    Left = 89
-    Top = 418
-    Properties.ReadOnly = True
-    TabOrder = 80
-    Width = 92
-  end
-  object cxLabel35: TcxLabel [81]
-    Left = 187
-    Top = 419
-    Caption = 'GPS ('#1076#1086#1083#1075#1086#1090#1072')'
-  end
-  object edGPSE: TcxTextEdit [82]
-    Left = 261
-    Top = 418
-    Properties.ReadOnly = True
-    TabOrder = 82
-    Width = 92
-  end
-  object cxLabel36: TcxLabel [83]
-    Left = 366
-    Top = 449
-    Caption = #1043#1088#1072#1092#1080#1082' '#1079#1072#1074#1086#1079#1072':'
-  end
-  object cbDelivery1: TcxCheckBox [84]
-    Left = 473
-    Top = 444
-    Caption = #1055#1085'.'
-    Properties.ReadOnly = True
-    TabOrder = 84
-    Width = 39
-  end
-  object cbDelivery2: TcxCheckBox [85]
-    Left = 509
-    Top = 444
-    Caption = #1042#1090'.'
-    Properties.ReadOnly = True
-    TabOrder = 85
-    Width = 38
-  end
-  object cbDelivery3: TcxCheckBox [86]
-    Left = 544
-    Top = 444
-    Caption = #1057#1088'.'
-    Properties.ReadOnly = True
-    TabOrder = 86
-    Width = 39
-  end
-  object cbDelivery4: TcxCheckBox [87]
-    Left = 580
-    Top = 444
-    Caption = #1063#1090'.'
-    Properties.ReadOnly = True
-    TabOrder = 87
-    Width = 40
-  end
-  object cbDelivery5: TcxCheckBox [88]
-    Left = 615
-    Top = 444
-    Caption = #1055#1090'.'
-    Properties.ReadOnly = True
-    TabOrder = 88
-    Width = 39
-  end
-  object cbDelivery6: TcxCheckBox [89]
-    Left = 650
-    Top = 444
-    Caption = #1057#1073'.'
-    Properties.ReadOnly = True
-    TabOrder = 89
-    Width = 39
-  end
-  object cbDelivery7: TcxCheckBox [90]
-    Left = 687
-    Top = 444
-    ParentCustomHint = False
-    Caption = #1042#1089'.'
-    Properties.ReadOnly = True
-    TabOrder = 90
-    Width = 37
-  end
-  object cxLabel37: TcxLabel [91]
-    Left = 735
-    Top = 71
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
-  end
-  object cePersonalMerch: TcxButtonEdit [92]
-    Left = 878
-    Top = 70
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 92
-    Width = 195
-  end
-  object cxLabel38: TcxLabel [93]
-    Left = 15
-    Top = 361
-    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1058#1058
-  end
-  object edCategory: TcxCurrencyEdit [94]
-    Left = 158
-    Top = 360
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    Properties.EditFormat = '0'
-    TabOrder = 94
-    Width = 195
-  end
-  object cxLabel39: TcxLabel [95]
-    Left = 15
-    Top = 275
-    Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
-  end
-  object edRoute30201: TcxButtonEdit [96]
-    Left = 158
-    Top = 274
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 96
-    Width = 195
-  end
-  object cxLabel40: TcxLabel [97]
-    Left = 380
-    Top = 347
-    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
-  end
-  object cePriceList30201: TcxButtonEdit [98]
-    Left = 529
-    Top = 346
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 98
-    Width = 190
-  end
-  object cxLabel47: TcxLabel [99]
-    Left = 15
-    Top = 448
-    Caption = #1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)'
-  end
-  object edUnitMobile: TcxButtonEdit [100]
-    Left = 141
-    Top = 447
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 100
-    Width = 212
-  end
-  object cxLabel41: TcxLabel [101]
-    Left = 366
-    Top = 472
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077'('#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1080')'
-  end
-  object edMovementComment: TcxTextEdit [102]
-    Left = 509
-    Top = 471
-    TabOrder = 102
-    Width = 210
-  end
-  object edTaxSale_Personal: TcxCurrencyEdit [103]
-    Left = 1019
-    Top = 220
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 103
-    Width = 54
-  end
-  object cxLabel42: TcxLabel [104]
-    Left = 735
-    Top = 222
-    Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088' - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
-  end
-  object edTaxSale_PersonalTrade: TcxCurrencyEdit [105]
-    Left = 1019
-    Top = 246
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 105
-    Width = 54
-  end
-  object cxLabel43: TcxLabel [106]
-    Left = 736
-    Top = 247
-    Caption = #1058#1055' - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
-  end
-  object edTaxSale_MemberSaler1: TcxCurrencyEdit [107]
-    Left = 1019
-    Top = 274
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 107
-    Width = 54
-  end
-  object cxLabel44: TcxLabel [108]
-    Left = 735
-    Top = 275
-    Caption = #1055#1088#1086#1076#1072#1074#1077#1094'-1 - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
-  end
-  object edTaxSale_MemberSaler2: TcxCurrencyEdit [109]
-    Left = 1019
-    Top = 303
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 109
-    Width = 54
-  end
-  object cxLabel45: TcxLabel [110]
-    Left = 735
-    Top = 304
-    Caption = #1055#1088#1086#1076#1072#1074#1077#1094'-2 - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
-  end
-  object cxLabel46: TcxLabel [111]
-    Left = 735
-    Top = 161
-    Caption = #1060#1080#1079' '#1083#1080#1094#1086' ('#1055#1088#1086#1076#1072#1074#1077#1094'-1)'
-  end
-  object edMemberSaler1: TcxButtonEdit [112]
-    Left = 878
-    Top = 160
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 112
-    Width = 195
-  end
-  object cxLabel48: TcxLabel [113]
-    Left = 735
-    Top = 191
-    Caption = #1060#1080#1079' '#1083#1080#1094#1086' ('#1055#1088#1086#1076#1072#1074#1077#1094'-2)'
-  end
-  object edMemberSaler2: TcxButtonEdit [114]
-    Left = 878
-    Top = 190
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 114
-    Width = 195
-  end
-  object edBranchCode: TcxTextEdit [115]
-    Left = 736
-    Top = 370
-    TabOrder = 115
-    Width = 81
-  end
-  object cxLabel49: TcxLabel [116]
-    Left = 736
-    Top = 347
-    Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
-  end
-  object edBranchJur: TcxTextEdit [117]
-    Left = 832
-    Top = 370
-    TabOrder = 117
-    Width = 241
-  end
-  object cxLabel50: TcxLabel [118]
-    Left = 832
-    Top = 347
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1102#1088'.'#1083#1080#1094#1072' '#1076#1083#1103' '#1092#1080#1083#1080#1072#1083#1072
-  end
-  object cxLabel51: TcxLabel [119]
-    Left = 736
-    Top = 398
-    Caption = #1050#1086#1076' '#1090#1077#1088#1084#1080#1085#1072#1083#1072
-  end
-  object edTerminal: TcxTextEdit [120]
-    Left = 735
-    Top = 419
-    TabOrder = 120
-    Width = 81
-  end
-  object cxLabel52: TcxLabel [121]
-    Left = 735
-    Top = 101
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1076#1087#1080#1089#1072#1085#1090')'
-  end
-  object edPersonalSigning: TcxButtonEdit [122]
-    Left = 878
-    Top = 100
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 122
-    Width = 195
-  end
-  object cbEdiOrdspr_vch: TcxCheckBox [123]
-    Left = 16
-    Top = 501
-    Caption = #1042#1063#1040#1057#1053#1054' - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
-    TabOrder = 123
-    Width = 160
-  end
-  object cbEdiInvoice_vch: TcxCheckBox [124]
-    Left = 184
-    Top = 501
-    Caption = #1042#1063#1040#1057#1053#1054' - '#1057#1095#1077#1090
-    TabOrder = 124
-    Width = 102
-  end
-  object cbEdiDesadv_vch: TcxCheckBox [125]
-    Left = 291
-    Top = 501
-    Caption = #1042#1063#1040#1057#1053#1054' - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
-    TabOrder = 125
-    Width = 154
-  end
-  object cxLabel53: TcxLabel [126]
-    Left = 15
-    Top = 478
-    Caption = #1042#1063#1040#1057#1053#1054' - '#1050#1086#1076' GLN - '#1055#1086#1089#1090#1072#1074#1097#1080#1082
-  end
-  object edGLNCodeCorporate_vch: TcxTextEdit [127]
-    Left = 182
-    Top = 476
-    TabOrder = 127
-    Width = 171
-  end
-  object cxLabel54: TcxLabel [128]
-    Left = 736
-    Top = 449
-    Caption = #1063#1077#1088#1077#1079' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1086#1092#1086#1088#1084'. '#1076#1086#1082'. ('#1052#1103#1089#1085'.'#1089#1099#1088#1100#1077')'
-  end
-  object cxLabel55: TcxLabel [129]
-    Left = 736
-    Top = 472
-    Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1085#1080#1084'-'#1089#1103' '#1079#1072#1082#1072#1079' ('#1052#1103#1089#1085'.'#1089#1099#1088#1100#1077')'
-  end
-  object edPrepareDayCount_30201: TcxCurrencyEdit [130]
-    Left = 988
-    Top = 472
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    Properties.EditFormat = '0'
-    TabOrder = 130
-    Width = 85
-  end
-  object edDocumentDayCount_30201: TcxCurrencyEdit [131]
-    Left = 988
-    Top = 447
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    Properties.EditFormat = '0'
-    TabOrder = 131
-    Width = 85
-  end
-  object cbDayCount_30201: TcxCheckBox [132]
-    Left = 871
-    Top = 419
-    Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1072' '#1089#1093#1077#1084#1072' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
-    TabOrder = 132
-    Width = 202
-  end
-  object cxLabel56: TcxLabel [133]
-    Left = 15
-    Top = 304
-    Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058
-  end
-  object ceRouteTT: TcxButtonEdit [134]
-    Left = 158
-    Top = 303
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 134
-    Width = 195
-  end
-  object cxLabel57: TcxLabel [135]
-    Left = 15
-    Top = 529
-    Caption = #1058#1080#1087' '#1086#1090#1075#1088#1091#1079#1082#1080
-  end
-  object edTypeCommerc: TcxButtonEdit [136]
-    Left = 141
-    Top = 528
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 136
-    Width = 212
-  end
-  object cxLabel58: TcxLabel [137]
-    Left = 15
-    Top = 561
-    Caption = #1054#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080
-  end
-  object edUnitCommerc: TcxButtonEdit [138]
-    Left = 141
-    Top = 560
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 138
-    Width = 212
-  end
-  object cxLabel59: TcxLabel [139]
-    Left = 381
-    Top = 529
-    Caption = #1043#1088#1091#1087#1087#1072' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
-  end
-  object edPersonalGroupCommerc: TcxButtonEdit [140]
-    Left = 507
-    Top = 528
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 140
-    Width = 212
+    Width = 1075
+    Height = 577
+    TabOrder = 1
+    Properties.ActivePage = cxTabSheet1
+    Properties.CustomButtons.Buttons = <>
+    ClientRectBottom = 577
+    ClientRectRight = 1075
+    ClientRectTop = 24
+    object cxTabSheet1: TcxTabSheet
+      Caption = #1047#1072#1075#1072#1083#1100#1085#1072
+      ImageIndex = 0
+      object edAddress: TcxTextEdit
+        Left = 158
+        Top = 160
+        Properties.ReadOnly = True
+        TabOrder = 0
+        Width = 195
+      end
+      object cxLabel1: TcxLabel
+        Left = 15
+        Top = 161
+        Caption = #1040#1076#1088#1077#1089
+      end
+      object Код: TcxLabel
+        Left = 15
+        Top = 7
+        Caption = #1050#1086#1076
+      end
+      object ceCode: TcxCurrencyEdit
+        Left = 45
+        Top = 8
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 3
+        Width = 54
+      end
+      object cxLabel2: TcxLabel
+        Left = 117
+        Top = 7
+        Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
+      end
+      object edGLNCode: TcxTextEdit
+        Left = 233
+        Top = 6
+        TabOrder = 5
+        Width = 120
+      end
+      object cxLabel3: TcxLabel
+        Left = 15
+        Top = 101
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+      end
+      object edJuridical: TcxButtonEdit
+        Left = 158
+        Top = 100
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 7
+        Width = 195
+      end
+      object cxLabel4: TcxLabel
+        Left = 15
+        Top = 219
+        Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1085#1080#1084#1072#1077#1090#1089#1103' '#1079#1072#1082#1072#1079
+      end
+      object cxLabel5: TcxLabel
+        Left = 15
+        Top = 189
+        Caption = #1063#1077#1088#1077#1079' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1086#1092#1086#1088#1084#1083#1103#1077#1090#1089#1103' '#1076#1086#1082#1091#1084#1077#1085#1090
+      end
+      object cxLabel6: TcxLabel
+        Left = 15
+        Top = 247
+        Caption = #1052#1072#1088#1096#1088#1091#1090
+      end
+      object ceRoute: TcxButtonEdit
+        Left = 158
+        Top = 246
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 11
+        Width = 195
+      end
+      object cxLabel7: TcxLabel
+        Left = 961
+        Top = 412
+        Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+        Visible = False
+      end
+      object ceRouteSorting: TcxButtonEdit
+        Left = 1022
+        Top = 410
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 13
+        Visible = False
+        Width = 57
+      end
+      object cxLabel8: TcxLabel
+        Left = 735
+        Top = 131
+        Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+      end
+      object ceMemberTake: TcxButtonEdit
+        Left = 878
+        Top = 130
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 15
+        Width = 195
+      end
+      object cePrepareDayCount: TcxCurrencyEdit
+        Left = 253
+        Top = 218
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        Properties.EditFormat = '0'
+        TabOrder = 16
+        Width = 100
+      end
+      object ceDocumentDayCount: TcxCurrencyEdit
+        Left = 253
+        Top = 188
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        Properties.EditFormat = '0'
+        TabOrder = 17
+        Width = 100
+      end
+      object cxLabel9: TcxLabel
+        Left = 380
+        Top = 321
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+      end
+      object cxLabel10: TcxLabel
+        Left = 950
+        Top = 397
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
+        Visible = False
+      end
+      object cePriceList: TcxButtonEdit
+        Left = 515
+        Top = 320
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 20
+        Width = 204
+      end
+      object cePriceListPromo: TcxButtonEdit
+        Left = 995
+        Top = 397
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 23
+        Visible = False
+        Width = 54
+      end
+      object cxLabel11: TcxLabel
+        Left = 380
+        Top = 380
+        Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
+      end
+      object cxLabel12: TcxLabel
+        Left = 569
+        Top = 380
+        Caption = #1044#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1072#1082#1094#1080#1080
+      end
+      object edStartPromo: TcxDateEdit
+        Left = 380
+        Top = 398
+        EditValue = 0d
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        Properties.ValidateOnEnter = False
+        TabOrder = 24
+        Width = 120
+      end
+      object edEndPromo: TcxDateEdit
+        Left = 569
+        Top = 397
+        EditValue = 0d
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        Properties.ValidateOnEnter = False
+        TabOrder = 26
+        Width = 120
+      end
+      object cxLabel13: TcxLabel
+        Left = 15
+        Top = 131
+        Caption = #1059#1089#1083#1086#1074#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+      end
+      object edShortName: TcxTextEdit
+        Left = 158
+        Top = 130
+        TabOrder = 29
+        Width = 195
+      end
+      object cxLabel14: TcxLabel
+        Left = 380
+        Top = 221
+        Caption = #1059#1083#1080#1094#1072'/'#1087#1088#1086#1089#1087#1077#1082#1090
+      end
+      object cxLabel15: TcxLabel
+        Left = 532
+        Top = 247
+        Caption = #1044#1086#1084':'
+      end
+      object cxLabel16: TcxLabel
+        Left = 628
+        Top = 247
+        Caption = #1050#1086#1088#1087#1091#1089':'
+      end
+      object cxLabel17: TcxLabel
+        Left = 458
+        Top = 271
+        Caption = #8470' '#1057#1082#1083#1072#1076#1072' '#1080#1083#1080' '#1082#1074'.:'
+      end
+      object ceStreet: TcxButtonEdit
+        Left = 484
+        Top = 220
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 32
+        Width = 235
+      end
+      object edHouseNumber: TcxTextEdit
+        Left = 562
+        Top = 246
+        TabOrder = 33
+        Width = 45
+      end
+      object edCaseNumber: TcxTextEdit
+        Left = 674
+        Top = 246
+        TabOrder = 34
+        Width = 45
+      end
+      object edRoomNumber: TcxTextEdit
+        Left = 562
+        Top = 270
+        TabOrder = 36
+        Width = 157
+      end
+      object cxLabel18: TcxLabel
+        Left = 737
+        Top = 7
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+      end
+      object cePersonal: TcxButtonEdit
+        Left = 878
+        Top = 6
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 38
+        Width = 195
+      end
+      object cxLabel19: TcxLabel
+        Left = 735
+        Top = 41
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
+      end
+      object cePersonalTrade: TcxButtonEdit
+        Left = 878
+        Top = 40
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 40
+        Width = 195
+      end
+      object cxLabel20: TcxLabel
+        Left = 15
+        Top = 333
+        Caption = #1056#1077#1075#1080#1086#1085
+      end
+      object ceArea: TcxButtonEdit
+        Left = 158
+        Top = 332
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 42
+        Width = 195
+      end
+      object cxLabel21: TcxLabel
+        Left = 15
+        Top = 390
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
+      end
+      object cePartnerTag: TcxButtonEdit
+        Left = 158
+        Top = 389
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 44
+        Width = 195
+      end
+      object cxLabel22: TcxLabel
+        Left = 380
+        Top = 7
+        Caption = #1054#1073#1083#1072#1089#1090#1100
+      end
+      object ceRegion: TcxButtonEdit
+        Left = 484
+        Top = 6
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 46
+        Width = 235
+      end
+      object cxLabel23: TcxLabel
+        Left = 380
+        Top = 41
+        Caption = #1056#1072#1081#1086#1085
+      end
+      object ceProvince: TcxButtonEdit
+        Left = 484
+        Top = 40
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 48
+        Width = 235
+      end
+      object cxLabel24: TcxLabel
+        Left = 380
+        Top = 71
+        Caption = #1042#1080#1076' '#1085#1072#1089'.'#1087#1091#1085#1082#1090#1072
+      end
+      object ceCityKind: TcxButtonEdit
+        Left = 484
+        Top = 70
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 50
+        Width = 235
+      end
+      object cxLabel25: TcxLabel
+        Left = 380
+        Top = 101
+        Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
+      end
+      object ceCity: TcxButtonEdit
+        Left = 485
+        Top = 100
+        Properties.AutoSelect = False
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
+        TabOrder = 52
+        Width = 235
+      end
+      object cxLabel26: TcxLabel
+        Left = 380
+        Top = 131
+        Caption = #1052#1080#1082#1088#1086#1088#1072#1081#1086#1085
+      end
+      object ceProvinceCity: TcxButtonEdit
+        Left = 484
+        Top = 130
+        Properties.AutoSelect = False
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
+        TabOrder = 54
+        Width = 235
+      end
+      object cxLabel27: TcxLabel
+        Left = 380
+        Top = 191
+        Caption = #1042#1080#1076
+      end
+      object ceStreetKind: TcxButtonEdit
+        Left = 484
+        Top = 190
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 56
+        Width = 235
+      end
+      object cxLabel28: TcxLabel
+        Left = 380
+        Top = 161
+        Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
+      end
+      object edPostalCode: TcxTextEdit
+        Left = 484
+        Top = 160
+        TabOrder = 57
+        Width = 235
+      end
+      object cbEdiOrdspr: TcxCheckBox
+        Left = 15
+        Top = 30
+        Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+        TabOrder = 58
+        Width = 134
+      end
+      object cbEdiDesadv: TcxCheckBox
+        Left = 233
+        Top = 30
+        Caption = 'EDI - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+        TabOrder = 59
+        Width = 120
+      end
+      object cbEdiInvoice: TcxCheckBox
+        Left = 155
+        Top = 29
+        Caption = 'EDI - '#1057#1095#1077#1090
+        TabOrder = 61
+        Width = 76
+      end
+      object cxLabel29: TcxLabel
+        Left = 130
+        Top = 54
+        Caption = 'GLN - '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100
+      end
+      object edGLNCodeJuridical: TcxTextEdit
+        Left = 15
+        Top = 71
+        TabOrder = 63
+        Width = 100
+      end
+      object cxLabel30: TcxLabel
+        Left = 15
+        Top = 54
+        Caption = 'GLN - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
+      end
+      object edGLNCodeRetail: TcxTextEdit
+        Left = 130
+        Top = 71
+        TabOrder = 64
+        Width = 100
+      end
+      object edGLNCodeCorporate: TcxTextEdit
+        Left = 253
+        Top = 71
+        TabOrder = 67
+        Width = 100
+      end
+      object cxLabel31: TcxLabel
+        Left = 253
+        Top = 54
+        Caption = 'GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+      end
+      object cxLabel32: TcxLabel
+        Left = 380
+        Top = 296
+        Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088'  '#1089#1074'-'#1074' '#1090#1086#1074'.'
+      end
+      object ceGoodsProperty: TcxButtonEdit
+        Left = 515
+        Top = 295
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 68
+        Width = 204
+      end
+      object cbValue1: TcxCheckBox
+        Left = 473
+        Top = 423
+        Caption = #1055#1085'.'
+        TabOrder = 69
+        Width = 39
+      end
+      object cbValue2: TcxCheckBox
+        Left = 509
+        Top = 423
+        Caption = #1042#1090'.'
+        TabOrder = 70
+        Width = 38
+      end
+      object cbValue3: TcxCheckBox
+        Left = 544
+        Top = 423
+        Caption = #1057#1088'.'
+        TabOrder = 71
+        Width = 39
+      end
+      object cbValue4: TcxCheckBox
+        Left = 580
+        Top = 423
+        Caption = #1063#1090'.'
+        TabOrder = 72
+        Width = 40
+      end
+      object cbValue5: TcxCheckBox
+        Left = 615
+        Top = 423
+        Caption = #1055#1090'.'
+        TabOrder = 73
+        Width = 39
+      end
+      object cbValue6: TcxCheckBox
+        Left = 650
+        Top = 423
+        Caption = #1057#1073'.'
+        TabOrder = 74
+        Width = 39
+      end
+      object cbValue7: TcxCheckBox
+        Left = 687
+        Top = 423
+        ParentCustomHint = False
+        Caption = #1042#1089'.'
+        TabOrder = 77
+        Width = 37
+      end
+      object cxLabel33: TcxLabel
+        Left = 366
+        Top = 423
+        Caption = #1043#1088#1072#1092#1080#1082' '#1087#1086#1089#1077#1097#1077#1085#1080#1103':'
+      end
+      object cxLabel34: TcxLabel
+        Left = 15
+        Top = 419
+        Caption = 'GPS ('#1096#1080#1088#1086#1090#1072')'
+      end
+      object edGPSN: TcxTextEdit
+        Left = 89
+        Top = 418
+        Properties.ReadOnly = True
+        TabOrder = 79
+        Width = 92
+      end
+      object cxLabel35: TcxLabel
+        Left = 187
+        Top = 419
+        Caption = 'GPS ('#1076#1086#1083#1075#1086#1090#1072')'
+      end
+      object edGPSE: TcxTextEdit
+        Left = 261
+        Top = 418
+        Properties.ReadOnly = True
+        TabOrder = 81
+        Width = 92
+      end
+      object cxLabel36: TcxLabel
+        Left = 366
+        Top = 449
+        Caption = #1043#1088#1072#1092#1080#1082' '#1079#1072#1074#1086#1079#1072':'
+      end
+      object cbDelivery1: TcxCheckBox
+        Left = 473
+        Top = 444
+        Caption = #1055#1085'.'
+        Properties.ReadOnly = True
+        TabOrder = 82
+        Width = 39
+      end
+      object cbDelivery2: TcxCheckBox
+        Left = 509
+        Top = 444
+        Caption = #1042#1090'.'
+        Properties.ReadOnly = True
+        TabOrder = 83
+        Width = 38
+      end
+      object cbDelivery3: TcxCheckBox
+        Left = 544
+        Top = 444
+        Caption = #1057#1088'.'
+        Properties.ReadOnly = True
+        TabOrder = 84
+        Width = 39
+      end
+      object cbDelivery4: TcxCheckBox
+        Left = 580
+        Top = 444
+        Caption = #1063#1090'.'
+        Properties.ReadOnly = True
+        TabOrder = 85
+        Width = 40
+      end
+      object cbDelivery5: TcxCheckBox
+        Left = 615
+        Top = 444
+        Caption = #1055#1090'.'
+        Properties.ReadOnly = True
+        TabOrder = 86
+        Width = 39
+      end
+      object cbDelivery6: TcxCheckBox
+        Left = 650
+        Top = 444
+        Caption = #1057#1073'.'
+        Properties.ReadOnly = True
+        TabOrder = 87
+        Width = 39
+      end
+      object cbDelivery7: TcxCheckBox
+        Left = 687
+        Top = 444
+        ParentCustomHint = False
+        Caption = #1042#1089'.'
+        Properties.ReadOnly = True
+        TabOrder = 89
+        Width = 37
+      end
+      object cxLabel37: TcxLabel
+        Left = 735
+        Top = 71
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+      end
+      object cePersonalMerch: TcxButtonEdit
+        Left = 878
+        Top = 70
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 91
+        Width = 195
+      end
+      object cxLabel38: TcxLabel
+        Left = 15
+        Top = 361
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1058#1058
+      end
+      object edCategory: TcxCurrencyEdit
+        Left = 158
+        Top = 360
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        Properties.EditFormat = '0'
+        TabOrder = 93
+        Width = 195
+      end
+      object cxLabel39: TcxLabel
+        Left = 15
+        Top = 275
+        Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+      end
+      object edRoute30201: TcxButtonEdit
+        Left = 158
+        Top = 274
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 95
+        Width = 195
+      end
+      object cxLabel40: TcxLabel
+        Left = 380
+        Top = 347
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+      end
+      object cePriceList30201: TcxButtonEdit
+        Left = 529
+        Top = 346
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 97
+        Width = 190
+      end
+      object cxLabel47: TcxLabel
+        Left = 15
+        Top = 448
+        Caption = #1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)'
+      end
+      object edUnitMobile: TcxButtonEdit
+        Left = 141
+        Top = 447
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 99
+        Width = 212
+      end
+      object cxLabel41: TcxLabel
+        Left = 366
+        Top = 472
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077'('#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1080')'
+      end
+      object edMovementComment: TcxTextEdit
+        Left = 509
+        Top = 471
+        TabOrder = 100
+        Width = 210
+      end
+      object edTaxSale_Personal: TcxCurrencyEdit
+        Left = 1019
+        Top = 220
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 102
+        Width = 54
+      end
+      object cxLabel42: TcxLabel
+        Left = 735
+        Top = 222
+        Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088' - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
+      end
+      object edTaxSale_PersonalTrade: TcxCurrencyEdit
+        Left = 1019
+        Top = 246
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 104
+        Width = 54
+      end
+      object cxLabel43: TcxLabel
+        Left = 736
+        Top = 247
+        Caption = #1058#1055' - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
+      end
+      object edTaxSale_MemberSaler1: TcxCurrencyEdit
+        Left = 1019
+        Top = 274
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 106
+        Width = 54
+      end
+      object cxLabel44: TcxLabel
+        Left = 735
+        Top = 275
+        Caption = #1055#1088#1086#1076#1072#1074#1077#1094'-1 - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
+      end
+      object edTaxSale_MemberSaler2: TcxCurrencyEdit
+        Left = 1019
+        Top = 303
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 109
+        Width = 54
+      end
+      object cxLabel45: TcxLabel
+        Left = 735
+        Top = 304
+        Caption = #1055#1088#1086#1076#1072#1074#1077#1094'-2 - % '#1086#1090' '#1090#1086#1074#1072#1088#1086#1086#1073#1086#1088#1086#1090#1072
+      end
+      object cxLabel46: TcxLabel
+        Left = 735
+        Top = 161
+        Caption = #1060#1080#1079' '#1083#1080#1094#1086' ('#1055#1088#1086#1076#1072#1074#1077#1094'-1)'
+      end
+      object edMemberSaler1: TcxButtonEdit
+        Left = 878
+        Top = 160
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 111
+        Width = 195
+      end
+      object cxLabel48: TcxLabel
+        Left = 735
+        Top = 191
+        Caption = #1060#1080#1079' '#1083#1080#1094#1086' ('#1055#1088#1086#1076#1072#1074#1077#1094'-2)'
+      end
+      object edMemberSaler2: TcxButtonEdit
+        Left = 878
+        Top = 190
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 112
+        Width = 195
+      end
+      object edBranchCode: TcxTextEdit
+        Left = 736
+        Top = 370
+        TabOrder = 114
+        Width = 81
+      end
+      object cxLabel49: TcxLabel
+        Left = 736
+        Top = 347
+        Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
+      end
+      object edBranchJur: TcxTextEdit
+        Left = 832
+        Top = 370
+        TabOrder = 117
+        Width = 241
+      end
+      object cxLabel50: TcxLabel
+        Left = 832
+        Top = 347
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1102#1088'.'#1083#1080#1094#1072' '#1076#1083#1103' '#1092#1080#1083#1080#1072#1083#1072
+      end
+      object cxLabel51: TcxLabel
+        Left = 736
+        Top = 398
+        Caption = #1050#1086#1076' '#1090#1077#1088#1084#1080#1085#1072#1083#1072
+      end
+      object edTerminal: TcxTextEdit
+        Left = 735
+        Top = 419
+        TabOrder = 119
+        Width = 81
+      end
+      object cxLabel52: TcxLabel
+        Left = 735
+        Top = 101
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1076#1087#1080#1089#1072#1085#1090')'
+      end
+      object edPersonalSigning: TcxButtonEdit
+        Left = 878
+        Top = 100
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 120
+        Width = 195
+      end
+      object cbEdiOrdspr_vch: TcxCheckBox
+        Left = 16
+        Top = 501
+        Caption = #1042#1063#1040#1057#1053#1054' - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+        TabOrder = 121
+        Width = 160
+      end
+      object cbEdiInvoice_vch: TcxCheckBox
+        Left = 184
+        Top = 501
+        Caption = #1042#1063#1040#1057#1053#1054' - '#1057#1095#1077#1090
+        TabOrder = 122
+        Width = 102
+      end
+      object cbEdiDesadv_vch: TcxCheckBox
+        Left = 291
+        Top = 501
+        Caption = #1042#1063#1040#1057#1053#1054' - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+        TabOrder = 124
+        Width = 154
+      end
+      object cxLabel53: TcxLabel
+        Left = 15
+        Top = 478
+        Caption = #1042#1063#1040#1057#1053#1054' - '#1050#1086#1076' GLN - '#1055#1086#1089#1090#1072#1074#1097#1080#1082
+      end
+      object edGLNCodeCorporate_vch: TcxTextEdit
+        Left = 182
+        Top = 476
+        TabOrder = 127
+        Width = 171
+      end
+      object cxLabel54: TcxLabel
+        Left = 736
+        Top = 449
+        Caption = #1063#1077#1088#1077#1079' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1086#1092#1086#1088#1084'. '#1076#1086#1082'. ('#1052#1103#1089#1085'.'#1089#1099#1088#1100#1077')'
+      end
+      object cxLabel55: TcxLabel
+        Left = 736
+        Top = 472
+        Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1085#1080#1084'-'#1089#1103' '#1079#1072#1082#1072#1079' ('#1052#1103#1089#1085'.'#1089#1099#1088#1100#1077')'
+      end
+      object edPrepareDayCount_30201: TcxCurrencyEdit
+        Left = 988
+        Top = 472
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        Properties.EditFormat = '0'
+        TabOrder = 128
+        Width = 85
+      end
+      object edDocumentDayCount_30201: TcxCurrencyEdit
+        Left = 988
+        Top = 447
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        Properties.EditFormat = '0'
+        TabOrder = 129
+        Width = 85
+      end
+      object cbDayCount_30201: TcxCheckBox
+        Left = 871
+        Top = 419
+        Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1072' '#1089#1093#1077#1084#1072' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+        TabOrder = 131
+        Width = 202
+      end
+      object cxLabel56: TcxLabel
+        Left = 15
+        Top = 304
+        Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058
+      end
+      object ceRouteTT: TcxButtonEdit
+        Left = 158
+        Top = 303
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 133
+        Width = 195
+      end
+      object cxLabel57: TcxLabel
+        Left = 15
+        Top = 529
+        Caption = #1058#1080#1087' '#1086#1090#1075#1088#1091#1079#1082#1080
+      end
+      object edTypeCommerc: TcxButtonEdit
+        Left = 141
+        Top = 528
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 135
+        Width = 212
+      end
+      object cxLabel58: TcxLabel
+        Left = 736
+        Top = 529
+        Caption = #1054#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080
+      end
+      object edUnitCommerc: TcxButtonEdit
+        Left = 836
+        Top = 528
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 138
+        Width = 237
+      end
+      object cxLabel59: TcxLabel
+        Left = 381
+        Top = 529
+        Caption = #1043#1088#1091#1087#1087#1072' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
+      end
+      object edPersonalGroupCommerc: TcxButtonEdit
+        Left = 507
+        Top = 528
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 136
+        Width = 212
+      end
+    end
+    object cxTabSheet2: TcxTabSheet
+      Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111': '#1056#1086#1079#1076#1088#1110#1073
+      ImageIndex = 1
+      object cxLabel60: TcxLabel
+        Left = 287
+        Top = 7
+        Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 1)'
+      end
+      object cePosition_1: TcxButtonEdit
+        Left = 287
+        Top = 26
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 1
+        Width = 273
+      end
+      object cxLabel61: TcxLabel
+        Left = 287
+        Top = 56
+        Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 2) '#9
+      end
+      object cePosition_2: TcxButtonEdit
+        Left = 287
+        Top = 75
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 3
+        Width = 273
+      end
+      object cxLabel62: TcxLabel
+        Left = 287
+        Top = 103
+        Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 3) '#9
+      end
+      object cePosition_3: TcxButtonEdit
+        Left = 287
+        Top = 122
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 5
+        Width = 273
+      end
+      object cxLabel63: TcxLabel
+        Left = 287
+        Top = 147
+        Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 4)'
+      end
+      object cePosition_4: TcxButtonEdit
+        Left = 287
+        Top = 167
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 7
+        Width = 273
+      end
+      object cxLabel64: TcxLabel
+        Left = 287
+        Top = 192
+        Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 5)'
+      end
+      object cePosition_5: TcxButtonEdit
+        Left = 287
+        Top = 212
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 9
+        Width = 273
+      end
+      object cxLabel65: TcxLabel
+        Left = 287
+        Top = 242
+        Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 6) '#9
+      end
+      object cePosition_6: TcxButtonEdit
+        Left = 287
+        Top = 260
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 11
+        Width = 273
+      end
+      object cxLabel66: TcxLabel
+        Left = 17
+        Top = 7
+        Caption = #1057#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082' ('#1056#1110#1074#1077#1085#1100' 1)'
+      end
+      object edPersonal_1: TcxButtonEdit
+        Left = 17
+        Top = 26
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 13
+        Width = 248
+      end
+      object edPersonal_2: TcxButtonEdit
+        Left = 17
+        Top = 75
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 14
+        Width = 248
+      end
+      object cxLabel68: TcxLabel
+        Left = 17
+        Top = 103
+        Caption = #1057#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082' ('#1056#1110#1074#1077#1085#1100' 3)'
+      end
+      object edPersonal_3: TcxButtonEdit
+        Left = 17
+        Top = 122
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 16
+        Width = 248
+      end
+      object edPersonal_4: TcxButtonEdit
+        Left = 17
+        Top = 167
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 17
+        Width = 248
+      end
+      object cxLabel69: TcxLabel
+        Left = 17
+        Top = 147
+        Caption = #1057#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082' ('#1056#1110#1074#1077#1085#1100' 4)'
+      end
+      object cxLabel70: TcxLabel
+        Left = 17
+        Top = 192
+        Caption = #1057#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082' ('#1056#1110#1074#1077#1085#1100' 5)'
+      end
+      object edPersonal_5: TcxButtonEdit
+        Left = 17
+        Top = 212
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 20
+        Width = 248
+      end
+      object edPersonal_6: TcxButtonEdit
+        Left = 17
+        Top = 260
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 21
+        Width = 248
+      end
+      object cxLabel71: TcxLabel
+        Left = 17
+        Top = 242
+        Caption = #1057#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082' ('#1056#1110#1074#1077#1085#1100' 6)'
+      end
+    end
+  end
+  object cxLabel67: TcxLabel [3]
+    Left = 21
+    Top = 87
+    Caption = #1057#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082' ('#1056#1110#1074#1077#1085#1100' 2)'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 299
@@ -1055,8 +1280,17 @@
     Top = 200
   end
   inherited ActionList: TActionList
-    Left = 295
-    Top = 65535
+    Left = 815
+    Top = 447
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGet_Commerc
+        end>
+    end
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1369,7 +1603,7 @@
       item
         Name = 'inJuridicalId'
         Value = ''
-        Component = dsdJuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1838,14 +2072,14 @@
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = dsdJuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = dsdJuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2475,10 +2709,10 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 520
-    Top = 452
+    Left = 480
+    Top = 412
   end
-  object dsdJuridicalGuides: TdsdGuides
+  object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalForm'
@@ -2490,7 +2724,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = dsdJuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2499,14 +2733,14 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = dsdJuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 200
-    Top = 90
+    Left = 392
+    Top = 354
   end
   object GuidesMemberTake: TdsdGuides
     KeyField = 'Id'
@@ -2595,7 +2829,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 120
+    Left = 160
     Top = 244
   end
   object dsdPriceListGuides: TdsdGuides
@@ -2891,7 +3125,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 552
+    Left = 584
     Top = 75
   end
   object CityGuides: TdsdGuides
@@ -2998,7 +3232,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 568
+    Left = 608
     Top = 123
   end
   object StreetKindGuides: TdsdGuides
@@ -3423,5 +3657,574 @@
       end>
     Left = 590
     Top = 509
+  end
+  object GuidesPosition_1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition_1
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition_1
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition_1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 388
+    Top = 29
+  end
+  object GuidesPosition_2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition_2
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition_2
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition_2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 436
+    Top = 80
+  end
+  object GuidesPosition_3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition_3
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition_3
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition_3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 444
+    Top = 125
+  end
+  object GuidesPosition_4: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition_4
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition_4
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition_4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 444
+    Top = 173
+  end
+  object GuidesPosition_5: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition_5
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition_5
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition_5
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 444
+    Top = 227
+  end
+  object GuidesPosition_6: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition_6
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition_6
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition_6
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 436
+    Top = 269
+  end
+  object Guides_Personal_1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal_1
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = Guides_Personal_1
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = Guides_Personal_1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 144
+    Top = 45
+  end
+  object Guides_Personal_2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal_2
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = Guides_Personal_2
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = Guides_Personal_2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 144
+    Top = 85
+  end
+  object Guides_Personal_3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal_3
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = Guides_Personal_3
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = Guides_Personal_3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 144
+    Top = 141
+  end
+  object Guides_Personal_4: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal_4
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = Guides_Personal_4
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = Guides_Personal_4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 144
+    Top = 189
+  end
+  object Guides_Personal_5: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal_5
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = Guides_Personal_5
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = Guides_Personal_5
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 72
+    Top = 229
+  end
+  object Guides_Personal_6: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal_6
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = Guides_Personal_6
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = Guides_Personal_6
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 48
+    Top = 301
+  end
+  object spGet_Commerc: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Partner_Commerc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = 0
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId_1'
+        Value = ''
+        Component = Guides_Personal_1
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName_1'
+        Value = ''
+        Component = Guides_Personal_1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId_2'
+        Value = ''
+        Component = Guides_Personal_2
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName_2'
+        Value = ''
+        Component = Guides_Personal_2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId_3'
+        Value = ''
+        Component = Guides_Personal_3
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName_3'
+        Value = ''
+        Component = Guides_Personal_3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId_4'
+        Value = ''
+        Component = Guides_Personal_4
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName_4'
+        Value = ''
+        Component = Guides_Personal_4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId_5'
+        Value = ''
+        Component = Guides_Personal_5
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName_5'
+        Value = ''
+        Component = Guides_Personal_5
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId_6'
+        Value = ''
+        Component = Guides_Personal_6
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName_6'
+        Value = ''
+        Component = Guides_Personal_6
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId_1'
+        Value = ''
+        Component = GuidesPosition_1
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName_1'
+        Value = ''
+        Component = GuidesPosition_1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId_2'
+        Value = ''
+        Component = GuidesPosition_2
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName_2'
+        Value = ''
+        Component = GuidesPosition_2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId_3'
+        Value = ''
+        Component = GuidesPosition_3
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName_3'
+        Value = ''
+        Component = GuidesPosition_3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId_4'
+        Value = ''
+        Component = GuidesPosition_4
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName_4'
+        Value = ''
+        Component = GuidesPosition_4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId_5'
+        Value = ''
+        Component = GuidesPosition_5
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName_5'
+        Value = ''
+        Component = GuidesPosition_5
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId_6'
+        Value = ''
+        Component = GuidesPosition_6
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName_6'
+        Value = ''
+        Component = GuidesPosition_6
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 544
+    Top = 404
   end
 end
