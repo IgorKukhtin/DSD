@@ -1146,7 +1146,7 @@ object SaleCommercForm: TSaleCommercForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 38
+    Left = 46
     Top = 391
   end
   object spSelectMI: TdsdStoredProc
@@ -2136,14 +2136,14 @@ object SaleCommercForm: TSaleCommercForm
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
-    Left = 110
-    Top = 367
+    Left = 102
+    Top = 223
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 343
+    Left = 40
+    Top = 215
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2919,7 +2919,6 @@ object SaleCommercForm: TSaleCommercForm
   end
   object DetailCDS: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'ContractId_Child'
     MasterFields = 'ContractId'
     MasterSource = MasterDS
@@ -2934,7 +2933,7 @@ object SaleCommercForm: TSaleCommercForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = True
+    OnlyEditingCellOnEnter = False
     ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
@@ -2951,7 +2950,7 @@ object SaleCommercForm: TSaleCommercForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 886
+    Left = 926
     Top = 473
   end
   object spSelectDetail: TdsdStoredProc
@@ -2979,7 +2978,7 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 680
+    Left = 720
     Top = 472
   end
 end

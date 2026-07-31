@@ -34,7 +34,7 @@ BEGIN
                                   , MovementItem.Amount
                                   , MovementItem.ObjectId                  AS ContractId_bonus
                                   , MILO_Contract.ObjectId                 AS ContractId
-                                  , MILO_Contract.ObjectId                 AS ContractId_Child
+                                  , MILO_ContractChild.ObjectId            AS ContractId_Child
                                   , MILO_ContractConditionKind.ObjectId    AS ContractConditionKindId
                                   , MILO_BonusKind.ObjectId                AS BonusKindId
                                   , MILinkObject_PaidKind.ObjectId         AS PaidKindId
