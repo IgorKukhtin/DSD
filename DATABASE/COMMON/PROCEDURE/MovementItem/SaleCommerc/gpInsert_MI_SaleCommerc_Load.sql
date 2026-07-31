@@ -33,6 +33,7 @@ $BODY$
            vbBranchId      Integer;
            vbJuridicalId   Integer;
            vbContractId    Integer;
+           vbContractCode  Integer;
            vbPaidKindId    Integer;
            vbGoodsKindId   Integer;
            vbId            Integer;
@@ -80,11 +81,15 @@ BEGIN
      
 
      -- Поиск договор по Juridical
+     vbContractCode:= zfConvert_StringToNumber (inContractName);
+     -- Поиск договор по Juridical
      vbContractId:= (SELECT Object_Contract.Id  AS ContractId
                      FROM ObjectLink AS ObjectLink_Contract_Juridical
                           INNER JOIN Object AS Object_Contract ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
                                                               AND Object_Contract.isErased = FALSE
-                                                              AND Object_Contract.ValueData ILIKE TRIM (inContractName)
+                                                              AND Object_Contract.ObjectCode = vbContractCode
+                                                              AND vbContractCode > 0
+                                                            --AND Object_Contract.ValueData ILIKE TRIM (inContractName)
                 
                           LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
                                                ON ObjectLink_Contract_ContractStateKind.ObjectId      = Object_Contract.Id
@@ -102,6 +107,7 @@ BEGIN
 
      -- проверка
      IF COALESCE (vbContractId, 0) = 0 AND TRIM (inContractName) <> ''
+        AND 1=0
      THEN
          --
          RAISE EXCEPTION 'Ошибка.Не найден Договор № <%> для <%>.', inContractName, inPartnerName;
@@ -156,7 +162,7 @@ BEGIN
      END IF;
 
      -- 6 находим вид товара
-     vbGoodsKindId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inGoodsKindName) AND Object.DescId = zc_Object_GoodsKind() AND TRIM (inGoodsKindName) <> '');
+     vbGoodsKindId := COALESCE ((SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inGoodsKindName) AND Object.DescId = zc_Object_GoodsKind() AND TRIM (inGoodsKindName) <> ''), zc_GoodsKind_Basis());
 
      IF COALESCE (vbGoodsKindId,0) = 0 AND TRIM (inGoodsKindName) <> ''
      THEN
@@ -226,6 +232,7 @@ BEGIN
                           WHERE lfSelect.GoodsId = vbGoodsId
                           )
                   SELECT COALESCE ( (SELECT tmp.Price FROM tmp WHERE COALESCE (tmp.GoodsKindId,0) = COALESCE (vbGoodsKindId,0))
+                                  , (SELECT tmp.Price FROM tmp WHERE tmp.GoodsKindId = zc_GoodsKind_Basis())
                                   , (SELECT tmp.Price FROM tmp WHERE tmp.GoodsKindId IS NULL)
                                   , 0 
                                   ) ::TFloat AS Price

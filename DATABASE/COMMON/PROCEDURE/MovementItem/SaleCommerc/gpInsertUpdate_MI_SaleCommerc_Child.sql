@@ -59,6 +59,7 @@ BEGIN
                           WHERE lfSelect.GoodsId = inGoodsId
                           )
                   SELECT COALESCE ( (SELECT tmp.Price FROM tmp WHERE COALESCE (tmp.GoodsKindId,0) = COALESCE (inGoodsKindId,0))
+                                  , (SELECT tmp.Price FROM tmp WHERE tmp.GoodsKindId = zc_GoodsKind_Basis())
                                   , (SELECT tmp.Price FROM tmp WHERE tmp.GoodsKindId IS NULL)
                                   , 0 
                                   ) ::TFloat AS Price
