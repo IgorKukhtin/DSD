@@ -137,6 +137,24 @@ type
     Color_rose: TcxGridDBColumn;
     Color_green: TcxGridDBColumn;
     Ord: TcxGridDBColumn;
+    DetailDS: TDataSource;
+    DetailCDS: TClientDataSet;
+    DBViewAddOnDetail: TdsdDBViewAddOn;
+    spSelectDetail: TdsdStoredProc;
+    cxGridDetail: TcxGrid;
+    cxGridDBTableViewDetail: TcxGridDBTableView;
+    ContractCode_bonus_ch2: TcxGridDBColumn;
+    ContractName_bonus_ch2: TcxGridDBColumn;
+    ContractCode_ch2: TcxGridDBColumn;
+    ContractName_ch2: TcxGridDBColumn;
+    ContractConditionKindName_ch2: TcxGridDBColumn;
+    BonusKindName_ch2: TcxGridDBColumn;
+    PaidKindName_ch2: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
+    InfoMoneyName_ch2: TcxGridDBColumn;
+    isErased_ch2: TcxGridDBColumn;
+    cxGridLevelDetail: TcxGridLevel;
+    cxSplitter2: TcxSplitter;
   private
   public
   end;

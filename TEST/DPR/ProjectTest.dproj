@@ -5955,16 +5955,16 @@
 				<Form>SaleCommercJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SaleCommerc.pas">
-				<Form>SaleCommercForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PromoSale.pas">
 				<Form>PromoSaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PromoSaleJournal.pas">
 				<Form>PromoSaleJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SaleCommerc.pas">
+				<Form>SaleCommercForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
