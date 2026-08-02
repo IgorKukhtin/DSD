@@ -77,6 +77,17 @@ BEGIN
                                                      AND MovementItem.DescId     = zc_MI_Child()
                                                      AND MovementItem.isErased   = tmpIsErased.isErased
                          )
+      , tmpMI_Detail AS (SELECT MILO_ContractChild.ObjectId AS ContractId_Child
+                              , SUM (MovementItem.Amount)   AS ValueData
+                         FROM MovementItem
+                              INNER JOIN MovementItemLinkObject AS MILO_ContractChild
+                                                                ON MILO_ContractChild.MovementItemId = MovementItem.Id
+                                                               AND MILO_ContractChild.DescId         = zc_MILinkObject_ContractChild()
+                         WHERE MovementItem.MovementId = inMovementId
+                           AND MovementItem.DescId     = zc_MI_Detail()
+                           AND MovementItem.isErased   = FALSE
+                         GROUP BY MILO_ContractChild.ObjectId
+                        )
 
       , tmpMILO_Master AS (SELECT MovementItemLinkObject.*
                            FROM MovementItemLinkObject
@@ -274,6 +285,9 @@ BEGIN
        FROM tmpMI_Master AS MovementItem
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementItem.ObjectId
 
+            -- <Бонусы>
+            LEFT JOIN tmpMI_Detail AS MIFloat_Bonus ON MIFloat_Bonus.ContractId_Child = MovementItem.ObjectId
+
             LEFT JOIN tmpMILO_Master AS MILinkObject_Partner
                                      ON MILinkObject_Partner.MovementItemId = MovementItem.Id
                                     AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
@@ -313,9 +327,9 @@ BEGIN
             LEFT JOIN tmpMIFloat_Child AS MIFloat_SummNoPromo
                                        ON MIFloat_SummNoPromo.MovementItemId = tmpMI_Child.Id
                                       AND MIFloat_SummNoPromo.DescId = zc_MIFloat_SummNoPromo()
-            LEFT JOIN tmpMIFloat_Child AS MIFloat_Bonus
+            /*LEFT JOIN tmpMIFloat_Child AS MIFloat_Bonus
                                        ON MIFloat_Bonus.MovementItemId = tmpMI_Child.Id
-                                      AND MIFloat_Bonus.DescId = zc_MIFloat_Bonus()
+                                      AND MIFloat_Bonus.DescId = zc_MIFloat_Bonus()*/
             LEFT JOIN tmpMIFloat_Child AS MIFloat_Price
                                        ON MIFloat_Price.MovementItemId = tmpMI_Child.Id
                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
