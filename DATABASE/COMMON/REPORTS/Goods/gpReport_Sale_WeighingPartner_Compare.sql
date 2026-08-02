@@ -434,7 +434,7 @@ BEGIN
                                 AND tmpData_wp.GoodsKindId = tmpData_sale.GoodsKindId
 
             LEFT JOIN tmpGoods_param ON tmpGoods_param.GoodsId = tmpData_sale.GoodsId
-       
+
      ;
 
 END;
