@@ -63,6 +63,11 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
               Format = ',0.####'
               Kind = skSum
               Column = CountPack_wp
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountPack
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -104,6 +109,11 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
               Format = ',0.####'
               Kind = skSum
               Column = CountPack_wp
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountPack
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -307,6 +317,14 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
             Options.Editing = False
             Width = 70
           end
+          object isBarCode_str: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'isBarCode_str'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object RealWeight_wp: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1085#1072' '#1074#1077#1089#1072#1093' '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'RealWeight_wp'
@@ -358,7 +376,52 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
             DataBinding.FieldName = 'CountPack_wp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077
+            Options.Editing = False
+            Width = 70
+          end
+          object CountPack: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1091#1087#1072#1082#1086#1074#1086#1082
+            DataBinding.FieldName = 'CountPack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object WeightTotal: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1080#1090#1086#1075#1086' '#1074' '#1091#1087#1072#1082'.'
+            DataBinding.FieldName = 'WeightTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object WeightPackage: TcxGridDBColumn
+            Caption = #1042#1077#1089' 1-'#1086#1081' '#1091#1087'.'
+            DataBinding.FieldName = 'WeightPackage'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object WeightPack_wp: TcxGridDBColumn
+            Caption = #1042#1077#1089' 1-'#1086#1081' '#1091#1087'.  ('#1074#1079#1074#1077#1096'.)'
+            DataBinding.FieldName = 'WeightPack_wp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077

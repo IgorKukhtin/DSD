@@ -29,9 +29,10 @@ RETURNS TABLE (MovementId       Integer
              , GoodsGroupNameFull TVarChar
              , MeasureName        TVarChar
              , Weight             TFloat
-             , Amount           TFloat
-             , AmountPartner    TFloat
-             -- WeighingPartner
+             , Amount             TFloat
+             , AmountPartner      TFloat
+             , CountPack          TFloat
+              -- WeighingPartner
              , OperDate_wp            TVarChar
              , InvNumber_wp           TVarChar
              , InvNumberOrder_wp      TVarChar
@@ -50,8 +51,11 @@ RETURNS TABLE (MovementId       Integer
              , CountTare_wp           TFloat
              , WeightTare_wp          TFloat
              , CountPack_wp           TFloat
-
-             )
+             , isBarCode_str          TVarChar
+             , WeightPack_wp          TFloat
+             , WeightPackage          TFloat
+             , WeightTotal            TFloat
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -188,6 +192,12 @@ BEGIN
                                                              )
                                  )
 
+   , tmpMIBoolean_wp AS (SELECT MovementItemBoolean.*
+                         FROM MovementItemBoolean
+                         WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI_WeighingPartner.Id FROM tmpMI_WeighingPartner)
+                           AND MovementItemBoolean.DescId IN (zc_MIBoolean_BarCode()
+                                                             )
+                            )
    , tmpMIFloat_wp AS (SELECT MovementItemFloat.*
                        FROM MovementItemFloat
                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_WeighingPartner.Id FROM tmpMI_WeighingPartner)
@@ -210,6 +220,8 @@ BEGIN
                        --, ((MIN (MovementFloat_WeighingNumber.ValueData) :: Integer) ::TVarChar || CASE WHEN MIN (MovementFloat_WeighingNumber.ValueData) <> MAX (MovementFloat_WeighingNumber.ValueData) THEN ' - ' || (MAX (MovementFloat_WeighingNumber.ValueData) :: Integer) ::TVarChar  ELSE '' END
                        --   ) ::TVarChar AS WeighingNumber
                          , STRING_AGG (DISTINCT (MovementFloat_WeighingNumber.ValueData :: Integer) ::TVarChar, ';' ) AS WeighingNumber
+                         
+                         , STRING_AGG (DISTINCT CASE WHEN COALESCE (MIBoolean_isBarCode.ValueData, FALSE) = TRUE THEN 'Да'  ELSE 'Нет' END ::TVarChar, ';' ) AS isBarCode_str
 
                          , MIN (MovementDate_StartWeighing.ValueData)            AS StartWeighing
                          , MAX (MovementDate_EndWeighing.ValueData)              AS EndWeighing
@@ -236,9 +248,13 @@ BEGIN
                          , SUM (COALESCE (MIFloat_CountTare.ValueData, 0))           AS CountTare
                          , SUM (COALESCE (MIFloat_WeightTare.ValueData, 0))          AS WeightTare
                         -- , CASE WHEN inShowAll = TRUE THEN COALESCE (MIFloat_WeightTare.ValueData, 0) ELSE 0 END AS WeightTare  --Вес 1 тары
-                         , SUM (CASE WHEN COALESCE (MIFloat_WeightPack.ValueData,0) > 0 THEN 0 ELSE COALESCE (MIFloat_CountPack.ValueData, 0) END) AS CountPack  --Кол. упаковок
-                        -- , MIFloat_WeightPack.ValueData  ::TFloat AS WeightPack   --Вес  1-ой уп.
-                        -- , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount   --% скидки вес
+                           -- Кол. упаковок
+                         , SUM (CASE WHEN COALESCE (MIFloat_WeightPack.ValueData, 0) > 0 THEN 0 ELSE COALESCE (MIFloat_CountPack.ValueData, 0) END) AS CountPack
+                           -- Вес 1-ой уп.
+                         , MAX (MIFloat_WeightPack.ValueData)  ::TFloat AS WeightPack
+
+                      -- , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount   --% скидки вес
+
                     FROM tmpMovement_WeighingPartner AS Movement
                          LEFT JOIN tmpMLO_wp AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Movement.Id
@@ -315,6 +331,10 @@ BEGIN
                          LEFT JOIN tmpMIFloat_wp AS MIFloat_WeightPack
                                                  ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
                                                 AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
+                         LEFT JOIN tmpMIBoolean_wp AS MIBoolean_isBarCode
+                                                   ON MIBoolean_isBarCode.MovementItemId = MovementItem.Id
+                                                  AND MIBoolean_isBarCode.DescId         = zc_MIBoolean_BarCode()
+                         
                   /*LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                               ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                              AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount() */
@@ -341,6 +361,8 @@ BEGIN
                            , Object_GoodsKind.ValueData                     AS GoodsKindName
                            , COALESCE (MovementItem.Amount, 0)              AS Amount
                            , COALESCE (MIFloat_AmountPartner.ValueData, 0)  AS AmountPartner
+                           , COALESCE (MIFloat_CountPack.ValueData, 0)      AS CountPack
+                           
                       FROM tmpMovement_Sale AS Movement
                          LEFT JOIN Object AS Object_From ON Object_From.Id = Movement.FromId
 
@@ -369,6 +391,9 @@ BEGIN
                          LEFT JOIN tmpMIFloat_sale AS MIFloat_AmountPartner
                                                    ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                   AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                         LEFT JOIN tmpMIFloat_sale AS MIFloat_CountPack
+                                                   ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
 
                          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                       )
@@ -403,8 +428,26 @@ BEGIN
                                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                   )
 
+ , tmpGoodsByGoodsKind_param AS
+                  (SELECT Object_GoodsByGoodsKind_View.GoodsId     AS GoodsId
+                        , Object_GoodsByGoodsKind_View.GoodsKindId AS GoodsKindId
+                        , ObjectFloat_WeightPackage.ValueData      AS WeightPackage
+                        , ObjectFloat_WeightTotal.ValueData        AS WeightTotal
+              
+                   FROM (SELECT DISTINCT tmpData_sale.GoodsId FROM tmpData_sale) AS tmpGoods
+                        INNER JOIN Object_GoodsByGoodsKind_View
+                                 ON Object_GoodsByGoodsKind_View.GoodsId = tmpGoods.GoodsId
+                        -- Вес одной упаковки
+                        LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                              ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                             AND ObjectFloat_WeightPackage.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+                        --
+                        LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                              ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                             AND ObjectFloat_WeightTotal.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+                  )
 
-       ----
+       -- Результат
        SELECT --SALE
               tmpData_sale.MovementId       ::Integer
             , tmpData_sale.MovementDescId   ::Integer
@@ -431,6 +474,7 @@ BEGIN
 
             , tmpData_sale.Amount           ::TFloat
             , tmpData_sale.AmountPartner    ::TFloat
+            , tmpData_sale.CountPack        ::TFloat
 
             -- WeighingPartner
             , tmpData_wp.OperDate           ::TVarChar AS OperDate_wp
@@ -452,12 +496,20 @@ BEGIN
             , tmpData_wp.CountTare          ::TFloat   AS CountTare_wp
             , tmpData_wp.WeightTare         ::TFloat   AS WeightTare_wp
             , tmpData_wp.CountPack          ::TFloat   AS CountPack_wp
+            , tmpData_wp.isBarCode_str      ::TVarChar AS isBarCode_str
+            , tmpData_wp.WeightPack         ::TFloat   AS WeightPack_wp
+
+            , tmpGoodsByGoodsKind_param.WeightPackage :: TFloat
+            , tmpGoodsByGoodsKind_param.WeightTotal   :: TFloat
+
        FROM tmpData_sale
             LEFT JOIN tmpData_wp ON tmpData_wp.ParentId = tmpData_sale.MovementId
                                 AND tmpData_wp.GoodsId = tmpData_sale.GoodsId
                                 AND tmpData_wp.GoodsKindId = tmpData_sale.GoodsKindId
 
             LEFT JOIN tmpGoods_param ON tmpGoods_param.GoodsId = tmpData_sale.GoodsId
+            LEFT JOIN tmpGoodsByGoodsKind_param ON tmpGoodsByGoodsKind_param.GoodsId     = tmpData_sale.GoodsId
+                                               AND tmpGoodsByGoodsKind_param.GoodsKindId = tmpData_sale.GoodsKindId
 
      ;
 

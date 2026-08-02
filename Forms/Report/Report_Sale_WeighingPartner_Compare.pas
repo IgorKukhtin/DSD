@@ -68,6 +68,11 @@ type
     edUnitFrom: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     InvNumber_wp: TcxGridDBColumn;
+    isBarCode_str: TcxGridDBColumn;
+    WeightPackage: TcxGridDBColumn;
+    WeightTotal: TcxGridDBColumn;
+    CountPack: TcxGridDBColumn;
+    WeightPack_wp: TcxGridDBColumn;
   private
     { Private declarations }
   public
