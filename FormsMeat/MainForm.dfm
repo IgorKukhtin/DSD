@@ -9447,6 +9447,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actOrderRK: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1047#1072#1076#1072#1085#1080#1077' '#1089#1073#1086#1088#1082#1072' '#1043#1055
+      Hint = #1047#1072#1076#1072#1085#1080#1077' '#1089#1073#1086#1088#1082#1072' '#1043#1055
+      FormName = 'TOrderRKJournalForm'
+      FormNameParam.Value = 'TOrderRKJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
     object actWeighingPartner: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
@@ -11181,6 +11193,9 @@ inherited MainForm: TMainForm
       object miOrderExternalUnit: TMenuItem
         Action = actOrderExternalUnit
       end
+      object miOrderRK: TMenuItem
+        Action = actOrderRK
+      end
       object N109: TMenuItem
         Action = actOrderIncome
       end
@@ -11404,6 +11419,9 @@ inherited MainForm: TMainForm
         end
         object N270: TMenuItem
           Action = actWeighingPartnerJournal_protocol
+        end
+        object miReport_Sale_WeighingPartner_Compare: TMenuItem
+          Action = actReport_Sale_WeighingPartner_Compare
         end
       end
       object N251: TMenuItem
@@ -12823,9 +12841,6 @@ inherited MainForm: TMainForm
       end
       object miReport_Inventory_WeighingFact: TMenuItem
         Action = actReport_Inventory_WeighingFact
-      end
-      object miReport_Sale_WeighingPartner_Compare: TMenuItem
-        Action = actReport_Sale_WeighingPartner_Compare
       end
     end
     object miReportsFinance: TMenuItem [14]
