@@ -40,8 +40,8 @@ RETURNS TABLE (MovementId Integer
              , PaidKindName_wp        TVarChar 
              , ContractName_wp        TVarChar
              , WeighingNumber_wp      TVarChar 
-             , StartWeighing_wp       TVarChar 
-             , EndWeighing_wp         TVarChar 
+             , StartWeighing_wp       TDateTime 
+             , EndWeighing_wp         TDateTime 
              , Amount_wp              TFloat   
              , AmountPartner_wp       TFloat   
              , AmountPartnerSecond_wp TFloat   
@@ -435,21 +435,6 @@ BEGIN
 
             LEFT JOIN tmpGoods_param ON tmpGoods_param.GoodsId = tmpData_sale.GoodsId
        
-/*            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
-                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                                 
-            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMI.FromId
-            LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMI.ToId  
-            */
      ;
 
 END;
