@@ -57,10 +57,6 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = RealWeight_wp
             end
             item
@@ -98,10 +94,6 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
               Format = ',0.####'
               Kind = skSum
               Column = AmountPartner_wp
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
