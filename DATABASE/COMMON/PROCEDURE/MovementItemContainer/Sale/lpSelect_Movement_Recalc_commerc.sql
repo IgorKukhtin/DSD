@@ -93,6 +93,8 @@ BEGIN
                                                                                                    zc_Enum_ContractConditionKind_BonusPercentSaleReturn()
                                                                                                  , zc_Enum_ContractConditionKind_BonusPercentSale()
                                                                                                  , 0
+                                                                                                 , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
+                                                                                                 , zc_Enum_ContractConditionKind_BonusPercentAccount()
                                                                                                   )
                                      AND Object_ContractCondition_View.Value <> 0
                                    --AND inStartDate BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
@@ -135,6 +137,8 @@ BEGIN
                                           ON tmpContractCondition.ContractId = tmpContract_full.ContractId
                                          AND tmpContractCondition.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSaleReturn()
                                                                                             , zc_Enum_ContractConditionKind_BonusPercentSale()
+                                                                                            , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
+                                                                                            , zc_Enum_ContractConditionKind_BonusPercentAccount()
                                                                                              )
                                   -- Контрагенты в Договоре
                                   LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Contract
@@ -330,6 +334,8 @@ BEGIN
                                       -- только такие уловия
                                       WHERE tmpContractCondition.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSaleReturn()
                                                                                            , zc_Enum_ContractConditionKind_BonusPercentSale()
+                                                                                           , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
+                                                                                           , zc_Enum_ContractConditionKind_BonusPercentAccount()
                                                                                             )
                                      )
 

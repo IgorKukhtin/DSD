@@ -150,7 +150,9 @@ BEGIN
                                         JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
                                                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
                                    WHERE MovementItem.MovementId = inMovementId
-                                     AND MovementItem.isErased = FALSE)
+                                     AND MovementItem.isErased   = FALSE
+                                     AND MovementItem.DescId     <> zc_MI_Detail()
+                                  )
                         , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective())  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
                                   UNION ALL
                                    SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId NOT IN (zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective()) AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2))
@@ -214,7 +216,9 @@ BEGIN
                                             JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
                                                                        AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
                                        WHERE MovementItem.MovementId = inMovementId
-                                         AND MovementItem.isErased = FALSE)
+                                         AND MovementItem.isErased   = FALSE
+                                         AND MovementItem.DescId     <> zc_MI_Detail()
+                                      )
                             , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective())  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
                                       UNION ALL
                                        SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId NOT IN (zc_Movement_SendDebt(), zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective()) AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
@@ -326,7 +330,9 @@ BEGIN
                                         JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
                                                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
                                    WHERE MovementItem.MovementId = inMovementId
-                                     AND MovementItem.isErased = FALSE)
+                                     AND MovementItem.isErased   = FALSE
+                                     AND MovementItem.DescId     <> zc_MI_Detail()
+                                  )
                         , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective())  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
                                   UNION ALL
                                    SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId NOT IN (zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective()) AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2))
