@@ -273,7 +273,8 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -284,7 +285,7 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -294,7 +295,8 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076') ('#1074#1079#1074#1077#1096'.)'
             DataBinding.FieldName = 'Amount_wp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077
@@ -305,7 +307,8 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1074#1079#1074#1077#1096'.)'
             DataBinding.FieldName = 'AmountPartner_wp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077
@@ -316,7 +319,8 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
             Caption = #1050#1086#1083'-'#1074#1086' '#1085#1072' '#1074#1077#1089#1072#1093' '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'RealWeight_wp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077
@@ -328,7 +332,7 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
             DataBinding.FieldName = 'CountTare_wp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077
@@ -340,7 +344,7 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
             DataBinding.FieldName = 'WeightTare_wp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077
