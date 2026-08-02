@@ -454,7 +454,7 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
     inherited deStart: TcxDateEdit
       Left = 10
       Top = 26
-      EditValue = 45658d
+      EditValue = 46023d
       Properties.SaveTime = False
       ExplicitLeft = 10
       ExplicitTop = 26
@@ -464,7 +464,7 @@ inherited Report_Sale_WeighingPartner_CompareForm: TReport_Sale_WeighingPartner_
     inherited deEnd: TcxDateEdit
       Left = 122
       Top = 26
-      EditValue = 45658d
+      EditValue = 46023d
       Properties.SaveTime = False
       ExplicitLeft = 122
       ExplicitTop = 26

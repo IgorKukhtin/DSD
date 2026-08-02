@@ -76,6 +76,7 @@ BEGIN
      RETURN QUERY
      WITH
      tmpMovement_Sale AS (SELECT Movement.Id                       AS Id
+                               , Movement.DescId                   AS DescId
                                , Movement.InvNumber                AS InvNumber
                                , Movement.OperDate                 AS OperDate
                                , MovementDesc.ItemName             AS MovementDescName
@@ -205,8 +206,11 @@ BEGIN
                          , STRING_AGG (DISTINCT Object_PaidKind.ValueData, ';' ) AS PaidKindName
                          , STRING_AGG (DISTINCT Object_Contract.ValueData, ';' ) AS ContractName
                          , STRING_AGG (DISTINCT Object_User.ValueData, ';') AS UserName
-                         , (MIN (MovementFloat_WeighingNumber.ValueData) ::TVarChar || CASE WHEN MAX (MovementFloat_WeighingNumber.ValueData) <> 1 THEN ' - ' || MAX (MovementFloat_WeighingNumber.ValueData) ::TVarChar  ELSE '' END
-                            ) ::TVarChar AS WeighingNumber
+
+                       --, ((MIN (MovementFloat_WeighingNumber.ValueData) :: Integer) ::TVarChar || CASE WHEN MIN (MovementFloat_WeighingNumber.ValueData) <> MAX (MovementFloat_WeighingNumber.ValueData) THEN ' - ' || (MAX (MovementFloat_WeighingNumber.ValueData) :: Integer) ::TVarChar  ELSE '' END
+                       --   ) ::TVarChar AS WeighingNumber
+                         , STRING_AGG (DISTINCT (MovementFloat_WeighingNumber.ValueData :: Integer) ::TVarChar, ';' ) AS WeighingNumber
+
                          , MIN (MovementDate_StartWeighing.ValueData)            AS StartWeighing
                          , MAX (MovementDate_EndWeighing.ValueData)              AS EndWeighing
 
@@ -329,9 +333,9 @@ BEGIN
                            , Object_From.ValueData             AS FromName
                            , Object_To.Id                      AS ToId
                            , Object_To.ValueData               AS ToName
-                           , CASE WHEN Movement.DescId =zc_Movement_SendOnPrice() THEN Object_PaidKind_2.ValueData ELSE Object_PaidKind.ValueData END AS PaidKindName
+                           , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN Object_PaidKind_2.ValueData ELSE Object_PaidKind.ValueData END AS PaidKindName
                            , Object_Contract.ValueData         AS ContractName
-                           --
+                             --
                            , MovementItem.ObjectId                          AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
                            , Object_GoodsKind.ValueData                     AS GoodsKindName
