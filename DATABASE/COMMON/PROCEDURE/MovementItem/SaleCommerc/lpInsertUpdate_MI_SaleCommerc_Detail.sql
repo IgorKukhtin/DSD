@@ -24,9 +24,13 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
+     -- IF EXISTS := lpInsertUpdate_MovementItem (ioId, zc_MI_Detail(), inContractId_bonus, inMovementId, inBonusValue, NULL, -12345);
+
+
+     -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Detail(), inContractId_bonus, inMovementId, inBonusValue, NULL, -12345);
 
-     -- сохранили свойство <Договор(начисление)>
+     -- сохранили свойство <Договор (БАЗА)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractChild(), ioId, inContractId_child);
 
      -- сохранили свойство <Договор(начисление)>

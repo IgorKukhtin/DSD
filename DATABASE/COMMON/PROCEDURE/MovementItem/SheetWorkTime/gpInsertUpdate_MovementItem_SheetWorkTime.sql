@@ -134,7 +134,72 @@ BEGIN
     END IF;
 
     -- Проверка
-    IF NOT EXISTS (SELECT 1
+    IF      -- Если был Прием на работу
+            EXISTS (SELECT Movement.*
+                    FROM MovementLinkObject AS MLO_Member
+                         JOIN Movement ON Movement.Id       = MLO_Member.MovementId
+                                      AND Movement.DescId   = zc_Movement_StaffListMember()
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                                      AND Movement.OperDate <= inOperDate
+                         JOIN MovementBoolean AS MB_Main
+                                              ON MB_Main.MovementId = MLO_Member.MovementId
+                                             AND MB_Main.DescId     = zc_MovementBoolean_Main()
+                                             -- Только Основное место
+                                             AND MB_Main.ValueData  = TRUE
+                         -- Прием на работу
+                         INNER JOIN MovementLinkObject AS MLO_StaffListKind
+                                                       ON MLO_StaffListKind.MovementId = MLO_Member.MovementId
+                                                      AND MLO_StaffListKind.DescId     = zc_MovementLinkObject_StaffListKind()
+                                                      AND MLO_StaffListKind.ObjectId   = zc_Enum_StaffListKind_In()
+
+                         INNER JOIN MovementLinkObject AS MLO_Unit
+                                                       ON MLO_Unit.MovementId = MLO_Member.MovementId
+                                                      AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                                      AND MLO_Unit.ObjectId   = inUnitId
+                         INNER JOIN MovementLinkObject AS MLO_Position
+                                                       ON MLO_Position.MovementId = MLO_Member.MovementId
+                                                      AND MLO_Position.DescId     = zc_MovementLinkObject_Position()
+                                                      AND MLO_Position.ObjectId   = inPositionId
+                    WHERE MLO_Member.ObjectId = inMemberId
+                      AND MLO_Member.DescId   = zc_MovementLinkObject_Member()
+                   )
+    THEN
+        RAISE INFO 'Все ОК = <Прием на работу>';
+
+    ELSEIF  -- Если был Перевод
+            EXISTS (SELECT Movement.*
+                    FROM MovementLinkObject AS MLO_Member
+                         JOIN Movement ON Movement.Id       = MLO_Member.MovementId
+                                      AND Movement.DescId   = zc_Movement_StaffListMember()
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                                      AND Movement.OperDate <= inOperDate
+                         JOIN MovementBoolean AS MB_Main
+                                              ON MB_Main.MovementId = MLO_Member.MovementId
+                                             AND MB_Main.DescId     = zc_MovementBoolean_Main()
+                                             -- Только Основное место
+                                             AND MB_Main.ValueData  = TRUE
+                         -- Прием на работу
+                         INNER JOIN MovementLinkObject AS MLO_StaffListKind
+                                                       ON MLO_StaffListKind.MovementId = MLO_Member.MovementId
+                                                      AND MLO_StaffListKind.DescId     = zc_MovementLinkObject_StaffListKind()
+                                                      AND MLO_StaffListKind.ObjectId   = zc_Enum_StaffListKind_Send()
+
+                         INNER JOIN MovementLinkObject AS MLO_Unit
+                                                       ON MLO_Unit.MovementId = MLO_Member.MovementId
+                                                      AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                                      AND MLO_Unit.ObjectId   = inUnitId
+                         INNER JOIN MovementLinkObject AS MLO_Position
+                                                       ON MLO_Position.MovementId = MLO_Member.MovementId
+                                                      AND MLO_Position.DescId     = zc_MovementLinkObject_Position()
+                                                      AND MLO_Position.ObjectId   = inPositionId
+                    WHERE MLO_Member.ObjectId = inMemberId
+                      AND MLO_Member.DescId   = zc_MovementLinkObject_Member()
+                   )
+    THEN
+        RAISE INFO 'Все ОК = <Прием на работу>';
+
+    -- Проверка
+    ELSEIF NOT EXISTS (SELECT 1
                    FROM Object_Personal_View
                    WHERE Object_Personal_View.UnitId     = inUnitId
                      AND Object_Personal_View.MemberId   = inMemberId
@@ -182,13 +247,78 @@ BEGIN
                             )
                            ;
         ELSE
+         -- дата увольнения   - рабочий день, иначе Ввод в табеле закрыт
+         IF EXISTS (SELECT Movement.*
+                    FROM MovementLinkObject AS MLO_Member
+                         JOIN Movement ON Movement.Id       = MLO_Member.MovementId
+                                      AND Movement.DescId   = zc_Movement_StaffListMember()
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                                      AND Movement.OperDate < inOperDate
+                         /*JOIN MovementBoolean AS MB_Main
+                                              ON MB_Main.MovementId = MLO_Member.MovementId
+                                             AND MB_Main.DescId     = zc_MovementBoolean_Main()
+                                             -- Только Основное место
+                                             AND MB_Main.ValueData  = TRUE*/
+                         -- Прием на работу
+                         INNER JOIN MovementLinkObject AS MLO_StaffListKind
+                                                       ON MLO_StaffListKind.MovementId = MLO_Member.MovementId
+                                                      AND MLO_StaffListKind.DescId     = zc_MovementLinkObject_StaffListKind()
+                                                      AND MLO_StaffListKind.ObjectId   = zc_Enum_StaffListKind_Out()
+
+                         INNER JOIN MovementLinkObject AS MLO_Unit
+                                                       ON MLO_Unit.MovementId = MLO_Member.MovementId
+                                                      AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                                      AND MLO_Unit.ObjectId   = inUnitId
+                         INNER JOIN MovementLinkObject AS MLO_Position
+                                                       ON MLO_Position.MovementId = MLO_Member.MovementId
+                                                      AND MLO_Position.DescId     = zc_MovementLinkObject_Position()
+                                                      AND MLO_Position.ObjectId   = inPositionId
+                    WHERE MLO_Member.ObjectId = inMemberId
+                      AND MLO_Member.DescId   = zc_MovementLinkObject_Member()
+                   )
+            THEN
+                RAISE EXCEPTION 'Ошибка. Сотрудник <%> <%>  <%> уволен с <%>.Ввод в табеле закрыт.'
+                              , lfGet_Object_ValueData_sh (inMemberId)
+                              , lfGet_Object_ValueData_sh (inPositionId)
+                              , lfGet_Object_ValueData_sh (inUnitId)
+                              , (SELECT zfConvert_DateToString (MAX (Movement.OperDate))
+                                 FROM MovementLinkObject AS MLO_Member
+                                      JOIN Movement ON Movement.Id       = MLO_Member.MovementId
+                                                   AND Movement.DescId   = zc_Movement_StaffListMember()
+                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                   AND Movement.OperDate < inOperDate
+                                      /*JOIN MovementBoolean AS MB_Main
+                                                           ON MB_Main.MovementId = MLO_Member.MovementId
+                                                          AND MB_Main.DescId     = zc_MovementBoolean_Main()
+                                                          -- Только Основное место
+                                                          AND MB_Main.ValueData  = TRUE*/
+                                      -- Прием на работу
+                                      INNER JOIN MovementLinkObject AS MLO_StaffListKind
+                                                                    ON MLO_StaffListKind.MovementId = MLO_Member.MovementId
+                                                                   AND MLO_StaffListKind.DescId     = zc_MovementLinkObject_StaffListKind()
+                                                                   AND MLO_StaffListKind.ObjectId   = zc_Enum_StaffListKind_Out()
+             
+                                      INNER JOIN MovementLinkObject AS MLO_Unit
+                                                                    ON MLO_Unit.MovementId = MLO_Member.MovementId
+                                                                   AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                                                   AND MLO_Unit.ObjectId   = inUnitId
+                                      INNER JOIN MovementLinkObject AS MLO_Position
+                                                                    ON MLO_Position.MovementId = MLO_Member.MovementId
+                                                                   AND MLO_Position.DescId     = zc_MovementLinkObject_Position()
+                                                                   AND MLO_Position.ObjectId   = inPositionId
+                                 WHERE MLO_Member.ObjectId = inMemberId
+                                   AND MLO_Member.DescId   = zc_MovementLinkObject_Member()
+                                )
+                               ;
+
             --дата увольнения   - рабочий день, иначе Ввод в табеле закрыт
-            IF EXISTS (SELECT 1
+            ELSEIF EXISTS (SELECT 1
                              FROM Object_Personal_View
                              WHERE Object_Personal_View.DateOut    < inOperDate
                                AND Object_Personal_View.UnitId     = inUnitId
                                AND Object_Personal_View.MemberId   = inMemberId
                                AND Object_Personal_View.PositionId = inPositionId
+                               AND Object_Personal_View.isErased   = FALSE
                             )
              --AND vbUserId <> 5
             THEN
