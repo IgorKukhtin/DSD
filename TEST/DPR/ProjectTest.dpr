@@ -1685,6 +1685,8 @@ uses
   Report_CommercBonus in '..\..\Forms\Report\Report_CommercBonus.pas' {Report_CommercBonusForm: TParentForm},
   DesadvXML_vch in '..\..\SOURCE\EDI\DesadvXML_vch.pas',
   SaleCommercJournal in '..\..\Forms\Document\SaleCommercJournal.pas' {SaleCommercJournalForm: TParentForm},
+  PromoSale in '..\..\Forms\Document\PromoSale.pas' {PromoSaleForm: TParentForm},
+  PromoSaleJournal in '..\..\Forms\Document\PromoSaleJournal.pas' {PromoSaleJournalForm: TParentForm},
   SaleCommerc in '..\..\Forms\Document\SaleCommerc.pas' {SaleCommercForm: TParentForm};
 
 {$R *.RES}

@@ -18,7 +18,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC;
 
 type
   TPartnerEditForm = class(TAncestorEditDialogForm)
@@ -30,7 +31,7 @@ type
     edGLNCode: TcxTextEdit;
     cxLabel3: TcxLabel;
     edJuridical: TcxButtonEdit;
-    dsdJuridicalGuides: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
@@ -189,6 +190,46 @@ type
     cxLabel59: TcxLabel;
     edPersonalGroupCommerc: TcxButtonEdit;
     GuidesPersonalGroupCommerc: TdsdGuides;
+    cxPageControl1: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    cxLabel60: TcxLabel;
+    cePosition_1: TcxButtonEdit;
+    GuidesPosition_1: TdsdGuides;
+    cxLabel61: TcxLabel;
+    cePosition_2: TcxButtonEdit;
+    cxLabel62: TcxLabel;
+    cePosition_3: TcxButtonEdit;
+    cxLabel63: TcxLabel;
+    cePosition_4: TcxButtonEdit;
+    cxLabel64: TcxLabel;
+    cePosition_5: TcxButtonEdit;
+    cxLabel65: TcxLabel;
+    cePosition_6: TcxButtonEdit;
+    GuidesPosition_2: TdsdGuides;
+    GuidesPosition_3: TdsdGuides;
+    GuidesPosition_4: TdsdGuides;
+    GuidesPosition_5: TdsdGuides;
+    GuidesPosition_6: TdsdGuides;
+    cxLabel66: TcxLabel;
+    edPersonal_1: TcxButtonEdit;
+    Guides_Personal_1: TdsdGuides;
+    cxLabel67: TcxLabel;
+    edPersonal_2: TcxButtonEdit;
+    cxLabel68: TcxLabel;
+    edPersonal_3: TcxButtonEdit;
+    edPersonal_4: TcxButtonEdit;
+    cxLabel69: TcxLabel;
+    cxLabel70: TcxLabel;
+    edPersonal_5: TcxButtonEdit;
+    edPersonal_6: TcxButtonEdit;
+    cxLabel71: TcxLabel;
+    Guides_Personal_2: TdsdGuides;
+    Guides_Personal_3: TdsdGuides;
+    Guides_Personal_4: TdsdGuides;
+    Guides_Personal_5: TdsdGuides;
+    Guides_Personal_6: TdsdGuides;
+    spGet_Commerc: TdsdStoredProc;
 
   private
     { Private declara

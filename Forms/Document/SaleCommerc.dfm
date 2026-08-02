@@ -2,8 +2,8 @@ object SaleCommercForm: TSaleCommercForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1055#1088#1086#1076#1072#1078' ('#1082#1086#1084#1084#1077#1088#1094#1080#1103')>'
-  ClientHeight = 522
-  ClientWidth = 985
+  ClientHeight = 644
+  ClientWidth = 1114
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object SaleCommercForm: TSaleCommercForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 985
+    Width = 1114
     Height = 50
     Align = alTop
     BevelOuter = bvNone
@@ -96,14 +96,14 @@ object SaleCommercForm: TSaleCommercForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 76
-    Width = 985
-    Height = 438
+    Width = 1114
+    Height = 560
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 438
-    ClientRectRight = 985
+    ClientRectBottom = 560
+    ClientRectRight = 1114
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -111,8 +111,8 @@ object SaleCommercForm: TSaleCommercForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 985
-        Height = 414
+        Width = 1114
+        Height = 302
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -905,12 +905,229 @@ object SaleCommercForm: TSaleCommercForm
           GridView = cxGridDBTableView
         end
       end
+      object cxGridDetail: TcxGrid
+        Left = 0
+        Top = 310
+        Width = 1114
+        Height = 226
+        Align = alBottom
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableViewDetail: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DetailDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ContractName_bonus_ch2
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object ContractCode_bonus_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1091#1089#1083'. '#1073#1086#1085#1091#1089#1072')'
+            DataBinding.FieldName = 'ContractCode_bonus'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
+          object ContractName_bonus_ch2: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1091#1089#1083'. '#1073#1086#1085#1091#1089#1072')'
+            DataBinding.FieldName = 'ContractName_bonus'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 160
+          end
+          object ContractCode_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ContractName_ch2: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 116
+          end
+          object ContractCode_Child_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'ContractCode_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ContractName_Child_ch2: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'ContractName_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 116
+          end
+          object ContractConditionKindName_ch2: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractConditionKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 177
+          end
+          object BonusKindName_ch2: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1073#1086#1085#1091#1089#1072
+            DataBinding.FieldName = 'BonusKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 124
+          end
+          object PaidKindName_ch2: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 159
+          end
+          object Amount_ch2: TcxGridDBColumn
+            Caption = '% '#1073#1086#1085#1091#1089#1072
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object InfoMoneyName_ch2: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077')'
+            DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
+          object isErased_ch2: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+        end
+        object cxGridLevelDetail: TcxGridLevel
+          GridView = cxGridDBTableViewDetail
+        end
+      end
+      object cxSplitter2: TcxSplitter
+        Left = 0
+        Top = 302
+        Width = 1114
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGridDetail
+      end
     end
   end
   object cxSplitter1: TcxSplitter
     Left = 0
-    Top = 514
-    Width = 985
+    Top = 636
+    Width = 1114
     Height = 8
     AlignSplitter = salBottom
   end
@@ -929,7 +1146,7 @@ object SaleCommercForm: TSaleCommercForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 38
+    Left = 46
     Top = 391
   end
   object spSelectMI: TdsdStoredProc
@@ -1274,6 +1491,9 @@ object SaleCommercForm: TSaleCommercForm
         end
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectDetail
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1916,14 +2136,14 @@ object SaleCommercForm: TSaleCommercForm
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
-    Left = 110
-    Top = 367
+    Left = 102
+    Top = 223
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 343
+    Left = 40
+    Top = 215
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2553,8 +2773,8 @@ object SaleCommercForm: TSaleCommercForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 648
-    Top = 352
+    Left = 360
+    Top = 296
   end
   object DBViewChildAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2579,8 +2799,8 @@ object SaleCommercForm: TSaleCommercForm
     ViewDocumentList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
-    Left = 582
-    Top = 345
+    Left = 310
+    Top = 297
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -2615,8 +2835,8 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 574
-    Top = 432
+    Left = 406
+    Top = 296
   end
   object spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_SaleCommercChild_SetUnErased'
@@ -2640,8 +2860,8 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 662
-    Top = 432
+    Left = 454
+    Top = 296
   end
   object spGetImportSetting: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2691,5 +2911,74 @@ object SaleCommercForm: TSaleCommercForm
     PackSize = 1
     Left = 920
     Top = 48
+  end
+  object DetailDS: TDataSource
+    DataSet = DetailCDS
+    Left = 800
+    Top = 472
+  end
+  object DetailCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'ContractId_Child'
+    MasterFields = 'ContractId'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 848
+    Top = 472
+  end
+  object DBViewAddOnDetail: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewDetail
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <
+      item
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
+    ColumnEnterList = <
+      item
+      end
+      item
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 926
+    Top = 473
+  end
+  object spSelectDetail: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_SaleCommerc_Detail'
+    DataSet = DetailCDS
+    DataSets = <
+      item
+        DataSet = DetailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 472
   end
 end
