@@ -1655,6 +1655,8 @@ type
     miSaleCommercJournal: TMenuItem;
     actPromoSaleJournal: TdsdOpenForm;
     miPromoSaleJournal: TMenuItem;
+    actReport_Sale_WeighingPartner_Compare: TdsdOpenForm;
+    miReport_Sale_WeighingPartner_Compare: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

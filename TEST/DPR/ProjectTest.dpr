@@ -1687,7 +1687,9 @@ uses
   SaleCommercJournal in '..\..\Forms\Document\SaleCommercJournal.pas' {SaleCommercJournalForm: TParentForm},
   PromoSale in '..\..\Forms\Document\PromoSale.pas' {PromoSaleForm: TParentForm},
   PromoSaleJournal in '..\..\Forms\Document\PromoSaleJournal.pas' {PromoSaleJournalForm: TParentForm},
-  SaleCommerc in '..\..\Forms\Document\SaleCommerc.pas' {SaleCommercForm: TParentForm};
+  SaleCommerc in '..\..\Forms\Document\SaleCommerc.pas' {SaleCommercForm: TParentForm},
+  Report_Sale_WeighingPartner_Compare in '..\..\Forms\Report\Report_Sale_WeighingPartner_Compare.pas' {Report_Sale_WeighingPartner_CompareForm: TParentForm},
+  Report_Sale_WeighingPartner_CompareDialog in '..\..\Forms\Report\Report_Sale_WeighingPartner_CompareDialog.pas' {Report_Sale_WeighingPartner_CompareDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

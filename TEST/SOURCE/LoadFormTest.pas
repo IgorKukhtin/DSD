@@ -2794,6 +2794,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_WeighingPartner_CompareForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_WeighingPartner_CompareForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_WeighingPartner_CompareDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_WeighingPartner_CompareDialogForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Component_Plan_Olap_BIForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Component_Plan_Olap_BIForm');

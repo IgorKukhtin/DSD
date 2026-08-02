@@ -5967,6 +5967,14 @@
 				<Form>SaleCommercForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Sale_WeighingPartner_Compare.pas">
+				<Form>Report_Sale_WeighingPartner_CompareForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Sale_WeighingPartner_CompareDialog.pas">
+				<Form>Report_Sale_WeighingPartner_CompareDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
