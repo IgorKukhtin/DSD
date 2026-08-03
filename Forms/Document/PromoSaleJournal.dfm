@@ -24,6 +24,7 @@ inherited PromoSaleJournalForm: TPromoSaleJournalForm
       inherited cxGrid: TcxGrid
         Width = 1084
         Height = 338
+        ExplicitLeft = 56
         ExplicitWidth = 1084
         ExplicitHeight = 338
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -70,13 +71,13 @@ inherited PromoSaleJournalForm: TPromoSaleJournalForm
             Width = 55
           end
           object StartPromo: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1103' '#1089
+            Caption = #1053#1072' '#1087#1086#1083#1082#1077' '#1089
             DataBinding.FieldName = 'StartPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
           object EndPromo: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1103' '#1087#1086
+            Caption = #1053#1072' '#1087#1086#1083#1082#1077' '#1087#1086
             DataBinding.FieldName = 'EndPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -96,7 +97,7 @@ inherited PromoSaleJournalForm: TPromoSaleJournalForm
             Width = 72
           end
           object CountDayPromo: TcxGridDBColumn
-            Caption = #1044#1085#1077#1081' '#1072#1082#1094#1080#1080
+            Caption = #1044#1085#1077#1081' '#1085#1072' '#1087#1086#1083#1082#1077
             DataBinding.FieldName = 'CountDayPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

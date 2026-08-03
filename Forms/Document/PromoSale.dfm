@@ -919,7 +919,7 @@ inherited PromoSaleForm: TPromoSaleForm
     object cxLabel5: TcxLabel
       Left = 195
       Top = 2
-      Caption = #1040#1082#1094#1080#1103' '#1089
+      Caption = #1053#1072' '#1087#1086#1083#1082#1077' '#1089
     end
     object deStartPromo: TcxDateEdit
       Left = 195
@@ -931,9 +931,9 @@ inherited PromoSaleForm: TPromoSaleForm
       Width = 81
     end
     object cxLabel6: TcxLabel
-      Left = 285
+      Left = 282
       Top = 2
-      Caption = #1040#1082#1094#1080#1103' '#1087#1086
+      Caption = #1053#1072' '#1087#1086#1083#1082#1077' '#1087#1086
     end
     object deEndPromo: TcxDateEdit
       Left = 282

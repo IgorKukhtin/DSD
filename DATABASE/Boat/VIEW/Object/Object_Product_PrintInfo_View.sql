@@ -32,7 +32,8 @@ AS
         , 'Agilis Jettenders GmbH'||Chr(13)||Chr(10)||'Lohfeld Str.2'||Chr(13)||Chr(10)||' 52428 Julich' ::TVarChar AS Footer1              --*
 
 --      , 'Bankverbindung'||Chr(13)||Chr(10)||'Aachener Bank eG'||Chr(13)||Chr(10)||'IBAN: DE56390601800154560009'||Chr(13)||Chr(10)||'BIC: GENODED1AAC' ::TVarChar AS Footer2
-        , 'Bankverbindung'||Chr(13)||Chr(10)||'WISE EUROPE S.A'||Chr(13)||Chr(10)||'IBAN: BE41 9678 8213 2110'||Chr(13)||Chr(10)||'BIC: TRWIBEB1XXX' ::TVarChar AS Footer2
+--      , 'Bankverbindung'||Chr(13)||Chr(10)||'WISE EUROPE S.A'||Chr(13)||Chr(10)||'IBAN: BE41 9678 8213 2110'||Chr(13)||Chr(10)||'BIC: TRWIBEB1XXX' ::TVarChar AS Footer2
+        , 'Bankverbindung'||Chr(13)||Chr(10)||'Revolut Bank UAB'||Chr(13)||Chr(10)||'IBAN: LT09 3250 0495 8798 8282'||Chr(13)||Chr(10)||'BIC: REVOLT21' ::TVarChar AS Footer2
 
         , 'Geschaftsfuhrer:Starchenko Maxym'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Amtsgericht Duren HRB 8163'||Chr(13)||Chr(10)||'Ust.-ID: DE326730388' ::TVarChar AS Footer3   --***
 

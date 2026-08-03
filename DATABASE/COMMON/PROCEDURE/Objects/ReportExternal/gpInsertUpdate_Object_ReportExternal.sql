@@ -219,6 +219,8 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_JuridicalCollation',           inSession:= zfCalc_UserAdmin()); -- + !!!
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_IncomeKill_Olap',              inSession:= zfCalc_UserAdmin()); -- + !!!
 
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_IncomeKill_Olap',              inSession:= zfCalc_UserAdmin()); -- + !!!
+
 -- --!!! SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsBalance',                 inSession:= zfCalc_UserAdmin()); -- + !!!
 
 
