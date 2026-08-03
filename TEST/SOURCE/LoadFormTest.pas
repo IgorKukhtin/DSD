@@ -3945,7 +3945,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_TradeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_TradeForm');
-   }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_Result_MonthForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_Result_MonthForm');
@@ -3954,7 +3954,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_Result_TradeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_Result_TradeForm');
 

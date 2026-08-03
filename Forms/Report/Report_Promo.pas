@@ -93,6 +93,11 @@ type
     Days_Sale: TcxGridDBColumn;
     Days_Real: TcxGridDBColumn;
     cbNotBudgPromo: TcxCheckBox;
+    MovementDescName: TcxGridDBColumn;
+    getMovementForm: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actGetForm: TdsdExecStoredProc;
+    actOpenDocument: TMultiAction;
   private
     { Private declarations }
   public

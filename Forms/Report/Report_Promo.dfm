@@ -287,6 +287,14 @@ inherited Report_PromoForm: TReport_PromoForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object MovementDescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'MovementDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
@@ -1254,6 +1262,8 @@ inherited Report_PromoForm: TReport_PromoForm
       ImageIndex = 1
       FormName = 'TPromoForm'
       FormNameParam.Value = 'TPromoForm'
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1328,6 +1338,30 @@ inherited Report_PromoForm: TReport_PromoForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actGetForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actGetForm'
+    end
+    object actOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetForm
+        end
+        item
+        end>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
+      ImageIndex = 28
     end
   end
   inherited MasterDS: TDataSource
@@ -1494,7 +1528,7 @@ inherited Report_PromoForm: TReport_PromoForm
       Category = 0
     end
     object dxBarButton3: TdxBarButton
-      Action = actOpenPromo
+      Action = actOpenDocument
       Category = 0
     end
     object bbPrint1: TdxBarButton
@@ -1627,5 +1661,41 @@ inherited Report_PromoForm: TReport_PromoForm
       end>
     Left = 793
     Top = 9
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 376
+    Top = 312
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'outisEdit'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    Left = 368
+    Top = 170
   end
 end
