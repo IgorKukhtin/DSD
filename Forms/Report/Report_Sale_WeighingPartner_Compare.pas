@@ -73,6 +73,11 @@ type
     WeightTotal: TcxGridDBColumn;
     CountPack: TcxGridDBColumn;
     WeightPack_wp: TcxGridDBColumn;
+    getMovementForm: TdsdStoredProc;
+    actGetForm: TdsdExecStoredProc;
+    actOpenForm: TdsdOpenForm;
+    actOpenDocument: TMultiAction;
+    bbOpenDocument: TdxBarButton;
   private
     { Private declarations }
   public

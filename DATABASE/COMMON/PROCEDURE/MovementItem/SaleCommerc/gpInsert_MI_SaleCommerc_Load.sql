@@ -41,7 +41,8 @@ $BODY$
            vbPrice         TFloat;
            vbAmount        TFloat;
            vbAmountPromo   TFloat;
-           vbAmountNoPromo TFloat;
+           vbAmountNoPromo TFloat; 
+           vbVATPercent    TFloat;
            
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -237,6 +238,12 @@ BEGIN
                                   , 0 
                                   ) ::TFloat AS Price
                  ) ::TFloat;
+
+     -- zc_PriceList_BasisComerc() прайс без ндс, поэтому нужно к цене + НДС
+     -- НДС прайса
+     vbVATPercent:= 1 + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = zc_PriceList_BasisComerc() AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()), 0) / 100;
+     --пересчитываем цену с учетом НДС
+     vbPrice := (vbPrice * vbVATPercent) ::TFloat;
 
      -- 2.сохраняем Child - Первичный план на неделю
      -- если товар шт - берем эту колонку, если там 0 а есть кг, то переводим в шт, весовой - всегда в кг
