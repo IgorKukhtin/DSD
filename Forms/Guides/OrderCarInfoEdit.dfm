@@ -57,7 +57,7 @@ object OrderCarInfoEditForm: TOrderCarInfoEditForm
   object cxLabel8: TcxLabel
     Left = 34
     Top = 93
-    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'('#1089#1090#1086#1088#1086#1085#1085#1077#1077')'
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'/'#1057#1082#1083#1072#1076' '#1092#1080#1083#1080#1072#1083
   end
   object edRetail: TcxButtonEdit
     Left = 34
@@ -88,7 +88,7 @@ object OrderCarInfoEditForm: TOrderCarInfoEditForm
   end
   object cxLabel13: TcxLabel
     Left = 34
-    Top = 205
+    Top = 270
     Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1074' '#1076#1085#1103#1093' '#1076#1083#1103' '#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
     Caption = #1048#1079#1084'. '#1074' '#1076#1085#1103#1093' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080')'
     ParentShowHint = False
@@ -112,22 +112,23 @@ object OrderCarInfoEditForm: TOrderCarInfoEditForm
   end
   object edDays: TcxCurrencyEdit
     Left = 222
-    Top = 204
+    Top = 269
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
     TabOrder = 11
     Width = 85
   end
   object cxLabel15: TcxLabel
     Left = 34
-    Top = 240
+    Top = 210
     Caption = #1063#1072#1089#1099', '#1042#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
   end
   object edHour: TcxCurrencyEdit
     Left = 177
-    Top = 239
+    Top = 209
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
@@ -137,12 +138,12 @@ object OrderCarInfoEditForm: TOrderCarInfoEditForm
   end
   object cxLabel16: TcxLabel
     Left = 34
-    Top = 276
+    Top = 240
     Caption = #1052#1080#1085#1091#1090#1099', '#1042#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
   end
   object edMin: TcxCurrencyEdit
     Left = 177
-    Top = 275
+    Top = 239
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
@@ -168,8 +169,8 @@ object OrderCarInfoEditForm: TOrderCarInfoEditForm
     Width = 273
   end
   object ActionList: TActionList
-    Left = 34
-    Top = 184
+    Left = 26
+    Top = 152
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -478,8 +479,8 @@ object OrderCarInfoEditForm: TOrderCarInfoEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 177
-    Top = 100
+    Left = 185
+    Top = 124
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

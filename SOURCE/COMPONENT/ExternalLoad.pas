@@ -795,8 +795,12 @@ begin
 
               for J := 1 to Cols do
               begin
-                if (Copy(Excel.Cells[I, J].Formula, 1, 1) = '=') or (Copy(Excel.Cells[I, J].Text, 1, 1) = '#') then
-                  TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Value
+                if (Copy(Excel.Cells[I, J].Formula, 1, 1) = '=') or (Copy(Excel.Cells[I, J].Text, 1, 1) = '#')
+                then
+                  try TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Value
+                  except
+                        ShowMessage('Неверное значение: ' + Excel.Cells[I, J].Text);
+                  end
                 else if (Excel.Cells[I, J].NumberFormat = 'General') or (Copy(Excel.Cells[I, J].NumberFormat, 1, 1) = '0') then
                   TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Formula
                 else TClientDataSet(FDataSet).Fields.Fields[J - 1].Value := Excel.Cells[I, J].Text;

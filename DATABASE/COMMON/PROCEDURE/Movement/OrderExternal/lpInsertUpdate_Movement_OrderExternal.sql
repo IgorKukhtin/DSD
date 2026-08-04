@@ -39,6 +39,11 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
+     IF inUserId = 5 AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка.';
+     END IF;
+
 
      -- замена, т.к. теперь история
      ioChangePercent:= COALESCE ((SELECT Object_PercentView.ChangePercent FROM Object_ContractCondition_PercentView AS Object_PercentView WHERE Object_PercentView.ContractId = inContractId AND inOperDate BETWEEN Object_PercentView.StartDate AND Object_PercentView.EndDate), 0);

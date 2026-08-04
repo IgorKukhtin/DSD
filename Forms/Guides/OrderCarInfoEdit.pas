@@ -20,7 +20,7 @@ uses
   Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, dsdAddOn, cxPropertiesStore, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
-  cxButtonEdit;
+  cxButtonEdit, dsdCommon;
 
 type
   TOrderCarInfoEditForm = class(TParentForm)

@@ -178,7 +178,7 @@ BEGIN
                                              AND MB_Main.DescId     = zc_MovementBoolean_Main()
                                              -- Только Основное место
                                              AND MB_Main.ValueData  = TRUE
-                         -- Прием на работу
+                         -- Перевод
                          INNER JOIN MovementLinkObject AS MLO_StaffListKind
                                                        ON MLO_StaffListKind.MovementId = MLO_Member.MovementId
                                                       AND MLO_StaffListKind.DescId     = zc_MovementLinkObject_StaffListKind()
@@ -196,7 +196,7 @@ BEGIN
                       AND MLO_Member.DescId   = zc_MovementLinkObject_Member()
                    )
     THEN
-        RAISE INFO 'Все ОК = <Прием на работу>';
+        RAISE INFO 'Все ОК = <Перевод>';
 
     -- Проверка
     ELSEIF NOT EXISTS (SELECT 1
