@@ -44,7 +44,23 @@ AS
 
         , 'CEO: STARCHENKO MAXYM, REGISTERGERICHT: DUREN HRB 8163, UMSATZSTEUERGESETZ: DE326730388' ::TVarChar AS Footer_user
    ;
+/*
+Recipient - Agilis Jettenders GmbH
 
+Recipient address - Lohfeldstra?e 2, 52428, Julich, Germany
+
+IBAN - LT09 3250 0495 8798 8282
+
+BIC - REVOLT21
+
+Intermediary BIC - CHASDEFX
+
+Bank - Revolut Bank UAB
+
+Bank address - Konstitucijos ave. 21B, 08130, Vilnius, Lithuania
+
+
+*/
 
 ALTER TABLE Object_Product_PrintInfo_View  OWNER TO postgres;
 
