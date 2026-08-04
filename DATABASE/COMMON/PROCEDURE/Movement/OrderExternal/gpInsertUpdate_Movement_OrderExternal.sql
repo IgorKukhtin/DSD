@@ -38,6 +38,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
 
+     -- Тест
+     IF vbUserId = 5 AND ioId = 34924100 AND 1=0
+     THEN PERFORM lpUnComplete_Movement_OrderExternal (inMovementId := ioId, inUserId := vbUserId);
+     END IF;
+
+
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
