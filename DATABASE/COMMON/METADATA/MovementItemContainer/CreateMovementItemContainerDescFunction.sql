@@ -6,6 +6,10 @@ CREATE OR REPLACE FUNCTION zc_MIContainer_CountCount() RETURNS integer AS $BODY$
 INSERT INTO MovementItemContainerDesc(Code, ItemName)
   SELECT 'zc_MIContainer_CountCount', 'Количественный учет батонов' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountCount');
 
+CREATE OR REPLACE FUNCTION zc_MIContainer_CountVirt() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountVirt'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemContainerDesc(Code, ItemName)
+  SELECT 'zc_MIContainer_CountVirt', 'Виртуальные Остатки количество' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountVirt');
+
 CREATE OR REPLACE FUNCTION zc_MIContainer_CountSupplier() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountSupplier'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemContainerDesc(Code, ItemName)
   SELECT 'zc_MIContainer_CountSupplier', 'Количественный учет - долги поставщику' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountSupplier');
