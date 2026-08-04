@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderRK(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Id Integer, LineNum Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar             
              , MeasureName TVarChar 
@@ -71,6 +71,7 @@ BEGIN
                                )
         SELECT
              MovementItem.Id                  :: Integer AS Id
+           , ROW_NUMBER() OVER (Order BY MovementItem.Id)  ::Integer AS LineNum
            , Object_Goods.Id                             AS GoodsId
            , Object_Goods.ObjectCode                     AS GoodsCode
            , Object_Goods.ValueData                      AS GoodsName

@@ -129,6 +129,7 @@ type
     procedure LoadOrderGoodsFormTest;
     procedure LoadOrderFinanceFormTest;
     procedure LoadOrderFinanceMovementFormTest;
+    procedure LoadOrderRKFormTest;
     procedure LoadOrderSaleFormTest;
     procedure LoadOrderIncomeFormTest;
     procedure LoadOrderInternalFormTest;
@@ -1098,7 +1099,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderSaleJournalForm');
 end;
 
-procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
+procedure TLoadFormTest.LoadOrderRKFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderRKJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderRKJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderRKForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderRKForm');
+end;
+
+  procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
 begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementSBForm'));
