@@ -36,7 +36,12 @@ $BODY$
   DECLARE vbMovementId_CarInfo  Integer;
   DECLARE vbIsSamoV             Boolean;
 BEGIN
-     outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := lfGet_User_Session (inUserId));
+     IF inUserId <> 5 THEN outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := lfGet_User_Session (inUserId)); END IF;
+
+     -- Тест
+     IF inUserId = 5 AND inMovementId = 34924100 
+     THEN PERFORM lpUnComplete_Movement_OrderExternal (inMovementId := inMovementId, inUserId := inUserId);
+     END IF;
 
      --
      vbCriticalWeight:= (SELECT tmpGet.CriticalWeight FROM gpGetMobile_Object_Const (inSession:= zfCalc_UserAdmin()) AS tmpGet);
@@ -662,5 +667,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= '2')
--- SELECT * FROM lpComplete_Movement_OrderExternal (inMovementId:= 579, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= '5')
+-- SELECT * FROM lpComplete_Movement_OrderExternal (inMovementId:= 579, inUserId:= '5')
