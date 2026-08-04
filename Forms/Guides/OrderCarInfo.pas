@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxCurrencyEdit, cxCalendar;
+  DataModul, cxCurrencyEdit, cxCalendar, dsdCommon;
 
 type
   TOrderCarInfoForm = class(TParentForm)

@@ -411,6 +411,7 @@ object OrderCarInfoForm: TOrderCarInfoForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TOrderCarInfoEditForm'
@@ -437,6 +438,7 @@ object OrderCarInfoForm: TOrderCarInfoForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TOrderCarInfoEditForm'
@@ -472,9 +474,9 @@ object OrderCarInfoForm: TOrderCarInfoForm
           StoredProc = spErasedUnErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -487,9 +489,9 @@ object OrderCarInfoForm: TOrderCarInfoForm
           StoredProc = spErasedUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       ImageIndex = 8
-      ShortCut = 32776
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -765,6 +767,7 @@ object OrderCarInfoForm: TOrderCarInfoForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 168
     Top = 216
