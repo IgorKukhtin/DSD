@@ -23,6 +23,12 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_OrderCarInfo());
    vbUserId:= lpGetUserBySession (inSession);
+
+
+   IF inUnitId <> zc_Unit_RK()
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение Подразделение должно быть = <%>.', lfGet_Object_ValueData_sh (zc_Unit_RK());
+   END IF;
    
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object_OrderCarInfo (ioId	      := ioId

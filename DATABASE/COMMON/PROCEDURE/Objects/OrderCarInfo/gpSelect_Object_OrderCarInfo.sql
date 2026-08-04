@@ -98,6 +98,7 @@ BEGIN
 
                      WHERE Object_OrderCarInfo.DescId = zc_Object_OrderCarInfo()
                        AND (Object_OrderCarInfo.isErased = inIsShowAll OR inIsShowAll = TRUE)
+                       AND (Object_Unit.Id = zc_Unit_RK() OR inIsShowAll = TRUE)
                     )
        -- Результат
        SELECT

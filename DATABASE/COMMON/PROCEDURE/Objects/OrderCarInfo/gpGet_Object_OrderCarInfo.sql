@@ -34,15 +34,17 @@ BEGIN
            , CAST (0 as Integer)    AS RetailCode
            , CAST ('' as TVarChar)  AS RetailName
 
-           , CAST (0 as Integer)    AS UnitId  
-           , CAST (0 as Integer)    AS UnitCode
-           , CAST ('' as TVarChar)  AS UnitName
+           , Object.Id            AS UnitId  
+           , Object.ObjectCode    AS UnitCode
+           , Object.ValueData     AS UnitName
 
            , CAST (0 AS TFloat)     AS OperDate
            , CAST (0 AS TFloat)     AS OperDatePartner 
            , CAST (0 AS TFloat)     AS Days
            , CAST (0 AS TFloat)     AS Hour
            , CAST (0 AS TFloat)     AS Min
+       FROM Object
+       WHERE Id = zc_Unit_RK()
 ;
    ELSE
        RETURN QUERY 
