@@ -128,54 +128,19 @@ BEGIN
                               WHERE Object_CommercRetail.DescId = zc_Object_CommercRetail()
                                AND Object_CommercRetail.isErased = FALSE
                              )
-
+                --получаем сотрудника из справочника торговой сети Помошник КАМ
               , tmpLevel1 AS (SELECT 1 AS Ord 
-                                   , tmpCommercRetail.PositionName_1       AS PositionName
-                                   , tmpCommercRetail.PersonalGroupName_1  AS PersonalGroupName
-                                   , String_AGG (Object_Personal.ValueData, CHR (10) || CHR (13) order by Object_Personal.ValueData) AS PersonalName
-                                   , Object_Unit.ValueData                 AS UnitName
-                              FROM tmpCommercRetail
-                               /*    INNER JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                                                         ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpCommercRetail.PersonalGroupId_1
-                                                        AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-                                                        AND ObjectLink_Personal_PersonalGroup.ObjectId = tmpCommercRetail.PersonalGroupId_1
+                                   , Object_Position.ValueData       AS PositionName
+                                   , Object_PersonalGroup.ValueData  AS PersonalGroupName
+                                   , Object_Personal.ValueData       AS PersonalName
+                                   , Object_Unit.ValueData           AS UnitName
+                              FROM ObjectLink AS ObjectLink_Retail_KAM_add
+                                   LEFT JOIN object AS Object_Personal ON Object_Personal.Id = ObjectLink_Retail_KAM_add.ChildObjectId
 
-                                   INNER JOIN ObjectLink AS ObjectLink_Personal_Position
-                                                         ON ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                                       AND ObjectLink_Personal_Position.ChildObjectId = tmpCommercRetail.PositionId_1  --149847
-                                                       AND ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_PersonalGroup.ObjectId 
-*/
-                                   INNER JOIN ObjectLink AS ObjectLink_Personal_Position
-                                                         ON ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                                        AND ObjectLink_Personal_Position.ChildObjectId = tmpCommercRetail.PositionId_1
-
-                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                                                        ON ObjectLink_Personal_PersonalGroup.ObjectId = ObjectLink_Personal_Position.ObjectId
-                                                       AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-                                  -- LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
-                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                        ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Position.ObjectId
-                                                       AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
- 
-                                   LEFT JOIN object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Position.ObjectId AND Object_Personal.isErased = FALSE
-                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
-                              WHERE Object_Personal.isErased = FALSE
-                                AND (COALESCE (ObjectLink_Personal_PersonalGroup.ObjectId,0) = COALESCE (tmpCommercRetail.PersonalGroupId_1,0) OR COALESCE (tmpCommercRetail.PersonalGroupId_1,0) = 0)
-                              GROUP BY tmpCommercRetail.PositionName_1
-                                     , tmpCommercRetail.PersonalGroupName_1
-                                     , Object_Unit.ValueData
-                              )
-
-              , tmpLevel2 AS (SELECT 2 AS Ord 
-                                   , tmpCommercRetail.PositionName_2       AS PositionName
-                                   , String_AGG (DISTINCT Object_PersonalGroup.ValueData, '; ') ::TVarChar AS PersonalGroupName
-                                   , String_AGG (Object_Personal.ValueData, CHR (10) || CHR (13) order by Object_Personal.ValueData) AS PersonalName
-                                   , String_AGG (DISTINCT Object_Unit.ValueData, '; ')          ::TVarChar AS UnitName
-                              FROM tmpCommercRetail
-
-                                   INNER JOIN ObjectLink AS ObjectLink_Personal_Position
-                                                         ON ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                                        AND ObjectLink_Personal_Position.ChildObjectId = tmpCommercRetail.PositionId_2
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                        ON ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                                       AND ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
+                                   LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
 
                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                                                         ON ObjectLink_Personal_PersonalGroup.ObjectId = ObjectLink_Personal_Position.ObjectId
@@ -185,12 +150,38 @@ BEGIN
                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                         ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Position.ObjectId
                                                        AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
- 
-                                   LEFT JOIN object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Position.ObjectId AND Object_Personal.isErased = FALSE
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
-                              WHERE Object_Personal.isErased = FALSE
-                              GROUP BY tmpCommercRetail.PositionName_2
+                              WHERE ObjectLink_Retail_KAM_add.ObjectId = vbRetailId
+                                AND ObjectLink_Retail_KAM_add.DescId = zc_ObjectLink_Retail_KAM_add()
                               )
+
+                --получаем сотрудника из справочника торговой сети сотрудник КАМ
+              , tmpLevel2 AS (SELECT 2 AS Ord 
+                                   , Object_Position.ValueData       AS PositionName
+                                   , Object_PersonalGroup.ValueData  AS PersonalGroupName
+                                   , Object_Personal.ValueData       AS PersonalName
+                                   , Object_Unit.ValueData           AS UnitName
+                              FROM ObjectLink AS ObjectLink_Retail_KAM
+                                   LEFT JOIN object AS Object_Personal ON Object_Personal.Id = ObjectLink_Retail_KAM.ChildObjectId
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                        ON ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                                       AND ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
+                                   LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                                                        ON ObjectLink_Personal_PersonalGroup.ObjectId = ObjectLink_Personal_Position.ObjectId
+                                                       AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+                                   LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                        ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Position.ObjectId
+                                                       AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+                              WHERE ObjectLink_Retail_KAM.ObjectId = vbRetailId
+                                AND ObjectLink_Retail_KAM.DescId = zc_ObjectLink_Retail_KAM()
+                              )
+
               , tmpLevel3 AS (SELECT 3 AS Ord 
                                    , tmpCommercRetail.PositionName_3       AS PositionName
                                    , String_AGG (DISTINCT Object_PersonalGroup.ValueData, '; ') ::TVarChar AS PersonalGroupName
@@ -219,20 +210,18 @@ BEGIN
 
 
            SELECT 1 ::Integer AS Ord 
-                , COALESCE (tmp.PositionName, tmpCommercRetail.PositionName_1)           ::TVarChar AS PositionName
-                , COALESCE (tmp.PersonalGroupName, tmpCommercRetail.PersonalGroupName_1) ::TVarChar AS PersonalGroupName
-                , tmp.PersonalName ::Text
-                , tmp.UnitName     ::TVarChar      
-           FROM tmpCommercRetail
-               LEFT JOIN tmpLevel1 AS tmp ON 1 = 1  
+                , tmp.PositionName          ::TVarChar
+                , tmp.PersonalGroupName     ::TVarChar
+                , tmp.PersonalName          ::Text
+                , tmp.UnitName              ::TVarChar      
+           FROM tmpLevel1 AS tmp
           UNION ALL
            SELECT 2 ::Integer AS Ord 
-                , COALESCE (tmp.PositionName, tmpCommercRetail.PositionName_2) ::TVarChar AS PositionName
-                , tmp.PersonalGroupName                                        ::TVarChar AS PersonalGroupName
-                , tmp.PersonalName ::Text
-                , tmp.UnitName     ::TVarChar      
-           FROM tmpCommercRetail
-               LEFT JOIN tmpLevel2 AS tmp ON 1 = 1 
+                , tmp.PositionName          ::TVarChar
+                , tmp.PersonalGroupName     ::TVarChar
+                , tmp.PersonalName          ::Text
+                , tmp.UnitName              ::TVarChar      
+           FROM tmpLevel2 AS tmp
           UNION 
            SELECT 3 ::Integer AS Ord 
                 , COALESCE (tmp.PositionName, tmpCommercRetail.PositionName_3)           ::TVarChar AS PositionName

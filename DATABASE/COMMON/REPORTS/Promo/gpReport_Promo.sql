@@ -60,6 +60,7 @@ RETURNS TABLE(
      MovementId           Integer   --ИД документа акции
     ,InvNumber            Integer   --№ документа акции
     ,StatusCode Integer, StatusName TVarChar
+    , MovementDescName TVarChar
     ,UnitName             TVarChar  --Склад
     ,PersonalTradeName    TVarChar  --Ответственный представитель коммерческого отдела
     ,PersonalName         TVarChar  --Ответственный представитель маркетингового отдела
@@ -242,6 +243,42 @@ BEGIN
                              OR (COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE) = TRUE AND inisNotBudgPromo = TRUE)
                              OR (inIsPromo = FALSE AND inIsTender = FALSE AND inisNotBudgPromo = FALSE)
                              )
+                         --AND (COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE) = inisNotBudgPromo) 
+                      UNION
+                          SELECT Movement_Promo.*
+                               , MovementDate_StartSale.ValueData            AS StartSale          --Дата начала отгрузки по акционной цене
+                               , MovementDate_EndSale.ValueData              AS EndSale            --Дата окончания отгрузки по акционной цене
+                               , 0                                           AS UnitId
+                               , FALSE                                                      :: Boolean AS isPromo         -- акция (да/нет)     
+                               , COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE)   :: Boolean AS isNotBudgPromo  -- Вне бюджета (да/нет)
+                               , COALESCE(MovementLinkObject_PriceList.ObjectId, zc_PriceList_Basis()) AS PriceListId
+                          FROM Movement AS Movement_Promo
+
+                             LEFT JOIN MovementDate AS MovementDate_StartSale
+                                                    ON MovementDate_StartSale.MovementId = Movement_Promo.Id
+                                                   AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                             LEFT JOIN MovementDate AS MovementDate_EndSale
+                                                    ON MovementDate_EndSale.MovementId = Movement_Promo.Id
+                                                   AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+
+                             LEFT JOIN MovementBoolean AS MovementBoolean_NotBudgPromo
+                                                       ON MovementBoolean_NotBudgPromo.MovementId = Movement_Promo.Id
+                                                      AND MovementBoolean_NotBudgPromo.DescId = zc_MovementBoolean_NotBudgPromo()
+                             -- нужно определить прайслист , а по нему значение НДС , для расчете цены с НДС
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                                          ON MovementLinkObject_PriceList.MovementId = Movement_Promo.Id
+                                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+
+                          WHERE Movement_Promo.DescId = zc_Movement_PromoSale()
+                         AND (MovementDate_StartSale.ValueData BETWEEN inStartDate AND inEndDate
+                         OR
+                               inStartDate BETWEEN MovementDate_StartSale.ValueData AND MovementDate_EndSale.ValueData
+                              )
+                         AND Movement_Promo.StatusId <> zc_Enum_Status_Erased()
+                         AND (inIsPromo = TRUE
+                             OR (COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE) = TRUE AND inisNotBudgPromo = TRUE)
+                             OR (inIsPromo = FALSE AND inIsTender = FALSE AND inisNotBudgPromo = FALSE)
+                             )
                          --AND (COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE) = inisNotBudgPromo)
                           )
           -- Для Прайсластов определяем НДС
@@ -253,7 +290,8 @@ BEGIN
         , tmpMovement_Promo AS (SELECT
                                 Movement_Promo.Id                                                 --Идентификатор
                               , Movement_Promo.InvNumber :: Integer         AS InvNumber          --Номер документа
-                              , Movement_Promo.OperDate                                           --Дата документа
+                              , Movement_Promo.OperDate                                           --Дата документа 
+                              , MovementDesc.ItemName                       AS MovementDescName
                               , Object_Status.Id                            AS StatusId           --
                               , Object_Status.ObjectCode                    AS StatusCode         --
                               , Object_Status.ValueData                     AS StatusName         --
@@ -304,12 +342,13 @@ BEGIN
                               , Object_NotBudgPromo.ValueData          AS NotBudgPromoName
                          FROM tmpMovement AS Movement_Promo
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
+                             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Promo.DescId
                              LEFT JOIN MovementDate AS MovementDate_StartPromo
-                                                     ON MovementDate_StartPromo.MovementId = Movement_Promo.Id
-                                                    AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                                    ON MovementDate_StartPromo.MovementId = Movement_Promo.Id
+                                                   AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
                              LEFT JOIN MovementDate AS MovementDate_EndPromo
-                                                     ON MovementDate_EndPromo.MovementId =  Movement_Promo.Id
-                                                    AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                                    ON MovementDate_EndPromo.MovementId =  Movement_Promo.Id
+                                                   AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
 
                              LEFT JOIN MovementDate AS MovementDate_EndReturn
                                                     ON MovementDate_EndReturn.MovementId = Movement_Promo.Id
@@ -646,6 +685,7 @@ WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_PromoPartner
           , Movement_Promo.InvNumber          --№ документа акции
           , Movement_Promo.StatusCode         --
           , Movement_Promo.StatusName         --
+          , Movement_Promo.MovementDescName
 
           , Movement_Promo.UnitName           --Склад
           , Movement_Promo.PersonalTradeName  --Ответственный представитель коммерческого отдела
@@ -828,7 +868,8 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
             Movement_Promo.Id                --ИД документа акции
           , Movement_Promo.InvNumber          --№ документа акции
           , Movement_Promo.StatusCode         --
-          , Movement_Promo.StatusName         --
+          , Movement_Promo.StatusName         -- 
+          , Movement_Promo.MovementDescName
 
           , Movement_Promo.UnitName           --Склад
           , Movement_Promo.PersonalTradeName  --Ответственный представитель коммерческого отдела
