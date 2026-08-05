@@ -1691,7 +1691,8 @@ uses
   Report_Sale_WeighingPartner_Compare in '..\..\Forms\Report\Report_Sale_WeighingPartner_Compare.pas' {Report_Sale_WeighingPartner_CompareForm: TParentForm},
   Report_Sale_WeighingPartner_CompareDialog in '..\..\Forms\Report\Report_Sale_WeighingPartner_CompareDialog.pas' {Report_Sale_WeighingPartner_CompareDialogForm: TParentForm},
   OrderRKJournal in '..\..\Forms\Document\OrderRKJournal.pas' {OrderRKJournalForm: TParentForm},
-  OrderRK in '..\..\Forms\Document\OrderRK.pas' {OrderRKForm: TParentForm};
+  OrderRK in '..\..\Forms\Document\OrderRK.pas' {OrderRKForm: TParentForm},
+  ServiceJournalChoice in '..\..\Forms\Document\ServiceJournalChoice.pas' {ServiceJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

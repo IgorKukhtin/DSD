@@ -258,6 +258,9 @@ type
     bbPrintSklad: TdxBarButton;
     MovementProtocolOpenForm_cost: TdsdOpenForm;
     bbMovementProtocolOpenForm_cost: TdxBarButton;
+    InsertRecordService: TInsertRecord;
+    ServiceJournalChoiceForm: TOpenChoiceForm;
+    bbInsertRecordService: TdxBarButton;
   private
   public
   end;

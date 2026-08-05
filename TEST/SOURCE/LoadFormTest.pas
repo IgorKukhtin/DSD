@@ -1229,11 +1229,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome20202JournalForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-  //exit;
-  }
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
   exit;
@@ -1533,6 +1533,9 @@ end;
 
 procedure TLoadFormTest.LoadServiceDocumentFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceJournalChoiceForm');
+   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceForm'));
