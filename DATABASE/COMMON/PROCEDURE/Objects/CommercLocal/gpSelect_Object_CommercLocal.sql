@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_CommercLocal(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar, BranchName TVarChar
              , PositionId_1 Integer, PositionCode_1 Integer, PositionName_1 TVarChar
              , PersonalGroupId_1 Integer, PersonalGroupCode_1 Integer, PersonalGroupName_1 TVarChar
              , PositionId_2 Integer, PositionCode_2 Integer, PositionName_2 TVarChar
@@ -33,6 +33,7 @@ BEGIN
          , Object_Unit.Id                      ::Integer  AS UnitId
          , Object_Unit.ObjectCode              ::Integer  AS UnitCode
          , Object_Unit.ValueData               ::TVarChar AS UnitName
+         , Object_Branch.ValueData             ::TVarChar AS BranchName
          
          , Object_Position_1.Id                ::Integer  AS PositionId_1
          , Object_Position_1.ObjectCode        ::Integer  AS PositionCode_1
@@ -113,6 +114,10 @@ BEGIN
                               AND ObjectLink_CommercLocal_Position_6.DescId = zc_ObjectLink_CommercLocal_Position_6()
           LEFT JOIN Object AS Object_Position_6 ON Object_Position_6.Id = ObjectLink_CommercLocal_Position_6.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
      WHERE Object_CommercLocal.DescId = zc_Object_CommercLocal()
        AND (Object_CommercLocal.isErased = FALSE OR inIsErased = TRUE)
@@ -126,6 +131,7 @@ BEGIN
          , 0     ::Integer  AS UnitId
          , 0     ::Integer  AS UnitCode
          , ''    ::TVarChar AS UnitName
+         , ''    ::TVarChar AS BranchName
          , 0     ::Integer  AS PositionId_1
          , 0     ::Integer  AS PositionCode_1
          , ''    ::TVarChar AS PositionName_1 

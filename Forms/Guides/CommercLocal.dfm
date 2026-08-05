@@ -78,6 +78,14 @@ object CommercLocalForm: TCommercLocalForm
         Options.Editing = False
         Width = 78
       end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1110#1083#1110#1103
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 159
+      end
       object UnitName: TcxGridDBColumn
         Caption = #1042#1110#1076#1076#1110#1083' '#1082#1086#1084#1077#1088#1094#1110#1111
         DataBinding.FieldName = 'UnitName'
