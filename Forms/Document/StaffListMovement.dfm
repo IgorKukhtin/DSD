@@ -11,17 +11,17 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Width = 1223
     Height = 422
     ExplicitTop = 142
-    ExplicitWidth = 1153
+    ExplicitWidth = 1223
     ExplicitHeight = 422
     ClientRectBottom = 422
     ClientRectRight = 1223
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1153
+      ExplicitWidth = 1223
       ExplicitHeight = 398
       inherited cxGrid: TcxGrid
         Width = 1223
         Height = 398
-        ExplicitWidth = 1153
+        ExplicitWidth = 1223
         ExplicitHeight = 398
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -765,7 +765,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Width = 1223
     Height = 116
     TabOrder = 3
-    ExplicitWidth = 1153
+    ExplicitWidth = 1223
     ExplicitHeight = 116
     inherited edInvNumber: TcxTextEdit
       Left = 8

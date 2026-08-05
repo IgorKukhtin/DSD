@@ -18,9 +18,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ClientKindId Integer, ClientKindName TVarChar
              , StickerHeaderId Integer, StickerHeaderName TVarChar
              , SectionId Integer, SectionName TVarChar
-             , KAMId Integer, KAMCode Integer, KAMName TVarChar
-             , KAM_addId Integer, KAM_addCode Integer, KAM_addName TVarChar 
-             , NOP_NMId Integer, NOP_NMCode Integer, NOP_NMName TVarChar
+             , KAMId Integer, KAMCode Integer, KAMName TVarChar, PositionName_KAM TVarChar
+             , KAM_addId Integer, KAM_addCode Integer, KAM_addName TVarChar, PositionName_KAM_add TVarChar
+             , NOP_NMId Integer, NOP_NMCode Integer, NOP_NMName TVarChar, PositionName_NOP_NM TVarChar
              , isErased Boolean
               )
 AS
@@ -62,12 +62,15 @@ BEGIN
            , Object_KAM.Id                       AS KAMId
            , Object_KAM.ObjectCode               AS KAMCode
            , Object_KAM.ValueData                AS KAMName
+           , Object_Position_KAM.ValueData       AS PositionName_KAM
            , Object_KAM_add.Id                   AS KAM_addId
            , Object_KAM_add.ObjectCode           AS KAM_addCode
            , Object_KAM_add.ValueData            AS KAM_addName
+           , Object_Position_KAM_add.ValueData   AS PositionName_KAM_add
            , Object_NOP_NM.Id                    AS NOP_NMId
            , Object_NOP_NM.ObjectCode            AS NOP_NMCode
            , Object_NOP_NM.ValueData             AS NOP_NMName
+           , Object_Position_NOP_NM.ValueData    AS PositionName_NOP_NM
            
            , Object_Retail.isErased              AS isErased
 
@@ -139,12 +142,25 @@ BEGIN
                                 AND ObjectLink_Retail_KAM_add.DescId = zc_ObjectLink_Retail_KAM_add()
             LEFT JOIN Object AS Object_KAM_add ON Object_KAM_add.Id = ObjectLink_Retail_KAM_add.ChildObjectId
 
-
             LEFT JOIN ObjectLink AS ObjectLink_Retail_NOP_NM
                                  ON ObjectLink_Retail_NOP_NM.ObjectId = Object_Retail.Id
                                 AND ObjectLink_Retail_NOP_NM.DescId = zc_ObjectLink_Retail_NOP_NM()
             LEFT JOIN Object AS Object_NOP_NM ON Object_NOP_NM.Id = ObjectLink_Retail_NOP_NM.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_Position_KAM
+                                ON ObjectLink_Personal_Position_KAM.ObjectId = Object_KAM.Id
+                               AND ObjectLink_Personal_Position_KAM.DescId = zc_ObjectLink_Personal_Position()
+           LEFT JOIN Object AS Object_Position_KAM ON Object_Position_KAM.Id = ObjectLink_Personal_Position_KAM.ChildObjectId
+    
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_Position_KAM_add
+                                ON ObjectLink_Personal_Position_KAM_add.ObjectId = Object_KAM_add.Id
+                               AND ObjectLink_Personal_Position_KAM_add.DescId = zc_ObjectLink_Personal_Position()
+           LEFT JOIN Object AS Object_Position_KAM_add ON Object_Position_KAM_add.Id = ObjectLink_Personal_Position_KAM_add.ChildObjectId
+    
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_Position_NOP_NM
+                                ON ObjectLink_Personal_Position_NOP_NM.ObjectId = Object_NOP_NM.Id
+                               AND ObjectLink_Personal_Position_NOP_NM.DescId = zc_ObjectLink_Personal_Position()
+           LEFT JOIN Object AS Object_Position_NOP_NM ON Object_Position_NOP_NM.Id = ObjectLink_Personal_Position_NOP_NM.ChildObjectId
        WHERE Object_Retail.DescId = zc_Object_Retail()
 
      UNION ALL
@@ -178,12 +194,15 @@ BEGIN
            , 0   :: Integer         AS KAMId
            , 0   :: Integer         AS KAMCode
            , ''  :: TVarChar        AS KAMName
+           , ''  :: TVarChar        AS PositionName_KAM
            , 0   :: Integer         AS KAM_addId
            , 0   :: Integer         AS KAM_addCode
            , ''  :: TVarChar        AS KAM_addName
+           , ''  :: TVarChar        AS PositionName_KAM_add
            , 0   :: Integer         AS NOP_NMId
            , 0   :: Integer         AS NOP_NMCode
            , ''  :: TVarChar        AS NOP_NMName
+           , ''  :: TVarChar        AS PositionName_NOP_NM
 
            , Object_Unit.isErased   AS isErased
        FROM Object AS Object_Unit
