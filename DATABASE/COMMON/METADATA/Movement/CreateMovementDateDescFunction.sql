@@ -315,12 +315,16 @@ CREATE OR REPLACE FUNCTION zc_movementdate_print() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_movementdate_print', 'Дата/время последней печати' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_movementdate_print');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_DateClose() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_DateClose'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_DateClose', 'Дата закрытия' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_DateClose');
 
-
+  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 05.08.26         * zc_MovementDate_DateClose
  03.08.26         * zc_movementdate_print
  14.01.26         * zc_MovementDate_SignSB
  13.11.25         * zc_MovementDate_Sign_1

@@ -113,6 +113,8 @@ type
     cxLabel18: TcxLabel;
     cePersonal: TcxButtonEdit;
     GuidesPersonal: TdsdGuides;
+    cxLabel19: TcxLabel;
+    edDateClose: TcxDateEdit;
   private
     { Private declarations }
   public

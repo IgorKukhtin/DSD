@@ -63,6 +63,7 @@ type
     actPersonalChoiceForm: TOpenChoiceForm;
     actUpdateCDS: TdsdUpdateDataSet;
     spUpdatePersonal: TdsdStoredProc;
+    DateClose: TcxGridDBColumn;
   private
     { Private declarations }
   public

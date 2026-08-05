@@ -2,11 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_KAM_Load (Integer, TVarChar, TVarChar, TVarChar);
 -- 1)Код сети (информативно) 2) назв  (по нему заливаем) 3) ФИО - по нему ищем основное место для Personal, если не нашли - ошибка
+DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_KAM_Load (Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Retail_KAM_Load(
     IN inRetailCode     Integer   , --
     IN inRetailName     TVarChar  ,
     IN inKAMName        TVarChar  ,
+    IN inNOP_NMName     TVarChar  ,           
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS VOID
