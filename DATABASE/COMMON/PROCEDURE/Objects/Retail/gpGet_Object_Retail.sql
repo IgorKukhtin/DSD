@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , SectionId Integer, SectionName TVarChar
              , KAMId Integer, KAMCode Integer, KAMName TVarChar
              , KAM_addId Integer, KAM_addCode Integer, KAM_addName TVarChar
+             , NOP_NMId Integer, NOP_NMCode Integer, NOP_NMName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -62,6 +63,10 @@ BEGIN
            , 0   :: Integer         AS KAM_addId
            , 0   :: Integer         AS KAM_addCode
            , ''  :: TVarChar        AS KAM_addName
+
+           , 0   :: Integer         AS NOP_NMId
+           , 0   :: Integer         AS NOP_NMCode
+           , ''  :: TVarChar        AS NOP_NMName           
            
            , CAST (NULL AS Boolean)  AS isErased;
    ELSE
@@ -98,6 +103,9 @@ BEGIN
            , Object_KAM_add.Id                   AS KAM_addId
            , Object_KAM_add.ObjectCode           AS KAM_addCode
            , Object_KAM_add.ValueData            AS KAM_addName
+           , Object_NOP_NM.Id                    AS NOP_NMId
+           , Object_NOP_NM.ObjectCode            AS NOP_NMCode
+           , Object_NOP_NM.ValueData             AS NOP_NMName
 
            , Object_Retail.isErased   AS isErased
 
@@ -164,6 +172,12 @@ BEGIN
                              ON ObjectLink_Retail_KAM_add.ObjectId = Object_Retail.Id
                             AND ObjectLink_Retail_KAM_add.DescId = zc_ObjectLink_Retail_KAM_add()
         LEFT JOIN Object AS Object_KAM_add ON Object_KAM_add.Id = ObjectLink_Retail_KAM_add.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_NOP_NM
+                             ON ObjectLink_Retail_NOP_NM.ObjectId = Object_Retail.Id
+                            AND ObjectLink_Retail_NOP_NM.DescId = zc_ObjectLink_Retail_NOP_NM()
+        LEFT JOIN Object AS Object_NOP_NM ON Object_NOP_NM.Id = ObjectLink_Retail_NOP_NM.ChildObjectId
+
 
        WHERE Object_Retail.Id = inId;
    END IF; 

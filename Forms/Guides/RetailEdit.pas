@@ -68,6 +68,9 @@ type
     cxLabel13: TcxLabel;
     edKAM_add: TcxButtonEdit;
     GuidesKAM_add: TdsdGuides;
+    cxLabel14: TcxLabel;
+    edNOP_NM: TcxButtonEdit;
+    GuidesNOP_NM: TdsdGuides;
   private
     { Private declarations }
   public

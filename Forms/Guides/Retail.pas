@@ -97,6 +97,7 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    NOP_NMName: TcxGridDBColumn;
   private
     { Private declarations }
   public
