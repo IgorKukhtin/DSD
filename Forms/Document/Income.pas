@@ -261,6 +261,9 @@ type
     InsertRecordService: TInsertRecord;
     ServiceJournalChoiceForm: TOpenChoiceForm;
     bbInsertRecordService: TdxBarButton;
+    UpdateRecordService2: TdsdInsertUpdateAction;
+    UpdateRecordService: TUpdateRecord;
+    bbUpdateRecordService: TdxBarButton;
   private
   public
   end;

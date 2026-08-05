@@ -897,9 +897,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -1339,6 +1336,10 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateRecordService'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1630,6 +1631,10 @@ object IncomeForm: TIncomeForm
     end
     object bbInsertRecordService: TdxBarButton
       Action = InsertRecordService
+      Category = 0
+    end
+    object bbUpdateRecordService: TdxBarButton
+      Action = UpdateRecordService
       Category = 0
     end
   end
@@ -2300,6 +2305,23 @@ object IncomeForm: TIncomeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    object UpdateRecordService2: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetCost
+      MoveParams = <>
+      Enabled = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
+      ImageIndex = 1
+      FormName = 'TServiceJournalChoiceForm'
+      FormNameParam.Value = 'TServiceJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+      ActionType = acUpdate
+      IdFieldName = 'Id'
+    end
     object actGoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2334,19 +2356,6 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = True
     end
-    object InsertRecordCost: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      View = cxGridDBTableView1
-      Action = CostJournalChoiceForm
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
-      ShortCut = 45
-      ImageIndex = 0
-    end
     object InsertRecordService: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
@@ -2357,6 +2366,18 @@ object IncomeForm: TIncomeForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
+      ImageIndex = 0
+    end
+    object InsertRecordCost: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView1
+      Action = CostJournalChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       ShortCut = 45
       ImageIndex = 0
     end
@@ -2940,6 +2961,17 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object UpdateRecordService: TUpdateRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView1
+      Action = ServiceJournalChoiceForm
+      Params = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
+      ImageIndex = 1
     end
   end
   object MasterDS: TDataSource
