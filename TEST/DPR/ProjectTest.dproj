@@ -766,10 +766,6 @@
 				<Form>PartnerJuridicalEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\PartnerEdit.pas">
-				<Form>PartnerEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalAccountTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\PersonalAccount.pas">
 				<Form>PersonalAccountForm</Form>
@@ -5985,6 +5981,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ServiceJournalChoice.pas">
 				<Form>ServiceJournalChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartnerEdit.pas">
+				<Form>PartnerEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -80,10 +80,10 @@ type
     PartnerTagGuides: TdsdGuides;
     cxLabel22: TcxLabel;
     ceRegion: TcxButtonEdit;
-    RegionGuides: TdsdGuides;
+    GuidesRegion: TdsdGuides;
     cxLabel23: TcxLabel;
     ceProvince: TcxButtonEdit;
-    ProvinceGuides: TdsdGuides;
+    GuidesProvince: TdsdGuides;
     cxLabel24: TcxLabel;
     ceCityKind: TcxButtonEdit;
     CityKindGuides: TdsdGuides;
@@ -178,17 +178,11 @@ type
     cxLabel55: TcxLabel;
     edPrepareDayCount_30201: TcxCurrencyEdit;
     edDocumentDayCount_30201: TcxCurrencyEdit;
-    cxLabel56: TcxLabel;
-    ceRouteTT: TcxButtonEdit;
     GuidesRouteTT: TdsdGuides;
     cxLabel57: TcxLabel;
     edTypeCommerc: TcxButtonEdit;
     GuidesTypeCommerc: TdsdGuides;
-    cxLabel58: TcxLabel;
-    edUnitCommerc: TcxButtonEdit;
     GuidesUnitCommerc: TdsdGuides;
-    cxLabel59: TcxLabel;
-    edPersonalGroupCommerc: TcxButtonEdit;
     GuidesPersonalGroupCommerc: TdsdGuides;
     cxPageControl1: TcxPageControl;
     cxTabSheet1: TcxTabSheet;
@@ -230,6 +224,12 @@ type
     Guides_Personal_5: TdsdGuides;
     Guides_Personal_6: TdsdGuides;
     spGet_Commerc: TdsdStoredProc;
+    cxLabel56: TcxLabel;
+    ceRouteTT: TcxButtonEdit;
+    cxLabel59: TcxLabel;
+    edPersonalGroupCommerc: TcxButtonEdit;
+    cxLabel72: TcxLabel;
+    edUnitCommerc: TcxButtonEdit;
 
   private
     { Private declara

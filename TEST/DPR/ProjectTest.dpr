@@ -288,7 +288,6 @@ uses
   TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
   SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
   PartnerJuridicalEdit in '..\..\Forms\Guides\PartnerJuridicalEdit.pas' {PartnerJuridicalEditForm: TParentForm},
-  PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm},
   PersonalAccountTest in '..\SOURCE\Movement\All\PersonalAccountTest.pas',
   PersonalAccount in '..\..\Forms\Document\PersonalAccount.pas' {PersonalAccountForm: TParentForm},
   PersonalAccountJournal in '..\..\Forms\Document\PersonalAccountJournal.pas' {PersonalAccountJournalForm: TParentForm},
@@ -1692,7 +1691,8 @@ uses
   Report_Sale_WeighingPartner_CompareDialog in '..\..\Forms\Report\Report_Sale_WeighingPartner_CompareDialog.pas' {Report_Sale_WeighingPartner_CompareDialogForm: TParentForm},
   OrderRKJournal in '..\..\Forms\Document\OrderRKJournal.pas' {OrderRKJournalForm: TParentForm},
   OrderRK in '..\..\Forms\Document\OrderRK.pas' {OrderRKForm: TParentForm},
-  ServiceJournalChoice in '..\..\Forms\Document\ServiceJournalChoice.pas' {ServiceJournalChoiceForm: TParentForm};
+  ServiceJournalChoice in '..\..\Forms\Document\ServiceJournalChoice.pas' {ServiceJournalChoiceForm: TParentForm},
+  PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
