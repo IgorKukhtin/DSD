@@ -141,7 +141,7 @@ end if;
                AND tmp.isBarCode   = TRUE
                AND tmp.MeasureId   = zc_Measure_Kg()
                AND tmp.GoodsId     > 0
-               AND tmp.GoodsKindId IN (6899005, 8349) -- нар. 200 + Флоу-пак
+               AND tmp.GoodsKindId IN (7462698, 6899005, 8349) -- нар. 180 + нар. 200 + Флоу-пак
             ) AS tmpMI
 
            ) AS tmpMI

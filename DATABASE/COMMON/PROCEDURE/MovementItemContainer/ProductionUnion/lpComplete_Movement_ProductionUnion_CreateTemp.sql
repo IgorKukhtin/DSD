@@ -12,7 +12,8 @@ BEGIN
 
      -- таблица - количественные Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem_pr (MovementItemId Integer
-                                  , MIContainerId_To BigInt, MIContainerId_count BigInt, ContainerId_GoodsTo Integer, ContainerId_count Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, PartionGoodsDate_mi TDateTime
+                                  , MIContainerId_To BigInt, MIContainerId_count BigInt, ContainerId_GoodsTo Integer, ContainerId_count Integer, ContainerId_Virt Integer
+                                  , GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, PartionGoodsDate_mi TDateTime
                                   , OperCount TFloat, OperCountCount TFloat
                                   , InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                   , BusinessId_To Integer
@@ -26,7 +27,8 @@ BEGIN
 
      -- таблица - количественные Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemChild (MovementItemId_Parent Integer, MovementItemId Integer
-                                    , ContainerId_GoodsFrom Integer, ContainerId_count Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                                    , ContainerId_GoodsFrom Integer, ContainerId_count Integer, ContainerId_Virt Integer
+                                    , GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
                                     , OperCount TFloat, OperCountCount TFloat
                                     , InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                     , BusinessId_From Integer

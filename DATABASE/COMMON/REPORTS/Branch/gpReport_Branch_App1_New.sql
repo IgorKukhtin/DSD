@@ -43,6 +43,12 @@ BEGIN
     -- !!!Только просмотр Аудитор!!!
     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
+
+    IF vbUserId = 6561986 
+    THEN
+       RAISE EXCEPTION 'Ошибка. Нет прав.Можно открыть отчет <Приложение 1 (движенние товара ГП) по месяцам>.';
+    END IF;
+
     
     -- CREATE TEMP TABLE _tmpBranch (BranchId Integer) ON COMMIT DROP; 
    

@@ -68,6 +68,8 @@ BEGIN
      vbIsInfoMoneyDestination_21500:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = vbUserId AND tmp.RoleId = 8852398);
 
 
+     IF vbUserId = 343013 THEN inSettingsServiceId:= 13951677; END IF;
+
      -- Результат
      RETURN QUERY 
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
