@@ -197,6 +197,14 @@ object RetailForm: TRetailForm
         Options.Editing = False
         Width = 100
       end
+      object PositionName_KAM: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' (KAM)'
+        DataBinding.FieldName = 'PositionName_KAM'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object KAM_addName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1084'.KAM)'
         DataBinding.FieldName = 'KAM_addName'
@@ -205,6 +213,30 @@ object RetailForm: TRetailForm
         HeaderHint = #1057#1086#1090#1088#1091#1076#1085#1080#1082'('#1087#1086#1084#1086#1097#1085#1080#1082' KAM)'
         Options.Editing = False
         Width = 90
+      end
+      object PositionName_KAM_add: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1087#1086#1084'.KAM)'
+        DataBinding.FieldName = 'PositionName_KAM_add'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object NOP_NMName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1053#1054#1055' '#1053#1052')'
+        DataBinding.FieldName = 'NOP_NMName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PositionName_NOP_NM: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100'  ('#1053#1054#1055' '#1053#1052')'
+        DataBinding.FieldName = 'PositionName_NOP_NM'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

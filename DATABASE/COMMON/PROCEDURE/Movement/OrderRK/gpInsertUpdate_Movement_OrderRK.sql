@@ -17,7 +17,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderRK());
      
      -- сохранили <Документ>
-      SELECT tmp.ioId, tmp.ioInvNumber
+      SELECT tmp.ioId
     INTO ioId
       FROM lpInsertUpdate_Movement_OrderRK (ioId           := ioId
                                           , inInvNumber    := inInvNumber

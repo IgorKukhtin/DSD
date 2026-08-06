@@ -143,11 +143,13 @@ BEGIN
                                , Object_SheetWorkTime.Id                          AS SheetWorkTimeId
                                , Object_SheetWorkTime.ValueData                   AS SheetWorkTimeName
 
+                               , COALESCE (ObjectBoolean_Main.ValueData, FALSE)  AS isMain
                                  -- № п/п
                                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId
                                                                , ObjectLink_Personal_Unit.ChildObjectId  
                                                                , ObjectLink_Personal_Position.ChildObjectId
                                                                , ObjectLink_Personal_PositionLevel.ChildObjectId
+                                                               , COALESCE (ObjectBoolean_Main.ValueData, FALSE)
                                                     ORDER BY CASE WHEN Object_Personal.isErased = FALSE THEN 0 ELSE 1 END ASC
                                                            , COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) DESC
                                                    ) AS Ord
@@ -162,7 +164,7 @@ BEGIN
                                INNER JOIN ObjectBoolean AS ObjectBoolean_Main
                                                         ON ObjectBoolean_Main.ObjectId  = Object_Personal.Id
                                                        AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Personal_Main()
-                                                       AND ObjectBoolean_Main.ValueData = TRUE
+                                                      -- AND ObjectBoolean_Main.ValueData = TRUE
 
                                LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                                     ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
@@ -224,7 +226,7 @@ BEGIN
                                                    AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine()
                             
                           WHERE Object_Personal.DescId = zc_Object_Personal()
-                          --  AND Object_Personal.isErased = FALSE
+                           AND Object_Personal.isErased = FALSE
                        ) 
 
         , tmpStorageLine AS (WITH
@@ -517,14 +519,33 @@ BEGIN
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
 
             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Movement.MemberId
-                                 AND tmpPersonal.DateIn <= Movement.OperDate
+                                 AND ((COALESCE (MovementBoolean_Main.ValueData, FALSE) = TRUE               --по основному месту работы
+                                       AND tmpPersonal.isMain = TRUE
+                                       AND tmpPersonal.Ord = 1
+                                        )
+                                      OR 
+                                      --для ссовместительства
+                                      (COALESCE (MovementBoolean_Main.ValueData, FALSE) = FALSE
+                                       AND COALESCE (tmpPersonal.UnitId,0)          = COALESCE (MovementLinkObject_Unit.ObjectId,0) 
+                                       AND COALESCE (tmpPersonal.PositionId,0)      = COALESCE (MovementLinkObject_Position.ObjectId,0) 
+                                       AND COALESCE (tmpPersonal.PositionLevelId,0) = COALESCE (MovementLinkObject_PositionLevel.ObjectId,0) 
+                                       AND tmpPersonal.isMain = FALSE
+                                       AND tmpPersonal.Ord = 1
+                                       ) 
+                                    )
+                                     
+                               
+                               
+                                /* AND tmpPersonal.DateIn <= Movement.OperDate
                                  AND COALESCE (tmpPersonal.DateOut, zc_DateEnd()) >= Movement.OperDate
                                  AND COALESCE (tmpPersonal.UnitId,0)          = COALESCE (MovementLinkObject_Unit.ObjectId,0) 
                                  AND COALESCE (tmpPersonal.PositionId,0)      = COALESCE (MovementLinkObject_Position.ObjectId,0) 
                                  AND COALESCE (tmpPersonal.PositionLevelId,0) = COALESCE (MovementLinkObject_PositionLevel.ObjectId,0) 
+                                 AND COALESCE (tmpPersonal.isMain, FALSE)     = COALESCE (MovementBoolean_Main.ValueData, FALSE)
                                  AND tmpPersonal.Ord = 1
-                              --   AND Object_StaffListKind.Id IN (zc_Enum_StaffListKind_Send(), zc_Enum_StaffListKind_Out())
-
+                              --   AND Object_StaffListKind.Id IN (zc_Enum_StaffListKind_Send(), zc_Enum_StaffListKind_Out()) 
+                              */
+                                
             LEFT JOIN tmpStorageLine ON tmpStorageLine.MemberId = Movement.MemberId
                                     AND tmpStorageLine.PositionId = MovementLinkObject_Position.ObjectId
                                     AND COALESCE (tmpStorageLine.PositionLevelId,0) = COALESCE (MovementLinkObject_PositionLevel.ObjectId,0)

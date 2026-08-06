@@ -1678,6 +1678,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Retail_KAM_add() RETURNS Integer AS $BO
  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
  SELECT 'zc_ObjectLink_Retail_KAM_add', 'Сотрудник(помощник KAM)', zc_Object_Retail(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_KAM_add');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Retail_NOP_NM() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_NOP_NM'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_Retail_NOP_NM', 'Сотрудник(НОП НМ)', zc_Object_Retail(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_NOP_NM');
+
 
 
 
@@ -3422,6 +3426,7 @@ SELECT 'zc_ObjectLink_GoodsGroupProperty_Parent', 'Аналитический классификатор',
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 05.08.26         * zc_ObjectLink_Retail_NOP_NM 
  03.06.26         * zc_ObjectLink_Partner_PersonalGroupCommerc
                     zc_ObjectLink_Partner_TypeCommerc
                     zc_ObjectLink_Partner_UnitCommerc

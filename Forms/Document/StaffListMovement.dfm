@@ -1,27 +1,27 @@
 inherited StaffListMovementForm: TStaffListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1080#1079#1084#1077#1085#1077#1085#1080#1103')>'
   ClientHeight = 564
-  ClientWidth = 1153
-  ExplicitWidth = 1169
+  ClientWidth = 1223
+  ExplicitWidth = 1239
   ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 142
-    Width = 1153
+    Width = 1223
     Height = 422
     ExplicitTop = 142
-    ExplicitWidth = 1153
+    ExplicitWidth = 1223
     ExplicitHeight = 422
     ClientRectBottom = 422
-    ClientRectRight = 1153
+    ClientRectRight = 1223
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1153
+      ExplicitWidth = 1223
       ExplicitHeight = 398
       inherited cxGrid: TcxGrid
-        Width = 1153
+        Width = 1223
         Height = 398
-        ExplicitWidth = 1153
+        ExplicitWidth = 1223
         ExplicitHeight = 398
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -762,32 +762,32 @@ inherited StaffListMovementForm: TStaffListMovementForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1153
+    Width = 1223
     Height = 116
     TabOrder = 3
-    ExplicitWidth = 1153
+    ExplicitWidth = 1223
     ExplicitHeight = 116
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
-      ExplicitWidth = 74
-      Width = 74
+      ExplicitWidth = 165
+      Width = 165
     end
     inherited cxLabel1: TcxLabel
       Left = 8
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 89
+      Left = 180
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 89
+      ExplicitLeft = 180
       ExplicitWidth = 84
       Width = 84
     end
     inherited cxLabel2: TcxLabel
-      Left = 89
-      ExplicitLeft = 89
+      Left = 180
+      ExplicitLeft = 180
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -801,12 +801,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Width = 165
     end
     object cxLabel3: TcxLabel
-      Left = 348
+      Left = 429
       Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edUnit: TcxButtonEdit
-      Left = 348
+      Left = 429
       Top = 23
       Properties.Buttons = <
         item
@@ -817,23 +817,23 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Width = 269
     end
     object cxLabel22: TcxLabel
-      Left = 629
+      Left = 706
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 629
+      Left = 706
       Top = 63
       TabOrder = 9
       Width = 243
     end
     object cxLabel8: TcxLabel
-      Left = 186
+      Left = 272
       Top = 45
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 186
+      Left = 272
       Top = 63
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -844,12 +844,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Width = 148
     end
     object cxLabel7: TcxLabel
-      Left = 889
+      Left = 957
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 889
+      Left = 957
       Top = 63
       Properties.Buttons = <
         item
@@ -862,12 +862,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Width = 125
     end
     object cxLabel24: TcxLabel
-      Left = 348
+      Left = 429
       Top = 45
       Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103
     end
     object edDepartment: TcxButtonEdit
-      Left = 348
+      Left = 429
       Top = 63
       Properties.Buttons = <
         item
@@ -879,12 +879,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Width = 133
     end
     object cxLabel14: TcxLabel
-      Left = 629
+      Left = 706
       Top = 5
       Caption = #1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
     end
     object cePersonalHead: TcxButtonEdit
-      Left = 629
+      Left = 706
       Top = 23
       Properties.Buttons = <
         item
@@ -972,12 +972,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Width = 28
     end
     object cxLabel18: TcxLabel
-      Left = 889
+      Left = 957
       Top = 5
       Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1087#1086' '#1087#1077#1088#1089#1086#1085#1072#1083#1091
     end
     object cePersonal: TcxButtonEdit
-      Left = 889
+      Left = 957
       Top = 23
       Properties.Buttons = <
         item
@@ -990,7 +990,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
     end
   end
   object edUpdateName: TcxButtonEdit [2]
-    Left = 1020
+    Left = 1088
     Top = 63
     Properties.Buttons = <
       item
@@ -1003,12 +1003,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Width = 125
   end
   object cxLabel4: TcxLabel [3]
-    Left = 1020
+    Left = 1088
     Top = 45
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
   end
   object edUpdateDate: TcxDateEdit [4]
-    Left = 186
+    Left = 272
     Top = 23
     EditValue = 42132d
     Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -1019,7 +1019,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Width = 148
   end
   object cxLabel5: TcxLabel [5]
-    Left = 186
+    Left = 272
     Top = 5
     Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'./'#1087#1088#1086#1074#1077#1076'.)'
   end
@@ -1081,12 +1081,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Width = 28
   end
   object cxLabel10: TcxLabel [12]
-    Left = 487
+    Left = 568
     Top = 45
     Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2 '#1088#1110#1074#1085#1103
   end
   object edDepartment2: TcxButtonEdit [13]
-    Left = 487
+    Left = 568
     Top = 63
     Properties.Buttons = <
       item
@@ -1096,6 +1096,20 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Properties.ReadOnly = True
     TabOrder = 17
     Width = 130
+  end
+  object cxLabel19: TcxLabel [14]
+    Left = 180
+    Top = 46
+    Caption = #1044#1072#1090#1072' '#1079#1072#1082#1088#1099#1090#1080#1103
+  end
+  object edDateClose: TcxDateEdit [15]
+    Left = 180
+    Top = 63
+    EditValue = 42132d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 19
+    Width = 84
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -1729,17 +1743,24 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Top = 440
   end
   inherited StatusGuides: TdsdGuides
-    Left = 80
-    Top = 48
+    Left = 48
+    Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_StaffList'
-    Left = 128
-    Top = 16
+    Top = 144
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_StaffList'
     Params = <
+      item
+        Name = 'StatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inMovementId'
         Value = Null
@@ -1784,14 +1805,6 @@ inherited StaffListMovementForm: TStaffListMovementForm
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StatusCode'
-        Value = ''
-        Component = StatusGuides
-        ComponentItem = 'Key'
-        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1952,6 +1965,13 @@ inherited StaffListMovementForm: TStaffListMovementForm
         ComponentItem = 'inMask'
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateClose'
+        Value = Null
+        Component = edDateClose
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1979,6 +1999,14 @@ inherited StaffListMovementForm: TStaffListMovementForm
         Name = 'inOperDate'
         Value = 0d
         Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateClose'
+        Value = Null
+        Component = edDateClose
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2041,6 +2069,9 @@ inherited StaffListMovementForm: TStaffListMovementForm
       end
       item
         Control = cePersonal
+      end
+      item
+        Control = edDateClose
       end>
     Left = 272
     Top = 201
@@ -2355,8 +2386,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 332
-    Top = 260
+    Left = 308
+    Top = 252
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -2503,7 +2534,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 432
+    Left = 536
     Top = 8
   end
   object spInsert_MI_byMovement: TdsdStoredProc

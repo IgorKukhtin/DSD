@@ -1332,6 +1332,18 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecordService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateRecordService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbCompleteCost'
         end
         item
@@ -1615,6 +1627,14 @@ object IncomeForm: TIncomeForm
     end
     object bbMovementProtocolOpenForm_cost: TdxBarButton
       Action = MovementProtocolOpenForm_cost
+      Category = 0
+    end
+    object bbInsertRecordService: TdxBarButton
+      Action = InsertRecordService
+      Category = 0
+    end
+    object bbUpdateRecordService: TdxBarButton
+      Action = UpdateRecordService
       Category = 0
     end
   end
@@ -2107,6 +2127,73 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = False
     end
+    object ServiceJournalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ServiceJournalChoiceForm'
+      FormName = 'TServiceJournalChoiceForm'
+      FormNameParam.Value = 'TServiceJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = CostCDS
+          ComponentItem = 'MasterMovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = CostCDS
+          ComponentItem = 'MasterInvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = CostCDS
+          ComponentItem = 'MasterOperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StatusCode'
+          Value = Null
+          Component = CostCDS
+          ComponentItem = 'MasterStatusCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitId'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOnlyService'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actGoodsKindChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2218,6 +2305,23 @@ object IncomeForm: TIncomeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    object UpdateRecordService2: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetCost
+      MoveParams = <>
+      Enabled = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
+      ImageIndex = 1
+      FormName = 'TServiceJournalChoiceForm'
+      FormNameParam.Value = 'TServiceJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+      ActionType = acUpdate
+      IdFieldName = 'Id'
+    end
     object actGoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2252,18 +2356,16 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = True
     end
-    object InsertRecordGoods: TInsertRecord
+    object InsertRecordService: TInsertRecord
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      View = cxGridDBTableView
-      Action = actGoodsChoiceForm
+      View = cxGridDBTableView1
+      Action = ServiceJournalChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ShortCut = 45
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
       ImageIndex = 0
     end
     object InsertRecordCost: TInsertRecord
@@ -2276,6 +2378,20 @@ object IncomeForm: TIncomeForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
+      ShortCut = 45
+      ImageIndex = 0
+    end
+    object InsertRecordGoods: TInsertRecord
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actGoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 45
       ImageIndex = 0
     end
@@ -2845,6 +2961,17 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object UpdateRecordService: TUpdateRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView1
+      Action = ServiceJournalChoiceForm
+      Params = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1083#1091#1075#1080'>'
+      ImageIndex = 1
     end
   end
   object MasterDS: TDataSource
@@ -4417,8 +4544,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 782
-    Top = 287
+    Left = 750
+    Top = 279
   end
   object spUnComplete_IncomeCost: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_IncomeCost'

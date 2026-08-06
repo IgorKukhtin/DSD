@@ -2,11 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffList (Integer, TVarChar, TDateTime, Integer, TVarChar,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffList (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffList (Integer, TVarChar, TDateTime, TDateTime, Integer, Integer, TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_StaffList(
  INOUT ioId                     Integer   , -- Ключ объекта <Документ>
     IN inInvNumber              TVarChar  , -- Номер документа
     IN inOperDate               TDateTime , -- Дата документа
+    IN inDateClose              TDateTime , -- Дата закрытия
     IN inUnitId                 Integer   , -- подразделение
     IN inPersonalId             Integer   , -- Менеджер по персоналу
     IN inComment                TVarChar  , -- Примечание
@@ -37,9 +39,18 @@ BEGIN
      vbPersonalHeadId := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inUnitId AND OL.DescId = zc_ObjectLink_Unit_PersonalHead());
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalHead(), ioId, vbPersonalHeadId);
+ 
+     --проверяем, если внесли значение то записываем инече не записываем
+     IF COALESCE (inDateClose, zc_DateEnd()) <> zc_DateEnd()
+     THEN
+         -- сохранили свойство <Дата создания>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateClose(), ioId, inDateClose);
+     END IF;
 
      -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+
 
      IF vbIsInsert = TRUE
      THEN

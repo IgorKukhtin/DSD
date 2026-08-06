@@ -150,7 +150,15 @@ inherited StaffListJournalForm: TStaffListJournalForm
             Options.Editing = False
             Width = 97
           end
-          inherited colInvNumber: TcxGridDBColumn [2]
+          object DateClose: TcxGridDBColumn [2]
+            Caption = #1044#1072#1090#1072' '#1079#1072#1082#1088#1099#1090#1080#1103
+            DataBinding.FieldName = 'DateClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          inherited colInvNumber: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False

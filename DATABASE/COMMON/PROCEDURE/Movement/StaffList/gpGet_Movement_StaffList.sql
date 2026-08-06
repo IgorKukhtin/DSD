@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_StaffList(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , DateClose TDateTime
              , StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar                               -- Подразделение
              , PersonalId Integer, PersonalName TVarChar                       -- Менеджер по персоналу
@@ -75,6 +76,7 @@ BEGIN
        SELECT 0 AS Id
             , CAST (NEXTVAL ('Movement_StaffList_seq') as TVarChar) AS InvNumber
             , inOperDate            AS OperDate                            --CURRENT_DATE
+            , zc_DateEnd()    ::TDateTime AS DateClose
             , Object_Status.Code    AS StatusCode
             , Object_Status.Name    AS StatusName
 
@@ -137,6 +139,7 @@ BEGIN
        SELECT Movement.Id
             , Movement.InvNumber               AS InvNumber
             , Movement.OperDate
+            , COALESCE (MovementDate_DateClose.ValueData, zc_DateEnd()) ::TDateTime AS DateClose
             , Object_Status.ObjectCode         AS StatusCode
             , Object_Status.ValueData          AS StatusName
 
@@ -198,6 +201,10 @@ BEGIN
                                         AND MovementLinkObject_PersonalHead.DescId = zc_MovementLinkObject_PersonalHead()
             LEFT JOIN Object AS Object_PersonalHead ON Object_PersonalHead.Id = MovementLinkObject_PersonalHead.ObjectId
 
+            LEFT JOIN MovementDate AS MovementDate_DateClose
+                                   ON MovementDate_DateClose.MovementId = Movement.Id
+                                  AND MovementDate_DateClose.DescId = zc_MovementDate_DateClose()
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -229,6 +236,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.08.26         * DateClose
  20.08.25         *
 */
 

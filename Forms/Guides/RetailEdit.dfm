@@ -237,6 +237,23 @@ object RetailEditForm: TRetailEditForm
     TabOrder = 28
     Width = 311
   end
+  object cxLabel14: TcxLabel
+    Left = 359
+    Top = 190
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082'('#1053#1054#1055' '#1053#1052')'
+  end
+  object edNOP_NM: TcxButtonEdit
+    Left = 359
+    Top = 209
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 30
+    Width = 311
+  end
   object ActionList: TActionList
     Left = 416
     Top = 16
@@ -381,6 +398,14 @@ object RetailEditForm: TRetailEditForm
         Name = 'inKAMId'
         Value = Null
         Component = GuidesKAM_add
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNOP_NMId'
+        Value = Null
+        Component = GuidesNOP_NM
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -569,6 +594,21 @@ object RetailEditForm: TRetailEditForm
         Name = 'KAM_addName'
         Value = Null
         Component = GuidesKAM_add
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NOP_NMId'
+        Value = Null
+        Component = GuidesNOP_NM
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NOP_NMName'
+        Value = Null
+        Component = GuidesNOP_NM
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -805,5 +845,35 @@ object RetailEditForm: TRetailEditForm
       end>
     Left = 516
     Top = 137
+  end
+  object GuidesNOP_NM: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edNOP_NM
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesNOP_NM
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesNOP_NM
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 516
+    Top = 190
   end
 end

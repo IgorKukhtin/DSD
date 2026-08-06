@@ -65,6 +65,7 @@ type
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     FormParams: TdsdFormParams;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

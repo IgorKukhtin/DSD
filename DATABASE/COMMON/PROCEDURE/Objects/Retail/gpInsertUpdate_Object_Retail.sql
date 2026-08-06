@@ -6,7 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
@@ -23,7 +24,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
     IN inClientKindId          Integer   ,     -- Категории покупателей     
     IN inSectionId             Integer   ,     -- Сегмент
     IN inKAMId                 Integer   ,     -- Сотрудник(KAM)
-    IN inKAM_addId             Integer   ,     -- Сотрудник(помощник KAM)
+    IN inKAM_addId             Integer   ,     -- Сотрудник(помощник KAM) 
+    IN inNOP_NMId              Integer   ,     -- Сотрудник(НОП НМ)
     IN inRoundWeight           TFloat    ,     -- Кол-во знаков для округления веса
     IN inSession               TVarChar        -- сессия пользователя
 )
@@ -41,6 +43,7 @@ BEGIN
    --проверка на изменеие параметров КАМ
    IF COALESCE (inKAMId,0) <> (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Retail_KAM() AND OL.ObjectId = ioId)
    OR COALESCE (inKAM_addId,0) <> (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Retail_KAM_add() AND OL.ObjectId = ioId)
+   OR COALESCE (inNOP_NMId,0) <> (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Retail_NOP_NM() AND OL.ObjectId = ioId)
    THEN
        vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Retail_KAM());
    END IF;
@@ -91,6 +94,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_KAM(), ioId, inKAMId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_KAM_add(), ioId, inKAM_addId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_NOP_NM(), ioId, inNOP_NMId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -103,6 +108,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.08.26         *
  26.05.26         *
  15.04.22         * inRoundWeight
  14.05.19         * inClientKindId
