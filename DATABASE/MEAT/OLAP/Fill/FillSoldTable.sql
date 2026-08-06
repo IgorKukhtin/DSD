@@ -13,6 +13,15 @@ AS
 $BODY$
     DECLARE vbEndDate_calc TDateTime;
 BEGIN
+
+    -- если период один = текущий месяц
+    /*IF DATE_TRUNC ('MONTH', CURRENT_TIMESTAMP) = DATE_TRUNC ('MONTH', inEndDate)
+       -- если ночной пересчет
+       AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) <= 5
+    THEN
+        inEndDate:= CURRENT_DATE;
+    END IF;*/
+
     -- inStartDate:='01.06.2014';
     --
     DELETE FROM SoldTable WHERE OperDate BETWEEN inStartDate AND inEndDate;

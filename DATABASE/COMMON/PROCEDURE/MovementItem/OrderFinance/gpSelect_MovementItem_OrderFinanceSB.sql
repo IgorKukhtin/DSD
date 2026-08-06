@@ -183,6 +183,8 @@ BEGIN
                                                                                              )
                                       )
                  ;
+     -- Спічка Є.О.
+     IF vbIsUser_where = TRUE AND vbUserId = 4538468 THEN vbIsUser_where:= FALSE; END IF;
 
      -- начало недели
      vbStartDate:= zfCalc_Week_StartDate (vbOperDate, vbWeekNumber);

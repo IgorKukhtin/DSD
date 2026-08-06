@@ -21,6 +21,9 @@ BEGIN
                                       , inUserId     := vbUserId);
      END IF;
 
+     -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
+     PERFORM lpComplete_Movement_Finance_CreateTemp();
+
      -- ѕроводим ƒокумент
      PERFORM lpComplete_Movement_Service (inMovementId     := inMovementId
                                         , inUserId         := vbUserId

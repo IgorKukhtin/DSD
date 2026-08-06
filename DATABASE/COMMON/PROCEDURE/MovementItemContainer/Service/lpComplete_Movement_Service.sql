@@ -13,6 +13,7 @@ $BODY$
   DECLARE vbMovementId_corr Integer;
   DECLARE vbIsChild         Boolean;
   DECLARE vbIsAccount_50401 Boolean;
+  DECLARE vbIsAccount_50000 Boolean;
   DECLARE vbIsAccount_60301 Boolean;
   DECLARE vbSummCorr_1      TFloat;
   DECLARE vbSummCorr_2      TFloat;
@@ -33,7 +34,18 @@ BEGIN
                         );
 
 
-     -- нужен тип документа, т.к. проведение для двух разных видов документов
+     -- 1.0. !!!обязательно!!! - если это Расходы будущих периодов
+     vbIsAccount_50000:= EXISTS (SELECT 1
+                                 FROM MovementFloat
+                                      INNER JOIN Movement ON Movement.Id       = MovementFloat.MovementId
+                                                         AND Movement.DescId   = zc_Movement_IncomeCost()
+                                                      -- AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                         AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 WHERE MovementFloat.ValueData = inMovementId
+                                   AND MovementFloat.DescId    = zc_MovementFloat_MovementId()
+                                );
+
+     -- 1.1. нужен тип документа, т.к. проведение для двух разных видов документов
      SELECT Movement.DescId, COALESCE (Movement.ParentId, 0)
           , CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
                   AND MILinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
@@ -582,7 +594,11 @@ BEGIN
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
 
-             , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE -- Расходы будущих периодов + Услуги по маркетингу
+             , CASE WHEN vbIsAccount_50000 = TRUE
+                         -- Расходы будущих периодов
+                         THEN lpInsertFind_Object_PartionMovement (inMovementId:= inMovementId, inPaymentDate:= _tmpItem.OperDate)
+
+                    WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE -- Расходы будущих периодов + Услуги по маркетингу
                          THEN _tmpItem.ObjectId -- из предыдущей проводки
                     WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_60301 = TRUE -- Прибыль будущих периодов + Бонусы от поставщиков
                          THEN _tmpItem.ObjectId -- из предыдущей проводки
@@ -601,7 +617,10 @@ BEGIN
 
                END AS ObjectId
 
-             , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE -- Расходы будущих периодов + Услуги по маркетингу
+             , CASE WHEN vbIsAccount_50000 = TRUE
+                         THEN zc_Object_PartionMovement()
+
+                    WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE -- Расходы будущих периодов + Услуги по маркетингу
                          THEN _tmpItem.ObjectDescId -- из предыдущей проводки
 
                     WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_60301 = TRUE -- Прибыль будущих периодов + Бонусы от поставщиков
@@ -634,8 +653,12 @@ BEGIN
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId    -- сформируем позже
-             , 0 AS AccountGroupId -- сформируем позже, или ...
-             , CASE WHEN MILinkObject_Asset.ObjectId > 0 AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+               -- Расходы будущих периодов или ...
+             , CASE WHEN vbIsAccount_50000 = TRUE THEN zc_Enum_AccountGroup_50000() ELSE 0 END AS AccountGroupId
+               -- Расходы будущих периодов или ...
+             , CASE WHEN vbIsAccount_50000 = TRUE
+                         THEN zc_Enum_AccountDirection_50300()
+                    WHEN MILinkObject_Asset.ObjectId > 0 AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                          THEN -- определяется сразу здесь
                               COALESCE ((SELECT tmp.AccountDirectionId FROM lfGet_Object_Unit_byAccountDirection_Asset (_tmpItem.UnitId) AS tmp), 0)
                     ELSE 0 -- сформируем позже, или ...
@@ -713,6 +736,9 @@ BEGIN
                                                                                                           AND vbIsChild = FALSE
                                                                                                           -- игнорируем Подразделение для Собственный капитал + Представительские, пакеты, подарки
                                                                                                           AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_80600()
+                                                                                                          --
+                                                                                                          AND vbIsAccount_50000 = FALSE
+
                                                                                                           
              LEFT JOIN (SELECT tmpMI_Child.ParentId, SUM (tmpMI_Child.Amount) AS Amount FROM tmpMI_Child GROUP BY tmpMI_Child.ParentId
                        ) AS MI_Child ON MI_Child.ParentId = _tmpItem.MovementItemId
@@ -875,6 +901,8 @@ BEGIN
                                                                                                           AND vbIsChild = FALSE
                                                                                                           -- игнорируем Подразделение для Собственный капитал + Представительские, пакеты, подарки
                                                                                                           AND View_InfoMoney.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_80600()
+                                                                                                          --
+                                                                                                          AND vbIsAccount_50000 = FALSE
                                                                                                           
              LEFT JOIN (SELECT tmpMI_Child.ParentId, SUM (tmpMI_Child.Amount) AS Amount FROM tmpMI_Child GROUP BY tmpMI_Child.ParentId
                        ) AS MI_Child ON MI_Child.ParentId = _tmpItem.MovementItemId
@@ -1099,6 +1127,16 @@ BEGIN
 
 
      -- RAISE EXCEPTION 'Ошибка.%   %', (select count(*) from _tmpItem), (select count(*) from _tmpItem WHERE _tmpItem.OperSumm <> 0);
+
+     -- 5.0. сохранили  "Сумма затрат" - расчет для удобства отображения в журналах
+     IF vbIsAccount_50000 = TRUE
+     THEN
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCost(), inMovementId, tmp.AmountCost)
+         FROM (SELECT SUM (_tmpItem.OperSumm) AS AmountCost FROM _tmpItem WHERE _tmpItem.AccountGroupId = zc_Enum_AccountGroup_50000()
+              ) AS tmp
+         ;
+     END IF;
+
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
