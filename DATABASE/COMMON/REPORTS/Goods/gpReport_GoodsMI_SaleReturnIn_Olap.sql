@@ -293,7 +293,7 @@ BEGIN
                            )
 
        , tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View WHERE InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()) -- !!!Доходы!!!)
-       , tmpOperationGroup AS
+       , tmpOperationGroup_all AS
                         (SELECT SoldTable.BranchId
                               , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalGroupId   ELSE 0 END AS JuridicalGroupId
                               , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalId        ELSE 0 END AS JuridicalId
@@ -376,26 +376,23 @@ BEGIN
                               , SUM (SoldTable.Actions_SummCost_NotBudg) AS Actions_SummCost_NotBudg
                               
                               , zfCalc_GoodsPropertyId (SoldTable.ContractId, SoldTable.JuridicalId, SoldTable.PartnerId) AS GoodsPropertyId
+
+                                -- Юр лица для Физ.лица Филиала
+                              , SoldTable.JuridicalId AS JuridicalId_calc
+                                --
+                              , SoldTable.PartnerId   AS PartnerId_calc
+                              , SoldTable.GoodsId     AS GoodsId_calc
+
                          FROM SoldTable
-                              LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = SoldTable.JuridicalId
-                              -- Юр лица для Физ.лица Филиала
-                              LEFT JOIN _tmpJuridicalBranch ON _tmpJuridicalBranch.JuridicalId = SoldTable.JuridicalId
-                              --
-                              LEFT JOIN _tmpPartner ON _tmpPartner.PartnerId = SoldTable.PartnerId
-                              LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = SoldTable.GoodsId
 
                          WHERE SoldTable.OperDate BETWEEN inStartDate AND inEndDate
                            AND (SoldTable.JuridicalId = inJuridicalId OR inJuridicalId = 0)
                            AND (SoldTable.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
                            AND (SoldTable.PaidKindId  = inPaidKindId  OR inPaidKindId  = 0)
-                           AND (SoldTable.BranchId = inBranchId OR inBranchId = 0 OR _tmpJuridicalBranch.JuridicalId > 0)
-                           AND (_tmpJuridical.JuridicalId > 0 OR inIsJuridical_where = FALSE)
-                           AND (_tmpPartner.PartnerId     > 0 OR inIsPartner_where   = FALSE)
-                           AND (_tmpGoods.GoodsId         > 0 OR inIsGoods_where     = FALSE)
                          GROUP BY SoldTable.BranchId
                               , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalGroupId   ELSE 0 END
-                              , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalId        ELSE 0 END
-                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.PartnerId          END
+                              , SoldTable.JuridicalId
+                              , SoldTable.PartnerId
                               , SoldTable.InfoMoneyId
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.RetailId           END
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.RetailReportId     END
@@ -417,7 +414,7 @@ BEGIN
                               , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsGroupId     ELSE 0 END
                               , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsGroupStatId ELSE 0 END
                               , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsTagId       ELSE 0 END
-                              , CASE WHEN inIsGoods     = TRUE THEN SoldTable.GoodsId          ELSE 0 END
+                              , SoldTable.GoodsId
                               , CASE WHEN inIsGoodsKind = TRUE THEN SoldTable.GoodsKindId      ELSE 0 END
                               , CASE WHEN inIsGoods     = TRUE THEN SoldTable.MeasureId        ELSE 0 END
 
@@ -431,7 +428,144 @@ BEGIN
                               , SoldTable.PaidKindId
                               , CASE WHEN inIsDate = TRUE THEN SoldTable.OperDate ELSE NULL END
                               , zfCalc_GoodsPropertyId (SoldTable.ContractId, SoldTable.JuridicalId, SoldTable.PartnerId) 
-                         HAVING SUM (SoldTable.Actions_Summ) <> 0
+                        )
+
+       , tmpOperationGroup AS
+                        (SELECT SoldTable.BranchId
+                              , SoldTable.JuridicalGroupId
+                              , SoldTable.JuridicalId
+                              , SoldTable.PartnerId
+                              , SoldTable.InfoMoneyId
+                              , SoldTable.RetailId           
+                              , SoldTable.RetailReportId     
+                              , SoldTable.AreaId             
+                              , SoldTable.PartnerTagId       
+                              , SoldTable.ContractId         
+                              , SoldTable.ContractTagId      
+                              , SoldTable.ContractTagGroupId 
+
+                              , SoldTable.PersonalId           
+                              , SoldTable.UnitId_Personal      
+                              , SoldTable.BranchId_Personal    
+                              , SoldTable.PersonalTradeId      
+                              , SoldTable.UnitId_PersonalTrade 
+
+                              , SoldTable.GoodsPlatformId     
+                              , SoldTable.TradeMarkId         
+                              , SoldTable.GoodsGroupAnalystId 
+                              , SoldTable.GoodsGroupId     
+                              , SoldTable.GoodsGroupStatId 
+                              , SoldTable.GoodsTagId       
+                              , SoldTable.GoodsId          
+                              , SoldTable.GoodsKindId      
+                              , SoldTable.MeasureId        
+
+                              , SoldTable.RegionId       
+                              , SoldTable.ProvinceId     
+                              , SoldTable.CityKindId     
+                              , SoldTable.CityId         
+                              , SoldTable.ProvinceCityId 
+                              , SoldTable.StreetKindId   
+                              , SoldTable.StreetId       
+                              , SoldTable.PaidKindId
+                              , SoldTable.OperDate
+
+                              , SUM (SoldTable.Promo_Summ)   AS Promo_Summ
+                              , SUM (SoldTable.Sale_Summ)    AS Sale_Summ
+                              , SUM (SoldTable.Return_Summ)  AS Return_Summ
+
+                              , SUM (SoldTable.Sale_Summ_10200)   AS Sale_Summ_10200
+                              , SUM (SoldTable.Sale_Summ_10250)   AS Sale_Summ_10250
+                              , SUM (SoldTable.Sale_Summ_10300)   AS Sale_Summ_10300
+                              , SUM (SoldTable.Return_Summ_10300) AS Return_Summ_10300
+                              , SUM (SoldTable.Return_Summ_10700) AS Return_Summ_10700
+
+                              , SUM (SoldTable.Sale_Amount_Weight)   AS Sale_Amount_Weight
+                              , SUM (SoldTable.Sale_Amount_Sh)       AS Sale_Amount_Sh
+                              , SUM (SoldTable.Return_Amount_Weight) AS Return_Amount_Weight
+                              , SUM (SoldTable.Return_Amount_Sh)     AS Return_Amount_Sh
+
+                              , SUM (SoldTable.Promo_AmountPartner_Weight)  AS Promo_AmountPartner_Weight
+                              , SUM (SoldTable.Promo_AmountPartner_Sh)      AS Promo_AmountPartner_Sh
+                              , SUM (SoldTable.Sale_AmountPartner_Weight)   AS Sale_AmountPartner_Weight
+                              , SUM (SoldTable.Sale_AmountPartner_Sh)       AS Sale_AmountPartner_Sh
+                              , SUM (SoldTable.Return_AmountPartner_Weight) AS Return_AmountPartner_Weight
+                              , SUM (SoldTable.Return_AmountPartner_Sh)     AS Return_AmountPartner_Sh
+
+                              , SUM (SoldTable.Sale_Amount_10500_Weight)    AS Sale_Amount_10500_Weight
+                              , SUM (SoldTable.Sale_Amount_40200_Weight)    AS Sale_Amount_40200_Weight
+                              , SUM (SoldTable.Return_Amount_40200_Weight)  AS Return_Amount_40200_Weight
+
+                              , SUM (SoldTable.Promo_SummCost)      AS Promo_SummCost
+                              , SUM (SoldTable.Sale_SummCost)       AS Sale_SummCost
+                              , SUM (SoldTable.Sale_SummCost_10500) AS Sale_SummCost_10500
+                              , SUM (SoldTable.Sale_SummCost_40200) AS Sale_SummCost_40200
+
+                              , SUM (SoldTable.Return_SummCost)       AS Return_SummCost
+                              , SUM (SoldTable.Return_SummCost_40200) AS Return_SummCost_40200
+                              -- сумма вх (схема павильоны)
+                              , SUM (SoldTable.Sale_SummIn_pav)     AS Sale_SummIn_pav
+                              , SUM (SoldTable.ReturnIn_SummIn_pav) AS ReturnIn_SummIn_pav
+                              --Вне бюджета вес+шт+с/с + сумма                            
+                              , SUM (SoldTable.Actions_Weight_NotBudg)   AS Actions_Weight_NotBudg  
+                              , SUM (SoldTable.Actions_Sh_NotBudg)       AS Actions_Sh_NotBudg      
+                              , SUM (SoldTable.Actions_Summ_NotBudg)     AS Actions_Summ_NotBudg    
+                              , SUM (SoldTable.Actions_SummCost_NotBudg) AS Actions_SummCost_NotBudg
+                              
+                              , SoldTable.GoodsPropertyId
+
+                         FROM tmpOperationGroup_all AS SoldTable
+                              LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = SoldTable.JuridicalId_calc
+                              -- Юр лица для Физ.лица Филиала
+                              LEFT JOIN _tmpJuridicalBranch ON _tmpJuridicalBranch.JuridicalId = SoldTable.JuridicalId_calc
+                              --
+                              LEFT JOIN _tmpPartner ON _tmpPartner.PartnerId = SoldTable.PartnerId_calc
+                              LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = SoldTable.GoodsId_calc
+
+                         WHERE (SoldTable.BranchId = inBranchId OR inBranchId = 0 OR _tmpJuridicalBranch.JuridicalId > 0)
+                           AND (_tmpJuridical.JuridicalId > 0 OR inIsJuridical_where = FALSE)
+                           AND (_tmpPartner.PartnerId     > 0 OR inIsPartner_where   = FALSE)
+                           AND (_tmpGoods.GoodsId         > 0 OR inIsGoods_where     = FALSE)
+                         GROUP BY SoldTable.BranchId
+                              , SoldTable.JuridicalGroupId
+                              , SoldTable.JuridicalId
+                              , SoldTable.PartnerId
+                              , SoldTable.InfoMoneyId
+                              , SoldTable.RetailId           
+                              , SoldTable.RetailReportId     
+                              , SoldTable.AreaId             
+                              , SoldTable.PartnerTagId       
+                              , SoldTable.ContractId         
+                              , SoldTable.ContractTagId      
+                              , SoldTable.ContractTagGroupId 
+
+                              , SoldTable.PersonalId           
+                              , SoldTable.UnitId_Personal      
+                              , SoldTable.BranchId_Personal    
+                              , SoldTable.PersonalTradeId      
+                              , SoldTable.UnitId_PersonalTrade 
+
+                              , SoldTable.GoodsPlatformId     
+                              , SoldTable.TradeMarkId         
+                              , SoldTable.GoodsGroupAnalystId 
+                              , SoldTable.GoodsGroupId     
+                              , SoldTable.GoodsGroupStatId 
+                              , SoldTable.GoodsTagId       
+                              , SoldTable.GoodsId          
+                              , SoldTable.GoodsKindId      
+                              , SoldTable.MeasureId        
+
+                              , SoldTable.RegionId       
+                              , SoldTable.ProvinceId     
+                              , SoldTable.CityKindId     
+                              , SoldTable.CityId         
+                              , SoldTable.ProvinceCityId 
+                              , SoldTable.StreetKindId   
+                              , SoldTable.StreetId       
+                              , SoldTable.PaidKindId
+                              , SoldTable.OperDate
+                              , SoldTable.GoodsPropertyId
+                         HAVING SUM (SoldTable.Promo_Summ)   <> 0
                              OR SUM (SoldTable.Sale_Summ)    <> 0
                              OR SUM (SoldTable.Return_Summ)  <> 0
 
@@ -446,8 +580,8 @@ BEGIN
                              OR SUM (SoldTable.Return_Amount_Weight) <> 0
                              OR SUM (SoldTable.Return_Amount_Sh)     <> 0
 
-                             OR SUM (SoldTable.Actions_Weight)              <> 0
-                             OR SUM (SoldTable.Actions_Sh)                  <> 0
+                             OR SUM (SoldTable.Promo_AmountPartner_Weight)  <> 0
+                             OR SUM (SoldTable.Promo_AmountPartner_Sh)      <> 0
                              OR SUM (SoldTable.Sale_AmountPartner_Weight)   <> 0
                              OR SUM (SoldTable.Sale_AmountPartner_Sh)       <> 0
                              OR SUM (SoldTable.Return_AmountPartner_Weight) <> 0
@@ -457,21 +591,21 @@ BEGIN
                              OR SUM (SoldTable.Sale_Amount_40200_Weight)    <> 0
                              OR SUM (SoldTable.Return_Amount_40200_Weight)  <> 0
 
-                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Actions_SummCost    ELSE 0 END) <> 0
-                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost       ELSE 0 END) <> 0
-                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost_10500 ELSE 0 END) <> 0
-                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Sale_SummCost_40200 ELSE 0 END) <> 0
+                             OR SUM (SoldTable.Promo_SummCost)      <> 0
+                             OR SUM (SoldTable.Sale_SummCost)       <> 0
+                             OR SUM (SoldTable.Sale_SummCost_10500) <> 0
+                             OR SUM (SoldTable.Sale_SummCost_40200) <> 0
 
-                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost       ELSE 0 END) <> 0
-                             OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost_40200 ELSE 0 END) <> 0
+                             OR SUM (SoldTable.Return_SummCost)       <> 0
+                             OR SUM (SoldTable.Return_SummCost_40200) <> 0
 
                               -- сумма вх (схема павильоны)
-                             OR SUM (SoldTable.Sale_SummIn_pav) <> 0
+                             OR SUM (SoldTable.Sale_SummIn_pav)     <> 0
                              OR SUM (SoldTable.ReturnIn_SummIn_pav) <> 0
 
-                             OR SUM (SoldTable.Actions_Weight_NotBudg) <> 0
-                             OR SUM (SoldTable.Actions_Sh_NotBudg) <> 0      
-                             OR SUM (SoldTable.Actions_Summ_NotBudg) <> 0   
+                             OR SUM (SoldTable.Actions_Weight_NotBudg)   <> 0
+                             OR SUM (SoldTable.Actions_Sh_NotBudg)       <> 0      
+                             OR SUM (SoldTable.Actions_Summ_NotBudg)     <> 0   
                              OR SUM (SoldTable.Actions_SummCost_NotBudg) <> 0
                         )
 
