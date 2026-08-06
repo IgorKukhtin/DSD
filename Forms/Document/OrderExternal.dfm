@@ -585,7 +585,6 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1434
     Height = 140
     TabOrder = 3
-    ExplicitTop = 5
     ExplicitWidth = 1434
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
@@ -3570,8 +3569,7 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 16
+    Left = 424
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'

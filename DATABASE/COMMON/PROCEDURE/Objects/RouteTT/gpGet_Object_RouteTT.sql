@@ -49,7 +49,7 @@ $BODY$BEGIN
          , Object_Personal.ValueData           ::TVarChar AS PersonalName 
          , Object_Position.Id                  ::Integer  AS PositionId
          , Object_Position.ValueData           ::TVarChar AS PositionName
-         , Object_PersonalGroup.Id             ::Integer  AS PersonalGroupId
+         , CASE WHEN TRIM (Object_PersonalGroup.ValueData) = '' THEN 0 ELSE Object_PersonalGroup.Id END :: Integer AS PersonalGroupId
          , Object_PersonalGroup.ValueData      ::TVarChar AS PersonalGroupName
 
          , ObjectString_Comment.ValueData  AS Comment

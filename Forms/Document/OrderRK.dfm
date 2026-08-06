@@ -1,27 +1,27 @@
 inherited OrderRKForm: TOrderRKForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1076#1072#1085#1080#1077' '#1085#1072' '#1089#1073#1086#1088#1082#1091' '#1043#1055'>'
   ClientHeight = 460
-  ClientWidth = 1101
-  ExplicitWidth = 1117
+  ClientWidth = 1298
+  ExplicitWidth = 1314
   ExplicitHeight = 499
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 123
-    Width = 1101
+    Width = 1298
     Height = 337
     ExplicitTop = 123
-    ExplicitWidth = 1101
+    ExplicitWidth = 1298
     ExplicitHeight = 337
     ClientRectBottom = 337
-    ClientRectRight = 1101
+    ClientRectRight = 1298
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1101
+      ExplicitWidth = 1298
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
-        Width = 1101
+        Width = 1298
         Height = 313
-        ExplicitWidth = 1101
+        ExplicitWidth = 1298
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -250,32 +250,37 @@ inherited OrderRKForm: TOrderRKForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1101
+    Width = 1298
     Height = 97
     TabOrder = 3
-    ExplicitWidth = 1101
+    ExplicitTop = 5
+    ExplicitWidth = 1298
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 8
+      Top = 22
       ExplicitLeft = 8
-      ExplicitWidth = 168
-      Width = 168
+      ExplicitTop = 22
+      ExplicitWidth = 75
+      Width = 75
     end
     inherited cxLabel1: TcxLabel
       Left = 8
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 183
+      Left = 89
+      Top = 22
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 183
-      ExplicitWidth = 112
-      Width = 112
+      ExplicitLeft = 89
+      ExplicitTop = 22
+      ExplicitWidth = 87
+      Width = 87
     end
     inherited cxLabel2: TcxLabel
-      Left = 183
-      ExplicitLeft = 183
+      Left = 89
+      ExplicitLeft = 89
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -289,13 +294,13 @@ inherited OrderRKForm: TOrderRKForm
       Width = 168
     end
     object cxLabel4: TcxLabel
-      Left = 304
+      Left = 507
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 304
-      Top = 23
+      Left = 507
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -303,16 +308,16 @@ inherited OrderRKForm: TOrderRKForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 226
+      Width = 231
     end
     object cxLabel7: TcxLabel
-      Left = 542
-      Top = 45
+      Left = 1152
+      Top = 5
       Caption = #1052#1072#1088#1096#1088#1091#1090
     end
     object edRoute: TcxButtonEdit
-      Left = 542
-      Top = 60
+      Left = 1152
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -320,16 +325,16 @@ inherited OrderRKForm: TOrderRKForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 270
+      Width = 139
     end
     object cxLabel8: TcxLabel
-      Left = 542
+      Left = 749
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edTo: TcxButtonEdit
-      Left = 542
-      Top = 23
+      Left = 749
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -337,35 +342,35 @@ inherited OrderRKForm: TOrderRKForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 270
+      Width = 268
     end
     object cbPrinted: TcxCheckBox
-      Left = 407
-      Top = 60
+      Left = 610
+      Top = 63
       Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 12
       Width = 128
     end
     object cxLabel18: TcxLabel
-      Left = 824
+      Left = 749
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 824
-      Top = 60
+      Left = 749
+      Top = 63
       TabOrder = 14
-      Width = 270
+      Width = 542
     end
     object cxLabel19: TcxLabel
-      Left = 305
+      Left = 507
       Top = 45
       Caption = #1044#1072#1090#1072' '#1087#1077#1095#1072#1090#1080
     end
     object edOperDate_print: TcxDateEdit
-      Left = 305
-      Top = 60
+      Left = 507
+      Top = 63
       EditValue = 42195d
       Properties.ReadOnly = True
       Properties.SaveTime = False
@@ -389,15 +394,80 @@ inherited OrderRKForm: TOrderRKForm
       TabOrder = 18
       Width = 113
     end
+    object edOrderExternal: TcxButtonEdit
+      Left = 300
+      Top = 22
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 200
+    end
+    object cxLabel5: TcxLabel
+      Left = 304
+      Top = 5
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103
+    end
+    object cxLabel6: TcxLabel
+      Left = 182
+      Top = 5
+      Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
+    end
+    object edOperDate_OrderExternal: TcxDateEdit
+      Left = 182
+      Top = 22
+      EditValue = 42132d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 22
+      Width = 113
+    end
+    object cxLabel10: TcxLabel
+      Left = 300
+      Top = 45
+      Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088'.('#1079#1072#1103#1074'.)'
+    end
+    object edOperDatePartner_OrderExternal: TcxDateEdit
+      Left = 300
+      Top = 63
+      EditValue = 43282d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 24
+      Width = 95
+    end
+    object cxLabel9: TcxLabel
+      Left = 401
+      Top = 45
+      Hint = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088'.('#1079#1072#1103#1074'.)'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edOperDatePartner_sale: TcxDateEdit
+      Left = 402
+      Top = 63
+      EditValue = 42195d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 26
+      Width = 98
+    end
   end
   object cxLabel3: TcxLabel [2]
-    Left = 824
+    Left = 1024
     Top = 5
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
   end
   object edRetail: TcxButtonEdit [3]
-    Left = 824
-    Top = 23
+    Left = 1024
+    Top = 22
     Properties.Buttons = <
       item
         Default = True
@@ -405,7 +475,7 @@ inherited OrderRKForm: TOrderRKForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 270
+    Width = 121
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 923
@@ -1664,6 +1734,42 @@ inherited OrderRKForm: TOrderRKForm
         Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_OrderExternal'
+        Value = Null
+        Component = GuidesOrderExternal
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull_OrderExternal'
+        Value = Null
+        Component = GuidesOrderExternal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_OrderExternal'
+        Value = Null
+        Component = edOperDate_OrderExternal
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDatePartner_OrderExternal'
+        Value = Null
+        Component = edOperDatePartner_OrderExternal
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDatePartner_sale_OE'
+        Value = Null
+        Component = edOperDatePartner_sale
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1677,6 +1783,14 @@ inherited OrderRKForm: TOrderRKForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = GuidesOrderExternal
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1702,6 +1816,22 @@ inherited OrderRKForm: TOrderRKForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outRouteName'
+        Value = Null
+        Component = GuidesRoute
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outRetailName'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 296
@@ -1723,16 +1853,13 @@ inherited OrderRKForm: TOrderRKForm
         Control = edOperDate
       end
       item
-        Control = edFrom
+        Control = edOrderExternal
       end
       item
-        Control = edTo
       end
       item
-        Control = edRoute
       end
       item
-        Control = cbPrinted
       end
       item
         Control = ceComment
@@ -1938,6 +2065,7 @@ inherited OrderRKForm: TOrderRKForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1961,12 +2089,13 @@ inherited OrderRKForm: TOrderRKForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 392
-    Top = 24
+    Left = 704
+    Top = 16
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'
     LookupControl = edRoute
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TRoute_SelfForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1991,12 +2120,13 @@ inherited OrderRKForm: TOrderRKForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 648
-    Top = 56
+    Left = 976
+    Top = 80
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2021,7 +2151,7 @@ inherited OrderRKForm: TOrderRKForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 571
+    Left = 635
     Top = 4
   end
   object spSavePrintState: TdsdStoredProc
@@ -2187,6 +2317,7 @@ inherited OrderRKForm: TOrderRKForm
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
     LookupControl = edRetail
+    DisableGuidesOpen = True
     Key = '0'
     FormNameParam.Value = 'TRetailForm'
     FormNameParam.DataType = ftString
@@ -2214,5 +2345,84 @@ inherited OrderRKForm: TOrderRKForm
       end>
     Left = 872
     Top = 16
+  end
+  object GuidesOrderExternal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderExternal
+    FormNameParam.Value = 'TOrderExternalJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderExternalJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderExternal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesOrderExternal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = Null
+        Component = edOperDatePartner_OrderExternal
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = edOperDate_OrderExternal
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 316
+    Top = 96
   end
 end

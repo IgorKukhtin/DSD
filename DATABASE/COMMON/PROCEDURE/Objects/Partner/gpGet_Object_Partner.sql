@@ -358,8 +358,9 @@ BEGIN
            , Object_TypeCommerc.Id        ::Integer  AS TypeCommercId 
            , Object_TypeCommerc.ValueData ::TVarChar AS TypeCommercName
            , Object_UnitCommerc.Id        ::Integer  AS UnitCommercId 
-           , Object_UnitCommerc.ValueData ::TVarChar AS UnitCommercName
-           , Object_PersonalGroupCommerc.Id        ::Integer  AS PersonalGroupCommercId
+           , Object_UnitCommerc.ValueData ::TVarChar AS UnitCommercName 
+           , CASE WHEN TRIM (Object_PersonalGroupCommerc.ValueData) = '' THEN 0 ELSE Object_PersonalGroupCommerc.Id END :: Integer AS PersonalGroupCommercId
+          -- , Object_PersonalGroupCommerc.Id        ::Integer  AS PersonalGroupCommercId
            , Object_PersonalGroupCommerc.ValueData ::TVarChar AS PersonalGroupCommercName
        FROM Object AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
@@ -640,7 +641,7 @@ BEGIN
          
        WHERE Object_Partner.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
        
-   END IF;
+ END IF;
    
 END;
 $BODY$

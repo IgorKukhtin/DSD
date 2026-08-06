@@ -117,6 +117,10 @@ type
     mactPrint_OrderCell_Pak_copy3: TMultiAction;
     bbPrint_OrderCell_Pak_copy2: TdxBarButton;
     bbPrint_OrderCell_Pak_copy3: TdxBarButton;
+    InvNumber_OrderExternal: TcxGridDBColumn;
+    OperDate_OrderExternal: TcxGridDBColumn;
+    OperDatePartner_OrderExternal: TcxGridDBColumn;
+    OperDatePartner_sale_OE: TcxGridDBColumn;
   private
     { Private declarations }
   public

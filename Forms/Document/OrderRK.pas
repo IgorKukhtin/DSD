@@ -106,6 +106,15 @@ type
     actGoodsChoice: TOpenChoiceForm;
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
+    GuidesOrderExternal: TdsdGuides;
+    edOrderExternal: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    edOperDate_OrderExternal: TcxDateEdit;
+    cxLabel10: TcxLabel;
+    edOperDatePartner_OrderExternal: TcxDateEdit;
+    cxLabel9: TcxLabel;
+    edOperDatePartner_sale: TcxDateEdit;
   private
     { Private declarations }
   public
