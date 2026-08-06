@@ -256,8 +256,16 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
             Width = 80
           end
           object OperDate_OrderExternal: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103')'
+            Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103')'
             DataBinding.FieldName = 'OperDate_OrderExternal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object OperDatePartner_OrderExternal: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103')'
+            DataBinding.FieldName = 'OperDatePartner_OrderExternal'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

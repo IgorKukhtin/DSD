@@ -119,6 +119,7 @@ type
     bbPrint_OrderCell_Pak_copy3: TdxBarButton;
     InvNumber_OrderExternal: TcxGridDBColumn;
     OperDate_OrderExternal: TcxGridDBColumn;
+    OperDatePartner_OrderExternal: TcxGridDBColumn;
   private
     { Private declarations }
   public

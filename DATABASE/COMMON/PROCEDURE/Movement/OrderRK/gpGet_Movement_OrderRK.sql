@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , MovementId_OrderExternal Integer
              , InvNumber_OrderExternal  TVarChar, InvNumberFull_OrderExternal TVarChar
-             , OperDate_OrderExternal   TDateTime
+             , OperDate_OrderExternal   TDateTime, OperDatePartner_OrderExternal TDateTime
              , isPrint Boolean
              , OperDate_Print TDateTime
              , OperDate_CarInfo TDateTime
@@ -46,6 +46,7 @@ BEGIN
              , CAST ('' AS TVarChar)    AS InvNumber_OrderExternal
              , CAST ('' AS TVarChar)    AS InvNumberFull_OrderExternal
              , Null         ::TDateTime AS OperDate_OrderExternal
+             , Null         ::TDateTime AS OperDatePartner_OrderExternal
              
              , False ::Boolean          AS isPrint
              , CAST (NULL AS TDateTime) AS OperDate_Print
@@ -78,9 +79,8 @@ BEGIN
            , Movement_OrderExternal.Id           AS MovementId_OrderExternal
            , Movement_OrderExternal.InvNumber    AS InvNumber_OrderExternal
            , zfCalc_PartionMovementName (Movement_OrderExternal.DescId, MovementDesc_OrderExternal.ItemName, Movement_OrderExternal.InvNumber, Movement_OrderExternal.OperDate) AS InvNumberFull_OrderExternal
-
            , Movement_OrderExternal.OperDate     AS OperDate_OrderExternal
-           
+           , MovementDate_OperDatePartner_order.ValueData     AS OperDatePartner_OrderExternal
            
            , COALESCE (MovementBoolean_Print.ValueData, False) ::Boolean AS isPrint
            , MovementDate_Print.ValueData                    ::TDateTime AS OperDate_Print
@@ -104,6 +104,10 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN Movement AS Movement_OrderExternal ON Movement_OrderExternal.Id = Movement.ParentId
             LEFT JOIN MovementDesc AS MovementDesc_OrderExternal ON MovementDesc_OrderExternal.Id = Movement_OrderExternal.DescId
+
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_order
+                                   ON MovementDate_OperDatePartner_order.MovementId = Movement_OrderExternal.Id
+                                  AND MovementDate_OperDatePartner_order.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id

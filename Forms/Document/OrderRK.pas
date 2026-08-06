@@ -109,6 +109,10 @@ type
     GuidesOrderExternal: TdsdGuides;
     edOrderExternal: TcxButtonEdit;
     cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    edOperDate_OrderExternal: TcxDateEdit;
+    cxLabel10: TcxLabel;
+    edOperDatePartner_OrderExternal: TcxDateEdit;
   private
     { Private declarations }
   public

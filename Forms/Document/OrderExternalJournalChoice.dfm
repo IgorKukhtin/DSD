@@ -536,6 +536,14 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'OperDatePartner'
           Value = Null
           Component = MasterCDS

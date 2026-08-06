@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , MovementId_OrderExternal Integer
              , InvNumber_OrderExternal  TVarChar
-             , OperDate_OrderExternal   TDateTime
+             , OperDate_OrderExternal   TDateTime, OperDatePartner_OrderExternal TDateTime
 
              , isPrint Boolean
              , OperDate_Print TDateTime
@@ -55,6 +55,7 @@ BEGIN
            , Movement_OrderExternal.Id           AS MovementId_OrderExternal
            , Movement_OrderExternal.InvNumber    AS InvNumber_OrderExternal
            , Movement_OrderExternal.OperDate     AS OperDate_OrderExternal
+           , MovementDate_OperDatePartner_order.ValueData AS OperDatePartner_OrderExternal
 
 
            , COALESCE (MovementBoolean_Print.ValueData, False) ::Boolean AS isPrint
@@ -89,6 +90,10 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN Movement AS Movement_OrderExternal ON Movement_OrderExternal.Id = Movement.ParentId
+
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_order
+                                   ON MovementDate_OperDatePartner_order.MovementId = Movement_OrderExternal.Id
+                                  AND MovementDate_OperDatePartner_order.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
