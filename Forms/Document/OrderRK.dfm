@@ -1,25 +1,25 @@
 inherited OrderRKForm: TOrderRKForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1076#1072#1085#1080#1077' '#1085#1072' '#1089#1073#1086#1088#1082#1091' '#1043#1055'>'
   ClientHeight = 460
-  ClientWidth = 1101
-  ExplicitWidth = 1117
+  ClientWidth = 1171
+  ExplicitWidth = 1187
   ExplicitHeight = 499
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 123
-    Width = 1101
+    Width = 1171
     Height = 337
     ExplicitTop = 123
     ExplicitWidth = 1101
     ExplicitHeight = 337
     ClientRectBottom = 337
-    ClientRectRight = 1101
+    ClientRectRight = 1171
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1101
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
-        Width = 1101
+        Width = 1171
         Height = 313
         ExplicitWidth = 1101
         ExplicitHeight = 313
@@ -250,10 +250,11 @@ inherited OrderRKForm: TOrderRKForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1101
+    Width = 1171
     Height = 97
     TabOrder = 3
-    ExplicitWidth = 1101
+    ExplicitTop = 5
+    ExplicitWidth = 1171
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -306,13 +307,13 @@ inherited OrderRKForm: TOrderRKForm
       Width = 226
     end
     object cxLabel7: TcxLabel
-      Left = 542
-      Top = 45
+      Left = 955
+      Top = 5
       Caption = #1052#1072#1088#1096#1088#1091#1090
     end
     object edRoute: TcxButtonEdit
-      Left = 542
-      Top = 60
+      Left = 955
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -320,7 +321,7 @@ inherited OrderRKForm: TOrderRKForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 270
+      Width = 139
     end
     object cxLabel8: TcxLabel
       Left = 542
@@ -340,7 +341,7 @@ inherited OrderRKForm: TOrderRKForm
       Width = 270
     end
     object cbPrinted: TcxCheckBox
-      Left = 407
+      Left = 408
       Top = 60
       Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
@@ -389,6 +390,23 @@ inherited OrderRKForm: TOrderRKForm
       TabOrder = 18
       Width = 113
     end
+    object edOrderExternal: TcxButtonEdit
+      Left = 542
+      Top = 60
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 270
+    end
+    object cxLabel5: TcxLabel
+      Left = 542
+      Top = 45
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103
+    end
   end
   object cxLabel3: TcxLabel [2]
     Left = 824
@@ -405,7 +423,7 @@ inherited OrderRKForm: TOrderRKForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 270
+    Width = 121
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 923
@@ -1664,6 +1682,21 @@ inherited OrderRKForm: TOrderRKForm
         Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_OrderExternal'
+        Value = Null
+        Component = GuidesOrderExternal
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull_OrderExternal'
+        Value = Null
+        Component = GuidesOrderExternal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1677,6 +1710,14 @@ inherited OrderRKForm: TOrderRKForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = GuidesOrderExternal
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1702,6 +1743,22 @@ inherited OrderRKForm: TOrderRKForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outRouteName'
+        Value = Null
+        Component = GuidesRoute
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outRetailName'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 296
@@ -1723,16 +1780,13 @@ inherited OrderRKForm: TOrderRKForm
         Control = edOperDate
       end
       item
-        Control = edFrom
+        Control = edOrderExternal
       end
       item
-        Control = edTo
       end
       item
-        Control = edRoute
       end
       item
-        Control = cbPrinted
       end
       item
         Control = ceComment
@@ -1938,6 +1992,7 @@ inherited OrderRKForm: TOrderRKForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1961,12 +2016,13 @@ inherited OrderRKForm: TOrderRKForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 392
-    Top = 24
+    Left = 400
+    Top = 8
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'
     LookupControl = edRoute
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TRoute_SelfForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1991,12 +2047,13 @@ inherited OrderRKForm: TOrderRKForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 648
-    Top = 56
+    Left = 1016
+    Top = 8
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2021,7 +2078,7 @@ inherited OrderRKForm: TOrderRKForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 571
+    Left = 635
     Top = 4
   end
   object spSavePrintState: TdsdStoredProc
@@ -2187,6 +2244,7 @@ inherited OrderRKForm: TOrderRKForm
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
     LookupControl = edRetail
+    DisableGuidesOpen = True
     Key = '0'
     FormNameParam.Value = 'TRetailForm'
     FormNameParam.DataType = ftString
@@ -2214,5 +2272,68 @@ inherited OrderRKForm: TOrderRKForm
       end>
     Left = 872
     Top = 16
+  end
+  object GuidesOrderExternal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderExternal
+    FormNameParam.Value = 'TOrderExternalJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderExternalJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderExternal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesOrderExternal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 692
+    Top = 56
   end
 end

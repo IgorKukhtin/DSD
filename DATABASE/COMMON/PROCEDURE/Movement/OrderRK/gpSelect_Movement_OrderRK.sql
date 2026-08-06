@@ -11,6 +11,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderRK(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , MovementId_OrderExternal Integer
+             , InvNumber_OrderExternal  TVarChar
+             , OperDate_OrderExternal   TDateTime
+
              , isPrint Boolean
              , OperDate_Print TDateTime
              , OperDate_CarInfo TDateTime
@@ -48,6 +52,11 @@ BEGIN
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
 
+           , Movement_OrderExternal.Id           AS MovementId_OrderExternal
+           , Movement_OrderExternal.InvNumber    AS InvNumber_OrderExternal
+           , Movement_OrderExternal.OperDate     AS OperDate_OrderExternal
+
+
            , COALESCE (MovementBoolean_Print.ValueData, False) ::Boolean AS isPrint
            , MovementDate_Print.ValueData                    ::TDateTime AS OperDate_Print
            , MovementDate_CarInfo.ValueData                  ::TDateTime AS OperDate_CarInfo
@@ -78,6 +87,8 @@ BEGIN
             ) AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN Movement AS Movement_OrderExternal ON Movement_OrderExternal.Id = Movement.ParentId
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id

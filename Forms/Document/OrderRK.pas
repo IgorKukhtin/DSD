@@ -106,6 +106,9 @@ type
     actGoodsChoice: TOpenChoiceForm;
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
+    GuidesOrderExternal: TdsdGuides;
+    edOrderExternal: TcxButtonEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

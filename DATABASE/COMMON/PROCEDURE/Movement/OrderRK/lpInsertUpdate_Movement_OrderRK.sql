@@ -1,15 +1,22 @@
 -- Function: lpInsertUpdate_Movement_OrderRK()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderRK (Integer, TVarChar, TDateTime, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderRK (Integer, Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer,TVarChar, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderRK(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inParentId            Integer   , --Заявка сторонняя
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа 
+    IN inFromId              Integer   , --
+    IN inToId                Integer   , --
+    IN inRouteId             Integer   , --
+    IN inRetailId            Integer   , --
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
+
 RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
@@ -25,8 +32,19 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderRK(), inInvNumber, inOperDate, NULL, NULL);
-   
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderRK(), inInvNumber, inOperDate, inParentId, NULL);
+
+
+     -- сохранили связь с <От кого (в документе)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
+     -- сохранили связь с <Кому (в документе)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
+
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Retail(), ioId, inRetailId);
+        
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 

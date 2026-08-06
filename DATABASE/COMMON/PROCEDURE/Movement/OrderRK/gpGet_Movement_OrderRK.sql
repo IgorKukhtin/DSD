@@ -10,6 +10,9 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderRK(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , MovementId_OrderExternal Integer
+             , InvNumber_OrderExternal  TVarChar, InvNumberFull_OrderExternal TVarChar
+             , OperDate_OrderExternal   TDateTime
              , isPrint Boolean
              , OperDate_Print TDateTime
              , OperDate_CarInfo TDateTime
@@ -39,7 +42,11 @@ BEGIN
              , DATE_TRUNC ('Month',inOperDate)       ::TDateTime AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
-
+             , 0                        AS MovementId_OrderExternal
+             , CAST ('' AS TVarChar)    AS InvNumber_OrderExternal
+             , CAST ('' AS TVarChar)    AS InvNumberFull_OrderExternal
+             , Null         ::TDateTime AS OperDate_OrderExternal
+             
              , False ::Boolean          AS isPrint
              , CAST (NULL AS TDateTime) AS OperDate_Print
              , CAST (NULL AS TDateTime) AS OperDate_CarInfo
@@ -68,6 +75,13 @@ BEGIN
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
 
+           , Movement_OrderExternal.Id           AS MovementId_OrderExternal
+           , Movement_OrderExternal.InvNumber    AS InvNumber_OrderExternal
+           , zfCalc_PartionMovementName (Movement_OrderExternal.DescId, MovementDesc_OrderExternal.ItemName, Movement_OrderExternal.InvNumber, Movement_OrderExternal.OperDate) AS InvNumberFull_OrderExternal
+
+           , Movement_OrderExternal.OperDate     AS OperDate_OrderExternal
+           
+           
            , COALESCE (MovementBoolean_Print.ValueData, False) ::Boolean AS isPrint
            , MovementDate_Print.ValueData                    ::TDateTime AS OperDate_Print
            , MovementDate_CarInfo.ValueData                  ::TDateTime AS OperDate_CarInfo
@@ -88,6 +102,8 @@ BEGIN
        FROM Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN Movement AS Movement_OrderExternal ON Movement_OrderExternal.Id = Movement.ParentId
+            LEFT JOIN MovementDesc AS MovementDesc_OrderExternal ON MovementDesc_OrderExternal.Id = Movement_OrderExternal.DescId
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
