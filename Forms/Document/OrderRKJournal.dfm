@@ -271,6 +271,13 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
             Options.Editing = False
             Width = 80
           end
+          object OperDatePartner_sale_OE: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103')'
+            DataBinding.FieldName = 'OperDatePartner_sale_OE'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
         end
       end
     end

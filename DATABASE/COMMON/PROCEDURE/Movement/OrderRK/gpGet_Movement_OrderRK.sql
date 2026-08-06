@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , MovementId_OrderExternal Integer
              , InvNumber_OrderExternal  TVarChar, InvNumberFull_OrderExternal TVarChar
-             , OperDate_OrderExternal   TDateTime, OperDatePartner_OrderExternal TDateTime
+             , OperDate_OrderExternal   TDateTime, OperDatePartner_OrderExternal TDateTime, OperDatePartner_sale_OE TDateTime
              , isPrint Boolean
              , OperDate_Print TDateTime
              , OperDate_CarInfo TDateTime
@@ -47,6 +47,7 @@ BEGIN
              , CAST ('' AS TVarChar)    AS InvNumberFull_OrderExternal
              , Null         ::TDateTime AS OperDate_OrderExternal
              , Null         ::TDateTime AS OperDatePartner_OrderExternal
+             , Null         ::TDateTime AS OperDatePartner_sale_OE
              
              , False ::Boolean          AS isPrint
              , CAST (NULL AS TDateTime) AS OperDate_Print
@@ -81,7 +82,8 @@ BEGIN
            , zfCalc_PartionMovementName (Movement_OrderExternal.DescId, MovementDesc_OrderExternal.ItemName, Movement_OrderExternal.InvNumber, Movement_OrderExternal.OperDate) AS InvNumberFull_OrderExternal
            , Movement_OrderExternal.OperDate     AS OperDate_OrderExternal
            , MovementDate_OperDatePartner_order.ValueData     AS OperDatePartner_OrderExternal
-           
+           , COALESCE (MovementDate_OperDatePartner_Effie.ValueData, MovementDate_OperDatePartner_order.ValueData + (COALESCE (ObjectFloat_DocumentDayCount_order.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale_OE
+
            , COALESCE (MovementBoolean_Print.ValueData, False) ::Boolean AS isPrint
            , MovementDate_Print.ValueData                    ::TDateTime AS OperDate_Print
            , MovementDate_CarInfo.ValueData                  ::TDateTime AS OperDate_CarInfo
@@ -108,6 +110,18 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_order
                                    ON MovementDate_OperDatePartner_order.MovementId = Movement_OrderExternal.Id
                                   AND MovementDate_OperDatePartner_order.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Effie
+                                   ON MovementDate_OperDatePartner_Effie.MovementId = Movement_OrderExternal.Id
+                                  AND MovementDate_OperDatePartner_Effie.DescId = zc_MovementDate_OperDatePartner_Effie()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From_order
+                                         ON MovementLinkObject_From_order.MovementId = Movement_OrderExternal.Id
+                                        AND MovementLinkObject_From_order.DescId = zc_MovementLinkObject_From()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount_order
+                                  ON ObjectFloat_DocumentDayCount_order.ObjectId = MovementLinkObject_From_order.ObjectId
+                                 AND ObjectFloat_DocumentDayCount_order.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
+
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id

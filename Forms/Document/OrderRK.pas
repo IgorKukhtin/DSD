@@ -113,6 +113,8 @@ type
     edOperDate_OrderExternal: TcxDateEdit;
     cxLabel10: TcxLabel;
     edOperDatePartner_OrderExternal: TcxDateEdit;
+    cxLabel9: TcxLabel;
+    edOperDatePartner_sale: TcxDateEdit;
   private
     { Private declarations }
   public

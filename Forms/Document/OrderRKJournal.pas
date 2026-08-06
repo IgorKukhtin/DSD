@@ -120,6 +120,7 @@ type
     InvNumber_OrderExternal: TcxGridDBColumn;
     OperDate_OrderExternal: TcxGridDBColumn;
     OperDatePartner_OrderExternal: TcxGridDBColumn;
+    OperDatePartner_sale_OE: TcxGridDBColumn;
   private
     { Private declarations }
   public
