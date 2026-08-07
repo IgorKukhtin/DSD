@@ -253,7 +253,6 @@ inherited OrderRKForm: TOrderRKForm
     Width = 1298
     Height = 97
     TabOrder = 3
-    ExplicitTop = 5
     ExplicitWidth = 1298
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
