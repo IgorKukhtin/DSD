@@ -115,6 +115,8 @@ type
     edOperDatePartner_OrderExternal: TcxDateEdit;
     cxLabel9: TcxLabel;
     edOperDatePartner_sale: TcxDateEdit;
+    cxLabel11: TcxLabel;
+    edInsertDate: TcxDateEdit;
   private
     { Private declarations }
   public
