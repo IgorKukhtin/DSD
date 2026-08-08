@@ -19,7 +19,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
-  dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC;
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC, Vcl.ExtCtrls;
 
 type
   TPartnerEditForm = class(TAncestorEditDialogForm)
@@ -187,7 +187,6 @@ type
     cxPageControl1: TcxPageControl;
     cxTabSheet1: TcxTabSheet;
     cxTabSheet2: TcxTabSheet;
-    cxLabel60: TcxLabel;
     cePosition_1: TcxButtonEdit;
     GuidesPosition_1: TdsdGuides;
     cxLabel61: TcxLabel;
@@ -205,10 +204,8 @@ type
     GuidesPosition_4: TdsdGuides;
     GuidesPosition_5: TdsdGuides;
     GuidesPosition_6: TdsdGuides;
-    cxLabel66: TcxLabel;
     edPersonal_1: TcxButtonEdit;
     Guides_Personal_1: TdsdGuides;
-    cxLabel67: TcxLabel;
     edPersonal_2: TcxButtonEdit;
     cxLabel68: TcxLabel;
     edPersonal_3: TcxButtonEdit;
@@ -230,6 +227,41 @@ type
     edPersonalGroupCommerc: TcxButtonEdit;
     cxLabel72: TcxLabel;
     edUnitCommerc: TcxButtonEdit;
+    Panel1: TPanel;
+    cxLabel66: TcxLabel;
+    cxLabel60: TcxLabel;
+    cxLabel67: TcxLabel;
+    Panel2: TPanel;
+    cxLabel58: TcxLabel;
+    cePosition_1ret: TcxButtonEdit;
+    cxLabel73: TcxLabel;
+    cePosition_2ret: TcxButtonEdit;
+    cxLabel74: TcxLabel;
+    cePosition_3ret: TcxButtonEdit;
+    edPersonal_1ret: TcxButtonEdit;
+    edPersonal_2ret: TcxButtonEdit;
+    cxLabel78: TcxLabel;
+    edPersonal_3ret: TcxButtonEdit;
+    cxLabel82: TcxLabel;
+    ceUnit_1ret: TcxButtonEdit;
+    cxLabel83: TcxLabel;
+    ceUnit_2ret: TcxButtonEdit;
+    cxLabel84: TcxLabel;
+    ceUnit_3ret: TcxButtonEdit;
+    cxLabel88: TcxLabel;
+    cxLabel89: TcxLabel;
+    GuidesUnit_1ret: TdsdGuides;
+    GuidesUnit_2ret: TdsdGuides;
+    GuidesUnit_3ret: TdsdGuides;
+    GuidesPosition_1ret: TdsdGuides;
+    GuidesPosition_21ret: TdsdGuides;
+    GuidesPosition_3ret: TdsdGuides;
+    Guides_Personal_1ret: TdsdGuides;
+    Guides_Personal_2ret: TdsdGuides;
+    Guides_Personal_3ret: TdsdGuides;
+    spUpdate_Commerc: TdsdStoredProc;
+    HeaderExit: THeaderExit;
+    actUpdate_Commerc: TdsdDataSetRefresh;
 
   private
     { Private declara

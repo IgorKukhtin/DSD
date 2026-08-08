@@ -24,7 +24,17 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                UnitId_3 Integer, UnitName_3 TVarChar,
                UnitId_4 Integer, UnitName_4 TVarChar,
                UnitId_5 Integer, UnitName_5 TVarChar,
-               UnitId_6 Integer, UnitName_6 TVarChar
+               UnitId_6 Integer, UnitName_6 TVarChar,
+               --
+               PersonalName_1ret TVarChar,
+               PersonalName_2ret TVarChar,
+               PersonalName_3ret TVarChar,
+               PositionName_1ret TVarChar,
+               PositionName_2ret TVarChar,
+               PositionName_3ret TVarChar,
+               UnitName_1ret TVarChar,
+               UnitName_2ret TVarChar,
+               UnitName_3ret TVarChar
                )
 AS
 $BODY$
@@ -99,8 +109,8 @@ BEGIN
                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_CommercLocal_Unit.ChildObjectId
 
                                   LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                                                 ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_CommercLocal_Unit.ChildObjectId
-                                                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                                       ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_CommercLocal_Unit.ChildObjectId
+                                                      AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                   --LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
                                   INNER JOIN ObjectLink AS ObjectLink_CommercLocal_Position_1
@@ -319,7 +329,72 @@ BEGIN
                           LEFT JOIN  tmpRetail ON 1 = 1
                      WHERE COALESCE (tmpRetail.NOP_NMId,0) = 0
                      )
+     --Сети
+     , tmpCommercRetail AS (SELECT Object_Position_1.Id                ::Integer  AS PositionId_1
+                                 , Object_Position_1.ObjectCode        ::Integer  AS PositionCode_1
+                                 , Object_Position_1.ValueData         ::TVarChar AS PositionName_1 
+                                 , Object_Position_2.Id                ::Integer  AS PositionId_2
+                                 , Object_Position_2.ObjectCode        ::Integer  AS PositionCode_2
+                                 , Object_Position_2.ValueData         ::TVarChar AS PositionName_2 
+                                 , Object_Position_3.Id                ::Integer  AS PositionId_3
+                                 , Object_Position_3.ObjectCode        ::Integer  AS PositionCode_3
+                                 , Object_Position_3.ValueData         ::TVarChar AS PositionName_3
+                                 , ObjectLink_CommercRetail_PersonalGroup_1.ChildObjectId ::Integer  AS PersonalGroupId
+                            FROM Object AS Object_CommercRetail
+                                 INNER JOIN ObjectLink AS ObjectLink_CommercRetail_Retail
+                                                       ON ObjectLink_CommercRetail_Retail.ObjectId = Object_CommercRetail.Id
+                                                      AND ObjectLink_CommercRetail_Retail.DescId = zc_ObjectLink_CommercRetail_Retail()
+                                                      AND ObjectLink_CommercRetail_Retail.ChildObjectId IN (SELECT DISTINCT tmpRetail.RetailId FROM tmpRetail)
+                                 --LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_CommercRetail_Retail.ChildObjectId
+                       
+                                 LEFT JOIN ObjectLink AS ObjectLink_CommercRetail_Position_1
+                                                      ON ObjectLink_CommercRetail_Position_1.ObjectId = Object_CommercRetail.Id
+                                                     AND ObjectLink_CommercRetail_Position_1.DescId = zc_ObjectLink_CommercRetail_Position_1()
+                                 LEFT JOIN Object AS Object_Position_1 ON Object_Position_1.Id = ObjectLink_CommercRetail_Position_1.ChildObjectId
+                       
+                                 LEFT JOIN ObjectLink AS ObjectLink_CommercRetail_Position_2
+                                                      ON ObjectLink_CommercRetail_Position_2.ObjectId = Object_CommercRetail.Id
+                                                     AND ObjectLink_CommercRetail_Position_2.DescId = zc_ObjectLink_CommercRetail_Position_2()
+                                 LEFT JOIN Object AS Object_Position_2 ON Object_Position_2.Id = ObjectLink_CommercRetail_Position_2.ChildObjectId
+                       
+                                 LEFT JOIN ObjectLink AS ObjectLink_CommercRetail_Position_3
+                                                      ON ObjectLink_CommercRetail_Position_3.ObjectId = Object_CommercRetail.Id
+                                                     AND ObjectLink_CommercRetail_Position_3.DescId = zc_ObjectLink_CommercRetail_Position_3()
+                                 LEFT JOIN Object AS Object_Position_3 ON Object_Position_3.Id = ObjectLink_CommercRetail_Position_3.ChildObjectId
+                       
+                                 LEFT JOIN ObjectLink AS ObjectLink_CommercRetail_PersonalGroup_1
+                                                      ON ObjectLink_CommercRetail_PersonalGroup_1.ObjectId = Object_CommercRetail.Id
+                                                     AND ObjectLink_CommercRetail_PersonalGroup_1.DescId = zc_ObjectLink_CommercRetail_PersonalGroup_1()
+                                 --LEFT JOIN Object AS Object_PersonalGroup_1 ON Object_PersonalGroup_1.Id = ObjectLink_CommercRetail_PersonalGroup_1.ChildObjectId
+                       
+                            WHERE Object_CommercRetail.DescId = zc_Object_CommercRetail()
+                              AND Object_CommercRetail.isErased = FALSE
+                           )
 
+
+     , tmpLevel1_Ret AS (SELECT Count (*) AS Count
+                              , STRING_AGG (tmpPersonal_byUnit.PersonalName, ';') AS PersonalName
+                              , STRING_AGG (tmpCommercRetail.PositionName_1, ';') AS PositionName
+                              , STRING_AGG (tmpPersonal_byUnit.UnitName, ';')     AS UnitName
+                         FROM tmpCommercRetail
+                              LEFT JOIN tmpPersonal_byUnit ON tmpPersonal_byUnit.PositionId = tmpCommercRetail.PositionId_1
+                         )
+     , tmpLevel2_Ret AS (SELECT Count (*) AS Count
+                              , STRING_AGG (tmpPersonal_byUnit.PersonalName, ';') AS PersonalName
+                              , STRING_AGG (tmpCommercRetail.PositionName_2, ';') AS PositionName
+                              , STRING_AGG (tmpPersonal_byUnit.UnitName, ';')     AS UnitName
+                         FROM tmpCommercRetail
+                              LEFT JOIN tmpPersonal_byUnit ON tmpPersonal_byUnit.PositionId = tmpCommercRetail.PositionId_2
+                         )
+     , tmpLevel3_Ret AS (SELECT Count (*) AS Count
+                              , STRING_AGG (tmpPersonal_byUnit.PersonalName, ';') AS PersonalName
+                              , STRING_AGG (tmpCommercRetail.PositionName_3, ';') AS PositionName
+                              , STRING_AGG (tmpPersonal_byUnit.UnitName, ';')     AS UnitName
+                         FROM tmpCommercRetail
+                              LEFT JOIN tmpPersonal_byUnit ON tmpPersonal_byUnit.PositionId = tmpCommercRetail.PositionId_3
+                         )
+
+                     
  
        SELECT 
              Object_Partner.Id          :: Integer AS Id
@@ -365,6 +440,16 @@ BEGIN
            , tmpLevel6.UnitId  ::Integer         AS UnitId_6
            , tmpLevel6.UnitName::TVarChar        AS UnitName_6
 
+           --
+           , (CASE WHEN COALESCE (tmpLevel1_Ret.Count,0) > 1 THEN '('||tmpLevel1_Ret.Count::TVarChar||')' ELSE '' END ||tmpLevel1_Ret.PersonalName ) ::TVarChar  AS PersonalName_1ret 
+           , (CASE WHEN COALESCE (tmpLevel1_Ret.Count,0) > 1 THEN '('||tmpLevel1_Ret.Count::TVarChar||')' ELSE '' END ||tmpLevel2_Ret.PersonalName ) ::TVarChar  AS PersonalName_2ret
+           , (CASE WHEN COALESCE (tmpLevel1_Ret.Count,0) > 1 THEN '('||tmpLevel1_Ret.Count::TVarChar||')' ELSE '' END ||tmpLevel3_Ret.PersonalName ) ::TVarChar  AS PersonalName_3ret
+           , tmpLevel1_Ret.PositionName ::TVarChar  AS PositionName_1ret
+           , tmpLevel2_Ret.PositionName ::TVarChar  AS PositionName_2ret
+           , tmpLevel3_Ret.PositionName ::TVarChar  AS PositionName_3ret
+           , tmpLevel1_Ret.UnitName     ::TVarChar  AS UnitName_1ret    
+           , tmpLevel2_Ret.UnitName     ::TVarChar  AS UnitName_2ret    
+           , tmpLevel3_Ret.UnitName     ::TVarChar  AS UnitName_3ret    
        FROM Object AS Object_Partner
             LEFT JOIN tmpLevel1 ON 1=1
             LEFT JOIN tmpLevel2 ON 1=1
@@ -372,6 +457,9 @@ BEGIN
             LEFT JOIN tmpLevel4 ON 1=1
             LEFT JOIN tmpLevel5 ON 1=1
             LEFT JOIN tmpLevel6 ON 1=1
+            LEFT JOIN tmpLevel1_Ret ON 1=1
+            LEFT JOIN tmpLevel2_Ret ON 1=1
+            LEFT JOIN tmpLevel3_Ret ON 1=1
        WHERE Object_Partner.Id = inId;
        
    
@@ -386,4 +474,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_Object_Partner_Commerc (inId := 0 , inSession := '5');
+--  select * from gpGet_Object_Partner_Commerc (inId := 5817065 , inSession := '5');    
+-- select * from gpGet_Object_Partner_Commerc (inId := 5817065 , inSession := '5');
