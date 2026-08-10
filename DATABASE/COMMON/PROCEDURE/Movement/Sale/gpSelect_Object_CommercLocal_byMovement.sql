@@ -10,7 +10,11 @@ RETURNS TABLE (Ord Integer
              , PositionName TVarChar
              , PersonalGroupName TVarChar
              , PersonalName Text
-             , UnitName TVarChar
+             , UnitName TVarChar 
+             , PositionName_inf TVarChar
+             , PersonalGroupName_inf TVarChar
+             , PersonalName_inf Text
+             , UnitName_inf TVarChar
               )
 AS
 $BODY$
@@ -379,6 +383,23 @@ BEGIN
                                    LEFT JOIN Object AS Object_Position_1 ON Object_Position_1.Id = vbPositionId_1
                                    LEFT JOIN Object AS Object_PersonalGroup_1 ON Object_PersonalGroup_1.Id = vbPersonalGroupId_1
                               WHERE Object_Personal.Id = vbPersonalId
+                                AND vbisEDI = FALSE
+                             UNION
+                              SELECT 1                              AS ord
+                                   , tmpCommercLocal.PositionName_1 AS PositionName
+                                   , Object_PersonalGroup.ValueData AS PersonalGroupName
+                                   , Object_Personal.ValueData      AS PersonalName
+                                   , tmpRouteTT.UnitName            AS UnitName
+                              FROM tmpRouteTT
+                                   INNER JOIN tmpCommercLocal ON tmpCommercLocal.UnitId = tmpRouteTT.UnitId
+                                                             AND tmpCommercLocal.PositionId_1 = tmpRouteTT.PositionId
+                                   LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = CASE WHEN tmpCommercLocal.Id IS NOT NULL THEN tmpRouteTT.PersonalId ELSE 0 END
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                                                        ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id
+                                                       AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+                                   LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+                              WHERE vbisEDI = TRUE
                               )
 
               , tmpLevel2 AS (SELECT 2 AS Ord 
@@ -392,9 +413,27 @@ BEGIN
                                                                 AND tmpPersonal.PositionId = tmpCommercLocal.PositionId_2
                                                                 AND COALESCE (tmpPersonal.PersonalGroupId,0) = COALESCE (tmpCommercLocal.PersonalGroupId_2,0)
                                                                -- AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+                              WHERE vbisEDI = FALSE
                               GROUP BY tmpCommercLocal.PositionName_2
                                      , tmpCommercLocal.PersonalGroupName_2
                                      , tmpCommercLocal.UnitName
+                             UNION
+                              SELECT 2                              AS ord
+                                   , tmpCommercLocal.PositionName_2 AS PositionName
+                                   , tmpCommercLocal.PersonalGroupName_2 ::TVarChar  AS PersonalGroupName
+                                   , String_AGG (tmpPersonal.PersonalName, CHR (10) || CHR (13) order by tmpPersonal.PersonalName) ::Text  AS PersonalName
+                                   , tmpPersonal.UnitName
+                              FROM tmpRouteTT
+                                   INNER JOIN tmpCommercLocal ON tmpCommercLocal.UnitId = tmpRouteTT.UnitId
+                                                             AND tmpCommercLocal.PositionId_1 = tmpRouteTT.PositionId
+                                                             AND COALESCE (tmpCommercLocal.PersonalGroupId_1,0) = COALESCE (tmpRouteTT.PersonalGroupId,0)
+                                   LEFT JOIN tmpPersonal_byUnit AS tmpPersonal
+                                                                ON tmpPersonal.PositionId = tmpCommercLocal.PositionId_2 
+                              WHERE (SELECT COUNT(*) FROM tmpLevel1) <> 0
+                                AND vbisEDI = TRUE
+                              GROUP BY tmpCommercLocal.PositionName_2
+                                     , tmpCommercLocal.PersonalGroupName_2
+                                     , tmpPersonal.UnitName
                               )
 
               , tmpLevel3 AS (--Для НЕ EDI    vbisEDI = Fa 
@@ -555,7 +594,12 @@ BEGIN
               , tmp.PositionName      ::TVarChar
               , tmp.PersonalGroupName ::TVarChar
               , tmp.PersonalName      ::Text
-              , tmp.UnitName          ::TVarChar 
+              , tmp.UnitName          ::TVarChar
+
+              , '' ::TVarChar AS PositionName_inf
+              , '' ::TVarChar AS PersonalGroupName_inf
+              , '' ::Text     AS PersonalName_inf
+              , '' ::TVarChar AS UnitName_inf 
          FROM (SELECT tmp.Ord 
                     , tmp.PositionName
                     , tmp.PersonalGroupName
@@ -574,39 +618,67 @@ BEGIN
                WHERE vbisEDI = False
               UNION 
                SELECT 3 AS Ord 
-                    , COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_3) AS PositionName
+                    , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_3) ELSE tmp.PositionName END AS PositionName
                     , tmp.PersonalGroupName
                     , tmp.PersonalName ::Text
-                    , COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) AS UnitName           
+                    , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) ELSE tmp.UnitName END  AS UnitName           
                FROM tmpCommercLocal
                     LEFT JOIN tmpLevel3 AS tmp ON 1 = 1
               UNION 
                SELECT 4 AS Ord 
-                    , COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_4) AS PositionName
+                    , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_4) ELSE tmp.PositionName END AS PositionName
                     , tmp.PersonalGroupName
                     , tmp.PersonalName ::Text
-                    , COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) AS UnitName           
+                    , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) ELSE tmp.UnitName END AS UnitName           
                FROM tmpCommercLocal
                     LEFT JOIN tmpLevel4 AS tmp ON 1 = 1
               UNION 
                SELECT 5 AS Ord 
-                    , COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_5) AS PositionName
+                    , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_5) ELSE tmp.PositionName END AS PositionName
                     , tmp.PersonalGroupName
                     , tmp.PersonalName ::Text
-                    , COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) AS UnitName           
+                    , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) ELSE tmp.UnitName END AS UnitName           
                FROM tmpCommercLocal
                     LEFT JOIN tmpLevel5 AS tmp ON 1 = 1
               UNION 
                SELECT 6 AS Ord 
-                    , COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_6) AS PositionName
+                    , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_6) ELSE tmp.PositionName END AS PositionName
                     , tmp.PersonalGroupName
                     , tmp.PersonalName ::Text
-                    , COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) AS UnitName           
+                    , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) ELSE tmp.UnitName END AS UnitName           
                FROM tmpCommercLocal
                     LEFT JOIN tmpLevel6 AS tmp ON 1 = 1
               ) AS tmp
-        ORDER BY tmp.Ord
-           ;
+        UNION ALL --схема для Маршрут ТТ информативно
+              SELECT 
+                     1 AS Ord
+                   , '' ::TVarChar AS PositionName
+                   , '' ::TVarChar AS PersonalGroupName
+                   , '' ::Text     AS PersonalName
+                   , '' ::TVarChar AS UnitName
+                    
+                   , tmp.PositionName        AS PositionName_inf
+                   , tmp.PersonalGroupName   AS PersonalGroupName_inf
+                   , tmp.PersonalName ::Text AS PersonalName_inf
+                   , tmp.UnitName            AS UnitName_inf           
+              FROM tmpLevel1 AS tmp
+              WHERE vbisEDI = TRUE
+        UNION ALL --схема для Маршрут ТТ информативно
+              SELECT 
+                     2 AS Ord
+                   , '' ::TVarChar AS PositionName
+                   , '' ::TVarChar AS PersonalGroupName
+                   , '' ::Text AS PersonalName
+                   , '' ::TVarChar AS UnitName
+                    
+                   , tmp.PositionName        AS PositionName_inf
+                   , tmp.PersonalGroupName   AS PersonalGroupName_inf
+                   , tmp.PersonalName ::Text AS PersonalName_inf
+                   , tmp.UnitName            AS UnitName_inf
+              FROM tmpLevel1 AS tmp
+              WHERE vbisEDI = TRUE      
+        ORDER BY 1
+        ;
 
 END;
 $BODY$
@@ -622,7 +694,7 @@ $BODY$
 -- SELECT * FROM gpSelect_Object_CommercLocal_byMovement (inMovementId:= 40874, inSession := zfCalc_UserAdmin());
 
 --
---select * from gpSelect_Object_CommercLocal_byMovement22(inMovementId := 34499291 ,  inSession := '9457');
+--select * from gpSelect_Object_CommercLocal_byMovement(inMovementId := 34499291 ,  inSession := '9457');
 --select * from gpSelect_Object_CommercLocal_byMovement(inMovementId := 34932287  ,  inSession := '9457'); --EDI
 
 
