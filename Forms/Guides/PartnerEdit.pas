@@ -262,6 +262,8 @@ type
     spUpdate_Commerc: TdsdStoredProc;
     HeaderExit: THeaderExit;
     actUpdate_Commerc: TdsdDataSetRefresh;
+    cxLabel75: TcxLabel;
+    cxLabel76: TcxLabel;
 
   private
     { Private declara

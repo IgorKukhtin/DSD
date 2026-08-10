@@ -110,6 +110,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
    OUT outPartnerName        TVarChar  ,    -- 
@@ -155,7 +163,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inRouteId             Integer   ,    -- Маршрут
     IN inRouteId_30201       Integer   ,    -- Маршрут мясное сырье    
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
-    IN inRouteTTId           Integer   ,    -- Маршрут ТТ
+    --IN inRouteTTId           Integer   ,    -- Маршрут ТТ
   
     IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
     IN inMemberSaler1Id      Integer   ,    -- Физ лицо(Продавец-1)
@@ -175,8 +183,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
     IN inUnitMobileId        Integer   ,    -- Подразделение(заявки мобильный) 
     IN inTypeCommercId       Integer   ,    -- Тип отгрузки
-    IN inUnitCommercId       Integer   ,    -- Отдео комменции
-    IN inPersonalGroupCommercId  Integer   ,    -- Группа Сотрудников
+    --IN inUnitCommercId       Integer   ,    -- Отдео комменции
+    --IN inPersonalGroupCommercId  Integer   ,    -- Группа Сотрудников
 
     IN inStartPromo          TDateTime ,    -- Дата начала акции
     IN inEndPromo            TDateTime ,    -- Дата окончания акции     
@@ -304,7 +312,7 @@ BEGIN
                                         , inRouteId         := inRouteId
                                         , inRouteId_30201   := inRouteId_30201
                                         , inRouteSortingId  := inRouteSortingId
-                                        , inRouteTTId       := inRouteTTId
+                                        --, inRouteTTId       := inRouteTTId
                                         , inMemberTakeId    := inMemberTakeId
                                         , inMemberSaler1Id  := inMemberSaler1Id
                                         , inMemberSaler2Id  := inMemberSaler2Id
@@ -320,8 +328,8 @@ BEGIN
                                         , inPriceListPromoId:= inPriceListPromoId
                                         , inUnitMobileId    := inUnitMobileId
                                         , inTypeCommercId   := inTypeCommercId
-                                        , inUnitCommercId   := inUnitCommercId
-                                        , inPersonalGroupCommercId := inPersonalGroupCommercId
+                                        --, inUnitCommercId   := inUnitCommercId
+                                        --, inPersonalGroupCommercId := inPersonalGroupCommercId
                                         , inStartPromo      := inStartPromo
                                         , inEndPromo        := inEndPromo
                                         , inUserId          := vbUserId

@@ -80,7 +80,12 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer, Integer, Integer, Integer,
                                                        TDateTime, TDateTime, Integer);   
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                       Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       Integer, Integer
+                                                       TDateTime, TDateTime, Integer); 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
     IN inCode                Integer   ,    -- код объекта <Контрагент> 
@@ -120,7 +125,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inRouteId             Integer   ,    -- Маршрут
     IN inRouteId_30201       Integer   ,    -- Маршрут мясное сырье 
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
-    IN inRouteTTId           Integer   ,    -- Маршрут ТТ
+    --IN inRouteTTId           Integer   ,    -- Маршрут ТТ
     
     IN inMemberTakeId        Integer   ,    -- Физ лицо (сотрудник экспедитор)
     IN inMemberSaler1Id      Integer   ,    -- Физ лицо(Продавец-1)
@@ -137,8 +142,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
        
     IN inUnitMobileId        Integer   ,    -- Подразделение(заявки мобильный)
     IN inTypeCommercId       Integer   ,    -- Тип отгрузки
-    IN inUnitCommercId       Integer   ,    -- Отдео комменции 
-    IN inPersonalGroupCommercId  Integer   ,    -- Группа Сотрудников
+    --IN inUnitCommercId       Integer   ,    -- Отдео комменции 
+    --IN inPersonalGroupCommercId  Integer   ,    -- Группа Сотрудников
 
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListId_30201   Integer   ,    -- Прайс-лист мясное сырье
@@ -218,7 +223,7 @@ BEGIN
    -- сохранили связь с <Маршруты>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), ioId, inRouteId);
    -- сохранили связь с <Маршруты ТТ>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteTT(), ioId, inRouteTTId);
+   --PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteTT(), ioId, inRouteTTId);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route30201(), ioId, inRouteId_30201);
@@ -263,9 +268,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_TypeCommerc(), ioId, inTypeCommercId);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_UnitCommerc(), ioId, CASE WHEN COALESCE (inRouteTTId,0) <> 0 THEN NULL ELSE inUnitCommercId END);
+   --PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_UnitCommerc(), ioId, CASE WHEN COALESCE (inRouteTTId,0) <> 0 THEN NULL ELSE inUnitCommercId END);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalGroupCommerc(), ioId, CASE WHEN COALESCE (inRouteTTId,0) <> 0 THEN NULL ELSE inPersonalGroupCommercId END);
+   --PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalGroupCommerc(), ioId, CASE WHEN COALESCE (inRouteTTId,0) <> 0 THEN NULL ELSE inPersonalGroupCommercId END);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, DATE (inStartPromo));

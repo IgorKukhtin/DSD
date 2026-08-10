@@ -1016,19 +1016,17 @@
       ImageIndex = 1
       ParentShowHint = False
       ShowHint = False
-      ExplicitLeft = 168
-      ExplicitTop = -100
       DesignSize = (
         1075
         553)
       object cxLabel56: TcxLabel
         Left = 17
-        Top = 8
+        Top = 0
         Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058
       end
       object ceRouteTT: TcxButtonEdit
         Left = 17
-        Top = 27
+        Top = 15
         Properties.Buttons = <
           item
             Default = True
@@ -1040,12 +1038,12 @@
       end
       object cxLabel59: TcxLabel
         Left = 287
-        Top = 8
+        Top = 0
         Caption = #1043#1088#1091#1087#1087#1072' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
       end
       object edPersonalGroupCommerc: TcxButtonEdit
         Left = 287
-        Top = 27
+        Top = 16
         Properties.Buttons = <
           item
             Default = True
@@ -1057,12 +1055,12 @@
       end
       object cxLabel72: TcxLabel
         Left = 582
-        Top = 8
+        Top = 0
         Caption = #1054#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080
       end
       object edUnitCommerc: TcxButtonEdit
         Left = 582
-        Top = 26
+        Top = 15
         Properties.Buttons = <
           item
             Default = True
@@ -1074,7 +1072,7 @@
       end
       object Panel1: TPanel
         Left = 17
-        Top = 64
+        Top = 68
         Width = 854
         Height = 291
         Anchors = [akTop]
@@ -1099,7 +1097,7 @@
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         object cxLabel66: TcxLabel
-          Left = 12
+          Left = 13
           Top = 2
           Caption = #1057#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082' ('#1056#1110#1074#1077#1085#1100' 1)'
           Style.TextColor = clWindowText
@@ -1408,7 +1406,7 @@
       end
       object Panel2: TPanel
         Left = 17
-        Top = 378
+        Top = 385
         Width = 854
         Height = 162
         Anchors = [akTop]
@@ -1587,6 +1585,22 @@
           Caption = #1057#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082' ('#1056#1110#1074#1077#1085#1100' 2)'
         end
       end
+      object cxLabel75: TcxLabel
+        Left = 17
+        Top = 49
+        Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111': '#1056#1086#1079#1076#1088#1110#1073
+        Style.BorderColor = clBackground
+        Style.TextColor = clBlue
+        Style.TextStyle = [fsBold]
+      end
+      object cxLabel76: TcxLabel
+        Left = 17
+        Top = 365
+        Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111': '#1052#1077#1088#1077#1078#1110
+        Style.BorderColor = clBackground
+        Style.TextColor = clBlue
+        Style.TextStyle = [fsBold]
+      end
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1621,6 +1635,7 @@
         end>
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
@@ -1965,11 +1980,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inRouteTTId'
         Value = Null
         Component = GuidesRouteTT
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2093,19 +2107,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitCommercId'
         Value = Null
         Component = GuidesUnitCommerc
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalGroupCommercId'
         Value = Null
         Component = GuidesPersonalGroupCommerc
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -4359,8 +4371,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 788
-    Top = 341
+    Left = 748
+    Top = 357
   end
   object Guides_Personal_1: TdsdGuides
     KeyField = 'Id'

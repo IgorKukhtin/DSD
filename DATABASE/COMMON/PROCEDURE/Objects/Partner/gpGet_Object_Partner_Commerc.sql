@@ -261,7 +261,7 @@ BEGIN
                      )
 
        --Автоматично - відносно рівня 1, відповідно до структури комерції по співпадінню "Філія підрозділу (рівень 1) + посада (рівень 4)
-     , tmpLevel4 AS (SELECT 3                              AS ord
+     , tmpLevel4 AS (SELECT 4                              AS ord
                           , tmpPersonal_byUnit.PersonalId
                           , tmpPersonal_byUnit.PersonalName
                           , tmpPersonal_byUnit.PositionId
