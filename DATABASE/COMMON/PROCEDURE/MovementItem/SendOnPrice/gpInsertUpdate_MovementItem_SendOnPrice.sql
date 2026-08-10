@@ -48,7 +48,7 @@ BEGIN
      vbIsBarCode:= COALESCE ((SELECT MIBoolean.ValueData FROM MovementItemBoolean AS MIBoolean WHERE MIBoolean.MovementItemId = ioId AND MIBoolean.DescId = zc_MIBoolean_BarCode()), FALSE);
 
      -- !!!скидка - вес упаковки!!!
-     IF vbIsBarCode = TRUE
+     IF vbIsBarCode = TRUE AND (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId = zc_Unit_RK())
      THEN
          -- проверка: если вводится кол склад надо сообщить что оно расчетное, вводить нельзя
          IF ioId <> 0 AND EXISTS (SELECT 1 FROM MovementItemFloat AS MIFloat WHERE MIFloat.MovementItemId = ioId AND MIFloat.DescId = zc_MIFloat_AmountPartner() AND MIFloat.ValueData = ioAmountPartner)

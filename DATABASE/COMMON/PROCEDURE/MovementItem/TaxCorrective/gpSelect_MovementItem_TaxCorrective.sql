@@ -39,8 +39,6 @@ BEGIN
                            );
 
 
-     --
-     IF inShowAll THEN
 
      -- определили
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
@@ -65,6 +63,11 @@ BEGIN
      WHERE MLM.MovementId = inMovementId 
        AND MLM.DescId     = zc_MovementLinkMovement_Child();
 
+
+
+     --
+     IF inShowAll = TRUE
+     THEN
 
      -- Результат
      RETURN QUERY
