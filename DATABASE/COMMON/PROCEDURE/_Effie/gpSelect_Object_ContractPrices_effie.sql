@@ -20,7 +20,7 @@ RETURNS TABLE (priceHeaderExtId      TVarChar   -- Идентификатор прайса
 AS
 $BODY$
    DECLARE vbUserId Integer;
- BEGIN
+BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
