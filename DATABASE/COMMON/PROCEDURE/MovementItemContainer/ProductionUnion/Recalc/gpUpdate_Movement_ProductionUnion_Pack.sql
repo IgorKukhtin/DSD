@@ -24,7 +24,7 @@ BEGIN
    --IF EXTRACT (DAY FROM inStartDate) >= 24 THEN RAISE EXCEPTION 'Ошибка.end'; END IF;
    --
 	
-   IF (DATE_TRUNC ('MONTH', inStartDate) < DATE_TRUNC ('MONTH', CURRENT_DATE)
+  /*IF (DATE_TRUNC ('MONTH', inStartDate) < DATE_TRUNC ('MONTH', CURRENT_DATE)
        OR EXTRACT (DAY FROM CURRENT_DATE) >= 20
       )
       AND inStartDate <>  CURRENT_DATE - INTERVAL '1 DAY'
@@ -37,6 +37,7 @@ BEGIN
    THEN
        RETURN;
    END IF;
+   */
 
    -- ЦЕХ упаковки
    --IF inUnitId IN (8451) THEN RETURN; END IF
