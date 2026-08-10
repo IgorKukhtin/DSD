@@ -130,7 +130,6 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
@@ -256,10 +255,11 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
             Width = 80
           end
           object OperDate_OrderExternal: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103')'
+            Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
             DataBinding.FieldName = 'OperDate_OrderExternal'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' ('#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103')'
             Options.Editing = False
             Width = 80
           end
