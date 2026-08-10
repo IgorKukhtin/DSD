@@ -74,21 +74,27 @@ END IF;
 
 
      -- определяется Таврія
-     vbIsBATCHNUMBER:= EXISTS (SELECT
+     vbIsBATCHNUMBER:= EXISTS (SELECT 1
                                FROM MovementLinkObject AS MLO
                                     INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                           ON ObjectLink_Partner_Juridical.ObjectId = MLO.ObjectId
                                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                    INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                    INNER JOIN ObjectBoolean AS ObjectBoolean_Juridical_isEdiESert
+                                                             ON ObjectBoolean_Juridical_isEdiESert.ObjectId  = ObjectLink_Partner_Juridical.ChildObjectId
+                                                            AND ObjectBoolean_Juridical_isEdiESert.DescId    = zc_ObjectBoolean_Juridical_isEdiESert()
+                                                            AND ObjectBoolean_Juridical_isEdiESert.ValueData = TRUE
+                                  /*INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                           ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                         AND ObjectLink_Juridical_Retail.ChildObjectId IN (310831) -- Таврія
+                                                         AND ObjectLink_Juridical_Retail.ChildObjectId IN (310831 -- Таврія
+                                                                                                         , 310859 -- Новус
+                                                                                                          )*/
                                WHERE MLO.MovementId = inMovementId
-                                 AND MLO.DescId = zc_MovementLinkObject_To()
+                                 AND MLO.DescId     = zc_MovementLinkObject_To()
                               );
 
      -- определяется Новая схема Сильпо - Desadv = BOXESQUANTITY (Кількість ящиків)
-     vbIsSchema_fozz_desadv:= EXISTS (SELECT
+     vbIsSchema_fozz_desadv:= EXISTS (SELECT 1
                                       FROM MovementLinkObject AS MLO
                                       WHERE MLO.MovementId = inMovementId
                                         AND MLO.DescId = zc_MovementLinkObject_To()
