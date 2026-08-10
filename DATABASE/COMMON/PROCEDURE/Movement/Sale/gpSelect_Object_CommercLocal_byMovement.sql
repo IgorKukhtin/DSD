@@ -675,7 +675,7 @@ BEGIN
                    , tmp.PersonalGroupName   AS PersonalGroupName_inf
                    , tmp.PersonalName ::Text AS PersonalName_inf
                    , tmp.UnitName            AS UnitName_inf
-              FROM tmpLevel1 AS tmp
+              FROM tmpLevel2 AS tmp
               WHERE vbisEDI = TRUE      
         ORDER BY 1
         ;
