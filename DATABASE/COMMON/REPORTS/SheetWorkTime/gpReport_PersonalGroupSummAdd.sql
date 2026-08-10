@@ -269,6 +269,7 @@ BEGIN
                                         AND COALESCE (tmpPersonal.PositionLevelId,0) = COALESCE (tmpSheetWorkTime.PositionLevelId,0)
                                         AND tmpPersonal.PositionId      = tmpSheetWorkTime.PositionId
                                         AND tmpPersonal.UnitId          = tmpSheetWorkTime.UnitId
+                                        AND tmpPersonal.Ord             = 1
                ) 
 
   -- сумму из основной ведомости по фио из колонки "Премия" 
@@ -276,9 +277,12 @@ BEGIN
                                 , MovementItem.Id                                  AS MovementItemId
                                 , ObjectLink_Personal_Member.ChildObjectId         AS MemberId       --MemberId_Personal 
                                 , MILinkObject_Position.ObjectId                   AS PositionId
-                                , MILinkObject_PositionLevel.ObjectId              AS PositionLevelId
                                 , MovementLinkObject_PersonalServiceList.ObjectId  AS PersonalServiceListId
                                 , (COALESCE (MIFloat_SummAdd.ValueData,0))         AS SummAdd
+                                  -- № п/п
+                                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId, MILinkObject_Position.ObjectId, MovementLinkObject_PersonalServiceList.ObjectId
+                                                     ORDER BY COALESCE (MIFloat_SummAdd.ValueData,0) DESC
+                                                    ) AS Ord
                            FROM MovementDate AS MovementDate_ServiceDate
                                JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
                                             AND Movement.DescId = zc_Movement_PersonalService()
@@ -304,7 +308,7 @@ BEGIN
                                                                AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
 
                            WHERE MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inOperDate) AND (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
-                            AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                             AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
                            --GROUP BY ObjectLink_Personal_Member.ChildObjectId
                            --       , MovementLinkObject_PersonalServiceList.ObjectId
                            )
@@ -353,9 +357,11 @@ BEGIN
 
         LEFT JOIN tmpPersonalService ON tmpPersonalService.MemberId        = tmpRes.MemberId
                                     AND tmpPersonalService.PositionId      = tmpRes.PositionId
-                                    AND COALESCE (tmpPersonalService.PositionLevelId,0) = COALESCE (tmpRes.PositionLevelId,0)
                                     AND tmpPersonalService.PersonalServiceListId = tmpRes.PersonalServiceListId
-                                    --PositionLevel нет в мастере PersonalService
+                                    -- !!!Только ОДИН!!!
+                                    AND tmpPersonalService.Ord             = 1
+                                    -- PositionLevel нет в мастере PersonalService
+                                    -- AND COALESCE (tmpPersonalService.PositionLevelId,0) = COALESCE (tmpRes.PositionLevelId,0)
 
         LEFT JOIN Movement AS Movement_PersonalService ON Movement_PersonalService.Id = tmpPersonalService.MovementId 
    ;
