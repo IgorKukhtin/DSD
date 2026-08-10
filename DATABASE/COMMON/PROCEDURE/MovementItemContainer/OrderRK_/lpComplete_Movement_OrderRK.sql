@@ -256,7 +256,7 @@ BEGIN
               -- Контейнер ОПиУ - ИЛИ Контейнер Юр.Лицо - перевыставление
             , 0                                       AS ContainerId_Analyzer
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
-            , vbPartnerId_To                          AS ObjectExtId_Analyzer   -- Подраделение кому или...
+            , vbPartnerId_To                          AS ObjectExtId_Analyzer   -- Филиал кому или Покупатель
             , 0                                       AS ParentId
             , -1 * _tmpItem.OperCount
             , vbOperDate
