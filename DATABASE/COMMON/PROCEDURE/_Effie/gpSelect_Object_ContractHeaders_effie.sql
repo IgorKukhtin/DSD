@@ -15,6 +15,7 @@ RETURNS TABLE (extId            TVarChar   -- Уникальный идентификатор договора
              , form             Integer    -- 1 или 2 форма
              , paymentDelay     Integer    -- Отсрочка оплаты в днях
              , creditLimit      TFloat     -- Кредитный лимит 
+             , discount	        TFloat	   -- % скидки по договору
              , isDeleted        Boolean    -- Признак активности: false = активен / true = не активен
              , PaidKindId       Integer    -- Форма оплата - для внутреннего использования
              , PaidKindName     TVarChar   -- Форма оплата - для внутреннего использования
@@ -35,7 +36,15 @@ BEGIN
      tmpDelayCreditLimit AS (SELECT -- Договор
                                       ObjectLink_ContractCondition_Contract.ChildObjectId  AS ContractId
                                       -- кредитный лимит
-                                    , MAX (COALESCE (ObjectFloat_Value.ValueData,0)) :: TFloat AS Value
+                                    , MAX (CASE WHEN ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_DelayCreditLimit()
+                                                     THEN COALESCE (ObjectFloat_Value.ValueData,0)
+                                                ELSE 0 
+                                           END) :: TFloat AS Value
+                                      -- % скидки по договору
+                                    , MAX (CASE WHEN ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
+                                                     THEN -1 * COALESCE (ObjectFloat_Value.ValueData,0)
+                                                ELSE 0 
+                                           END) :: TFloat AS Discount
                                     
                              FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                     -- Условие договора НЕ удалено
@@ -58,7 +67,9 @@ BEGIN
                                     LEFT JOIN ObjectDate AS ObjectDate_EndDate
                                                          ON ObjectDate_EndDate.ObjectId = Object_ContractCondition.Id
                                                         AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
-                             WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_DelayCreditLimit()
+                             WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId IN (zc_Enum_ContractConditionKind_DelayCreditLimit()
+                                                                                                      , zc_Enum_ContractConditionKind_ChangePercent()
+                                                                                                       )
                                AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                                AND (COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())) :: TDateTime <= CURRENT_DATE
                                AND (COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())) > CURRENT_DATE
@@ -78,6 +89,7 @@ BEGIN
             END                                                            ::Integer  AS form
           , (COALESCE (Object_Contract_View.DayCalendar,0) + COALESCE (Object_Contract_View.DayBank,0)) ::Integer AS paymentDelay
           , tmpDelayCreditLimit.Value                                      ::TFloat   AS creditLimit
+          , tmpDelayCreditLimit.Discount                                   ::TFloat   AS Discount
           , Object_Contract_View.isErased                                  ::Boolean  AS isDeleted
 
           , Object_PaidKind.Id        AS PaidKindId
