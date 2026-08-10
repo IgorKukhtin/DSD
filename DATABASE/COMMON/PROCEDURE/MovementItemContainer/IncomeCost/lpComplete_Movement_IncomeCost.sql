@@ -70,6 +70,14 @@ BEGIN
          --
          DROP TABLE _tmpItem_Transport;
 
+     -- Перепроведение, что б "затраты" оказались во ВСЕХ "Расходы будущих периодов"
+     ELSEIF vbMovementDescId_from = zc_Movement_Service() -- AND 1=0
+        AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_from AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         PERFORM gpReComplete_Movement_Service (vbMovementId_from, lfGet_User_Session (inUserId));
+         --
+         DROP TABLE _tmpItem;
+
      END IF;
      
      -- создаются временные таблицы - для формирование данных для проводок
