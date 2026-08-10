@@ -48,6 +48,14 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, False);
 
+if (vbUserId = 5 AND 1=1) -- OR inMovementId = 34404010 
+then
+    RAISE EXCEPTION 'Admin - Test <%> '
+                  , 'ok'
+                   ;
+    -- 'ѕовторите действие через 3 мин.'
+end if;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
