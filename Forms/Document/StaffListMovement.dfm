@@ -1628,6 +1628,11 @@ inherited StaffListMovementForm: TStaffListMovementForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
+      ShowCaption = False
+    end
     object bbPrintNoGroup: TdxBarButton
       Caption = #1055#1077#1095#1072#1090#1100' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       Category = 0
