@@ -236,7 +236,9 @@ BEGIN
            , ( '(' || Object_BankAccount.ObjectCode :: TVarChar || ') ' || Object_BankAccount.ValueData) :: TVarChar AS BankAccountName
 
            , Object_Contract_View.ContractTagId
-           , Object_Contract_View.ContractTagName
+           , CASE WHEN COALESCE (Object_ContractTagKind.ValueData,'') = '' THEN Object_Contract_View.ContractTagName
+                  ELSE Object_Contract_View.ContractTagName||' '||Object_ContractTagKind.ValueData
+             END ::TVarChar AS ContractTagName   
 
            , Object_AreaContract.Id                     AS AreaContractId
            , Object_AreaContract.ValueData              AS AreaContractName
@@ -472,6 +474,11 @@ BEGIN
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
             LEFT JOIN Object AS Object_CurrencyBasis ON Object_CurrencyBasis.Id = zc_Enum_Currency_Basis()
+
+            LEFT JOIN ObjectLink AS ObjectLink_ContractTag_ContractTagKind
+                                 ON ObjectLink_ContractTag_ContractTagKind.ObjectId = Object_Contract_View.ContractTagId 
+                                AND ObjectLink_ContractTag_ContractTagKind.DescId = zc_ObjectLink_ContractTag_ContractTagKind()
+            LEFT JOIN Object AS Object_ContractTagKind ON Object_ContractTagKind.Id = ObjectLink_ContractTag_ContractTagKind.ChildObjectId
 
        WHERE Object_Contract_View.ContractId = inId
        --AND Object_Contract_View.EndDate_condition = zc_DateEnd()

@@ -19,9 +19,11 @@ $BODY$
           vbPersonalId      Integer;
           vbRetailId        Integer;
           vbUnitId          Integer;
+          vbBranchId        Integer;
           
           vbPositionId_1      Integer;
           vbPersonalGroupId_1 Integer;
+          vbPositionId_ContractTag Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -29,7 +31,8 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      SELECT ObjectLink_Juridical_Retail.ChildObjectId
-    INTO vbRetailId 
+          , ObjectLink_ContractTag_Position.ChildObjectId AS PositionId_ContractTag
+    INTO vbRetailId, vbPositionId_ContractTag 
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                        ON MovementLinkObject_Partner.MovementId = Movement.Id        
@@ -43,6 +46,19 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                              ON ObjectLink_Contract_ContractTag.ObjectId = MovementLinkObject_Contract.ObjectId
+                             AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+
+         LEFT JOIN ObjectLink AS ObjectLink_ContractTag_Position
+                              ON ObjectLink_ContractTag_Position.ObjectId = ObjectLink_Contract_ContractTag.ChildObjectId
+                             AND ObjectLink_ContractTag_Position.DescId = zc_ObjectLink_ContractTag_Position()
+
      WHERE Movement.Id = inMovementId  ;
 
 --vbRetailId := 992487;
@@ -63,12 +79,14 @@ BEGIN
      --данные по пользователю для определения данных из справочника CommercLocal 
      SELECT tmpPersonal.PersonalId
           , tmpPersonal.UnitId
+          , tmpPersonal.BranchId
           , tmpPersonal.PositionId
           , ObjectLink_Personal_PersonalGroup.ChildObjectId AS PersonalGroupId
-    INTO vbPersonalId, vbUnitId, vbPositionId_1, vbPersonalGroupId_1 
+    INTO vbPersonalId, vbUnitId, vbBranchId, vbPositionId_1, vbPersonalGroupId_1 
      FROM (SELECT lfSelect.MemberId
                 , lfSelect.PersonalId 
                 , lfSelect.UnitId
+                , lfSelect.BranchId
                 , lfSelect.PositionId
            FROM lfSelect_Object_Member_findPersonal (zfCalc_UserAdmin()) AS lfSelect
            ) AS tmpPersonal
@@ -180,6 +198,35 @@ BEGIN
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
                               WHERE ObjectLink_Retail_KAM.ObjectId = vbRetailId
                                 AND ObjectLink_Retail_KAM.DescId = zc_ObjectLink_Retail_KAM()
+                                AND COALESCE (vbPositionId_ContractTag,0) = 0
+                           UNION
+                              --если заполнена должность по признаку договора
+                              SELECT 2 AS Ord 
+                                   , Object_Position.ValueData       AS PositionName
+                                   , Object_PersonalGroup.ValueData  AS PersonalGroupName
+                                   , Object_Personal.ValueData       AS PersonalName
+                                   , Object_Unit.ValueData           AS UnitName
+                              FROM ObjectLink AS ObjectLink_Personal_Position
+                                   LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+                                   
+                                   LEFT JOIN object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Position.ObjectId
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                                                        ON ObjectLink_Personal_PersonalGroup.ObjectId = ObjectLink_Personal_Position.ObjectId
+                                                       AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+                                   LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                        ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Position.ObjectId
+                                                       AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                   INNER JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                        ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                                       AND ObjectLink_Unit_Branch.ChildObjectId = vbBranchId
+                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+                              WHERE ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                AND ObjectLink_Personal_Position.ChildObjectId = vbPositionId_ContractTag
+                                AND COALESCE (vbPositionId_ContractTag,0) <> 0
                               )
 
               , tmpLevel3 AS (SELECT 3 AS Ord 
@@ -247,6 +294,6 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Object_CommercRetail_byMovement (inMovementId:= 40874, inSession := zfCalc_UserAdmin());
 
---select * from gpSelect_Object_CommercRetail_byMovement(inMovementId := 34499291 ,  inSession := '9457');
+--select * from gpSelect_Object_CommercRetail_byMovement(inMovementId := 34932287 ,  inSession := '9457');
 
---select * from gpSelect_Object_CommercRetail(inIsErased := 'False' ,  inSession := '9457');
+--

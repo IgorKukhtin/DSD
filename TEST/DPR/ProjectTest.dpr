@@ -1692,7 +1692,9 @@ uses
   OrderRKJournal in '..\..\Forms\Document\OrderRKJournal.pas' {OrderRKJournalForm: TParentForm},
   OrderRK in '..\..\Forms\Document\OrderRK.pas' {OrderRKForm: TParentForm},
   ServiceJournalChoice in '..\..\Forms\Document\ServiceJournalChoice.pas' {ServiceJournalChoiceForm: TParentForm},
-  PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm};
+  PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm},
+  ContractTagKind in '..\..\Forms\Guides\ContractTagKind.pas' {ContractTagKindForm: TParentForm},
+  ContractTagKindEdit in '..\..\Forms\Guides\ContractTagKindEdit.pas' {ContractTagKindEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

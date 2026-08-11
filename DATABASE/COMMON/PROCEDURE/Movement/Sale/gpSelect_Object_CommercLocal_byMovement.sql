@@ -93,10 +93,10 @@ BEGIN
                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId -- PartnerId
                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
-        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
      WHERE Movement.Id = inMovementId;
 
      --данные по пользователю для определения данных из справочника CommercLocal 
@@ -675,7 +675,7 @@ BEGIN
                    , tmp.PersonalGroupName   AS PersonalGroupName_inf
                    , tmp.PersonalName ::Text AS PersonalName_inf
                    , tmp.UnitName            AS UnitName_inf
-              FROM tmpLevel1 AS tmp
+              FROM tmpLevel2 AS tmp
               WHERE vbisEDI = TRUE      
         ORDER BY 1
         ;

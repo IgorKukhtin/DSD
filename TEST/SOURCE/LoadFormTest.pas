@@ -503,7 +503,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
   exit;
@@ -511,7 +511,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
   exit;
 
- {
+
    // Состояние договора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractStateKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractStateKindForm');
@@ -520,15 +520,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractArticleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractArticleEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractArticleEditForm');
-  }
+
   // Регионы
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
-   exit;
-   // Регионы (договора)
-  {
+  exit;
+  // Регионы (договора)
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContractEditForm'));
@@ -537,21 +537,28 @@ begin
   // Типы условий договоров
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionKindForm');
-  }
+
   // Условия договоров
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionByContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionByContractForm');
-  {// Признак договора
+  // Признак договора
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractTagForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractTagEditForm');
-  // Группы признаков договоров
+  {// Группы признаков договоров
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractTagGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractTagGroupEditForm');
-   }
+  }
+
+  //Категория (Признак дог.)
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractTagKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractTagKindEditForm');
 end;
 
 procedure TLoadFormTest.LoadContractKindFormTest;

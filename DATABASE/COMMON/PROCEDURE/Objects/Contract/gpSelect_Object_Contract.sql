@@ -43,7 +43,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PersonalSigningId Integer, PersonalSigningCode Integer, PersonalSigningName TVarChar
             
              , BankAccountId Integer, BankAccountName TVarChar
-             , ContractTagId Integer, ContractTagName TVarChar, ContractTagGroupName TVarChar
+             , ContractTagId Integer, ContractTagName TVarChar, ContractTagGroupName TVarChar, ContractTagKindName TVarChar, PositionName_ContractTag TVarChar
                           
              , AreaContractId Integer, AreaContractName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
@@ -248,7 +248,9 @@ BEGIN
 
        , Object_Contract_View.ContractTagId
        , Object_Contract_View.ContractTagName
-       , Object_Contract_View.ContractTagGroupName
+       , Object_Contract_View.ContractTagGroupName 
+       , Object_ContractTagKind.ValueData  ::TVarChar   AS ContractTagKindName
+       , Object_Position.ValueData         ::TVarChar   AS PositionName_ContractTag
 
        , Object_AreaContract.Id             AS AreaContractId
        , Object_AreaContract.ValueData      AS AreaContractName
@@ -546,6 +548,18 @@ BEGIN
         LEFT JOIN Object_Contract_InvNumber_Key_View AS View_Contract_InvNumber_Key ON View_Contract_InvNumber_Key.ContractId = Object_Contract_View.ContractId
  
         LEFT JOIN tmpContractPriceList ON tmpContractPriceList.ContractId = Object_Contract_View.ContractId
+
+
+          LEFT JOIN ObjectLink AS ObjectLink_ContractTag_ContractTagKind
+                               ON ObjectLink_ContractTag_ContractTagKind.ObjectId = Object_Contract_View.ContractTagId 
+                              AND ObjectLink_ContractTag_ContractTagKind.DescId = zc_ObjectLink_ContractTag_ContractTagKind()
+          LEFT JOIN Object AS Object_ContractTagKind ON Object_ContractTagKind.Id = ObjectLink_ContractTag_ContractTagKind.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ContractTag_Position
+                               ON ObjectLink_ContractTag_Position.ObjectId = Object_Contract_View.ContractTagId 
+                              AND ObjectLink_ContractTag_Position.DescId = zc_ObjectLink_ContractTag_Position()
+          LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_ContractTag_Position.ChildObjectId
+
 
    WHERE ((inIsPeriod = TRUE AND Object_Contract_View.EndDate_Term BETWEEN inStartDate AND inEndDate AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
           ) OR inIsPeriod = FALSE)
