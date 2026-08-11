@@ -29,20 +29,83 @@ BEGIN
          RETURN;
      END IF;
 
-     -- находим торговую сеть
-     vbJuridicalId := (SELECT Object.Id FROM Object WHERE TRIM (Object.ValueData) ILIKE TRIM (inJuridicalName) AND Object.DescId = zc_Object_Juridical() Limit 1);
-     
+     inJuridicalName:= REPLACE (inJuridicalName, CHR(39), '`');
+
+
+     -- 1
+     -- проверка - 1
+     IF 1 < (SELECT COUNT(*) FROM Object WHERE REPLACE (Object.ValueData, CHR(39), '`') ILIKE ' ' || inJuridicalName AND Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE)
+     THEN
+         RAISE EXCEPTION 'Ошибка-1. Найдено несколько значений Юр.лицо = <%> не найдено.', ' ' || inJuridicalName
+        ;
+     END IF;
+
+     -- находим-1
+     vbJuridicalId := (SELECT Object.Id FROM Object WHERE REPLACE (Object.ValueData, CHR(39), '`') ILIKE ' ' || inJuridicalName AND Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE);
+
+
+     -- 2
      IF COALESCE (vbJuridicalId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка. Юр.лицо <(%) %> не найдено', inJuridicalCode, inJuridicalName;
+         -- проверка - 2
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE REPLACE (Object.ValueData, CHR(39), '`') ILIKE inJuridicalName || ' ' AND Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE)
+         THEN
+             RAISE EXCEPTION 'Ошибка-2. Найдено несколько значений Юр.лицо = <%> не найдено.', inJuridicalName || ' '
+             ;
+         END IF;
+
+         -- находим - 2
+         vbJuridicalId := (SELECT Object.Id FROM Object WHERE REPLACE (Object.ValueData, CHR(39), '`') ILIKE inJuridicalName || ' ' AND Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE);
+
+     END IF;
+
+
+     -- 3
+     IF COALESCE (vbJuridicalId,0) = 0
+     THEN
+         -- проверка - 3
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE REPLACE (Object.ValueData, CHR(39), '`') ILIKE inJuridicalName AND Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE)
+         THEN
+             RAISE EXCEPTION 'Ошибка-3. Найдено несколько значений Юр.лицо = <%> не найдено.', inJuridicalName
+             ;
+         END IF;
+
+         -- находим - 3
+         vbJuridicalId := (SELECT Object.Id FROM Object WHERE REPLACE (Object.ValueData, CHR(39), '`') ILIKE inJuridicalName AND Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE);
+
+     END IF;
+
+
+     -- 4
+     IF COALESCE (vbJuridicalId,0) = 0
+     THEN
+         -- проверка - 4
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE TRIM (REPLACE (Object.ValueData, CHR(39), '`')) ILIKE TRIM (inJuridicalName) AND Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE)
+         THEN
+             RAISE EXCEPTION 'Ошибка-4. Найдено несколько значений Юр.лицо = <%> не найдено.', TRIM (inJuridicalName)
+             ;
+         END IF;
+
+         -- находим - 4
+         vbJuridicalId := (SELECT Object.Id FROM Object WHERE TRIM (REPLACE (Object.ValueData, CHR(39), '`')) ILIKE TRIM (inJuridicalName) AND Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE);
+
+     END IF;
+
+
+     IF COALESCE (vbJuridicalId,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Юр.лицо <%> не найдено.'
+                       , REPLACE (inJuridicalName, CHR(39), '`')
+                     --, 'SELECT COUNT(*) FROM Object WHERE Object.ValueData ILIKE ' || CHR(39) || inJuridicalName || CHR(39) || ' AND Object.DescId = zc_Object_Juridical() AND Object.isErased = FALSE'
+                        ;
      END IF;
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_OrderAuto(), vbJuridicalId, CASE WHEN UPPER (TRIM (inisAuto)) = 'ДА' THEN TRUE ELSE FALSE END);
-     
+
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (vbJuridicalId, vbUserId);
-   
+
      if vbUserId = 9457 then  RAISE EXCEPTION 'Test admin.Ok'; end if;
 
 END;
