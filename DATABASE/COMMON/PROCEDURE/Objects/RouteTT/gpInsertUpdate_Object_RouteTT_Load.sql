@@ -41,8 +41,8 @@ BEGIN
          RAISE EXCEPTION 'Помилка.Для маршрута <%> значення Посада не заповнено', inRouteTTName;
      END IF;
      
-     -- проверка
-     IF COALESCE (inPersonalGroupName,'') = ''
+     -- НЕТ проверки
+     IF COALESCE (inPersonalGroupName,'') = '' AND 1=0
      THEN
          RAISE EXCEPTION 'Помилка.Для маршрута <%> значення Група співробітників не заповнено', inRouteTTName;
      END IF;
@@ -67,7 +67,7 @@ BEGIN
      -- находим Группу сотрудника
      vbPersonalGroupId := (SELECT Object.Id FROM Object WHERE TRIM (Object.ValueData) ILIKE TRIM (inPersonalGroupName) AND Object.DescId = zc_Object_PersonalGroup() Limit 1);
      
-     IF COALESCE (vbPersonalGroupId,0) = 0
+     IF COALESCE (vbPersonalGroupId,0) = 0 AND TRIM (inPersonalGroupName) <> ''
      THEN
          RAISE EXCEPTION 'Помилка. Групу співробітників <%> не знайдено', inPersonalGroupName;
      END IF;

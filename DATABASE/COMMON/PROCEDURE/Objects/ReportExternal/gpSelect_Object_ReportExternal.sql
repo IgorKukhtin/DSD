@@ -43,6 +43,9 @@ BEGIN
           AND (Object.ValueData NOT ILIKE 'gpReport_GoodsMI_byMovement'
             OR vbUserId <> 5
               )
+          AND (Object.ValueData NOT ILIKE 'gpReport_JuridicalCollation'
+            OR vbUserId NOT IN (10352030, 13246443) -- Павлова О.О. + Сушко О.О.
+              )
 
         /*AND (Object.ValueData ILIKE '%Report%'
             OR Object.ValueData ILIKE '%Mobile%'

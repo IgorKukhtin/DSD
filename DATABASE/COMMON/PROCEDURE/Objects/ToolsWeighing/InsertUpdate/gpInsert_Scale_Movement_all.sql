@@ -186,6 +186,47 @@ BEGIN
      END IF;
 
 
+     -- проверка - договор В заявке <> Взвешивание
+     IF EXISTS (SELECT 1
+                FROM MovementLinkMovement AS MovementLinkMovement_Order
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                  ON MovementLinkObject_Contract.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                     LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                          ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                         AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                     LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+                WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                  AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
+                   --
+                  AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Готовая продукция
+               )
+       AND NOT EXISTS (SELECT 1
+                       FROM MovementLinkObject AS MovementLinkObject_Contract
+                            LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                 ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                                AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+                       WHERE MovementLinkObject_Contract.MovementId = inMovementId
+                         AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
+                         --
+                         AND View_InfoMoney.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_30100() -- Готовая продукция
+                      )
+     THEN
+         -- !!!исправляем ДОГОВОР!!!
+          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId
+                                                   , (SELECT MovementLinkObject_Contract.ObjectId
+                                                      FROM MovementLinkMovement AS MovementLinkMovement_Order
+                                                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                                        ON MovementLinkObject_Contract.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                                                       AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                                      WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                                                        AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                                                     ));
+         
+     END IF;
+
+
      -- Схема с Упаковокой - документ будет не проведен
      vbIsUpak_UnComplete:= EXISTS (SELECT 1
                                    FROM Object_Unit_Scale_upak_View
