@@ -1,4 +1,4 @@
-unit ContractTag;
+unit ContractTagKind;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   dsdCommon;
 
 type
-  TContractTagForm = class(TParentForm)
+  TContractTagKindForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -57,9 +57,8 @@ type
     actInsert: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    ContractTagGroupName: TcxGridDBColumn;
-    ContractTagKindName: TcxGridDBColumn;
-    PositionName: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public
@@ -71,6 +70,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TContractTagForm);
+  RegisterClass(TContractTagKindForm);
 
 end.

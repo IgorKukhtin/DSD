@@ -2,12 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractTag(Integer,Integer,TVarChar,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractTag(Integer,Integer,TVarChar,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractTag(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractTag(
  INOUT ioId	                 Integer,       -- ключ объекта <Призник договора>
     IN inCode                Integer,       -- Код объекта <>
     IN inName                TVarChar,      -- Название объекта <>
     IN inContractTagGroupId  Integer,       -- Группы признаков договоров
+    IN inContractTagKindId   Integer,       -- Категория (Признак дог.)
+    IN inPositionId          Integer,       -- Должность
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -34,6 +37,10 @@ BEGIN
    
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractTag_ContractTagGroup(), ioId, inContractTagGroupId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractTag_ContractTagKind(), ioId, inContractTagKindId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractTag_Position(), ioId, inPositionId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -41,12 +48,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ContractTag (Integer,Integer,TVarChar,Integer,TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_ContractTag (Integer,Integer,TVarChar,Integer,TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.08.26         *
  08.05.14                                        * add lpCheckRight
  21.04.14         *
 */

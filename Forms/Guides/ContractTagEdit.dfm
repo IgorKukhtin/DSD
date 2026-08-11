@@ -2,7 +2,7 @@ object ContractTagEditForm: TContractTagEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-  ClientHeight = 190
+  ClientHeight = 300
   ClientWidth = 294
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,12 +24,12 @@ object ContractTagEditForm: TContractTagEditForm
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 49
+    Top = 53
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 39
-    Top = 156
+    Left = 33
+    Top = 263
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object ContractTagEditForm: TContractTagEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 183
-    Top = 156
+    Left = 177
+    Top = 263
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -53,19 +53,19 @@ object ContractTagEditForm: TContractTagEditForm
   end
   object edCode: TcxCurrencyEdit
     Left = 10
-    Top = 30
+    Top = 25
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 273
   end
   object cxLabel11: TcxLabel
-    Left = 8
+    Left = 10
     Top = 101
     Caption = #1043#1088#1091#1087#1087#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object ceContractTagGroup: TcxButtonEdit
-    Left = 8
+    Left = 10
     Top = 120
     Properties.Buttons = <
       item
@@ -74,6 +74,40 @@ object ContractTagEditForm: TContractTagEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 152
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
+  end
+  object edContractTagKind: TcxButtonEdit
+    Left = 10
+    Top = 171
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 200
+    Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+  end
+  object edPosition: TcxButtonEdit
+    Left = 10
+    Top = 219
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
     Width = 273
   end
   object ActionList: TActionList
@@ -95,6 +129,7 @@ object ContractTagEditForm: TContractTagEditForm
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -104,6 +139,7 @@ object ContractTagEditForm: TContractTagEditForm
     end
     object dsdFormClose: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -117,12 +153,14 @@ object ContractTagEditForm: TContractTagEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -130,6 +168,7 @@ object ContractTagEditForm: TContractTagEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractTagGroupId'
@@ -137,6 +176,23 @@ object ContractTagEditForm: TContractTagEditForm
         Component = ContractTagGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractTagKindId'
+        Value = Null
+        Component = GuidesContractTagKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 104
@@ -148,6 +204,7 @@ object ContractTagEditForm: TContractTagEditForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 8
@@ -163,23 +220,27 @@ object ContractTagEditForm: TContractTagEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractTagGroupId'
         Value = Null
         Component = ContractTagGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractTagGroupName'
@@ -187,6 +248,37 @@ object ContractTagEditForm: TContractTagEditForm
         Component = ContractTagGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagKindId'
+        Value = Null
+        Component = GuidesContractTagKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagKindName'
+        Value = Null
+        Component = GuidesContractTagKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -208,14 +300,15 @@ object ContractTagEditForm: TContractTagEditForm
     Top = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 48
-    Top = 40
+    Left = 224
+    Top = 152
   end
   object ContractTagGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContractTagGroup
     FormNameParam.Value = 'TContractTagGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractTagGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -224,6 +317,7 @@ object ContractTagEditForm: TContractTagEditForm
         Value = ''
         Component = ContractTagGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -231,8 +325,63 @@ object ContractTagEditForm: TContractTagEditForm
         Component = ContractTagGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 120
     Top = 104
+  end
+  object GuidesContractTagKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContractTagKind
+    FormNameParam.Value = 'TContractTagKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TContractTagKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesContractTagKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesContractTagKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 126
+    Top = 144
+  end
+  object GuidesPosition: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 120
+    Top = 211
   end
 end

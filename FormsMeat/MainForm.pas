@@ -1659,6 +1659,8 @@ type
     miReport_Sale_WeighingPartner_Compare: TMenuItem;
     actOrderRK: TdsdOpenForm;
     miOrderRK: TMenuItem;
+    actContractTagKind: TdsdOpenForm;
+    N285: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
