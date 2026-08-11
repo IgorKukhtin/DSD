@@ -392,6 +392,8 @@ type
     dxBarButton1: TdxBarButton;
     dxBarSeparator2: TdxBarSeparator;
     isReExch: TcxGridDBColumn;
+    PositionName_ContractTag: TcxGridDBColumn;
+    ContractTagKindName: TcxGridDBColumn;
 
   private
     { Private declarations }
