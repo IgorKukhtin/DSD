@@ -52,6 +52,16 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Personal());
 
+
+   -- Голота К.О.
+   IF vbUserId = 6604558 
+   THEN
+       -- сохранили связь с <Группировки Сотрудников>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalGroup(), ioId, inPersonalGroupId);
+       --
+       RETURN;
+   END IF;
+
    -- проверка
    IF zfConvert_StringToNumber (vbSession_s) >= 0 -- AND vbUserId <> 5
    THEN
