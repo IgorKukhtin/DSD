@@ -121,10 +121,24 @@ BEGIN
                            UNION SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = zc_Enum_Process_InsertUpdate_Movement_Cash() AND EXISTS (SELECT tmpAccessKey_isCashAll.Id FROM tmpAccessKey_isCashAll) GROUP BY AccessKeyId
                                 )
           , tmpAll AS (SELECT tmpStatus.StatusId, tmpStatus.StartDate, tmpStatus.EndDate, tmpRoleAccessKey.AccessKeyId FROM tmpStatus, tmpRoleAccessKey)
+
+          , tmpMovement3 AS (SELECT Movement.Id AS MovementId_main --, Movement.StatusId, Movement.AccessKeyId, Movement.OperDate
+                                --, MovementItem.*
+                             FROM Movement
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.ObjectId   = inCashId
+                             WHERE Movement.DescId = zc_Movement_Cash()
+                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                            )
+
           , tmpMovement2 AS (SELECT Movement.*
                              FROM Movement
                              WHERE Movement.DescId = zc_Movement_Cash()
-                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                               AND (Movement.Id IN (SELECT DISTINCT tmpMovement3.MovementId_main FROM tmpMovement3)
+                                 OR (inCashId = 0 AND vbUser_all = TRUE)
+                                   )
                             )
           , tmpMovement AS (SELECT Movement.*
                               , Object_Status.ObjectCode AS StatusCode
@@ -190,11 +204,15 @@ BEGIN
                                                                          )
                                 )
 
-         , tmpMI2 AS (SELECT MovementItem.*
+         , tmpMI2 AS (SELECT MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, MovementItem.Amount, MovementItem.ParentId, MovementItem.isErased
                       FROM MovementItem
                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                         AND MovementItem.DescId = zc_MI_Master()
                        -- AND MovementItem.ObjectId = inCashId
+                       -- AND inCashId = 0 AND vbUser_all = TRUE
+                   /*UNION ALL
+                      SELECT MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, MovementItem.Amount, MovementItem.ParentId, MovementItem.isErased
+                      FROM tmpMovement3 AS MovementItem*/
                      )
          , tmpMI AS (SELECT MovementItem.*
                      FROM tmpMovement
