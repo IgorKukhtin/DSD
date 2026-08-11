@@ -169,7 +169,7 @@ $BODY$
                                AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
 
      WHERE Object_Partner.DescId   = zc_Object_Partner()
-       AND Object_Partner.isErased = FALSE
+      AND Object_Partner.isErased = FALSE
     --AND ObjectLink_Partner_Street.ChildObjectId > 0
     ;
 
@@ -182,11 +182,11 @@ $BODY$
            FROM _tmpPartner
            GROUP BY _tmpPartner.PartnerId, _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
            ) AS tmpPartner
-   --WHERE Object_TT_effie.PartnerId  = tmpPartner.PartnerId
-     WHERE Object_TT_effie.StreetId   = tmpPartner.StreetId
+     WHERE Object_TT_effie.PartnerId  = tmpPartner.PartnerId
+   /*WHERE Object_TT_effie.StreetId   = tmpPartner.StreetId
        AND Object_TT_effie.HouseNumber= tmpPartner.HouseNumber
        AND Object_TT_effie.CaseNumber = tmpPartner.CaseNumber
-       AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber
+       AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber*/
     ;
 
      -- нужно записать в таблица Object_TT_effie.Id - ключ StreetId, HouseNumber, CaseNumber, RoomNumber  те элементы , которых нет
@@ -202,16 +202,16 @@ $BODY$
           , tmpPartner.EDIId
           , CURRENT_TIMESTAMP AS InsertDate
           , FALSE             AS isErased
-      FROM (SELECT 0 AS PartnerId, _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
+      FROM (SELECT _tmpPartner.PartnerId, _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
                  , MAX (_tmpPartner.PartnerTagId) AS PartnerTagId, MAX (_tmpPartner.AreaId) AS AreaId, MAX (_tmpPartner.EDIId) AS EDIId
             FROM _tmpPartner
-            GROUP BY _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
+            GROUP BY _tmpPartner.PartnerId, _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
            ) AS tmpPartner
-           LEFT JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner.StreetId
+           LEFT JOIN Object_TT_effie ON Object_TT_effie.PartnerId  = tmpPartner.PartnerId
+                                  /*AND Object_TT_effie.StreetId   = tmpPartner.StreetId
                                     AND Object_TT_effie.HouseNumber= tmpPartner.HouseNumber
                                     AND Object_TT_effie.CaseNumber = tmpPartner.CaseNumber
-                                    AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber
-                                  --AND Object_TT_effie.PartnerId  = tmpPartner.PartnerId
+                                    AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber*/
      WHERE Object_TT_effie.Id IS NULL;
 
 
@@ -221,24 +221,26 @@ $BODY$
      SELECT Object_TT_effie.Id                            ::TVarChar AS extId
           , Object_TT_effie.PartnerId                     ::Integer  AS PartnerId
 
-            -- !!!здесь Адрес!!!
-          , TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
-              || ' ' || COALESCE (Object_City.ValueData, '')
-              || ' ' || COALESCE (ObjectString_StreetKind_ShortName.ValueData, '')
-              || ' ' || COALESCE (Object_Street.ValueData, '')
-                     || CASE WHEN COALESCE (Object_TT_effie.HouseNumber, '') <> ''
-                                  THEN ' буд.' || COALESCE (Object_TT_effie.HouseNumber, '')
-                             ELSE ''
-                        END
-                     || CASE WHEN COALESCE (Object_TT_effie.CaseNumber, '') <> ''
-                                  THEN ' корп.' || COALESCE (Object_TT_effie.CaseNumber, '')
-                             ELSE ''
-                        END
-                       )                                  ::TVarChar AS Name       --StreetId + HouseNumber + CaseNumber + RoomNumber
+          , COALESCE (Object_Juridical.ValueData
+            || ' ' || TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
+                        || ' ' || COALESCE (Object_City.ValueData, '')
+                        || ' ' || COALESCE (ObjectString_StreetKind_ShortName.ValueData, '')
+                        || ' ' || COALESCE (Object_Street.ValueData, '')
+                               || CASE WHEN COALESCE (Object_TT_effie.HouseNumber, '') <> ''
+                                            THEN ' буд.' || COALESCE (Object_TT_effie.HouseNumber, '')
+                                       ELSE ''
+                                  END
+                               || CASE WHEN COALESCE (Object_TT_effie.CaseNumber, '') <> ''
+                                            THEN ' корп.' || COALESCE (Object_TT_effie.CaseNumber, '')
+                                       ELSE ''
+                                  END
+                                 )
+                      ,  Object_Partner.ValueData
+                      , ''
+                      )                                 ::TVarChar AS Name       --StreetId + HouseNumber + CaseNumber + RoomNumber
 
           , ''                                            ::TVarChar AS legalAddress
 
-            -- !!!здесь Адрес!!!
           , TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
               || ' ' || COALESCE (Object_City.ValueData, '')
               || ' ' || COALESCE (ObjectString_StreetKind_ShortName.ValueData, '')
@@ -252,7 +254,6 @@ $BODY$
                              ELSE ''
                         END
                        )                                  ::TVarChar AS streetAddress
-
           , ''                                            ::TVarChar AS latitude
           , ''                                            ::TVarChar AS longitude
           , 0                                             ::Integer  AS recurrence
@@ -261,7 +262,7 @@ $BODY$
           , ''                                            ::TVarChar AS salePointDistributorExtId
           , ''                                            ::TVarChar AS customer
           , ''                                            ::TVarChar AS customerIsis
-          , ''                                            ::TVarChar AS banner
+          , COALESCE (Object_Retail.ValueData, 'нет')     ::TVarChar AS banner
           , Object_City.ValueData                         ::TVarChar AS address2
           , Object_Street.ValueData                       ::TVarChar AS address3
           , COALESCE (Object_TT_effie.HouseNumber,'')     ::TVarChar AS address4
@@ -270,8 +271,8 @@ $BODY$
           , ''                                            ::TVarChar AS recTimeBeg
           , ''                                            ::TVarChar AS recTimeEnd
           , NULL                                          ::Integer  AS timeInTT
-          , ''                                            ::TVarChar AS retailerName
-          , ''                                            ::TVarChar AS retailerExtId
+          , COALESCE (Object_Retail.ValueData, 'нет')     ::TVarChar AS retailerName
+          , COALESCE (Object_Retail.Id ::TVarChar, zfCalc_UserAdmin() ::TVarChar) ::TVarChar AS retailerExtId
           , ''                                            ::TVarChar AS territorialFeatureExtId
           , Object_Region.Id                              ::TVarChar AS salePointDistrictExtId
           , Object_Region.ValueData                       ::TVarChar AS salePointDistrictName
@@ -297,6 +298,18 @@ $BODY$
           , 0  ::Integer  AS isDeleted
 
      FROM Object_TT_effie
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = Object_TT_effie.PartnerId
+                              AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Object_TT_effie.PartnerId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                              AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+
           LEFT JOIN Object AS Object_Area ON Object_Area.Id = Object_TT_effie.AreaId
 
           LEFT JOIN Object AS Object_Street ON Object_Street.Id = Object_TT_effie.StreetId
@@ -331,9 +344,7 @@ $BODY$
 
      -- есть Адрес
      WHERE Object_TT_effie.StreetId  > 0
-       -- !!!!
-       -- AND Object_TT_effie.PartnerId > 0
-
+       AND Object_TT_effie.PartnerId > 0
      --limit 200
     ;
 

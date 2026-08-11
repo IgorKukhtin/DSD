@@ -10,6 +10,7 @@ RETURNS TABLE (priceHeaderExtId      TVarChar   -- Идентификатор прайса
              , contractHeaderExtId   TVarChar   -- Идентификатор контракта
              , validFrom             TVarChar   -- Дата начала (минимальная дата 1753-01-01)
              , validTo               TVarChar   -- Дата окончания (максимальная дата 9999-12-31)
+             , discount	             TFloat     -- % скидки по договору
              , isDeleted             Boolean    -- Признак активности: false = активна / true = не активна. По умолчанию false = активна.
              , PartnerId             Integer    -- Контрагент инф.
              , StreetId              Integer    -- Street инф.
@@ -20,7 +21,7 @@ RETURNS TABLE (priceHeaderExtId      TVarChar   -- Идентификатор прайса
 AS
 $BODY$
    DECLARE vbUserId Integer;
- BEGIN
+BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
@@ -181,13 +182,14 @@ $BODY$
                )
 
           -- только такие договора
-        , tmp_Contract AS (SELECT DISTINCT gpSelect.extId :: Integer AS ContractId, gpSelect.PaidKindId, gpSelect.PaidKindName FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)
+        , tmp_Contract AS (SELECT DISTINCT gpSelect.extId :: Integer AS ContractId, gpSelect.PaidKindId, gpSelect.PaidKindName, gpSelect.discount FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)
 
      -- Результат
      SELECT tmp.PriceListId         ::TVarChar AS priceHeaderExtId
           , tmp.ContractId          ::TVarChar AS contractHeaderExtId
           , zfConvert_DateToString (zc_DateStart()) ::TVarChar AS validFrom
           , zfConvert_DateToString (zc_DateEnd())   ::TVarChar AS validTo
+          , tmp_Contract.Discount   ::TFloat   AS Discount
           , FALSE                   ::Boolean  AS isDeleted
           , tmp.PartnerId           ::Integer  AS PartnerId
           , tmp.StreetId            ::Integer  AS StreetId
@@ -201,6 +203,7 @@ $BODY$
           , tmp.ContractId          ::TVarChar AS contractHeaderExtId
           , zfConvert_DateToString (tmp.StartDate)                  ::TVarChar AS validFrom
           , zfConvert_DateToString (/*tmp.EndDate*/ zc_DateEnd())   ::TVarChar AS validTo
+          , tmp_Contract.Discount   ::TFloat   AS Discount
           , FALSE                   ::Boolean  AS isDeleted
           , tmp.PartnerId           ::Integer  AS PartnerId
           , tmp.StreetId            ::Integer  AS StreetId
@@ -214,6 +217,7 @@ $BODY$
           , tmp.ContractId          ::TVarChar AS contractHeaderExtId
           , zfConvert_DateToString (zc_DateStart()) ::TVarChar AS validFrom
           , zfConvert_DateToString (zc_DateEnd())   ::TVarChar AS validTo
+          , tmp_Contract.Discount   ::TFloat   AS Discount
           , FALSE                   ::Boolean  AS isDeleted
           , tmp.PartnerId           ::Integer  AS PartnerId
           , tmp.StreetId            ::Integer  AS StreetId

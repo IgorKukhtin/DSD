@@ -28,6 +28,7 @@ RETURNS TABLE (MovementId                 Integer
              , linkDiscounts_extId        TVarChar   --Идентификатор единицы связи. К примеру, типа связи по продуктам это будет значение внешнего идентификатора продукта.
              , GoodsId                    Integer
              , GoodsKindId                Integer
+             , PriceDiscount              TFloat     -- Цена с учетом скидки без НДС
              , linkDiscounts_discount     TFloat     --"Объём скидки, используется только для типа программы скидок 1 - фиксированная.Допустимо отрицательное значение."
                -- для проверки
              , Price_orig                 TFloat     -- цена без НДС из док.Promo
@@ -120,7 +121,7 @@ $BODY$
                                 , tmpMI.GoodsId
                                 , COALESCE (tmpGoodsByGoodsKind_GoodsKind.GoodsKindId, tmpGoodsByGoodsKind.GoodsKindId) AS GoodsKindId
                                 , COALESCE (tmpGoodsByGoodsKind_GoodsKind.GoodsByGoodsKindId, tmpGoodsByGoodsKind.GoodsByGoodsKindId) AS GoodsByGoodsKindId
-                                , MIFloat_PriceWithOutVAT.ValueData ::TFloat AS Price              --Цена с учетом скидки
+                                , MIFloat_PriceWithOutVAT.ValueData ::TFloat AS Price             -- Цена с учетом скидки
                                 , MIFloat_OperPriceList.ValueData   ::TFloat AS OperPriceList     -- Цена в прайсе
                            FROM tmpMI
                                LEFT JOIN tmpMIFloat_Price AS MIFloat_PriceWithOutVAT
@@ -140,7 +141,7 @@ $BODY$
                                                             AND COALESCE (tmpMI.GoodsKindId,0) = 0
                            )
 
-   --прайсы
+    -- прайсы
    , tmpPriceForTwin_effie AS (SELECT gpSelect.extId            ::Integer AS ContractId
                                     , gpSelect.clientExtID      ::Integer AS PartnerId
                                     , gpSelect.priceHeaderExtId ::Integer AS PriceListId
@@ -170,9 +171,13 @@ $BODY$
                       , tmpMI.GoodsByGoodsKindId
                       , tmpMI.GoodsId
                       , tmpMI.GoodsKindId
+                        -- Цена с учетом скидки без НДС
                       , tmpMI.Price                   AS Price
+                        -- Цена в прайсе без НДС
                       , tmpMI.OperPriceList           AS Price_orig
+                        -- Цена в effie
                       , tmpPriceListItem_effie.Price  AS Price_effie
+                        --
                       , CASE WHEN COALESCE (tmpPriceListItem_effie.Price,0) <> 0
                              THEN 100 - (tmpMI.Price * 100 / tmpPriceListItem_effie.Price)
                              ELSE 0
@@ -218,6 +223,8 @@ $BODY$
           , tmpData.GoodsByGoodsKindId           ::TVarChar AS linkDiscounts_extId
           , tmpData.GoodsId                      ::Integer
           , tmpData.GoodsKindId                  ::Integer
+            -- Цена с учетом скидки = цена Promo без НДС
+          , tmpData.Price                        ::TFloat   AS PriceDiscount
           , tmpData.TaxPersent                   ::TFloat   AS linkDiscounts_discount
 
           , tmpData.Price_orig                   ::TFloat   AS Price_orig   -- цена без НДС из док.Promo

@@ -24,8 +24,8 @@ CREATE TABLE Object_TT_effie(
 /*-------------------------------------------------------------------------------*/
 
 /*                                  »Ì‰ÂÍÒ˚                                      */
--- CREATE UNIQUE INDEX idx_Object_TT_effie_StreetId_HouseNumber_CaseNumber_RoomNumber ON Object_TT_effie (StreetId, HouseNumber, CaseNumber, RoomNumber);
-CREATE UNIQUE INDEX idx_Object_TT_effie_StreetId_HouseNumber_CaseNumber_RoomNumber ON Object_TT_effie (PartnerId);
+CREATE UNIQUE INDEX idx_Object_TT_effie_StreetId_HouseNumber_CaseNumber_RoomNumber ON Object_TT_effie (StreetId, HouseNumber, CaseNumber, RoomNumber);
+-- CREATE UNIQUE INDEX idx_Object_TT_effie_StreetId_HouseNumber_CaseNumber_RoomNumber ON Object_TT_effie (PartnerId);
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

@@ -23,6 +23,7 @@ RETURNS TABLE (extId                      TVarChar   --Уникальный идентификатор 
              , clientExtId                TVarChar   --Внешний идентификатор контрагента
              , isPreDiscountCheckSkipped  Boolean    --Признак пропуска контроля цены до скидки
              , linkDiscounts_extId        TVarChar   --Идентификатор единицы связи. К примеру, типа связи по продуктам это будет значение внешнего идентификатора продукта.
+             , PriceDiscount              TFloat     --Цена с учетом скидки
              , linkDiscounts_discount     TFloat     --"Объём скидки, используется только для типа программы скидок 1 - фиксированная.Допустимо отрицательное значение."
                -- для проверки
              , Price_effie                TFloat     -- цена из effie
@@ -35,6 +36,9 @@ $BODY$
  BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+-- !!!НЕТ!!!
+RETURN;
 
      -- временная таблица PriceListItem
      CREATE TEMP TABLE _tmpPromoTax (ContractId Integer, PartnerId Integer, PriceListId Integer, GoodsByGoodsKindId Integer
