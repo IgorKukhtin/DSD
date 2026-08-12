@@ -1,9 +1,9 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-  ClientHeight = 625
-  ClientWidth = 1087
-  ExplicitWidth = 1093
-  ExplicitHeight = 654
+  ClientHeight = 639
+  ClientWidth = 1080
+  ExplicitWidth = 1086
+  ExplicitHeight = 668
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -20,20 +20,21 @@
     ExplicitLeft = 237
     ExplicitTop = 592
   end
-  object cxPageControl1: TcxPageControl [2]
-    Left = 4
-    Top = 9
+  object cxPageControl3: TcxPageControl [2]
+    Left = -3
+    Top = 0
     Width = 1075
-    Height = 577
+    Height = 569
     TabOrder = 1
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 577
+    ClientRectBottom = 569
     ClientRectRight = 1075
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1075#1072#1083#1100#1085#1072
       ImageIndex = 0
+      ExplicitHeight = 550
       object edAddress: TcxTextEdit
         Left = 158
         Top = 160
@@ -334,12 +335,12 @@
       end
       object cxLabel20: TcxLabel
         Left = 15
-        Top = 333
+        Top = 306
         Caption = #1056#1077#1075#1080#1086#1085
       end
       object ceArea: TcxButtonEdit
         Left = 158
-        Top = 332
+        Top = 300
         Properties.Buttons = <
           item
             Default = True
@@ -351,12 +352,12 @@
       end
       object cxLabel21: TcxLabel
         Left = 15
-        Top = 390
+        Top = 358
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
       end
       object cePartnerTag: TcxButtonEdit
         Left = 158
-        Top = 389
+        Top = 357
         Properties.Buttons = <
           item
             Default = True
@@ -607,24 +608,24 @@
       end
       object cxLabel34: TcxLabel
         Left = 15
-        Top = 419
+        Top = 387
         Caption = 'GPS ('#1096#1080#1088#1086#1090#1072')'
       end
       object edGPSN: TcxTextEdit
         Left = 89
-        Top = 418
+        Top = 386
         Properties.ReadOnly = True
         TabOrder = 79
         Width = 92
       end
       object cxLabel35: TcxLabel
         Left = 187
-        Top = 419
+        Top = 387
         Caption = 'GPS ('#1076#1086#1083#1075#1086#1090#1072')'
       end
       object edGPSE: TcxTextEdit
         Left = 261
-        Top = 418
+        Top = 386
         Properties.ReadOnly = True
         TabOrder = 81
         Width = 92
@@ -710,12 +711,12 @@
       end
       object cxLabel38: TcxLabel
         Left = 15
-        Top = 361
+        Top = 329
         Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1058#1058
       end
       object edCategory: TcxCurrencyEdit
         Left = 158
-        Top = 360
+        Top = 328
         Properties.Alignment.Horz = taRightJustify
         Properties.Alignment.Vert = taVCenter
         Properties.DecimalPlaces = 0
@@ -760,12 +761,12 @@
       end
       object cxLabel47: TcxLabel
         Left = 15
-        Top = 448
+        Top = 416
         Caption = #1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)'
       end
       object edUnitMobile: TcxButtonEdit
         Left = 141
-        Top = 447
+        Top = 415
         Properties.Buttons = <
           item
             Default = True
@@ -924,33 +925,33 @@
       end
       object cbEdiOrdspr_vch: TcxCheckBox
         Left = 16
-        Top = 501
+        Top = 469
         Caption = #1042#1063#1040#1057#1053#1054' - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
         TabOrder = 121
         Width = 160
       end
       object cbEdiInvoice_vch: TcxCheckBox
         Left = 184
-        Top = 501
+        Top = 469
         Caption = #1042#1063#1040#1057#1053#1054' - '#1057#1095#1077#1090
         TabOrder = 122
         Width = 102
       end
       object cbEdiDesadv_vch: TcxCheckBox
         Left = 291
-        Top = 501
+        Top = 469
         Caption = #1042#1063#1040#1057#1053#1054' - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
         TabOrder = 124
         Width = 154
       end
       object cxLabel53: TcxLabel
         Left = 15
-        Top = 478
+        Top = 446
         Caption = #1042#1063#1040#1057#1053#1054' - '#1050#1086#1076' GLN - '#1055#1086#1089#1090#1072#1074#1097#1080#1082
       end
       object edGLNCodeCorporate_vch: TcxTextEdit
         Left = 182
-        Top = 476
+        Top = 444
         TabOrder = 127
         Width = 171
       end
@@ -995,12 +996,12 @@
       end
       object cxLabel57: TcxLabel
         Left = 15
-        Top = 529
+        Top = 497
         Caption = #1058#1080#1087' '#1086#1090#1075#1088#1091#1079#1082#1080
       end
       object edTypeCommerc: TcxButtonEdit
         Left = 141
-        Top = 528
+        Top = 496
         Properties.Buttons = <
           item
             Default = True
@@ -1011,65 +1012,336 @@
         Width = 212
       end
     end
-    object cxTabSheet2: TcxTabSheet
+    object cxTabSheet3: TcxTabSheet
       Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111
+      ImageIndex = 2
+      ExplicitLeft = 61
+      ExplicitTop = 72
+      ExplicitHeight = 553
+      object Panel3: TPanel
+        Left = 0
+        Top = 0
+        Width = 1075
+        Height = 49
+        Align = alTop
+        Caption = 'Panel3'
+        TabOrder = 0
+        object cxLabel56: TcxLabel
+          Left = 17
+          Top = 0
+          Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058
+        end
+        object ceRouteTT: TcxButtonEdit
+          Left = 17
+          Top = 15
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          TabOrder = 1
+          Width = 248
+        end
+        object cxLabel59: TcxLabel
+          Left = 287
+          Top = 0
+          Caption = #1043#1088#1091#1087#1087#1072' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
+        end
+        object edPersonalGroupCommerc: TcxButtonEdit
+          Left = 287
+          Top = 16
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          TabOrder = 3
+          Width = 273
+        end
+        object cxLabel72: TcxLabel
+          Left = 582
+          Top = 0
+          Caption = #1054#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080
+        end
+        object edUnitCommerc: TcxButtonEdit
+          Left = 582
+          Top = 15
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          TabOrder = 5
+          Width = 273
+        end
+      end
+      object cxPageControl1: TcxPageControl
+        Left = 0
+        Top = 49
+        Width = 1075
+        Height = 303
+        Align = alClient
+        TabOrder = 1
+        Properties.ActivePage = cxTabSheet4
+        Properties.CustomButtons.Buttons = <>
+        ExplicitLeft = 128
+        ExplicitTop = 55
+        ExplicitWidth = 649
+        ExplicitHeight = 178
+        ClientRectBottom = 303
+        ClientRectRight = 1075
+        ClientRectTop = 24
+        object cxTabSheet4: TcxTabSheet
+          Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111': '#1056#1086#1079#1076#1088#1110#1073
+          ImageIndex = 0
+          ExplicitWidth = 649
+          ExplicitHeight = 90
+          object cxGridComLocal: TcxGrid
+            Left = 0
+            Top = 0
+            Width = 1075
+            Height = 248
+            Align = alClient
+            TabOrder = 0
+            LookAndFeel.NativeStyle = True
+            LookAndFeel.SkinName = 'UserSkin'
+            ExplicitTop = -6
+            ExplicitHeight = 199
+            object cxGridDBTableViewComLocal: TcxGridDBTableView
+              Navigator.Buttons.CustomButtons = <>
+              DataController.DataSource = ComLocalDS
+              DataController.Filter.Options = [fcoCaseInsensitive]
+              DataController.Summary.DefaultGroupSummaryItems = <>
+              DataController.Summary.FooterSummaryItems = <
+                item
+                  Format = #1057#1090#1088#1086#1082': ,0'
+                  Kind = skCount
+                  Column = PersonalName_ch4
+                end>
+              DataController.Summary.SummaryGroups = <>
+              Images = dmMain.SortImageList
+              OptionsCustomize.ColumnHiding = True
+              OptionsCustomize.ColumnsQuickCustomization = True
+              OptionsData.CancelOnExit = False
+              OptionsData.Deleting = False
+              OptionsData.DeletingConfirmation = False
+              OptionsData.Inserting = False
+              OptionsView.CellAutoHeight = True
+              OptionsView.GroupByBox = False
+              OptionsView.HeaderAutoHeight = True
+              OptionsView.Indicator = True
+              Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+              object Ord_ch4: TcxGridDBColumn
+                Caption = #1056#1110#1074#1077#1085#1100
+                DataBinding.FieldName = 'Ord'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 67
+              end
+              object PersonalName_ch4: TcxGridDBColumn
+                Caption = #1055#1030#1041
+                DataBinding.FieldName = 'PersonalName'
+                PropertiesClassName = 'TcxButtonEditProperties'
+                Properties.Buttons = <
+                  item
+                    Default = True
+                    Kind = bkEllipsis
+                  end>
+                Properties.ReadOnly = True
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 350
+              end
+              object PositionName_ch4: TcxGridDBColumn
+                Caption = #1055#1086#1089#1072#1076#1072
+                DataBinding.FieldName = 'PositionName'
+                PropertiesClassName = 'TcxButtonEditProperties'
+                Properties.Buttons = <
+                  item
+                    Default = True
+                    Kind = bkEllipsis
+                  end>
+                Properties.ReadOnly = True
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 184
+              end
+              object UnitName_ch4: TcxGridDBColumn
+                Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083
+                DataBinding.FieldName = 'UnitName'
+                PropertiesClassName = 'TcxButtonEditProperties'
+                Properties.Buttons = <
+                  item
+                    Default = True
+                    Kind = bkEllipsis
+                  end>
+                Properties.ReadOnly = True
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 230
+              end
+            end
+            object cxGridLevelComLocal: TcxGridLevel
+              GridView = cxGridDBTableViewComLocal
+            end
+          end
+          object Panel4: TPanel
+            Left = 0
+            Top = 248
+            Width = 1075
+            Height = 31
+            Align = alBottom
+            Caption = 'Panel4'
+            ShowCaption = False
+            TabOrder = 1
+            ExplicitTop = 242
+            object edJuridicalName: TcxTextEdit
+              Left = 285
+              Top = 4
+              Properties.ReadOnly = True
+              TabOrder = 0
+              Width = 289
+            end
+            object cxLabel77: TcxLabel
+              Left = 173
+              Top = 6
+              Caption = #1058#1086#1088#1075#1110#1074#1077#1083#1100#1085#1072' '#1084#1077#1088#1077#1078#1072
+              ParentFont = False
+              Style.Font.Charset = DEFAULT_CHARSET
+              Style.Font.Color = clBlue
+              Style.Font.Height = -11
+              Style.Font.Name = 'Tahoma'
+              Style.Font.Style = []
+              Style.IsFontAssigned = True
+            end
+          end
+        end
+      end
+      object cxPageControl2: TcxPageControl
+        Left = 0
+        Top = 352
+        Width = 1075
+        Height = 193
+        Align = alBottom
+        TabOrder = 2
+        Properties.ActivePage = cxTabSheet5
+        Properties.CustomButtons.Buttons = <>
+        ClientRectBottom = 193
+        ClientRectRight = 1075
+        ClientRectTop = 24
+        object cxTabSheet5: TcxTabSheet
+          Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111': '#1052#1077#1088#1077#1078#1110
+          ImageIndex = 0
+          ExplicitTop = 48
+          ExplicitHeight = 201
+          object cxGridComRetail: TcxGrid
+            Left = 0
+            Top = 0
+            Width = 1075
+            Height = 169
+            Align = alClient
+            TabOrder = 0
+            LookAndFeel.NativeStyle = True
+            LookAndFeel.SkinName = 'UserSkin'
+            ExplicitLeft = 215
+            ExplicitTop = 51
+            ExplicitWidth = 392
+            ExplicitHeight = 106
+            object cxGridDBTableViewComRetail: TcxGridDBTableView
+              Navigator.Buttons.CustomButtons = <>
+              DataController.DataSource = ComRetailDS
+              DataController.Filter.Options = [fcoCaseInsensitive]
+              DataController.Summary.DefaultGroupSummaryItems = <>
+              DataController.Summary.FooterSummaryItems = <
+                item
+                  Format = #1057#1090#1088#1086#1082': ,0'
+                  Kind = skCount
+                end>
+              DataController.Summary.SummaryGroups = <>
+              Images = dmMain.SortImageList
+              OptionsCustomize.ColumnHiding = True
+              OptionsCustomize.ColumnsQuickCustomization = True
+              OptionsData.CancelOnExit = False
+              OptionsData.Deleting = False
+              OptionsData.DeletingConfirmation = False
+              OptionsData.Inserting = False
+              OptionsView.CellAutoHeight = True
+              OptionsView.GroupByBox = False
+              OptionsView.HeaderAutoHeight = True
+              OptionsView.Indicator = True
+              Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+              object Ord_ch5: TcxGridDBColumn
+                Caption = #1056#1110#1074#1077#1085#1100
+                DataBinding.FieldName = 'Ord'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+              end
+              object PersonalName_ch5: TcxGridDBColumn
+                Caption = #1055#1030#1041
+                DataBinding.FieldName = 'PersonalName'
+                PropertiesClassName = 'TcxButtonEditProperties'
+                Properties.Buttons = <
+                  item
+                    Default = True
+                    Kind = bkEllipsis
+                  end>
+                Properties.ReadOnly = True
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 350
+              end
+              object PositionName_ch5: TcxGridDBColumn
+                Caption = #1055#1086#1089#1072#1076#1072
+                DataBinding.FieldName = 'PositionName'
+                PropertiesClassName = 'TcxButtonEditProperties'
+                Properties.Buttons = <
+                  item
+                    Default = True
+                    Kind = bkEllipsis
+                  end>
+                Properties.ReadOnly = True
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 207
+              end
+              object UnitName_ch5: TcxGridDBColumn
+                Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083
+                DataBinding.FieldName = 'UnitName'
+                PropertiesClassName = 'TcxButtonEditProperties'
+                Properties.Buttons = <
+                  item
+                    Default = True
+                    Kind = bkEllipsis
+                  end>
+                Properties.ReadOnly = True
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 244
+              end
+            end
+            object cxGridLevelComRetail: TcxGridLevel
+              GridView = cxGridDBTableViewComRetail
+            end
+          end
+        end
+      end
+    end
+    object cxTabSheet2: TcxTabSheet
+      Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111' (old)'
       ImageIndex = 1
       ParentShowHint = False
       ShowHint = False
+      TabVisible = False
+      ExplicitLeft = 48
+      ExplicitTop = 41
       DesignSize = (
         1075
-        553)
-      object cxLabel56: TcxLabel
-        Left = 17
-        Top = 0
-        Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058
-      end
-      object ceRouteTT: TcxButtonEdit
-        Left = 17
-        Top = 15
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        TabOrder = 2
-        Width = 248
-      end
-      object cxLabel59: TcxLabel
-        Left = 287
-        Top = 0
-        Caption = #1043#1088#1091#1087#1087#1072' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
-      end
-      object edPersonalGroupCommerc: TcxButtonEdit
-        Left = 287
-        Top = 16
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        TabOrder = 4
-        Width = 273
-      end
-      object cxLabel72: TcxLabel
-        Left = 582
-        Top = 0
-        Caption = #1054#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080
-      end
-      object edUnitCommerc: TcxButtonEdit
-        Left = 582
-        Top = 15
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        TabOrder = 6
-        Width = 273
-      end
+        545)
       object Panel1: TPanel
         Left = 17
         Top = 68
@@ -1427,7 +1699,7 @@
         ParentShowHint = False
         ShowCaption = False
         ShowHint = False
-        TabOrder = 7
+        TabOrder = 1
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         object cxLabel58: TcxLabel
@@ -1595,7 +1867,7 @@
       end
       object cxLabel76: TcxLabel
         Left = 17
-        Top = 365
+        Top = 366
         Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111': '#1052#1077#1088#1077#1078#1110
         Style.BorderColor = clBackground
         Style.TextColor = clBlue
@@ -1619,7 +1891,10 @@
           StoredProc = spGet
         end
         item
-          StoredProc = spGet_Commerc
+          StoredProc = spSelectComLocal
+        end
+        item
+          StoredProc = spSelectComRetail
         end>
     end
     object actUpdate_Commerc: TdsdDataSetRefresh
@@ -1635,7 +1910,6 @@
         end>
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
@@ -3052,6 +3326,13 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = edJuridicalName
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 928
     Top = 340
@@ -3083,7 +3364,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 392
+    Left = 352
     Top = 354
   end
   object GuidesMemberTake: TdsdGuides
@@ -3322,8 +3603,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 928
-    Top = 37
+    Left = 888
+    Top = 53
   end
   object AreaGuides: TdsdGuides
     KeyField = 'Id'
@@ -3352,8 +3633,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
-    Top = 346
+    Left = 104
+    Top = 410
   end
   object PartnerTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -3382,8 +3663,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 200
-    Top = 361
+    Left = 192
+    Top = 337
   end
   object GuidesRegion: TdsdGuides
     KeyField = 'Id'
@@ -3909,8 +4190,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 169
-    Top = 43
+    Left = 225
+    Top = 35
   end
   object GuidesTypeCommerc: TdsdGuides
     KeyField = 'Id'
@@ -4061,8 +4342,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 388
-    Top = 144
+    Left = 348
+    Top = 152
   end
   object GuidesPosition_3: TdsdGuides
     KeyField = 'Id'
@@ -4185,8 +4466,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 460
-    Top = 333
+    Left = 420
+    Top = 261
   end
   object GuidesUnit_1: TdsdGuides
     KeyField = 'Id'
@@ -4557,8 +4838,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 341
+    Left = 96
+    Top = 301
   end
   object spGet_Commerc: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Partner_Commerc'
@@ -5249,21 +5530,125 @@
       end
       item
         Control = edUnitCommerc
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end>
     Action = actUpdate_Commerc
     Left = 920
     Top = 544
+  end
+  object ComLocalCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 1056
+    Top = 240
+  end
+  object ComLocalDS: TDataSource
+    DataSet = ComLocalCDS
+    Left = 1056
+    Top = 192
+  end
+  object spSelectComLocal: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Partner_Commerc_1'
+    DataSet = ComLocalCDS
+    DataSets = <
+      item
+        DataSet = ComLocalCDS
+      end>
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1056
+    Top = 145
+  end
+  object ComRetailDS: TDataSource
+    DataSet = ComRetailCDS
+    Left = 1056
+    Top = 424
+  end
+  object ComRetailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 1000
+    Top = 432
+  end
+  object spSelectComRetail: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Partner_Commerc_2'
+    DataSet = ComRetailCDS
+    DataSets = <
+      item
+        DataSet = ComRetailCDS
+      end>
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1032
+    Top = 472
+  end
+  object dsdDBViewAddOnComLocal: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewComLocal
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <
+      item
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
+    ColumnEnterList = <
+      item
+      end
+      item
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 1070
+    Top = 305
+  end
+  object dsdDBViewAddOnComRetail: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewComRetail
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <
+      item
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
+    ColumnEnterList = <
+      item
+      end
+      item
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 1022
+    Top = 401
   end
 end

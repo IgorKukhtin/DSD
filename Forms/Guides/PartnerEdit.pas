@@ -19,7 +19,10 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
-  dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC, Vcl.ExtCtrls;
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC, Vcl.ExtCtrls, cxStyles,
+  cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB, cxDBData, cxGridLevel,
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
+  cxGridCustomView, cxGrid, Datasnap.DBClient;
 
 type
   TPartnerEditForm = class(TAncestorEditDialogForm)
@@ -184,7 +187,7 @@ type
     GuidesTypeCommerc: TdsdGuides;
     GuidesUnitCommerc: TdsdGuides;
     GuidesPersonalGroupCommerc: TdsdGuides;
-    cxPageControl1: TcxPageControl;
+    cxPageControl3: TcxPageControl;
     cxTabSheet1: TcxTabSheet;
     cxTabSheet2: TcxTabSheet;
     cePosition_1: TcxButtonEdit;
@@ -221,12 +224,6 @@ type
     Guides_Personal_5: TdsdGuides;
     Guides_Personal_6: TdsdGuides;
     spGet_Commerc: TdsdStoredProc;
-    cxLabel56: TcxLabel;
-    ceRouteTT: TcxButtonEdit;
-    cxLabel59: TcxLabel;
-    edPersonalGroupCommerc: TcxButtonEdit;
-    cxLabel72: TcxLabel;
-    edUnitCommerc: TcxButtonEdit;
     Panel1: TPanel;
     cxLabel66: TcxLabel;
     cxLabel60: TcxLabel;
@@ -264,6 +261,43 @@ type
     actUpdate_Commerc: TdsdDataSetRefresh;
     cxLabel75: TcxLabel;
     cxLabel76: TcxLabel;
+    cxTabSheet3: TcxTabSheet;
+    Panel3: TPanel;
+    cxLabel56: TcxLabel;
+    ceRouteTT: TcxButtonEdit;
+    cxLabel59: TcxLabel;
+    edPersonalGroupCommerc: TcxButtonEdit;
+    cxLabel72: TcxLabel;
+    edUnitCommerc: TcxButtonEdit;
+    ComLocalCDS: TClientDataSet;
+    ComLocalDS: TDataSource;
+    spSelectComLocal: TdsdStoredProc;
+    ComRetailDS: TDataSource;
+    ComRetailCDS: TClientDataSet;
+    spSelectComRetail: TdsdStoredProc;
+    dsdDBViewAddOnComLocal: TdsdDBViewAddOn;
+    dsdDBViewAddOnComRetail: TdsdDBViewAddOn;
+    cxPageControl1: TcxPageControl;
+    cxTabSheet4: TcxTabSheet;
+    cxGridComLocal: TcxGrid;
+    cxGridDBTableViewComLocal: TcxGridDBTableView;
+    Ord_ch4: TcxGridDBColumn;
+    PersonalName_ch4: TcxGridDBColumn;
+    PositionName_ch4: TcxGridDBColumn;
+    UnitName_ch4: TcxGridDBColumn;
+    cxGridLevelComLocal: TcxGridLevel;
+    cxPageControl2: TcxPageControl;
+    cxTabSheet5: TcxTabSheet;
+    cxGridComRetail: TcxGrid;
+    cxGridDBTableViewComRetail: TcxGridDBTableView;
+    Ord_ch5: TcxGridDBColumn;
+    PersonalName_ch5: TcxGridDBColumn;
+    PositionName_ch5: TcxGridDBColumn;
+    UnitName_ch5: TcxGridDBColumn;
+    cxGridLevelComRetail: TcxGridLevel;
+    Panel4: TPanel;
+    edJuridicalName: TcxTextEdit;
+    cxLabel77: TcxLabel;
 
   private
     { Private declara
