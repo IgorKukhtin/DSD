@@ -155,6 +155,8 @@ type
     isErased_ch2: TcxGridDBColumn;
     cxGridLevelDetail: TcxGridLevel;
     cxSplitter2: TcxSplitter;
+    KAMName: TcxGridDBColumn;
+    BranchName_KAM: TcxGridDBColumn;
   private
   public
   end;

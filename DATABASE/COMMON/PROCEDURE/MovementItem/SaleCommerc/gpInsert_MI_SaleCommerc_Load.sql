@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpInsert_MI_SaleCommerc_Load (Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_MI_SaleCommerc_Load (Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_MI_SaleCommerc_Load (Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MI_SaleCommerc_Load(
     IN inMovementId            Integer   , -- ключ Документа
     IN inBranchName            TVarChar  , -- филиал
+    IN inBranchKAMName         TVarChar  , -- филиал/КАМ    
     IN inJuridicalName         TVarChar  , -- Юр лицо 
     IN inPartnerName           TVarChar  , -- Контрагент 
     IN inPartnerId             Integer   , -- Контрагент
@@ -43,13 +45,13 @@ $BODY$
            vbAmountPromo   TFloat;
            vbAmountNoPromo TFloat; 
            vbVATPercent    TFloat;
+           vbBranchKAMId   Integer;
            
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SaleCommerc());
 
     
-
      -- 2 Поиск - Контргагент
      IF COALESCE(inPartnerId,0) <> 0 AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.Id = inPartnerId AND Object.isErased = FALSE) 
      THEN
@@ -171,6 +173,26 @@ BEGIN
      END IF;
 
 
+     --7 inBranchKAMName   строчка, ищем в справ филиалов, если не нашли - в справ сотрудников
+         --в гриде 2 поля, т.к. если загрузили сотрудника - по нему покажем филиал
+     IF TRIM (COALESCE (inBranchKAMName,'')) <> ''
+     THEN 
+         -- ищем в справ филиалов
+         vbBranchKAMId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND TRIM (Object.ValueData) = TRIM (inBranchKAMName) AND Object.isErased = FALSE);
+         -- если не нашли ищем в справ сотрудников
+         IF COALESCE (vbBranchKAMId,0) = 0
+         THEN
+             vbBranchKAMId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) = TRIM (inBranchKAMName) AND Object.isErased = FALSE limit 1);
+         END IF; 
+
+         -- проверка
+         IF COALESCE (vbBranchKAMId,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найден Филиал/КАМ <%> в справочниках.', inBranchKAMName;
+         END IF;
+     END IF;
+     
+     
 
      -- 1.сохраняем Master, не ошибка - в Master все суммы = 0 + Примечание в чайлд
      -- пробуем найти строку мастер, если нет записываем
@@ -204,6 +226,7 @@ BEGIN
                                            , inMovementId   := inMovementId   ::Integer
                                            , inContractId   := vbContractId   ::Integer
                                            , inBranchId     := vbBranchId     ::Integer
+                                           , inBranchKAMId  := vbBranchKAMId  ::Integer
                                            , inPartnerId    := inPartnerId    ::Integer
                                            , inPaidKindId   := vbPaidKindId   ::Integer 
                                            , inUserId       := vbUserId

@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_MI_SaleCommerc()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_SaleCommerc(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId           Integer   , -- Ключ объекта <Документ>
     IN inContractId           Integer   , -- 
     IN inBranchId             Integer   , --
+    IN inBranchKAMId          Integer   , --
     IN inPartnerId            Integer   , --
     IN inPaidKindId           Integer   , -- 
     IN inUserId               Integer    -- сессия пользователя
@@ -27,6 +29,8 @@ BEGIN
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), ioId, inBranchId);
+     -- сохранили связь с <>
+     --PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BranchKAM(), ioId, inBranchKAMId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Partner(), ioId, inPartnerId);
      -- сохранили связь с <>

@@ -900,6 +900,22 @@ object SaleCommercForm: TSaleCommercForm
             VisibleForCustomization = False
             Width = 30
           end
+          object KAMName: TcxGridDBColumn
+            Caption = 'KAM'
+            DataBinding.FieldName = 'KAMName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object BranchName_KAM: TcxGridDBColumn
+            Caption = #1060#1110#1083#1110#1103' KAM'
+            DataBinding.FieldName = 'BranchName_KAM'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
