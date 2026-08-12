@@ -143,7 +143,7 @@ BEGIN
                                    LEFT JOIN Object AS Object_Position_3 ON Object_Position_3.Id = ObjectLink_CommercRetail_Position_3.ChildObjectId
  
                               WHERE Object_CommercRetail.DescId = zc_Object_CommercRetail()
-                               AND Object_CommercRetail.isErased = FALSE
+                                AND Object_CommercRetail.isErased = FALSE
                              )
                 --получаем сотрудника из справочника торговой сети Помошник КАМ
               , tmpLevel1 AS (SELECT 1 AS Ord 
@@ -174,6 +174,7 @@ BEGIN
                                                        AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
                               WHERE ObjectLink_Retail_KAM_add.ObjectId = vbRetailId
                                 AND ObjectLink_Retail_KAM_add.DescId = zc_ObjectLink_Retail_KAM_add()
+                                AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
                               )
 
                 --получаем сотрудника из справочника торговой сети сотрудник КАМ
@@ -206,6 +207,7 @@ BEGIN
                               WHERE ObjectLink_Retail_KAM.ObjectId = vbRetailId
                                 AND ObjectLink_Retail_KAM.DescId = zc_ObjectLink_Retail_KAM()
                                 AND COALESCE (vbPositionId_ContractTag,0) = 0
+                                AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
                            UNION
                               --если заполнена должность по признаку договора
                               SELECT 2 AS Ord 
@@ -238,6 +240,7 @@ BEGIN
                               WHERE ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
                                 AND ObjectLink_Personal_Position.ChildObjectId = vbPositionId_ContractTag
                                 AND COALESCE (vbPositionId_ContractTag,0) <> 0
+                                AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
                               )
 
               , tmpLevel3 AS (SELECT 3 AS Ord 
@@ -267,6 +270,7 @@ BEGIN
                                                         ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
                                                        AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
                               WHERE Object_Personal.isErased = FALSE
+                                AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
                               GROUP BY tmpCommercRetail.PositionName_3
                               )
 

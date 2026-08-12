@@ -1183,17 +1183,10 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inIsJuridical'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_OrderRK'
       ReportNameParam.Value = 'PrintMovement_OrderRK'
       ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
@@ -1239,7 +1232,7 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
         end>
       Caption = 'actSPSavePrintState'
     end
-    object mactPrint_Order: TMultiAction
+    object mactPrint: TMultiAction
       Category = 'Print'
       MoveParams = <
         item
@@ -1788,6 +1781,10 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1819,7 +1816,7 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
       Action = actInsertMaskMulti
     end
     object bbPrint: TdxBarButton
-      Action = mactPrint_Order
+      Action = mactPrint
       Category = 0
     end
     object bbOpenReportForm: TdxBarButton
@@ -1878,10 +1875,6 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
         item
           Visible = True
           ItemName = 'bbSeparator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -2180,15 +2173,8 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsJuridical'
-        Value = False
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2204,7 +2190,7 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
       item
         Name = 'inId'
         Value = Null
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
