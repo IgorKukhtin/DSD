@@ -1334,7 +1334,7 @@ AS  (SELECT
              , SUM (COALESCE (gpReport.TotalCountKg1_5, 0))   :: TFloat AS TotalCountKg1_5
 
         FROM tmpWageWarehouseBranch AS gpReport
-             INNER JOIN (SELECT DISTINCT Setting_Wage_1.FromId, Setting_Wage_1.UnitId
+             INNER JOIN (SELECT DISTINCT Setting_Wage_1.UnitId --, Setting_Wage_1.FromId
                          FROM Setting_Wage_1
                          WHERE Setting_Wage_1.SelectKindId IN (-- Стикеровка
                                                                zc_Enum_SelectKind_MI_MasterSh()
@@ -1346,8 +1346,10 @@ AS  (SELECT
                                                              , zc_Enum_SelectKind_MI_Master_WareOut()
                                                               )
                            AND Setting_Wage_1.FromId > 0 OR Setting_Wage_1.UnitId > 0
-                        ) AS tmpFrom ON (tmpFrom.FromId = gpReport.UnitId AND tmpFrom.FromId > 0)
-                                     OR (tmpFrom.UnitId = gpReport.UnitId AND tmpFrom.UnitId > 0 AND COALESCE (tmpFrom.FromId, 0) = 0)
+                        ) AS tmpFrom ON tmpFrom.UnitId = gpReport.UnitId
+-- err = 11.08.2026
+--                      ) AS tmpFrom ON (tmpFrom.FromId = gpReport.UnitId AND tmpFrom.FromId > 0)
+--                                   OR (tmpFrom.UnitId = gpReport.UnitId AND tmpFrom.UnitId > 0 AND COALESCE (tmpFrom.FromId, 0) = 0)
         GROUP BY gpReport.OperDate, gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
                , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
                , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
