@@ -122,6 +122,7 @@ END IF;*/
                                                       WHEN COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = TRUE
                                                            THEN CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
                                                                       AND _tmpItem.InfoMoneyId <> zc_Enum_InfoMoney_40801() -- Внутренний оборот
+                                                                      AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                      THEN zc_Enum_AccountDirection_30150() -- покупатели ВЭД
                                                                      ELSE zc_Enum_AccountDirection_30200() -- наши компании
                                                                 END
@@ -266,6 +267,8 @@ END IF;*/
                                                               THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                                                          WHEN zc_Enum_InfoMoney_21152()
                                                               THEN zc_Enum_Account_30206() -- Алан АЗИЯ
+                                                         WHEN zc_Enum_InfoMoney_21153()
+                                                              THEN zc_Enum_Account_30208() -- Алан Европа
                                                          WHEN zc_Enum_InfoMoney_21155()
                                                               THEN zc_Enum_Account_30207() -- Фирменная торговля
                                                               
