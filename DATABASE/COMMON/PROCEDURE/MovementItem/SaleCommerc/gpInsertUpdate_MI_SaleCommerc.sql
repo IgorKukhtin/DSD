@@ -2,7 +2,8 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SaleCommerc (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SaleCommerc(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа master>
@@ -10,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SaleCommerc(
     IN inMovementId           Integer   , -- Ключ объекта <Документ>
     IN inContractId           Integer   , -- 
     IN inBranchId             Integer   , --
+    IN inKAMId                Integer   , --  KAM
+    IN inBranchId_KAM         Integer   , --  ПОдразделение  КАМ  
     IN inPartnerId            Integer   , --
     IN inPaidKindId           Integer   , --
     IN inGoodsId              Integer   , -- Товар
@@ -42,6 +45,7 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     
 
      -- сохранили <Элемент документа>
      SELECT tmp.ioId
@@ -50,6 +54,7 @@ BEGIN
                                        , inMovementId  := inMovementId     ::Integer
                                        , inContractId  := inContractId     ::Integer
                                        , inBranchId    := inBranchId       ::Integer
+                                       , inBranchKAMId := CASE WHEN COALESCE (inKAMId,0) <> 0 THEN inKAMId ELSE inBranchId_KAM END ::Integer
                                        , inPartnerId   := inPartnerId      ::Integer
                                        , inPaidKindId  := inPaidKindId     ::Integer
                                        , inUserId      := vbUserId         ::Integer

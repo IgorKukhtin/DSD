@@ -182,13 +182,36 @@ BEGIN
          -- если не нашли ищем в справ сотрудников
          IF COALESCE (vbBranchKAMId,0) = 0
          THEN
-             vbBranchKAMId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) = TRIM (inBranchKAMName) AND Object.isErased = FALSE limit 1);
+             IF (SELECT COUNT (*) 
+                 FROM Object AS Object_Personal
+                     INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                             ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                            AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
+                            AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = TRUE 
+                 WHERE Object_Personal.DescId = zc_Object_Personal()
+                   AND REPLACE (TRIM (Object_Personal.ValueData), CHR(39), '') ILIKE REPLACE (TRIM (inBranchKAMName), CHR(39), '')
+                   AND Object_Personal.isErased = FALSE
+                   ) > 1
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Найдено более 1 илиал/КАМ <%> в справочнике Сотрудников.', inBranchKAMName;
+             END IF;
+             
+             vbBranchKAMId := (SELECT Object_Personal.Id 
+                               FROM Object AS Object_Personal
+                                   INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                           ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                                          AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
+                                          AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = TRUE 
+                               WHERE Object_Personal.DescId = zc_Object_Personal()
+                                 AND REPLACE (TRIM (Object_Personal.ValueData), CHR(39), '') ILIKE REPLACE (TRIM (inBranchKAMName), CHR(39), '')
+                                 AND Object_Personal.isErased = FALSE
+                                 );  
          END IF; 
 
          -- проверка
          IF COALESCE (vbBranchKAMId,0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Не найден Филиал/КАМ <%> в справочниках.', inBranchKAMName;
+             RAISE EXCEPTION 'Ошибка.Не найден Филиал/КАМ <%> в справочниках <Филиалы> и <Сотруднико>.', inBranchKAMName;
          END IF;
      END IF;
      
