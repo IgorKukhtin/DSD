@@ -28,6 +28,7 @@ $BODY$
           vbisEDI           Boolean;
           vbRouteTTId       Integer;
           vbRetailId        Integer;
+          vbPersonalGroupCommercId Integer;
 BEGIN
 
      -- проверка прав пользовател€ на вызов процедуры
@@ -59,8 +60,9 @@ BEGIN
           , CASE WHEN COALESCE (MovementLinkMovement_Order_edi.MovementId) > 0 THEN TRUE ELSE FALSE END AS isEDI    -- автор = Ёƒ» или ¬„ј—Ќќ
           , MovementLinkObject_RouteTT.ObjectId       AS RouteTTId
           , ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+          , CASE WHEN TRIM (Object_PersonalGroupCommerc.ValueData) = '' THEN 0 ELSE Object_PersonalGroupCommerc.Id END :: Integer AS PersonalGroupCommercId
           
-    INTO vbUserId_order, vbisEDI, vbRouteTTId, vbRetailId
+    INTO vbUserId_order, vbisEDI, vbRouteTTId, vbRetailId, vbPersonalGroupCommercId
      FROM Movement
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                            ON MovementLinkMovement_Order.MovementId = Movement.Id
@@ -96,6 +98,11 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalGroupCommerc
+                              ON ObjectLink_Partner_PersonalGroupCommerc.ObjectId = MovementLinkObject_To.ObjectId
+                             AND ObjectLink_Partner_PersonalGroupCommerc.DescId = zc_ObjectLink_Partner_PersonalGroupCommerc()
+         LEFT JOIN Object AS Object_PersonalGroupCommerc ON Object_PersonalGroupCommerc.Id = ObjectLink_Partner_PersonalGroupCommerc.ChildObjectId
 
      WHERE Movement.Id = inMovementId;
 
@@ -426,9 +433,11 @@ BEGIN
                               FROM tmpRouteTT
                                    INNER JOIN tmpCommercLocal ON tmpCommercLocal.UnitId = tmpRouteTT.UnitId
                                                              AND tmpCommercLocal.PositionId_1 = tmpRouteTT.PositionId
-                                                             AND COALESCE (tmpCommercLocal.PersonalGroupId_1,0) = COALESCE (tmpRouteTT.PersonalGroupId,0)
+                                                             AND COALESCE (tmpCommercLocal.PersonalGroupId_1,0) = CASE WHEN COALESCE (tmpRouteTT.PersonalGroupId,0) <> 0 THEN COALESCE (tmpRouteTT.PersonalGroupId,0) ELSE COALESCE (vbPersonalGroupCommercId,0) END
                                    LEFT JOIN tmpPersonal_byUnit AS tmpPersonal
-                                                                ON tmpPersonal.PositionId = tmpCommercLocal.PositionId_2 
+                                                                ON tmpPersonal.PositionId = tmpCommercLocal.PositionId_2
+                                                               AND COALESCE (tmpPersonal.PersonalGroupId, 0) = CASE WHEN COALESCE (tmpRouteTT.PersonalGroupId,0) <> 0 THEN COALESCE (tmpRouteTT.PersonalGroupId,0) ELSE COALESCE (vbPersonalGroupCommercId,0) END
+                      
                               WHERE (SELECT COUNT(*) FROM tmpLevel1) <> 0
                                 AND vbisEDI = TRUE
                               GROUP BY tmpCommercLocal.PositionName_2

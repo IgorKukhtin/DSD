@@ -98,7 +98,6 @@ BEGIN
                                 ON ObjectLink_Personal_PersonalGroup.ObjectId = tmpPersonal.PersonalId
                                AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
      ;
- 
 
          -- Результат
          RETURN QUERY 
@@ -169,6 +168,10 @@ BEGIN
                                                         ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Position.ObjectId
                                                        AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+
+                                   LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                        ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                                                       AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
                               WHERE ObjectLink_Retail_KAM_add.ObjectId = vbRetailId
                                 AND ObjectLink_Retail_KAM_add.DescId = zc_ObjectLink_Retail_KAM_add()
                               )
@@ -196,6 +199,10 @@ BEGIN
                                                         ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Position.ObjectId
                                                        AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+
+                                   LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                        ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                                                       AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
                               WHERE ObjectLink_Retail_KAM.ObjectId = vbRetailId
                                 AND ObjectLink_Retail_KAM.DescId = zc_ObjectLink_Retail_KAM()
                                 AND COALESCE (vbPositionId_ContractTag,0) = 0
@@ -224,6 +231,10 @@ BEGIN
                                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                                        AND ObjectLink_Unit_Branch.ChildObjectId = vbBranchId
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+
+                                   LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                        ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                                                       AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
                               WHERE ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
                                 AND ObjectLink_Personal_Position.ChildObjectId = vbPositionId_ContractTag
                                 AND COALESCE (vbPositionId_ContractTag,0) <> 0
@@ -251,6 +262,10 @@ BEGIN
  
                                    LEFT JOIN object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Position.ObjectId AND Object_Personal.isErased = FALSE
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+
+                                   LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                        ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                                                       AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
                               WHERE Object_Personal.isErased = FALSE
                               GROUP BY tmpCommercRetail.PositionName_3
                               )
