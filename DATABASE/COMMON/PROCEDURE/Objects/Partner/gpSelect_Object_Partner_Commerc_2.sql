@@ -108,6 +108,11 @@ BEGIN
                                                         ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Position.ObjectId
                                                        AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+
+                                   LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                        ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                                                       AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
+                              WHERE COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
                               )
 
                 --получаем сотрудника из справочника торговой сети сотрудник КАМ
@@ -133,6 +138,11 @@ BEGIN
                                                         ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Position.ObjectId
                                                        AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+
+                                   LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                        ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                                                       AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
+                              WHERE COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
                               )
 
               , tmpLevel3 AS (SELECT 3 AS Ord 
@@ -157,7 +167,12 @@ BEGIN
  
                                    LEFT JOIN object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Position.ObjectId AND Object_Personal.isErased = FALSE
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
-                              WHERE Object_Personal.isErased = FALSE
+
+                                   LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                        ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                                                       AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
+                              WHERE Object_Personal.isErased = FALSE 
+                                AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
                               GROUP BY tmpCommercRetail.PositionName_3
                               )
 

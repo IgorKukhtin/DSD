@@ -13,11 +13,21 @@ RETURNS TABLE (Ord Integer,
                )
 AS
 $BODY$
+     DECLARE vbPersonalGroupCommercId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Partner());
 
+     SELECT CASE WHEN TRIM (Object_PersonalGroupCommerc.ValueData) = '' THEN 0 ELSE Object_PersonalGroupCommerc.Id END :: Integer AS PersonalGroupCommercId
+    INTO vbPersonalGroupCommercId 
+     FROM ObjectLink AS ObjectLink_Partner_PersonalGroupCommerc
+         LEFT JOIN Object AS Object_PersonalGroupCommerc ON Object_PersonalGroupCommerc.Id = ObjectLink_Partner_PersonalGroupCommerc.ChildObjectId
+     WHERE ObjectLink_Partner_PersonalGroupCommerc.ObjectId = inId
+       AND ObjectLink_Partner_PersonalGroupCommerc.DescId = zc_ObjectLink_Partner_PersonalGroupCommerc()
+     ;
+
+       
        RETURN QUERY
        WITH 
        tmpRouteTT AS (SELECT ObjectLink_Partner_RouteTT.ChildObjectId   AS RouteTTId
@@ -48,8 +58,8 @@ BEGIN
                                                      ON ObjectLink_RouteTT_PersonalGroup.ObjectId = Object_RouteTT.Id
                                                     AND ObjectLink_RouteTT_PersonalGroup.DescId = zc_ObjectLink_RouteTT_PersonalGroup()
                                 LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_RouteTT_PersonalGroup.ChildObjectId
-                      
-                      WHERE ObjectLink_Partner_RouteTT.ObjectId = inId --5817065  --inPartnerId
+
+                       WHERE ObjectLink_Partner_RouteTT.ObjectId = inId --5817065  --inPartnerId
                         AND ObjectLink_Partner_RouteTT.DescId = zc_ObjectLink_Partner_RouteTT()
                       )
 
@@ -167,8 +177,8 @@ BEGIN
                                    , ObjectLink_Unit_Branch.ChildObjectId            AS BranchId
                               FROM Object AS Object_Personal
                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                         ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
-                                                        AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                                        ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
+                                                       AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
                                                         --AND ObjectLink_Personal_Unit.ChildObjectId = vbUnitId
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
 
@@ -183,12 +193,19 @@ BEGIN
                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                                                         ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id
                                                        AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-                                   LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId                     
+                                   LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+ 
+                                   LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                        ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                                                       AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()                                  
+                                                        
                               WHERE Object_Personal.DescId = zc_Object_Personal()
                                 AND Object_Personal.isErased = FALSE 
                                 AND (ObjectLink_Unit_Branch.ChildObjectId IN (SELECT DISTINCT tmpCommercLocal.BranchId FROM tmpCommercLocal)
                                   OR ObjectLink_Personal_Unit.ChildObjectId IN (SELECT DISTINCT tmpCommercLocal.UnitId FROM tmpCommercLocal))
+                                AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
                               )
+
        --Заповнюється автоматично на основі маршруту, якщо вказана в маршруті посада співпадає з посадами поточного рівня відповідно до структури відділу 
      , tmpLevel1 AS (SELECT 1                              AS ord
                      , Object_Personal.Id             AS PersonalId
@@ -213,8 +230,9 @@ BEGIN
                      FROM tmpRouteTT
                           INNER JOIN tmpCommercLocal ON tmpCommercLocal.UnitId = tmpRouteTT.UnitId
                                                     AND tmpCommercLocal.PositionId_1 = tmpRouteTT.PositionId
-                                                    AND COALESCE (tmpCommercLocal.PersonalGroupId_1,0) = COALESCE (tmpRouteTT.PersonalGroupId,0)
-                          LEFT JOIN tmpPersonal_byUnit ON tmpPersonal_byUnit.PositionId = tmpCommercLocal.PositionId_2 
+                                                    AND COALESCE (tmpCommercLocal.PersonalGroupId_1,0) = CASE WHEN COALESCE (tmpRouteTT.PersonalGroupId,0) <> 0 THEN COALESCE (tmpRouteTT.PersonalGroupId,0) ELSE COALESCE (vbPersonalGroupCommercId,0) END
+                          LEFT JOIN tmpPersonal_byUnit ON tmpPersonal_byUnit.PositionId = tmpCommercLocal.PositionId_2
+                                                      AND COALESCE (tmpPersonal_byUnit.PersonalGroupId, 0) = CASE WHEN COALESCE (tmpRouteTT.PersonalGroupId,0) <> 0 THEN COALESCE (tmpRouteTT.PersonalGroupId,0) ELSE COALESCE (vbPersonalGroupCommercId,0) END
                      WHERE (SELECT COUNT(*) FROM tmpLevel1) <> 0
                      )
        --Автоматично - відносно рівня 1, відповідно до структури комерції по співпадінню "Філія підрозділу (рівень 1) + посада (рівень 3). При умові, що по мережі в довіднику "Торгівельна мережа" поля "КАМ" та "НОП НМ" пусті. В іншому випадку пусто.

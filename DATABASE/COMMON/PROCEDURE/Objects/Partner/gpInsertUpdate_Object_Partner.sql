@@ -264,11 +264,11 @@ BEGIN
    END IF;
 
    --проверка
-   IF COALESCE (inRouteTTId,0) = 0 AND COALESCE (inUnitCommercId,0) = 0 AND 1=0
+  /* IF COALESCE (inRouteTTId,0) = 0 AND COALESCE (inUnitCommercId,0) = 0 AND 1=0
    THEN
        RAISE EXCEPTION 'Ошибка.Должен быть заполнен один из параметров <Маршрут ТТ> или <Отдел коммерции>.';
    END IF;
-
+   */
 
    -- !!! Если код не установлен, определяем его как последний+1
    vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
@@ -322,12 +322,13 @@ BEGIN
                                         , inPersonalSigningId:= inPersonalSigningId
                                         , inAreaId          := inAreaId
                                         , inPartnerTagId    := inPartnerTagId
-                                        , inGoodsPropertyId := inGoodsPropertyId           
+                                        , inGoodsPropertyId := inGoodsPropertyId 
+                                                
                                         , inPriceListId     := inPriceListId
                                         , inPriceListId_30201 := inPriceListId_30201
                                         , inPriceListPromoId:= inPriceListPromoId
                                         , inUnitMobileId    := inUnitMobileId
-                                        , inTypeCommercId   := inTypeCommercId
+                                        , inTypeCommercId   := inTypeCommercId  
                                         --, inUnitCommercId   := inUnitCommercId
                                         --, inPersonalGroupCommercId := inPersonalGroupCommercId
                                         , inStartPromo      := inStartPromo

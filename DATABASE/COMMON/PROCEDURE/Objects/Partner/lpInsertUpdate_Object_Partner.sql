@@ -1,115 +1,153 @@
--- Function: lpInsertUpdate_Object_Partner()
+ -- Function: gpInsertUpdate_Object_Partner()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, 
-                                                       TFloat, TFloat, Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);   
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);  
-/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);   */         
-/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat, Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);*/ 
-/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat, Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer); 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, TFloat, Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 */
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, TFloat, Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+*/
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, TFloat, Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+*/
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, TFloat, Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+*/
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+*/
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar); */
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
-/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat, Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);*/ 
-/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
-                                                       Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);*/
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
-                                                       Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);
-/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
-                                                       Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       Integer, Integer,
-                                                       TDateTime, TDateTime, Integer); */
-/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
-                                                       Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
-                                                       Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       Integer, Integer,
-                                                       TDateTime, TDateTime, Integer); */
-/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                       Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);*/
-/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                       Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       Integer, Integer,
-                                                       TDateTime, TDateTime, Integer); */
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                       Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                       Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);   
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                       Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       Integer, Integer
-                                                       TDateTime, TDateTime, Integer); 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
+   OUT outPartnerName        TVarChar  ,    -- 
+   OUT outAddress            TVarChar  ,    -- 
     IN inCode                Integer   ,    -- код объекта <Контрагент> 
+    IN inShortName           TVarChar  ,    -- краткое наименование
     IN inGLNCode             TVarChar  ,    -- Код GLN
-    
     IN inGLNCodeJuridical    TVarChar  ,    -- Код GLN - Покупатель
     IN inGLNCodeRetail       TVarChar  ,    -- Код GLN - Получатель
-    IN inGLNCodeCorporate    TVarChar  ,    -- Код GLN - Поставщик
-    IN inSchedule            TVarChar  ,    -- График посещения
-
+    IN inGLNCodeCorporate    TVarChar  ,    -- Код GLN - Поставщик 
+    
     IN inBranchCode          TVarChar  ,    -- Номер филиала
     IN inBranchJur           TVarChar  ,    -- Название юр.лица для филиала
     IN inTerminal            TVarChar  ,    -- код терминала
-
+        
+    IN inHouseNumber         TVarChar  ,    -- Номер дома
+    IN inCaseNumber          TVarChar  ,    -- Номер корпуса
+    IN inRoomNumber          TVarChar  ,    -- Номер квартиры
+    IN inStreetId            Integer   ,    -- Улица/проспект  
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
-    IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально 
-    IN inPrepareDayCount_30201     TFloat    ,    -- За сколько дней принимается заказ (Мясное сырье)
-    IN inDocumentDayCount_30201    TFloat    ,    -- Через сколько дней оформляется документально (Мясное сырье)
+    IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
+    IN inPrepareDayCount_30201  TFloat    ,    -- За сколько дней принимается заказ (Мясное сырье)
+    IN inDocumentDayCount_30201 TFloat    ,    -- Через сколько дней оформляется документально (Мясное сырье)
     IN inCategory               TFloat    ,    -- категория ТТ
+                
     IN inTaxSale_Personal       TFloat    ,   -- супервайзер - % от товарооборота
     IN inTaxSale_PersonalTrade  TFloat    ,   -- ТП - % от товарооборота
     IN inTaxSale_MemberSaler1   TFloat    ,   -- Продавец-1 - % от товарооборота
     IN inTaxSale_MemberSaler2   TFloat    ,   -- Продавец-2 - % от товарооборота
-
+    
     IN inisDayCount_30201    Boolean   ,    -- Подключена схема(Мясное сырье)
 
     IN inEdiOrdspr           Boolean   ,    -- EDI - Подтверждение
@@ -119,182 +157,218 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inEdiOrdspr_vch       Boolean   ,    -- Платформа ВЧАСНО - Подтверждение
     IN inEdiInvoice_vch      Boolean   ,    -- Платформа ВЧАСНО - Счет, Платформа ВЧАСНО
     IN inEdiDesadv_vch       Boolean   ,    -- Платформа ВЧАСНО - уведомление, Платформа ВЧАСНО 
-    IN inGLNCodeCorporate_vch TVarChar ,    -- Платформа ВЧАСНО - Код GLN - Поставщик
+    IN inGLNCodeCorporate_vch TVarChar ,    -- Платформа ВЧАСНО - Код GLN - Поставщик 
 
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
     IN inRouteId             Integer   ,    -- Маршрут
-    IN inRouteId_30201       Integer   ,    -- Маршрут мясное сырье 
+    IN inRouteId_30201       Integer   ,    -- Маршрут мясное сырье    
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
     --IN inRouteTTId           Integer   ,    -- Маршрут ТТ
-    
-    IN inMemberTakeId        Integer   ,    -- Физ лицо (сотрудник экспедитор)
+  
+    IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
     IN inMemberSaler1Id      Integer   ,    -- Физ лицо(Продавец-1)
     IN inMemberSaler2Id      Integer   ,    -- Физ лицо(Продавец-2)
-
-    IN inPersonalId          Integer   ,    -- Сотрудник (супервайзер)
-    IN inPersonalTradeId     Integer   ,    -- Сотрудник (торговый)
-    IN inPersonalMerchId     Integer   ,    -- Сотрудник (мерчандайзер)
+    
+    IN inPersonalId          Integer   ,    -- Физ лицо (ответственное лицо)
+    IN inPersonalTradeId     Integer   ,    -- Физ лицо(торговый)
+    IN inPersonalMerchId     Integer   ,    -- Физ лицо (мерчандайзер) 
     IN inPersonalSigningId   Integer   ,    -- Сотрудник (подписант)
     IN inAreaId              Integer   ,    -- Регион
-    IN inPartnerTagId        Integer   ,    -- Признак торговой точки
+    IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
 
     IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
-       
-    IN inUnitMobileId        Integer   ,    -- Подразделение(заявки мобильный)
-    IN inTypeCommercId       Integer   ,    -- Тип отгрузки
-    --IN inUnitCommercId       Integer   ,    -- Отдео комменции 
-    --IN inPersonalGroupCommercId  Integer   ,    -- Группа Сотрудников
-
+    
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListId_30201   Integer   ,    -- Прайс-лист мясное сырье
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
+    IN inUnitMobileId        Integer   ,    -- Подразделение(заявки мобильный) 
+    IN inTypeCommercId       Integer   ,    -- Тип отгрузки
+    --IN inUnitCommercId       Integer   ,    -- Отдео комменции
+    --IN inPersonalGroupCommercId  Integer   ,    -- Группа Сотрудников
+
     IN inStartPromo          TDateTime ,    -- Дата начала акции
     IN inEndPromo            TDateTime ,    -- Дата окончания акции     
+
+    IN inRegionName          TVarChar  ,    -- наименование области
+    IN inProvinceName        TVarChar  ,    -- наименование район
+    IN inCityName            TVarChar  ,    -- наименование населенный пункт
+    IN inCityKindId          Integer   ,    -- Вид населенного пункта
+    IN inProvinceCityName    TVarChar  ,    -- наименование района населенного пункта
+    IN inPostalCode          TVarChar  ,    -- индекс
+    IN inStreetName          TVarChar  ,    -- наименование улица
+    IN inStreetKindId        Integer   ,    -- Вид улицы
+
+    IN inValue1              Boolean  ,  -- понедельник значение
+    IN inValue2              Boolean  ,  -- вторник
+    IN inValue3              Boolean  ,  -- среда
+    IN inValue4              Boolean  ,  -- четверг
+    IN inValue5              Boolean  ,  -- пятница
+    IN inValue6              Boolean  ,  -- суббота
+    IN inValue7              Boolean  ,  -- воскресенье 
     
-    IN inUserId              Integer        -- Пользователь
+    IN inMovementComment     TVarChar ,  -- примечание для док продажи  
+   
+    IN inSession             TVarChar       -- сессия пользователя
 )
-  RETURNS Integer AS
+  RETURNS RECORD AS
 $BODY$
-   DECLARE vbIsInsert Boolean;
+   DECLARE vbUserId Integer;
+   DECLARE vbCode Integer;
+   DECLARE vbSchedule TVarChar;
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
 
-   -- Проверка для TPartner1CLinkPlaceForm
-   IF ioId <> 0 AND NOT EXISTS (SELECT Id FROM Object where Id = ioId AND DescId = zc_Object_Partner()) THEN
-      RAISE EXCEPTION 'Ошибка.Корректировка элемента невозможна.';
-   END IF;
 
-   -- Проверка установки значений
-   IF COALESCE (inJuridicalId, 0) = 0  THEN
-      RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
-   END IF;
-   
-
-   -- определяется признак Создание/Корректировка
-   vbIsInsert:= COALESCE (ioId, 0) = 0;
-
-   IF COALESCE (ioId, 0) = 0
+   -- Проверка
+   IF (inCategory <> COALESCE((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = ioId AND OFl.DescId = zc_ObjectFloat_Partner_Category()), 0))
+   AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_Partner_Category())
    THEN
-       -- сохранили <Объект>
-       ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), inCode, '');
+       RAISE EXCEPTION 'Ошибка.Нет прав заполнять <Категорию ТТ>.';
+   END IF;
+   
+   -- Проверка
+   IF ioId > 0
+      AND COALESCE (inPriceListId, 0) <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = ioId AND OL.DescId = zc_ObjectLink_Partner_PriceList()), 0)
+   THEN
+       -- RAISE EXCEPTION 'Ошибка.Нет прав устанавливать прайс <%>.', lfGet_Object_ValueData_sh (inPriceListId);
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_PriceList());
+   ELSEIF COALESCE (ioId, 0) = 0 AND inPriceListId > 0
+   THEN
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_PriceList());
    END IF;
 
-   -- сохранили свойство <Код GLN>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
+   -- Проверка
+   IF ioId > 0
+      AND COALESCE (inPriceListId_30201, 0) <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = ioId AND OL.DescId = zc_ObjectLink_Partner_PriceList30201()), 0)
+   THEN
+       -- RAISE EXCEPTION 'Ошибка.Нет прав устанавливать прайс <%>.', lfGet_Object_ValueData_sh (inPriceListId);
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_PriceList());
+   ELSEIF COALESCE (ioId, 0) = 0 AND inPriceListId_30201 > 0
+   THEN
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_PriceList());
+   END IF;
 
-   -- сохранили свойство <Код GLN>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCodeJuridical(), ioId, inGLNCodeJuridical);
-   -- сохранили свойство <Код GLN>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCodeRetail(), ioId, inGLNCodeRetail);   
-   -- сохранили свойство <Код GLN>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCodeCorporate(), ioId, inGLNCodeCorporate);   
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Schedule(), ioId, inSchedule);   
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_BranchCode(), ioId, inBranchCode); 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_BranchJur(), ioId, inBranchJur);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Terminal(), ioId, inTerminal); 
-         
-   -- сохранили свойство <За сколько дней принимается заказ>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPrepareDayCount /*CASE WHEN vbIsInsert = TRUE AND COALESCE (inPrepareDayCount, 0) = 0 THEN 1 ELSE inPrepareDayCount END*/);
-   -- сохранили свойство <Через сколько дней оформляется документально>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount(), ioId, inDocumentDayCount);
 
-   -- сохранили свойство <За сколько дней принимается заказ Мясное сырье>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount_30201(), ioId, inPrepareDayCount_30201);
-   -- сохранили свойство <Через сколько дней оформляется документально Мясное сырье>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount_30201(), ioId, inDocumentDayCount_30201);
+   -- !!!надо так криво обработать когда добавляют несколько пользователей!!!)
+   IF COALESCE (ioId, 0) = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ObjectCode = inCode)
+   THEN 
+       -- Обнулим, что б потом переопределить
+       inCode:= 0;
+   END IF;
+   -- !!!надо так криво обработать когда добавляют несколько пользователей!!!)
+   IF inCode > 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ObjectCode = inCode AND Object.Id <> COALESCE (ioId, 0))
+   THEN 
+       -- Обнулим, что б потом переопределить
+       inCode:= 0;
+   END IF;
 
-   -- сохранили свойство <inCategory>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_Category(), ioId, inCategory);
+   --проверка
+   IF COALESCE (inRouteTTId,0) = 0 AND COALESCE (inUnitCommercId,0) = 0 AND 1=0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Должен быть заполнен один из параметров <Маршрут ТТ> или <Отдел коммерции>.';
+   END IF;
 
-   -- сохранили свойство <inTaxSale_Personal>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_TaxSale_Personal(), ioId, inTaxSale_Personal);
-   -- сохранили свойство <inTaxSale_PersonalTrade>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_TaxSale_PersonalTrade(), ioId, inTaxSale_PersonalTrade);
-   -- сохранили свойство <inTaxSale_MemberSaler1>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_TaxSale_MemberSaler1(), ioId, inTaxSale_MemberSaler1);
-   -- сохранили свойство <inTaxSale_MemberSaler2>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_TaxSale_MemberSaler2(), ioId, inTaxSale_MemberSaler2);
-   
-   -- сохранили связь с <Юридические лица>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Juridical(), ioId, inJuridicalId);
-   -- сохранили связь с <Маршруты>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), ioId, inRouteId);
-   -- сохранили связь с <Маршруты ТТ>
-   --PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteTT(), ioId, inRouteTTId);
 
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route30201(), ioId, inRouteId_30201);
-   
-   -- сохранили связь с <Сортировки маршрутов>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteSorting(), ioId, inRouteSortingId);
-   -- сохранили связь с <Физ лицо (сотрудник экспедитор)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), ioId, inMemberTakeId);
+   -- !!! Если код не установлен, определяем его как последний+1
+   vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
 
-   -- сохранили связь с <Физ лицо (Продавец-1)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberSaler1(), ioId, inMemberSaler1Id);
-   -- сохранили связь с <Физ лицо (Продавец-2)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberSaler2(), ioId, inMemberSaler2Id);
-   
-   -- сохранили связь с <Сотрудник (супервайзер)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), ioId, inPersonalId);
-   -- сохранили связь с <Сотрудник (торговый)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
-   -- сохранили связь с <Сотрудник (мерчандайзер)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalMerch(), ioId, inPersonalMerchId);
-   -- сохранили связь с <Сотрудник (подписант)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalSigning(), ioId, inPersonalSigningId);
+   -- проверка уникальности <Код>
+   IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), vbCode); END IF;
 
-   -- сохранили связь с <Регион>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), ioId, inAreaId);
-   -- сохранили связь с <Признак торговой точки>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PartnerTag(), ioId, inPartnerTagId);
-   
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_GoodsProperty(), ioId, inGoodsPropertyId);
+   vbSchedule:= (inValue1||';'||inValue2||';'||inValue3||';'||inValue4||';'||inValue5||';'||inValue6||';'||inValue7) :: TVarChar;
+   vbSchedule:= replace( replace (vbSchedule, 'true', 't'), 'false', 'f');
 
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_PriceList(), ioId, inPriceListId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_PriceList30201(), ioId, inPriceListId_30201);
+   -- сохранили
+   ioId := lpInsertUpdate_Object_Partner (ioId              := ioId
+                                        , inCode            := vbCode
+                                        , inGLNCode         := inGLNCode
+                                        , inGLNCodeJuridical:= inGLNCodeJuridical
+                                        , inGLNCodeRetail   := inGLNCodeRetail
+                                        , inGLNCodeCorporate:= inGLNCodeCorporate
+                                        , inSchedule        := vbSchedule  
+                                        , inBranchCode      := inBranchCode
+                                        , inBranchJur       := inBranchJur
+                                        , inTerminal        := inTerminal
 
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceListPromo(), ioId, inPriceListPromoId);
+                                        , inPrepareDayCount := inPrepareDayCount
+                                        , inDocumentDayCount:= inDocumentDayCount
+                                        , inPrepareDayCount_30201 := inPrepareDayCount_30201
+                                        , inDocumentDayCount_30201:= inDocumentDayCount_30201
+                                        , inCategory        := inCategory
+                                        , inTaxSale_Personal      := inTaxSale_Personal
+                                        , inTaxSale_PersonalTrade := inTaxSale_PersonalTrade
+                                        , inTaxSale_MemberSaler1  := inTaxSale_MemberSaler1
+                                        , inTaxSale_MemberSaler2  := inTaxSale_MemberSaler2
+                                        , inisDayCount_30201:= inisDayCount_30201
+                                        , inEdiOrdspr       := inEdiOrdspr
+                                        , inEdiInvoice      := inEdiInvoice
+                                        , inEdiDesadv       := inEdiDesadv
+                                        , inEdiOrdspr_vch   := inEdiOrdspr_vch
+                                        , inEdiInvoice_vch  := inEdiInvoice_vch
+                                        , inEdiDesadv_vch   := inEdiDesadv_vch
+                                        , inGLNCodeCorporate_vch := inGLNCodeCorporate_vch
+                                        , inJuridicalId     := inJuridicalId
+                                        , inRouteId         := inRouteId
+                                        , inRouteId_30201   := inRouteId_30201
+                                        , inRouteSortingId  := inRouteSortingId
+                                        --, inRouteTTId       := inRouteTTId
+                                        , inMemberTakeId    := inMemberTakeId
+                                        , inMemberSaler1Id  := inMemberSaler1Id
+                                        , inMemberSaler2Id  := inMemberSaler2Id
+                                        , inPersonalId      := inPersonalId
+                                        , inPersonalTradeId := inPersonalTradeId
+                                        , inPersonalMerchId := inPersonalMerchId
+                                        , inPersonalSigningId:= inPersonalSigningId
+                                        , inAreaId          := inAreaId
+                                        , inPartnerTagId    := inPartnerTagId
+                                        , inGoodsPropertyId := inGoodsPropertyId 
+                                                
+                                        , inPriceListId     := inPriceListId
+                                        , inPriceListId_30201 := inPriceListId_30201
+                                        , inPriceListPromoId:= inPriceListPromoId
+                                        , inUnitMobileId    := inUnitMobileId
+                                        , inTypeCommercId   := inTypeCommercId  
+                                        --, inUnitCommercId   := inUnitCommercId
+                                        --, inPersonalGroupCommercId := inPersonalGroupCommercId
+                                        , inStartPromo      := inStartPromo
+                                        , inEndPromo        := inEndPromo
+                                        , inUserId          := vbUserId
+                                         );
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_UnitMobile(), ioId, inUnitMobileId);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_TypeCommerc(), ioId, inTypeCommercId);
-   -- сохранили свойство <>
-   --PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_UnitCommerc(), ioId, CASE WHEN COALESCE (inRouteTTId,0) <> 0 THEN NULL ELSE inUnitCommercId END);
-   -- сохранили свойство <>
-   --PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalGroupCommerc(), ioId, CASE WHEN COALESCE (inRouteTTId,0) <> 0 THEN NULL ELSE inPersonalGroupCommercId END);
+   -- сохранили
+   SELECT tmp.outPartnerName, tmp.outAddress
+         INTO outPartnerName, outAddress
+      FROM lpUpdate_Object_Partner_Address( inId                := ioId
+                                          , inJuridicalId       := inJuridicalId
+                                          , inShortName         := inShortName
+                                          , inCode              := vbCode
+                                          , inRegionName        := inRegionName
+                                          , inProvinceName      := inProvinceName
+                                          , inCityName          := inCityName
+                                          , inCityKindId        := inCityKindId
+                                          , inProvinceCityName  := inProvinceCityName  
+                                          , inPostalCode        := inPostalCode
+                                          , inStreetName        := inStreetName
+                                          , inStreetKindId      := inStreetKindId
+                                          , inHouseNumber       := inHouseNumber
+                                          , inCaseNumber        := inCaseNumber  
+                                          , inRoomNumber        := inRoomNumber
+                                          , inIsCheckUnique     := FALSE -- TRUE
+                                          , inSession           := inSession
+                                          , inUserId            := vbUserId
+                                           ) AS tmp;   
+   --
+   -- сохранили свойство <примечание для Накладной продажи>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Movement(), ioId, inMovementComment);
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, DATE (inStartPromo));
-      -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_EndPromo(), ioId, DATE (inEndPromo));
 
-   -- сохранили свойство <Подключена схема(Мясное сырье)>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_DayCount_30201(), ioId, inisDayCount_30201);
+   -- !!! ВРЕМЕННО !!!
+   IF vbUserId = 5 AND 1=1
+   THEN
+       RAISE EXCEPTION 'Admin - Test = OK';
+   END IF;
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiOrdspr(), ioId, inEdiOrdspr);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiInvoice(), ioId, inEdiInvoice);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiDesadv(), ioId, inEdiDesadv);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiOrdspr_vch(), ioId, inEdiOrdspr_vch);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiInvoice_vch(), ioId, inEdiInvoice_vch);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiDesadv_vch(), ioId, inEdiDesadv_vch);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCodeCorporate_vch(), ioId, inGLNCodeCorporate_vch);
 
 END;
 $BODY$
@@ -302,28 +376,30 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
- 03.05.26         *
- 21.05.26         * inRouteTTId
- 23.12.25         *
- 07.11.24         * inPersonalSigningId
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.05.26         *
+ 05.01.26         *
+ 09.12.25         *
+ 07.11.24         *
  04.07.24         *
  24.10.23         *
- 27.09.21         *
+ 27.01.23         *
  25.05.21         *
- 29.04.21         * Category
+ 29.04.21         * inCategory
  19.06.17         * add inPersonalMerchId
  07.03.17         * add Schedule
  25.12.15         * add inGoodsPropertyId
  06.02.15         * add inEdiOrdspr, inEdiInvoice, inEdiDesadv
+
  22.11.14                                        * all
+ 20.11.14         * add redmine              
  10.11.14         * add redmine
- 25.08.14                                        * set lp
+ 25.08.14                                        * add lp
  24.08.14                                        * add Проверка для TPartner1CLinkPlaceForm
  16.08.14                                        * add inAddress
  01.06.14         * add ShortName,
                         HouseNumber, CaseNumber, RoomNumber, Street
- 24.04.14                                        * add inPartnerName
+ 24.04.14                                        * add outPartnerName
  12.01.14         * add PriceList,
                         PriceListPromo,
                         StartPromo,
@@ -340,4 +416,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Object_Partner()
+-- SELECT * FROM gpInsertUpdate_Object_Partner()

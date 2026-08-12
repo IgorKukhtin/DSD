@@ -298,6 +298,12 @@ type
     Panel4: TPanel;
     edJuridicalName: TcxTextEdit;
     cxLabel77: TcxLabel;
+    cxLabel79: TcxLabel;
+    edCode_page2: TcxCurrencyEdit;
+    edName_page2: TcxTextEdit;
+    cxLabel80: TcxLabel;
+    cxButton1: TcxButton;
+    actRefresh_Commerc: TdsdDataSetRefresh;
 
   private
     { Private declara
