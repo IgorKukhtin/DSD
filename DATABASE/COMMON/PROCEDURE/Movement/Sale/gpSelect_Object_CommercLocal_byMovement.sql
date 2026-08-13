@@ -555,16 +555,28 @@ BEGIN
                               )
 
               , tmpLevel6 AS (SELECT 6 AS Ord 
-                                   , tmpCommercLocal.PositionName_6        AS PositionName
-                                   , String_AGG (DISTINCT tmpPersonal.PersonalGroupName, '; ') ::TVarChar AS PersonalGroupName
-                                   , String_AGG (tmpPersonal.PersonalName, CHR (10) || CHR (13) order by tmpPersonal.PersonalName) ::Text  AS PersonalName
-                                   , tmpPersonal.UnitName            AS UnitName
+                                   , tmpCommercLocal.PositionName_6 AS PositionName
+                                   , String_AGG (DISTINCT Object_PersonalGroup.ValueData, '; ') ::TVarChar  AS PersonalGroupName
+                                   , String_AGG (Object_Personal.ValueData, CHR (10) || CHR (13) order by Object_Personal.ValueData) ::Text  AS PersonalName
+                                   , Object_Unit.ValueData          AS UnitName
                               FROM tmpCommercLocal
-                                   LEFT JOIN tmpPersonal_byUnit AS tmpPersonal
-                                                                ON tmpPersonal.PositionId = tmpCommercLocal.PositionId_6
+                                   INNER JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                         ON ObjectLink_Personal_Position.ChildObjectId = tmpCommercLocal.PositionId_6 
+                                                        AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                   LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Position.ObjectId
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                                                        ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id
+                                                       AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+                                   LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                        ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
+                                                       AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
                               WHERE vbisEDI = FALSE
                               GROUP BY tmpCommercLocal.PositionName_6
-                                     , tmpPersonal.UnitName
+                                     , Object_Unit.ValueData
                              UNION
                               SELECT 6                              AS ord
                                    , tmpCommercLocal.PositionName_6 AS PositionName
