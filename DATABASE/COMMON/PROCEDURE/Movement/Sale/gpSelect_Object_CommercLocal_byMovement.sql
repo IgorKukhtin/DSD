@@ -34,24 +34,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
-
-     /*
-     IF EXISTS (SELECT 1
-                FROM Movement
-                       LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                                      ON MovementLinkMovement_Order.MovementId = Movement.Id
-                                                     AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-                       -- Док EDI
-                       INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order_edi
-                                                       ON MovementLinkMovement_Order_edi.MovementId = MovementLinkMovement_Order.MovementChildId
-                                                      AND MovementLinkMovement_Order_edi.DescId = zc_MovementLinkMovement_Order()
-                                                      AND COALESCE (MovementLinkMovement_Order_edi.MovementId) > 0
-                
-                WHERE Movement.Id = inMovementId)
-     THEN
-         RETURN;
-     END IF;
-     */                               
+                           
 
      SELECT CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MovementLinkObject_Insert_order.ObjectId
                  WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MovementLinkObject_Insert.ObjectId
