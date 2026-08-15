@@ -5995,6 +5995,14 @@
 				<Form>ContractTagKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SoldTable_Commerc_OlapDialog.pas">
+				<Form>Report_SoldTable_Commerc_OlapDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SoldTable_Commerc_Olap.pas">
+				<Form>Report_SoldTable_Commerc_OlapForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

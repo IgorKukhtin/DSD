@@ -2813,6 +2813,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldTable_Commerc_OlapForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SoldTable_Commerc_OlapForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldTable_Commerc_OlapDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SoldTable_Commerc_OlapDialogForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_WeighingPartner_CompareForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_WeighingPartner_CompareForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_WeighingPartner_CompareDialogForm'));

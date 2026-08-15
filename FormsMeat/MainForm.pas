@@ -1661,6 +1661,8 @@ type
     miOrderRK: TMenuItem;
     actContractTagKind: TdsdOpenForm;
     N285: TMenuItem;
+    actReport_SoldTable_Commerc_Olap: TdsdOpenForm;
+    miReport_SoldTable_Commerc_Olap: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
