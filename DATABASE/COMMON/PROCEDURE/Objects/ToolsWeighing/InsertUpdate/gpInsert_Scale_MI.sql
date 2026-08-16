@@ -668,6 +668,7 @@ BEGIN
           , CASE WHEN ObjectFloat_WeightTotal.ValueData   <> 0
                   AND ObjectFloat_WeightPackage.ValueData <> 0
                   AND ObjectFloat_WeightTotal.ValueData   > ObjectFloat_WeightPackage.ValueData
+                  AND vbMeasureId = zc_Measure_Kg()
 
                       THEN CASE WHEN inBranchCode > 1000
                                       -- не нужно значение
@@ -1443,8 +1444,20 @@ BEGIN
 
      END IF; -- if vbMessageText = ''
 
+
+     IF vbUserId = 5 AND 1=0 -- AND inBranchCode < 1000
+     THEN
+         RAISE EXCEPTION 'Admin - Test = OK  Amount = <%> Price = <%> AmountPartner = <%>'
+                       , (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = vbId)
+                       , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_Price())
+                       , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_AmountPartner())
+                        ;
+         -- RAISE EXCEPTION 'Повторите действие через 3 мин.';
+     END IF;
+
+
      -- Результат
-     RETURN QUERYё
+     RETURN QUERY
        SELECT vbId, vbTotalSumm, COALESCE (vbTotalSummPartner, 0) :: TFloat, vbMessageText :: Text MessageText;
 
 END;
