@@ -231,7 +231,11 @@ BEGIN
                    UNION SELECT tmp2.PaidKindId FROM tmp2 WHERE inMovementDescId <> zc_Movement_SendDebt() 
                    UNION SELECT tmp3.PaidKindId FROM tmp3
                     )
-     SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
+     SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two
+          , MAX (CASE WHEN _tmpPeriodClose.CloseDate_excl IS NOT NULL
+                           THEN _tmpPeriodClose.CloseDate_excl
+                     ELSE _tmpPeriodClose.CloseDate
+                 END) AS CloseDate
             INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
      FROM _tmpPeriodClose
           -- если вдруг для альтернативной формы опл - такая же дата, тогда игнорируем
