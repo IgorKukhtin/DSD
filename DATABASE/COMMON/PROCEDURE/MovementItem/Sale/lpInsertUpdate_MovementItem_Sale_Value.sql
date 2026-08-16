@@ -40,6 +40,7 @@ BEGIN
 
      -- !!!скидка - вес упаковки!!!
      IF inIsBarCode = TRUE
+        AND EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure() AND OL.ChildObjectId = zc_Measure_Kg())
      THEN
          -- получили значения для упаковки
          SELECT ObjectFloat_WeightPackage.ValueData, ObjectFloat_WeightTotal.ValueData

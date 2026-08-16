@@ -82,7 +82,9 @@ BEGIN
                                     ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id 
                                    AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
          WHERE Object_GoodsByGoodsKind_View.GoodsId = inGoodsId 
-           AND Object_GoodsByGoodsKind_View.GoodsKindId = inGoodsKindId;
+           AND Object_GoodsByGoodsKind_View.GoodsKindId = inGoodsKindId
+           AND vbMeasureId = zc_Measure_Kg()
+        ;
          -- расчет кол-во шт. упаковки (пока округление до 4-х знаков)
          outCountPack:= CASE WHEN outWeightTotal <> 0 AND outWeightPack <> 0 AND outWeightTotal > outWeightPack
                                   THEN CAST (CAST (ioAmountPartner / (1 - outWeightPack / outWeightTotal) AS NUMERIC (16, 4)) / outWeightTotal AS NUMERIC (16, 4))
