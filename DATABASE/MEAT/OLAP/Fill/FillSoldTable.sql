@@ -71,6 +71,8 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 
                        , ContractConditionKindId, BonusKindId, BonusTax
                        , GoodsByGoodsKindId
+                         --
+                       , MemberId_order, UnitId_user_order, PositionId_user_order, UserId_source_order, RouteTTId
                         )
 
    WITH tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
@@ -85,7 +87,16 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                                                     AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
                                 WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                                )
-
+              , tmpPersonal_byUser AS (SELECT ObjectLink_User_Member.ObjectId AS UserId
+                                            , lfSelect.MemberId
+                                            , lfSelect.UnitId
+                                            , lfSelect.PositionId
+                                       FROM lfSelect_Object_Member_findPersonal (zfCalc_UserAdmin()) AS lfSelect
+                                            INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                                                  ON ObjectLink_User_Member.ChildObjectId = lfSelect.MemberId
+                                                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                       WHERE lfSelect.Ord = 1
+                                      )
       , tmpOperation_SaleReturn
                      AS (SELECT MIContainer.OperDate
                               , CLO_Juridical.ObjectId                AS JuridicalId
@@ -133,6 +144,18 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     THEN -1 * MIContainer.Amount * COALESCE (MIFloat_PriceIn.ValueData, 0) * 1.2 ELSE 0 END) AS Sale_SummIn_pav
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() THEN  1 * MIContainer.Amount * COALESCE (MIFloat_PriceIn.ValueData, 0) * 1.2 ELSE 0 END) AS ReturnIn_SummIn_pav
 
+
+                              , tmpPersonal_byUser.MemberId     AS MemberId_order
+                              , tmpPersonal_byUser.UnitId       AS UnitId_user_order
+                              , tmpPersonal_byUser.PositionId   AS PositionId_user_order
+
+                              , CASE WHEN MovementString_DealId.ValueData <> ''         THEN 13992997 -- 'Вчасно'
+                                     WHEN MovementLinkMovement_Order_edi.MovementId > 0 THEN 13992996 -- 'EDI'
+                                     ELSE MovementLinkObject_Insert_order.ObjectId
+                                END :: Integer AS UserId_source_order
+
+                              , MovementLinkObject_RouteTT.ObjectId AS RouteTTId
+
                          FROM tmpAnalyzer
                               INNER JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
@@ -163,6 +186,28 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                               LEFT JOIN MovementItemFloat AS MIFloat_PriceIn
                                                           ON MIFloat_PriceIn.MovementItemId = MIContainer.MovementItemId
                                                          AND MIFloat_PriceIn.DescId         = zc_MIFloat_PriceIn()
+
+                              -- ЗаявкА
+                              LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                             ON MovementLinkMovement_Order.MovementId = MIContainer.MovementId
+                                                            AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteTT
+                                                           ON MovementLinkObject_RouteTT.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                          AND MovementLinkObject_RouteTT.DescId     = zc_MovementLinkObject_RouteTT()
+                              -- Док EDI
+                              LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_edi
+                                                             ON MovementLinkMovement_Order_edi.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                            AND MovementLinkMovement_Order_edi.DescId     = zc_MovementLinkMovement_Order()
+                              LEFT JOIN MovementString AS MovementString_DealId
+                                                       ON MovementString_DealId.MovementId = MovementLinkMovement_Order_edi.MovementChildId
+                                                      AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+
+                              -- Автор Заявки / Автор Возврат от покупателя
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert_order
+                                                           ON MovementLinkObject_Insert_order.MovementId = CASE WHEN MovementLinkMovement_Order.MovementChildId > 0 THEN MovementLinkMovement_Order.MovementChildId ELSE MIContainer.MovementId END
+                                                          AND MovementLinkObject_Insert_order.DescId     = zc_MovementLinkObject_Insert()
+                              LEFT JOIN tmpPersonal_byUser ON tmpPersonal_byUser.UserId = MovementLinkObject_Insert_order.ObjectId
+
                          GROUP BY MIContainer.OperDate
                                 , CLO_Juridical.ObjectId
                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END
@@ -172,6 +217,17 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                                 , CLO_Contract.ObjectId
                                 , MIContainer.ObjectId_Analyzer
                                 , MIContainer.ObjectIntId_Analyzer
+                                  --
+                                , tmpPersonal_byUser.MemberId
+                                , tmpPersonal_byUser.UnitId
+                                , tmpPersonal_byUser.PositionId
+
+                                , CASE WHEN MovementString_DealId.ValueData <> ''         THEN 13992997 -- 'Вчасно'
+                                       WHEN MovementLinkMovement_Order_edi.MovementId > 0 THEN 13992996 -- 'EDI'
+                                       ELSE MovementLinkObject_Insert_order.ObjectId
+                                  END :: Integer
+
+                                , MovementLinkObject_RouteTT.ObjectId
                         )
 
           , tmpBonus AS (SELECT MovementItemContainer.OperDate  AS OperDate
@@ -428,12 +484,17 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , (tmpOperation_SaleReturn.Sale_SummIn_pav)       AS Sale_SummIn_pav
                  , (tmpOperation_SaleReturn.ReturnIn_SummIn_pav)   AS ReturnIn_SummIn_pav
 
+                 , tmpOperation_SaleReturn.MemberId_order, tmpOperation_SaleReturn.UnitId_user_order, tmpOperation_SaleReturn.PositionId_user_order
+                 , tmpOperation_SaleReturn.UserId_source_order
+                 , tmpOperation_SaleReturn.RouteTTId
+
                  , 0 AS BonusBasis
                  , 0 AS Bonus
 
                  , 0          AS ContractConditionKindId
                  , 0          AS BonusKindId
                  , 0 ::TFloat AS BonusTax
+
             FROM tmpOperation_SaleReturn
                  /*INNER JOIN ObjectLink AS ObjectLink_InfoMoneyDestination
                                        ON ObjectLink_InfoMoneyDestination.ObjectId = tmpOperation_SaleReturn.InfoMoneyId
@@ -494,6 +555,10 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , 0 AS Sale_SummIn_pav
                  , 0 AS ReturnIn_SummIn_pav
 
+                 , 0 AS MemberId_order, 0 AS UnitId_user_order, 0 AS PositionId_user_order
+                 , 0 AS UserId_source_order
+                 , 0 AS RouteTTId
+
                  , (tmpBonus.BonusBasis) AS BonusBasis
                  , (tmpBonus.Bonus)      AS Bonus
 
@@ -501,7 +566,8 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , tmpBonus.BonusKindId
                  , tmpBonus.BonusTax  :: TFloat
 
-            FROM tmpBonus)
+            FROM tmpBonus
+           )
 
           , tmpOperation AS
            (SELECT tmpOperation_all.OperDate
@@ -561,6 +627,10 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , tmpOperation_all.BonusKindId
                  , tmpOperation_all.BonusTax
 
+                 , tmpOperation_all.MemberId_order, tmpOperation_all.UnitId_user_order, tmpOperation_all.PositionId_user_order
+                 , tmpOperation_all.UserId_source_order
+                 , tmpOperation_all.RouteTTId
+
             FROM tmpOperation_all
             GROUP BY tmpOperation_all.OperDate
 
@@ -578,7 +648,12 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                    , tmpOperation_all.ContractConditionKindId
                    , tmpOperation_all.BonusKindId
                    , tmpOperation_all.BonusTax
+                     --
+                   , tmpOperation_all.MemberId_order, tmpOperation_all.UnitId_user_order, tmpOperation_all.PositionId_user_order
+                   , tmpOperation_all.UserId_source_order
+                   , tmpOperation_all.RouteTTId
             )
+
 
       -- РЕЗУЛЬТАТ
       SELECT tmpResult.OperDate
@@ -683,6 +758,10 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 
            , COALESCE (tmpGoodsByGoodsKind.Id, 0) AS GoodsByGoodsKindId
 
+           , tmpResult.MemberId_order, tmpResult.UnitId_user_order, tmpResult.PositionId_user_order
+           , tmpResult.UserId_source_order
+           , tmpResult.RouteTTId
+
       FROM (SELECT tmpOperation.OperDate
 
                  , tmpOperation.JuridicalId
@@ -746,6 +825,10 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , SUM (tmpOperation.BonusBasis) AS BonusBasis
                  , SUM (tmpOperation.Bonus)      AS Bonus
 
+                 , tmpOperation.MemberId_order, tmpOperation.UnitId_user_order, tmpOperation.PositionId_user_order
+                 , tmpOperation.UserId_source_order
+                 , tmpOperation.RouteTTId
+
             FROM tmpOperation
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                       ON ObjectLink_Goods_Measure.ObjectId = tmpOperation.GoodsId
@@ -770,6 +853,11 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                    , tmpOperation.ContractConditionKindId
                    , tmpOperation.BonusKindId
                    , tmpOperation.BonusTax
+
+                   , tmpOperation.MemberId_order, tmpOperation.UnitId_user_order, tmpOperation.PositionId_user_order
+                   , tmpOperation.UserId_source_order
+                   , tmpOperation.RouteTTId
+
            ) AS tmpResult
 
            LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpResult.PartnerId
@@ -882,6 +970,10 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 
            , 0 AS GoodsByGoodsKindId
 
+           , 0 AS MemberId_order, 0 AS UnitId_user_order, 0 AS PositionId_user_order
+           , 0 AS UserId_source_order
+           , 0 AS RouteTTId
+
    FROM Movement
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                   AND MovementItemContainer.DescId = zc_MIContainer_Summ()
@@ -990,7 +1082,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 
             -- 1.4.JuridicalSold
             PERFORM gpInsert_bi_Table_JuridicalSold (inStartDate, vbEndDate_calc, zfCalc_UserAdmin());
-            
+
             -- 1.5.ProfitLoss
             PERFORM gpInsert_bi_Table_ProfitLoss (inStartDate, vbEndDate_calc, zfCalc_UserAdmin());
 
@@ -1006,7 +1098,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
            AND EXTRACT (DAY FROM CURRENT_TIMESTAMP) > 1
         THEN
             -- RAISE EXCEPTION 'Ошибка-2. <%>  <%>',  DATE_TRUNC ('MONTH', CURRENT_DATE), CURRENT_DATE - INTERVAL '1 DAY';
-            
+
             -- 2.1.Sale
             PERFORM gpInsert_bi_Table_Sale (DATE_TRUNC ('MONTH', CURRENT_DATE), CURRENT_DATE - INTERVAL '1 DAY', zfCalc_UserAdmin());
 
@@ -1070,13 +1162,13 @@ group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
 -- !!!check goods params
 --
 --      select * from Object where id = 8451
--- update SoldTable set BusinessId          = tmp.BusinessId          
-                      , GoodsPlatformId     = tmp.GoodsPlatformId     
-                      , TradeMarkId         = tmp.TradeMarkId         
-                      , GoodsGroupAnalystId = tmp.GoodsGroupAnalystId 
-                      , GoodsTagId          = tmp.GoodsTagId          
-                      , GoodsGroupId        = tmp.GoodsGroupId        
-                      , GoodsGroupStatId    = tmp.GoodsGroupStatId    
+-- update SoldTable set BusinessId          = tmp.BusinessId
+                      , GoodsPlatformId     = tmp.GoodsPlatformId
+                      , TradeMarkId         = tmp.TradeMarkId
+                      , GoodsGroupAnalystId = tmp.GoodsGroupAnalystId
+                      , GoodsTagId          = tmp.GoodsTagId
+                      , GoodsGroupId        = tmp.GoodsGroupId
+                      , GoodsGroupStatId    = tmp.GoodsGroupStatId
                       , MeasureId           = tmp.MeasureId
 -- select distinct SoldTable .GoodsId FROM SoldTable,
  FROM
