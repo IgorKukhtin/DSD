@@ -856,7 +856,63 @@ BEGIN
                                               AND MILinkObject_BankSecondDiff_num.DescId = zc_MILinkObject_BankSecondDiff_num()
                             LEFT JOIN tmpBank AS Object_BankSecondDiff_num ON Object_BankSecondDiff_num.Id = MILinkObject_BankSecondDiff_num.ObjectId 
                            )
-
+         -- Если был Перевод
+       , tmpMI_StaffListMember AS (SELECT MLO_Member.ObjectId            AS MemberId
+                                        , MLO_Unit.ObjectId              AS UnitId
+                                        , MLO_Position.ObjectId          AS PositionId
+                                        , MLO_PositionLevel.ObjectId     AS PositionLevelId
+                                        , MLO_Unit_old.ObjectId          AS UnitId_old
+                                        , MLO_Position_old.ObjectId      AS PositionId_old
+                                        , MLO_PositionLevel_old.ObjectId AS PositionLevelId_old
+                                          -- № п/п
+                                        , ROW_NUMBER() OVER (PARTITION BY MLO_Member.ObjectId
+                                                                        , MLO_Unit.ObjectId
+                                                                        , MLO_Position.ObjectId
+                                                                        , MLO_PositionLevel.ObjectId
+                                                                        , MLO_Unit_old.ObjectId
+                                                                        , MLO_Position_old.ObjectId
+                                                                        , MLO_PositionLevel_old.ObjectId
+                                                             ORDER BY Movement.OperDate ASC
+                                                            ) AS Ord
+                                   FROM MovementLinkObject AS MLO_Member
+                                        JOIN Movement ON Movement.Id       = MLO_Member.MovementId
+                                                     AND Movement.DescId   = zc_Movement_StaffListMember()
+                                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                     -- !!по дате начисления!!!
+                                                     AND Movement.OperDate >= DATE_TRUNC ('MONTH', vbServiceDate)
+                                        JOIN MovementBoolean AS MB_Main
+                                                             ON MB_Main.MovementId = MLO_Member.MovementId
+                                                            AND MB_Main.DescId     = zc_MovementBoolean_Main()
+                                                            -- Только Основное место
+                                                            -- AND MB_Main.ValueData  = TRUE
+                                        -- Перевод
+                                        INNER JOIN MovementLinkObject AS MLO_StaffListKind
+                                                                      ON MLO_StaffListKind.MovementId = MLO_Member.MovementId
+                                                                     AND MLO_StaffListKind.DescId     = zc_MovementLinkObject_StaffListKind()
+                                                                     AND MLO_StaffListKind.ObjectId   = zc_Enum_StaffListKind_Send()
+               
+                                        INNER JOIN MovementLinkObject AS MLO_Unit
+                                                                      ON MLO_Unit.MovementId = MLO_Member.MovementId
+                                                                     AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                        INNER JOIN MovementLinkObject AS MLO_Position
+                                                                      ON MLO_Position.MovementId = MLO_Member.MovementId
+                                                                     AND MLO_Position.DescId     = zc_MovementLinkObject_Position()
+                                        LEFT JOIN MovementLinkObject AS MLO_PositionLevel
+                                                                     ON MLO_PositionLevel.MovementId = MLO_Member.MovementId
+                                                                    AND MLO_PositionLevel.DescId     = zc_MovementLinkObject_PositionLevel()
+                                        INNER JOIN MovementLinkObject AS MLO_Unit_old
+                                                                      ON MLO_Unit_old.MovementId = MLO_Member.MovementId
+                                                                     AND MLO_Unit_old.DescId     = zc_MovementLinkObject_Unit_old()
+                                        INNER JOIN MovementLinkObject AS MLO_Position_old
+                                                                      ON MLO_Position_old.MovementId = MLO_Member.MovementId
+                                                                     AND MLO_Position_old.DescId     = zc_MovementLinkObject_Position_old()
+                                        LEFT JOIN MovementLinkObject AS MLO_PositionLevel_old
+                                                                     ON MLO_PositionLevel_old.MovementId = MLO_Member.MovementId
+                                                                    AND MLO_PositionLevel_old.DescId     = zc_MovementLinkObject_PositionLevel_old()
+                                   WHERE MLO_Member.ObjectId IN (SELECT DISTINCT tmpMI.MemberId FROM tmpMI)
+                                     AND MLO_Member.DescId   = zc_MovementLinkObject_Member()
+                                  )
+       
        -- Результат
        SELECT tmpAll.MovementItemId                         AS Id
             , Object_Personal.Id                            AS PersonalId
@@ -1100,7 +1156,6 @@ BEGIN
             , MIFloat_SummAddOth.ValueData              AS SummAddOth
             , MIFloat_SummAddOthRecalc.ValueData        AS SummAddOthRecalc
             , MIFloat_SummHouseAdd.ValueData  ::TFloat  AS SummHouseAdd
-
 
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensation.ValueData        ELSE 0 END ::TFloat AS SummCompensation
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensationRecalc.ValueData  ELSE 0 END ::TFloat AS SummCompensationRecalc
@@ -1368,8 +1423,17 @@ BEGIN
                             AND MIDate_BankOut.DescId = zc_MIDate_BankOut()
 
             LEFT JOIN tmpPersonal_param AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
-            LEFT JOIN tmpObject_Unit AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
-            LEFT JOIN tmpObject_Position AS Object_Position ON Object_Position.Id = tmpAll.PositionId
+
+            -- Если был Перевод
+            LEFT JOIN tmpMI_StaffListMember ON tmpMI_StaffListMember.UnitId     = tmpAll.UnitId
+                                           AND tmpMI_StaffListMember.MemberId   = tmpAll.MemberId
+                                           AND tmpMI_StaffListMember.PositionId = tmpAll.PositionId
+                                           AND COALESCE (tmpMI_StaffListMember.PositionLevelId, 0) = COALESCE (Object_Personal.PositionLevelId, 0)     
+                                           --
+                                           AND tmpMI_StaffListMember.Ord        = 1
+
+            LEFT JOIN tmpObject_Unit AS Object_Unit ON Object_Unit.Id = COALESCE (tmpMI_StaffListMember.UnitId_old, tmpAll.UnitId)
+            LEFT JOIN tmpObject_Position AS Object_Position ON Object_Position.Id = COALESCE (tmpMI_StaffListMember.PositionId_old, tmpAll.PositionId)
             LEFT JOIN tmpObject_Member AS Object_Member ON Object_Member.Id = tmpAll.MemberId
             LEFT JOIN tmpObject_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpAll.InfoMoneyId
             LEFT JOIN tmpObject_PersonalServiceList AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpAll.PersonalServiceListId
@@ -1467,6 +1531,7 @@ BEGIN
                             AND MILinkObject_BankSecondDiff_num.DescId = zc_MILinkObject_BankSecondDiff_num()
           LEFT JOIN tmpBank AS Object_BankSecondDiff_num ON Object_BankSecondDiff_num.Id = MILinkObject_BankSecondDiff_num.ObjectId 
           */
+
           --
           LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
           LEFT JOIN tmpMIChild_Hours ON tmpMIChild_Hours.ParentId = tmpAll.MovementItemId
@@ -1474,7 +1539,7 @@ BEGIN
           LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId_Personal
                                       AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
                                       AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
-                                      AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = COALESCE (Object_Personal.PositionLevelId, 0)     
+                                      AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = COALESCE (tmpMI_StaffListMember.PositionLevelId_old, Object_Personal.PositionLevelId, 0)     
                                       --
                                       AND tmpAll.Ord_pay = 1
 
