@@ -81,7 +81,8 @@ BEGIN
 
    -- Результат
    RETURN QUERY
-   WITH tmpListBranch_Constraint AS (SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+   WITH tmpListBranch_Constraint AS (-- PersonalTrade
+                                     SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                      FROM ObjectLink AS ObjectLink_Unit_Branch
                                           INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                                 ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
@@ -95,6 +96,7 @@ BEGIN
                                      WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Branch_Constraint
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                     UNION
+                                     -- Contract_Personal
                                      SELECT DISTINCT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
                                      FROM ObjectLink AS ObjectLink_Unit_Branch
                                           INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
