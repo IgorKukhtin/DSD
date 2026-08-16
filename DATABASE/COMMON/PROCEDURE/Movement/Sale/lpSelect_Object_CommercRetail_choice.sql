@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_CommercRetail_byReport (Integer,Integer,
 DROP FUNCTION IF EXISTS lpSelect_Object_CommercRetail_choice (Integer,Integer,Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpSelect_Object_CommercRetail_choice(
-    IN inUserId_order          Integer  , -- 
+    IN inMemberId_order        Integer  , --
     IN inRetailId              Integer  ,
     IN inContractTagId         Integer  ,
     IN inSession              TVarChar   -- сесси€ пользовател€
@@ -33,14 +33,11 @@ BEGIN
                                     AND ObjectLink_ContractTag_Position.DescId = zc_ObjectLink_ContractTag_Position()
                                   );
 
-     --данные по пользователю дл€ определени€ данных из справочника CommercRetail 
+     --данные по пользователю дл€ определени€ данных из справочника CommercRetail
      SELECT ObjectLink_Personal_Unit.ChildObjectId           AS UnitId
           , ObjectLink_Unit_Branch.ChildObjectId             AS BranchId
-    INTO vbUnitId, vbBranchId
-     FROM ObjectLink AS ObjectLink_User_Member
-         LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                              ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
-                             AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+            INTO vbUnitId, vbBranchId
+     FROM ObjectLink AS ObjectLink_Personal_Member
          LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
                                  ON ObjectBoolean_Main.ObjectId = ObjectLink_Personal_Member.ObjectId
                                 AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
@@ -53,35 +50,35 @@ BEGIN
          LEFT JOIN ObjectDate AS ObjectDate_DateOut
                               ON ObjectDate_DateOut.ObjectId = ObjectLink_Personal_Member.ObjectId
                              AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
-     WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-       AND ObjectLink_User_Member.ObjectId = inUserId_order
-       AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = TRUE
-       AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() 
+     WHERE ObjectLink_Personal_Member.ChildObjectId              = inMemberId_order
+       AND ObjectLink_Personal_Member.DescId                     = zc_ObjectLink_Personal_Member()
+       AND COALESCE (ObjectBoolean_Main.ValueData, FALSE)        = TRUE
+       AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
      ;
 
          -- –езультат
-         RETURN QUERY 
+         RETURN QUERY
          WITH
          tmpCommercRetail AS (SELECT Object_CommercRetail.Id
                                    , Object_Retail.Id                    ::Integer  AS RetailId
                                    , Object_Retail.ValueData             ::TVarChar AS RetailName
- 
+
                                    , Object_PersonalGroup_1.Id           ::Integer  AS PersonalGroupId_1
                                    , Object_PersonalGroup_1.ValueData    ::TVarChar AS PersonalGroupName_1
                                    , Object_Position_1.Id                ::Integer  AS PositionId_1
-                                   , Object_Position_1.ValueData         ::TVarChar AS PositionName_1 
+                                   , Object_Position_1.ValueData         ::TVarChar AS PositionName_1
                                    , Object_Position_2.Id                ::Integer  AS PositionId_2
-                                   , Object_Position_2.ValueData         ::TVarChar AS PositionName_2 
+                                   , Object_Position_2.ValueData         ::TVarChar AS PositionName_2
                                    , Object_Position_3.Id                ::Integer  AS PositionId_3
                                    , Object_Position_3.ValueData         ::TVarChar AS PositionName_3
-  
+
                               FROM Object AS Object_CommercRetail
                                    INNER JOIN ObjectLink AS ObjectLink_CommercRetail_Retail
                                                          ON ObjectLink_CommercRetail_Retail.ObjectId = Object_CommercRetail.Id
                                                         AND ObjectLink_CommercRetail_Retail.DescId = zc_ObjectLink_CommercRetail_Retail()
                                                         AND ObjectLink_CommercRetail_Retail.ChildObjectId = inRetailId
                                    LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_CommercRetail_Retail.ChildObjectId
- 
+
                                    LEFT JOIN ObjectLink AS ObjectLink_CommercRetail_PersonalGroup_1
                                                         ON ObjectLink_CommercRetail_PersonalGroup_1.ObjectId = Object_CommercRetail.Id
                                                        AND ObjectLink_CommercRetail_PersonalGroup_1.DescId = zc_ObjectLink_CommercRetail_PersonalGroup_1()
@@ -91,22 +88,22 @@ BEGIN
                                                         ON ObjectLink_CommercRetail_Position_1.ObjectId = Object_CommercRetail.Id
                                                        AND ObjectLink_CommercRetail_Position_1.DescId = zc_ObjectLink_CommercRetail_Position_1()
                                    LEFT JOIN Object AS Object_Position_1 ON Object_Position_1.Id = ObjectLink_CommercRetail_Position_1.ChildObjectId
-  
+
                                    LEFT JOIN ObjectLink AS ObjectLink_CommercRetail_Position_2
                                                         ON ObjectLink_CommercRetail_Position_2.ObjectId = Object_CommercRetail.Id
                                                        AND ObjectLink_CommercRetail_Position_2.DescId = zc_ObjectLink_CommercRetail_Position_2()
                                    LEFT JOIN Object AS Object_Position_2 ON Object_Position_2.Id = ObjectLink_CommercRetail_Position_2.ChildObjectId
-                      
+
                                    LEFT JOIN ObjectLink AS ObjectLink_CommercRetail_Position_3
                                                         ON ObjectLink_CommercRetail_Position_3.ObjectId = Object_CommercRetail.Id
                                                        AND ObjectLink_CommercRetail_Position_3.DescId = zc_ObjectLink_CommercRetail_Position_3()
                                    LEFT JOIN Object AS Object_Position_3 ON Object_Position_3.Id = ObjectLink_CommercRetail_Position_3.ChildObjectId
- 
+
                               WHERE Object_CommercRetail.DescId = zc_Object_CommercRetail()
                                 AND Object_CommercRetail.isErased = FALSE
                              )
                 --получаем сотрудника из справочника торговой сети ѕомошник  јћ
-              , tmpLevel1 AS (SELECT 1 AS Ord 
+              , tmpLevel1 AS (SELECT 1 AS Ord
                                    , Object_Position.ValueData       AS PositionName
                                    , Object_PersonalGroup.ValueData  AS PersonalGroupName
                                    , Object_Personal.ValueData       AS PersonalName
@@ -138,7 +135,7 @@ BEGIN
                               )
 
                 --получаем сотрудника из справочника торговой сети сотрудник  јћ
-              , tmpLevel2 AS (SELECT 2 AS Ord 
+              , tmpLevel2 AS (SELECT 2 AS Ord
                                    , Object_Position.ValueData       AS PositionName
                                    , Object_PersonalGroup.ValueData  AS PersonalGroupName
                                    , Object_Personal.ValueData       AS PersonalName
@@ -170,14 +167,14 @@ BEGIN
                                 AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
                            UNION
                               --если заполнена должность по признаку договора
-                              SELECT 2 AS Ord 
+                              SELECT 2 AS Ord
                                    , Object_Position.ValueData       AS PositionName
                                    , Object_PersonalGroup.ValueData  AS PersonalGroupName
                                    , Object_Personal.ValueData       AS PersonalName
                                    , Object_Unit.ValueData           AS UnitName
                               FROM ObjectLink AS ObjectLink_Personal_Position
                                    LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
-                                   
+
                                    LEFT JOIN object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Position.ObjectId
 
                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
@@ -203,7 +200,7 @@ BEGIN
                                 AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
                               )
 
-              , tmpLevel3 AS (SELECT 3 AS Ord 
+              , tmpLevel3 AS (SELECT 3 AS Ord
                                    , tmpCommercRetail.PositionName_3       AS PositionName
                                    , String_AGG (DISTINCT Object_PersonalGroup.ValueData, '; ') ::TVarChar AS PersonalGroupName
                                    , String_AGG (Object_Personal.ValueData, CHR (10) || CHR (13) order by Object_Personal.ValueData) AS PersonalName
@@ -222,7 +219,7 @@ BEGIN
                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                         ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Position.ObjectId
                                                        AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
- 
+
                                    LEFT JOIN object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Position.ObjectId AND Object_Personal.isErased = FALSE
                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
 
@@ -235,27 +232,27 @@ BEGIN
                               )
 
 
-           SELECT 1 ::Integer AS Ord 
+           SELECT 1 ::Integer AS Ord
                 , tmp.PositionName          ::TVarChar
                 , tmp.PersonalGroupName     ::TVarChar
                 , tmp.PersonalName          ::Text
-                , tmp.UnitName              ::TVarChar      
+                , tmp.UnitName              ::TVarChar
            FROM tmpLevel1 AS tmp
           UNION ALL
-           SELECT 2 ::Integer AS Ord 
+           SELECT 2 ::Integer AS Ord
                 , tmp.PositionName          ::TVarChar
                 , tmp.PersonalGroupName     ::TVarChar
                 , tmp.PersonalName          ::Text
-                , tmp.UnitName              ::TVarChar      
+                , tmp.UnitName              ::TVarChar
            FROM tmpLevel2 AS tmp
-          UNION 
-           SELECT 3 ::Integer AS Ord 
+          UNION
+           SELECT 3 ::Integer AS Ord
                 , COALESCE (tmp.PositionName, tmpCommercRetail.PositionName_3)           ::TVarChar AS PositionName
                 , COALESCE (tmp.PersonalGroupName, tmpCommercRetail.PersonalGroupName_1) ::TVarChar AS PersonalGroupName
                 , tmp.PersonalName ::Text
-                , tmp.UnitName     ::TVarChar      
+                , tmp.UnitName     ::TVarChar
            FROM tmpCommercRetail
-               LEFT JOIN tmpLevel3 AS tmp ON 1 = 1 
+               LEFT JOIN tmpLevel3 AS tmp ON 1 = 1
           order by 1
            ;
 
@@ -271,4 +268,4 @@ $BODY$
 */
 
 -- тест
--- select * from lpSelect_Object_CommercRetail_choice (inUserId_order:= 9481147 , inRetailId := 310839,  inContractTagId:= 10087645, inSession := '9457');
+-- SELECT * FROM lpSelect_Object_CommercRetail_choice (inMemberId_order:= 9481147 , inRetailId := 310839,  inContractTagId:= 10087645, inSession := '9457');

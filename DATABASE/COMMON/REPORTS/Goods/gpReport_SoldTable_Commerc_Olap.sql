@@ -169,7 +169,7 @@ BEGIN
                               , SoldTable.ContractId          AS ContractId
                               , SoldTable.ContractTagId       AS ContractTagId
                               , SoldTable.ContractTagGroupId  AS ContractTagGroupId
-                              , SoldTable.UserId_order        AS UserId_order
+                              , SoldTable.MemberId_order        AS MemberId_order
                               , SoldTable.UserId_source_order AS UserId_source_order
                               , SoldTable.RouteTTId           AS RouteTTId
 
@@ -250,7 +250,7 @@ BEGIN
                                , SoldTable.PaidKindId
                                , SoldTable.OperDate
                                , zfCalc_GoodsPropertyId (SoldTable.ContractId, SoldTable.JuridicalId, SoldTable.PartnerId)
-                               , SoldTable.UserId_order
+                               , SoldTable.MemberId_order
                                , SoldTable.UserId_source_order
                                , SoldTable.RouteTTId
                          HAVING SUM (SoldTable.Actions_Summ)   <> 0
@@ -372,7 +372,7 @@ BEGIN
                  */      
        --выбираем уник. ключ для получения данных CommercLocal
        , tmpParams_CommercLocal AS (SELECT DISTINCT 
-                                           tmp.UserId_order
+                                           tmp.MemberId_order
                                          , tmp.UserId_source_order
                                          , tmp.RetailId
                                          , tmp.RouteTTId
@@ -380,13 +380,13 @@ BEGIN
                                     FROM tmpOperationGroup_all AS tmp
                                     )         
        , tmpParams_CommercRetail AS (SELECT DISTINCT 
-                                            tmp.UserId_order
+                                            tmp.MemberId_order
                                           , tmp.RetailId
                                           , tmp.ContractTagId
                                      FROM tmpOperationGroup_all AS tmp
                                      )         
 
-       , tmpCommercLocal AS (SELECT tmp.UserId_order
+       , tmpCommercLocal AS (SELECT tmp.MemberId_order
                                   , tmp.UserId_source_order
                                   , tmp.RetailId
                                   , tmp.RouteTTId
@@ -411,7 +411,7 @@ BEGIN
                                   , STRING_AGG ( tmp.UnitName_4,';') AS UnitName_4
                                   , STRING_AGG ( tmp.UnitName_5,';') AS UnitName_5
                                   , STRING_AGG ( tmp.UnitName_6,';') AS UnitName_6
-                        FROM (SELECT tmp.UserId_order
+                        FROM (SELECT tmp.MemberId_order
                                    , tmp.UserId_source_order
                                    , tmp.RetailId
                                    , tmp.RouteTTId
@@ -437,20 +437,20 @@ BEGIN
                                    , CASE WHEN tmpCommercLocal.Ord = 5 THEN tmpCommercLocal.UnitName ELSE NULL END AS UnitName_5
                                    , CASE WHEN tmpCommercLocal.Ord = 6 THEN tmpCommercLocal.UnitName ELSE NULL END AS UnitName_6
                               FROM tmpParams_CommercLocal AS tmp
-                                   LEFT JOIN lpSelect_Object_CommercLocal_choice  (tmp.UserId_order
+                                   LEFT JOIN lpSelect_Object_CommercLocal_choice  (tmp.MemberId_order
                                                                                  , tmp.UserId_source_order
                                                                                  , tmp.RetailId
                                                                                  , tmp.RouteTTId
                                                                                  , tmp.PartnerId
                                                                                  , inSession::TVarChar) AS tmpCommercLocal ON 1 = 1 
                               ) AS tmp
-                        GROUP BY tmp.UserId_order
+                        GROUP BY tmp.MemberId_order
                                , tmp.UserId_source_order
                                , tmp.RetailId
                                , tmp.RouteTTId
                                , tmp.PartnerId
                         )
-       , tmpCommercRetail AS (SELECT tmp.UserId_order
+       , tmpCommercRetail AS (SELECT tmp.MemberId_order
                                    , tmp.RetailId
                                    , tmp.ContractTagId
      
@@ -465,7 +465,7 @@ BEGIN
                                    , STRING_AGG ( tmp.UnitName_1ret,';') AS UnitName_1ret
                                    , STRING_AGG ( tmp.UnitName_2ret,';') AS UnitName_2ret
                                    , STRING_AGG ( tmp.UnitName_3ret,';') AS UnitName_3ret
-                        FROM (SELECT tmp.UserId_order
+                        FROM (SELECT tmp.MemberId_order
                                    , tmp.RetailId
                                    , tmp.ContractTagId
                                    , CASE WHEN tmpCommercRetail.Ord = 1 THEN tmpCommercRetail.PersonalName ELSE NULL END AS PersonalName_1ret
@@ -480,12 +480,12 @@ BEGIN
                                    , CASE WHEN tmpCommercRetail.Ord = 2 THEN tmpCommercRetail.UnitName ELSE NULL END AS UnitName_2ret
                                    , CASE WHEN tmpCommercRetail.Ord = 3 THEN tmpCommercRetail.UnitName ELSE NULL END AS UnitName_3ret
                               FROM tmpParams_CommercRetail AS tmp
-                                   LEFT JOIN lpSelect_Object_CommercRetail_choice  (tmp.UserId_order
+                                   LEFT JOIN lpSelect_Object_CommercRetail_choice  (tmp.MemberId_order
                                                                                   , tmp.RetailId
                                                                                   , tmp.ContractTagId
                                                                                   , inSession::TVarChar) AS tmpCommercRetail ON 1 = 1 
                               ) AS tmp
-                        GROUP BY tmp.UserId_order
+                        GROUP BY tmp.MemberId_order
                                , tmp.RetailId
                                , tmp.ContractTagId
                         )
@@ -574,12 +574,12 @@ BEGIN
                               , tmpCommercRetail.UnitName_3ret
 
                          FROM tmpOperationGroup_all AS SoldTable
-                              LEFT JOIN tmpCommercLocal ON tmpCommercLocal.UserId_order = SoldTable.UserId_order
+                              LEFT JOIN tmpCommercLocal ON tmpCommercLocal.MemberId_order = SoldTable.MemberId_order
                                                        AND tmpCommercLocal.UserId_source_order= SoldTable.UserId_source_order
                                                        AND tmpCommercLocal.RetailId     = SoldTable.RetailId
                                                        AND tmpCommercLocal.RouteTTId    = SoldTable.RouteTTId
                                                        AND tmpCommercLocal.PartnerId    = SoldTable.PartnerId
-                              LEFT JOIN tmpCommercRetail ON tmpCommercRetail.UserId_order = SoldTable.UserId_order
+                              LEFT JOIN tmpCommercRetail ON tmpCommercRetail.MemberId_order = SoldTable.MemberId_order
                                                         AND tmpCommercRetail.RetailId     = SoldTable.RetailId
                                                         AND tmpCommercRetail.ContractTagId= SoldTable.ContractTagId
                          GROUP BY SoldTable.BranchId
