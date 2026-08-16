@@ -21,7 +21,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems;
+  dsdAddOn, dxBarExtItems, dsdCommon;
 
 type
   TBranch_ObjectForm = class(TParentForm)

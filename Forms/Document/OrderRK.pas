@@ -51,7 +51,7 @@ type
     MeasureName: TcxGridDBColumn;
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
-    mactPrint_Order: TMultiAction;
+    mactPrint: TMultiAction;
     cbPrinted: TcxCheckBox;
     GoodsGroupNameFull: TcxGridDBColumn;
     cxLabel18: TcxLabel;

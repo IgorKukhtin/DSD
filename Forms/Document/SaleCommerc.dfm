@@ -26,6 +26,8 @@ object SaleCommercForm: TSaleCommercForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -176
+    ExplicitTop = -32
     object edInvNumber: TcxTextEdit
       Left = 177
       Top = 23
@@ -900,6 +902,22 @@ object SaleCommercForm: TSaleCommercForm
             VisibleForCustomization = False
             Width = 30
           end
+          object KAMName: TcxGridDBColumn
+            Caption = 'KAM'
+            DataBinding.FieldName = 'KAMName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object BranchName_KAM: TcxGridDBColumn
+            Caption = #1060#1110#1083#1110#1103' KAM'
+            DataBinding.FieldName = 'BranchName_KAM'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -1251,6 +1269,19 @@ object SaleCommercForm: TSaleCommercForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbUpdateRecordKAM'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateRecordBraanch_kam'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1388,6 +1419,14 @@ object SaleCommercForm: TSaleCommercForm
       Category = 0
       Hint = 'New Button'
       Visible = ivAlways
+    end
+    object bbUpdateRecordKAM: TdxBarButton
+      Action = UpdateRecordKAM
+      Category = 0
+    end
+    object bbUpdateRecordBraanch_kam: TdxBarButton
+      Action = UpdateRecordBraanch_kam
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1700,6 +1739,52 @@ object SaleCommercForm: TSaleCommercForm
       Status = mtComplete
       Guides = StatusGuides
     end
+    object actPersonalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Personal_ObjectForm'
+      FormName = 'TPersonal_ChoiceForm'
+      FormNameParam.Value = 'TPersonal_ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'KAMId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'KAMName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchId_KAM'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName_KAM'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'Complete'
       MoveParams = <>
@@ -1765,6 +1850,52 @@ object SaleCommercForm: TSaleCommercForm
         end>
       isShowModal = False
     end
+    object actBranchKam_ObjectForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Branch_ObjectForm'
+      FormName = 'TBranch_ObjectForm'
+      FormNameParam.Value = 'TBranch_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchId_KAM'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName_KAM'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'KAMId'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'KAMId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'KAMName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'KAMName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actInsertRecordChild: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
@@ -1774,6 +1905,17 @@ object SaleCommercForm: TSaleCommercForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
       ImageIndex = 0
+    end
+    object UpdateRecordBraanch_kam: TUpdateRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actBranchKam_ObjectForm
+      Params = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1083#1080#1072#1083' '#1050#1040#1052'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1083#1080#1072#1083' '#1050#1040#1052'>'
+      ImageIndex = 1
     end
     object actInsertRecord: TInsertRecord
       Category = 'DSDLib'
@@ -1880,6 +2022,17 @@ object SaleCommercForm: TSaleCommercForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object UpdateRecordKAM: TUpdateRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actPersonalChoiceForm
+      Params = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <KAM>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <KAM>'
+      ImageIndex = 1
     end
     object actBranch_ObjectForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2195,6 +2348,22 @@ object SaleCommercForm: TSaleCommercForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'BranchId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKAMId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'KAMId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId_KAM'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BranchId_KAM'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2647,8 +2816,8 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 238
-    Top = 208
+    Left = 214
+    Top = 200
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_SaleCommerc_SetUnErased'
@@ -2672,7 +2841,7 @@ object SaleCommercForm: TSaleCommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 302
+    Left = 334
     Top = 208
   end
   object StatusGuides: TdsdGuides

@@ -17271,6 +17271,7 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
+
     -- 2
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inBranchName';
@@ -17289,11 +17290,30 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
+
     -- 3
+    vbImportTypeItemId := 0;
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inBranchKAMName';
+    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
+                                                                inParamNumber   := 3, 
+                                                                inName          := 'inBranchKAMName', 
+                                                                inParamType     := 'ftString', 
+                                                                inUserParamName := 'Філія / КАМ',
+                                                                inImportTypeId  := vbImportTypeId, 
+                                                                inSession       := lfGet_User_Session (vbUserId));
+    vbImportSettingsItem := 0;
+    Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
+    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
+                                                      inName              := 'A',
+                                                      inImportSettingsId  := vbImportSettingId,
+                                                      inImportTypeItemsId := vbImportTypeItemId,
+                                                      inDefaultValue      := NULL::TVarCHar,
+                                                      inSession           := lfGet_User_Session (vbUserId));
+    -- 4
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inJuridicalName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 3, 
+                                                                inParamNumber   := 4, 
                                                                 inName          := 'inJuridicalName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Юридична особа',
@@ -17308,11 +17328,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 4
+    -- 5
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPartnerName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 4, 
+                                                                inParamNumber   := 5, 
                                                                 inName          := 'inPartnerName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Контрагент',
@@ -17327,11 +17347,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 5
+    -- 6
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPartnerId';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 5, 
+                                                                inParamNumber   := 6, 
                                                                 inName          := 'inPartnerId', 
                                                                 inParamType     := 'ftInteger', 
                                                                 inUserParamName := 'Ключ-2',
@@ -17346,11 +17366,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 6
+    -- 7
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inContractName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 6, 
+                                                                inParamNumber   := 7, 
                                                                 inName          := 'inContractName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Договір',
@@ -17365,11 +17385,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 7
+    -- 8
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPaidKindName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 7, 
+                                                                inParamNumber   := 8, 
                                                                 inName          := 'inPaidKindName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Форма оплати',
@@ -17384,11 +17404,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 8
+    -- 9
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGoodsCode';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 8, 
+                                                                inParamNumber   := 9, 
                                                                 inName          := 'inGoodsCode', 
                                                                 inParamType     := 'ftInteger', 
                                                                 inUserParamName := 'Код товару',
@@ -17403,11 +17423,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 9
+    -- 10
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGoodsName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 9, 
+                                                                inParamNumber   := 10, 
                                                                 inName          := 'inGoodsName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Найменування товару',
@@ -17422,11 +17442,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 10
+    -- 11
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGoodsKindName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 10, 
+                                                                inParamNumber   := 11, 
                                                                 inName          := 'inGoodsKindName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Вид товару',
@@ -17441,11 +17461,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 11.1
+    -- 12
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAmount';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 11, 
+                                                                inParamNumber   := 12, 
                                                                 inName          := 'inAmount', 
                                                                 inParamType     := 'ftfloat', 
                                                                 inUserParamName := 'Відвантаження, шт - ПЛАН (загальний)',
@@ -17459,11 +17479,11 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
-    -- 12
+    -- 13
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAmount_weight';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 12, 
+                                                                inParamNumber   := 13, 
                                                                 inName          := 'inAmount_weight', 
                                                                 inParamType     := 'ftfloat', 
                                                                 inUserParamName := 'Відвантаження, кг - ПЛАН (загальний)',
@@ -17478,11 +17498,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 13
+    -- 14
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inSumm';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 13, 
+                                                                inParamNumber   := 14, 
                                                                 inName          := 'inSumm', 
                                                                 inParamType     := 'ftfloat', 
                                                                 inUserParamName := 'Відвантаження, грн - ПЛАН (загальний)',
@@ -17497,11 +17517,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 14
+    -- 15
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAmountPromo';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 14, 
+                                                                inParamNumber   := 15, 
                                                                 inName          := 'inAmountPromo', 
                                                                 inParamType     := 'ftfloat', 
                                                                 inUserParamName := 'Відвантаження, шт - ПЛАН (акційний)',
@@ -17515,11 +17535,11 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
-    -- 15
+    -- 16
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAmountPromo_weight';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 15, 
+                                                                inParamNumber   := 16, 
                                                                 inName          := 'inAmountPromo_weight', 
                                                                 inParamType     := 'ftfloat', 
                                                                 inUserParamName := 'Відвантаження, кг - ПЛАН (акційний)',
@@ -17533,11 +17553,11 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
-    -- 16
+    -- 17
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inSummPromo';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 16, 
+                                                                inParamNumber   := 17, 
                                                                 inName          := 'inSummPromo', 
                                                                 inParamType     := 'ftfloat', 
                                                                 inUserParamName := 'Відвантаження, грн - ПЛАН (акційний)',
@@ -17552,11 +17572,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 17
+    -- 18
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAmountNoPromo';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 17, 
+                                                                inParamNumber   := 18, 
                                                                 inName          := 'inAmountNoPromo', 
                                                                 inParamType     := 'ftfloat', 
                                                                 inUserParamName := 'Відвантаження, шт - ПЛАН (без акційний)',
@@ -17571,11 +17591,11 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
 
-    -- 18
+    -- 19
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAmountNoPromo_weight';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 18, 
+                                                                inParamNumber   := 19, 
                                                                 inName          := 'inAmountNoPromo_weight', 
                                                                 inParamType     := 'ftfloat', 
                                                                 inUserParamName := 'Відвантаження, кг - ПЛАН (без акційний)',
@@ -17589,11 +17609,11 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
-    -- 19
+    -- 20
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inSummNoPromo';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 19, 
+                                                                inParamNumber   := 20, 
                                                                 inName          := 'inSummNoPromo', 
                                                                 inParamType     := 'ftfloat', 
                                                                 inUserParamName := 'Відвантаження, грн - ПЛАН (без акційний)',

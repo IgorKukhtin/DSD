@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_SaleCommerc(
 RETURNS TABLE (Ord Integer, Id Integer
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
+             , KAMId Integer, KAMCode Integer, KAMName TVarChar
+             , BranchId_KAM Integer, BranchCode_KAM Integer, BranchName_KAM TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, SectionName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -95,6 +97,7 @@ BEGIN
                              AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Partner()
                                                                  , zc_MILinkObject_Branch()
                                                                  , zc_MILinkObject_PaidKind()
+                                                                 , zc_MILinkObject_BranchKAM()
                                                                  )
                            )
       , tmpParams_Partner AS (
@@ -206,6 +209,13 @@ BEGIN
            , Object_Branch.ObjectCode             AS BranchCode
            , Object_Branch.ValueData              AS BranchName
 
+           , CASE WHEN Object_BranchKAM.DescId = zc_Object_Personal() THEN Object_BranchKAM.Id ELSE 0 END         ::Integer   AS KAMId
+           , CASE WHEN Object_BranchKAM.DescId = zc_Object_Personal() THEN Object_BranchKAM.ObjectCode ELSE 0 END ::Integer   AS KAMCode
+           , CASE WHEN Object_BranchKAM.DescId = zc_Object_Personal() THEN Object_BranchKAM.ValueData ELSE '' END ::TVarChar  AS KAMName 
+           , Object_Branch_KAM.Id                 AS BranchId_KAM
+           , Object_Branch_KAM.ObjectCode         AS BranchCode_KAM
+           , Object_Branch_KAM.ValueData          AS BranchName_KAM
+
            , Object_Partner.PartnerId             AS PartnerId
            , Object_Partner.PartnerCode           AS PartnerCode
            , Object_Partner.PartnerName           AS PartnerName
@@ -303,6 +313,22 @@ BEGIN
                                     AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
 
+            LEFT JOIN tmpMILO_Master AS MILinkObject_BranchKAM
+                                     ON MILinkObject_BranchKAM.MovementItemId = MovementItem.Id
+                                    AND MILinkObject_BranchKAM.DescId = zc_MILinkObject_BranchKAM()
+            LEFT JOIN Object AS Object_BranchKAM ON Object_BranchKAM.Id = MILinkObject_BranchKAM.ObjectId
+            LEFT JOIN ObjectDesc AS ObjectDesc_BranchKAM ON ObjectDesc_BranchKAM.Id = Object_BranchKAM.Id
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit_KAM
+                                 ON ObjectLink_Personal_Unit_KAM.ObjectId = Object_BranchKAM.Id
+                                AND ObjectLink_Personal_Unit_KAM.DescId = zc_ObjectLink_Personal_Unit()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch_KAM
+                                 ON ObjectLink_Unit_Branch_KAM.ObjectId = ObjectLink_Personal_Unit_KAM.ChildObjectId
+                                AND ObjectLink_Unit_Branch_KAM.DescId = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_Branch_KAM ON Object_Branch_KAM.Id = COALESCE (ObjectLink_Unit_Branch_KAM.ChildObjectId, MILinkObject_BranchKAM.ObjectId) 
+            
+            
             --child
             INNER JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
             LEFT JOIN tmpParams_Goods AS Object_Goods ON Object_Goods.GoodsId = tmpMI_Child.ObjectId

@@ -45,7 +45,7 @@ type
     isPrint: TcxGridDBColumn;
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
-    mactPrint_Order: TMultiAction;
+    mactPrint: TMultiAction;
     actPrintSilent: TdsdPrintAction;
     mactSilentList: TMultiAction;
     mactSilentPrint: TMultiAction;

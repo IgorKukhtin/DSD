@@ -1694,7 +1694,9 @@ uses
   ServiceJournalChoice in '..\..\Forms\Document\ServiceJournalChoice.pas' {ServiceJournalChoiceForm: TParentForm},
   PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm},
   ContractTagKind in '..\..\Forms\Guides\ContractTagKind.pas' {ContractTagKindForm: TParentForm},
-  ContractTagKindEdit in '..\..\Forms\Guides\ContractTagKindEdit.pas' {ContractTagKindEditForm: TParentForm};
+  ContractTagKindEdit in '..\..\Forms\Guides\ContractTagKindEdit.pas' {ContractTagKindEditForm: TParentForm},
+  Report_SoldTable_Commerc_OlapDialog in '..\..\Forms\Report\Report_SoldTable_Commerc_OlapDialog.pas' {Report_SoldTable_Commerc_OlapDialogForm: TParentForm},
+  Report_SoldTable_Commerc_Olap in '..\..\Forms\Report\Report_SoldTable_Commerc_Olap.pas' {Report_SoldTable_Commerc_OlapForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

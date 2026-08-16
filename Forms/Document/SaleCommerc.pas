@@ -155,6 +155,14 @@ type
     isErased_ch2: TcxGridDBColumn;
     cxGridLevelDetail: TcxGridLevel;
     cxSplitter2: TcxSplitter;
+    KAMName: TcxGridDBColumn;
+    BranchName_KAM: TcxGridDBColumn;
+    actBranchKam_ObjectForm: TOpenChoiceForm;
+    actPersonalChoiceForm: TOpenChoiceForm;
+    UpdateRecordKAM: TUpdateRecord;
+    UpdateRecordBraanch_kam: TUpdateRecord;
+    bbUpdateRecordKAM: TdxBarButton;
+    bbUpdateRecordBraanch_kam: TdxBarButton;
   private
   public
   end;

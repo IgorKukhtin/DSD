@@ -10,19 +10,19 @@ inherited OrderRKForm: TOrderRKForm
     Top = 115
     Width = 1298
     Height = 345
-    ExplicitTop = 187
+    ExplicitTop = 115
     ExplicitWidth = 1298
-    ExplicitHeight = 273
+    ExplicitHeight = 345
     ClientRectBottom = 345
     ClientRectRight = 1298
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1298
-      ExplicitHeight = 249
+      ExplicitHeight = 321
       inherited cxGrid: TcxGrid
         Width = 1298
         Height = 321
         ExplicitWidth = 1298
-        ExplicitHeight = 249
+        ExplicitHeight = 321
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -900,7 +900,7 @@ inherited OrderRKForm: TOrderRKForm
       Hint = #1055#1077#1095#1072#1090#1100' ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1074#1080#1076#1091' '#1091#1087#1072#1082#1086#1074#1082#1080')'
       ImageIndex = 17
     end
-    object mactPrint_Order: TMultiAction
+    object mactPrint: TMultiAction
       Category = 'Print'
       MoveParams = <>
       ActionList = <
@@ -1288,6 +1288,10 @@ inherited OrderRKForm: TOrderRKForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1323,7 +1327,7 @@ inherited OrderRKForm: TOrderRKForm
       ShowCaption = False
     end
     inherited bbPrint: TdxBarButton
-      Action = mactPrint_Order
+      Action = mactPrint
     end
     object bbOpenReportForm: TdxBarButton
       Caption = #1054#1090#1095#1077#1090' <'#1042#1067#1055#1054#1051#1053#1045#1053#1048#1045' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
@@ -1397,10 +1401,6 @@ inherited OrderRKForm: TOrderRKForm
       Visible = ivNever
       ImageIndex = 3
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
         item
           Visible = True
           ItemName = 'bbPrintQty'
@@ -2074,13 +2074,6 @@ inherited OrderRKForm: TOrderRKForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsJuridical'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 311
@@ -2113,7 +2106,8 @@ inherited OrderRKForm: TOrderRKForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 816
+    Left = 832
+    Top = 8
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'

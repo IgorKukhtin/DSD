@@ -1,8 +1,8 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
   ClientHeight = 639
-  ClientWidth = 1080
-  ExplicitWidth = 1086
+  ClientWidth = 1079
+  ExplicitWidth = 1085
   ExplicitHeight = 668
   PixelsPerInch = 96
   TextHeight = 13
@@ -34,7 +34,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1075#1072#1083#1100#1085#1072
       ImageIndex = 0
-      ExplicitHeight = 550
       object edAddress: TcxTextEdit
         Left = 158
         Top = 160
@@ -246,7 +245,7 @@
       end
       object edShortName: TcxTextEdit
         Left = 158
-        Top = 130
+        Top = 133
         TabOrder = 29
         Width = 195
       end
@@ -322,7 +321,7 @@
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
       end
       object cePersonalTrade: TcxButtonEdit
-        Left = 878
+        Left = 877
         Top = 40
         Properties.Buttons = <
           item
@@ -912,7 +911,7 @@
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1076#1087#1080#1089#1072#1085#1090')'
       end
       object edPersonalSigning: TcxButtonEdit
-        Left = 878
+        Left = 877
         Top = 100
         Properties.Buttons = <
           item
@@ -1015,9 +1014,6 @@
     object cxTabSheet3: TcxTabSheet
       Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111
       ImageIndex = 2
-      ExplicitLeft = 61
-      ExplicitTop = 72
-      ExplicitHeight = 553
       object Panel3: TPanel
         Left = 0
         Top = 0
@@ -1025,14 +1021,15 @@
         Height = 49
         Align = alTop
         Caption = 'Panel3'
+        ShowCaption = False
         TabOrder = 0
         object cxLabel56: TcxLabel
-          Left = 17
-          Top = 0
+          Left = 368
+          Top = -1
           Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058
         end
         object ceRouteTT: TcxButtonEdit
-          Left = 17
+          Left = 368
           Top = 15
           Properties.Buttons = <
             item
@@ -1041,16 +1038,16 @@
             end>
           Properties.ReadOnly = True
           TabOrder = 1
-          Width = 248
+          Width = 160
         end
         object cxLabel59: TcxLabel
-          Left = 287
-          Top = 0
+          Left = 539
+          Top = -1
           Caption = #1043#1088#1091#1087#1087#1072' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
         end
         object edPersonalGroupCommerc: TcxButtonEdit
-          Left = 287
-          Top = 16
+          Left = 539
+          Top = 15
           Properties.Buttons = <
             item
               Default = True
@@ -1058,15 +1055,15 @@
             end>
           Properties.ReadOnly = True
           TabOrder = 3
-          Width = 273
+          Width = 160
         end
         object cxLabel72: TcxLabel
-          Left = 582
-          Top = 0
+          Left = 710
+          Top = -1
           Caption = #1054#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080
         end
         object edUnitCommerc: TcxButtonEdit
-          Left = 582
+          Left = 710
           Top = 15
           Properties.Buttons = <
             item
@@ -1075,7 +1072,43 @@
             end>
           Properties.ReadOnly = True
           TabOrder = 5
-          Width = 273
+          Width = 197
+        end
+        object cxLabel79: TcxLabel
+          Left = 17
+          Top = -1
+          Caption = #1050#1086#1076
+        end
+        object edCode_page2: TcxCurrencyEdit
+          Left = 17
+          Top = 15
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '0'
+          Properties.ReadOnly = True
+          TabOrder = 7
+          Width = 54
+        end
+        object edName_page2: TcxTextEdit
+          Left = 77
+          Top = 15
+          Properties.ReadOnly = True
+          TabOrder = 8
+          Width = 268
+        end
+        object cxLabel80: TcxLabel
+          Left = 77
+          Top = -1
+          Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        end
+        object cxButton1: TcxButton
+          Left = 937
+          Top = 14
+          Width = 120
+          Height = 25
+          Action = actRefresh_Commerc
+          Default = True
+          ModalResult = 1
+          TabOrder = 10
         end
       end
       object cxPageControl1: TcxPageControl
@@ -1087,18 +1120,12 @@
         TabOrder = 1
         Properties.ActivePage = cxTabSheet4
         Properties.CustomButtons.Buttons = <>
-        ExplicitLeft = 128
-        ExplicitTop = 55
-        ExplicitWidth = 649
-        ExplicitHeight = 178
         ClientRectBottom = 303
         ClientRectRight = 1075
         ClientRectTop = 24
         object cxTabSheet4: TcxTabSheet
           Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111': '#1056#1086#1079#1076#1088#1110#1073
           ImageIndex = 0
-          ExplicitWidth = 649
-          ExplicitHeight = 90
           object cxGridComLocal: TcxGrid
             Left = 0
             Top = 0
@@ -1108,8 +1135,6 @@
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitTop = -6
-            ExplicitHeight = 199
             object cxGridDBTableViewComLocal: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ComLocalDS
@@ -1198,7 +1223,6 @@
             Caption = 'Panel4'
             ShowCaption = False
             TabOrder = 1
-            ExplicitTop = 242
             object edJuridicalName: TcxTextEdit
               Left = 285
               Top = 4
@@ -1236,8 +1260,6 @@
         object cxTabSheet5: TcxTabSheet
           Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111': '#1052#1077#1088#1077#1078#1110
           ImageIndex = 0
-          ExplicitTop = 48
-          ExplicitHeight = 201
           object cxGridComRetail: TcxGrid
             Left = 0
             Top = 0
@@ -1247,10 +1269,6 @@
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitLeft = 215
-            ExplicitTop = 51
-            ExplicitWidth = 392
-            ExplicitHeight = 106
             object cxGridDBTableViewComRetail: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ComRetailDS
@@ -1337,8 +1355,6 @@
       ParentShowHint = False
       ShowHint = False
       TabVisible = False
-      ExplicitLeft = 48
-      ExplicitTop = 41
       DesignSize = (
         1075
         545)
@@ -1885,6 +1901,22 @@
   end
   inherited ActionList: TActionList
     Left = 999
+    object actRefresh_Commerc: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectComLocal
+      StoredProcList = <
+        item
+          StoredProc = spSelectComLocal
+        end
+        item
+          StoredProc = spSelectComRetail
+        end>
+      Caption = #1054#1085#1086#1074#1080#1090#1080' '#1076#1072#1085#1110
+      Hint = #1054#1085#1086#1074#1080#1090#1080' '#1076#1072#1085#1110
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -1910,6 +1942,7 @@
         end>
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
@@ -2254,13 +2287,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Value = Null
-        Component = GuidesRouteTT
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inMemberTakeId'
         Value = ''
         Component = GuidesMemberTake
@@ -2378,20 +2404,6 @@
         Component = GuidesTypeCommerc
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = GuidesUnitCommerc
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = GuidesPersonalGroupCommerc
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -3333,6 +3345,19 @@
         Component = edJuridicalName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = edCode_page2
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name'
+        Value = Null
+        Component = edName_page2
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 928
     Top = 340
@@ -3573,8 +3598,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 976
-    Top = 65525
+    Left = 984
+    Top = 101
   end
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
@@ -3693,7 +3718,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 752
-    Top = 43
+    Top = 67
   end
   object GuidesProvince: TdsdGuides
     KeyField = 'Id'
@@ -3946,8 +3971,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1016
-    Top = 53
+    Left = 1008
+    Top = 93
   end
   object GuidesRoute30201: TdsdGuides
     KeyField = 'Id'
@@ -4053,7 +4078,6 @@
         Value = ''
         Component = GuidesMemberSaler1
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -4083,7 +4107,6 @@
         Value = ''
         Component = GuidesMemberSaler2
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -4220,8 +4243,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 45
+    Left = 304
+    Top = 37
   end
   object GuidesUnitCommerc: TdsdGuides
     KeyField = 'Id'
@@ -4683,8 +4706,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 101
+    Left = 80
+    Top = 149
   end
   object Guides_Personal_2: TdsdGuides
     KeyField = 'Id'
@@ -4714,8 +4737,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 141
+    Left = 72
+    Top = 205
   end
   object Guides_Personal_3: TdsdGuides
     KeyField = 'Id'
