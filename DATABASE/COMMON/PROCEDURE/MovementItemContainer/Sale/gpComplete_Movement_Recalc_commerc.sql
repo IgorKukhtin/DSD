@@ -24,12 +24,6 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- 
-     IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Detail())
-     THEN
-         RETURN;
-     END IF;
-
 
      -- нашли
      vbOperDatePartner:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner());
@@ -76,6 +70,13 @@ BEGIN
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_RouteTT(), inMovementId, vbRouteTtId);
      END IF;
      
+
+     -- 
+     IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Detail())
+     THEN
+         RETURN;
+     END IF;
+
 
      --IF inUserId = 5
      IF 1 = 1
