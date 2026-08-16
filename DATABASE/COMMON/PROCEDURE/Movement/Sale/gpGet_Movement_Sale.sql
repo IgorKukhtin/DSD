@@ -238,8 +238,10 @@ BEGIN
                                             INNER JOIN ObjectLink AS ObjectLink_User_Member
                                                                   ON ObjectLink_User_Member.ChildObjectId = lfSelect.MemberId
                                                                  AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                                      LEFT JOIN Object AS Object_Unit_order ON Object_Unit_order.Id = lfSelect.UnitId         
-                                      )
+                                                               --AND ObjectLink_User_Member.ObjectId IN ()
+                                            LEFT JOIN Object AS Object_Unit_order ON Object_Unit_order.Id = lfSelect.UnitId         
+                                       WHERE lfSelect.Ord = 1
+                                     )
 
            SELECT
                  Movement.Id                                    AS Id
