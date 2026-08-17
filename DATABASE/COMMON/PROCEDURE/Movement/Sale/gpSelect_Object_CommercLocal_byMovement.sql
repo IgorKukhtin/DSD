@@ -108,7 +108,14 @@ BEGIN
               , tmp.PersonalGroupName_inf ::TVarChar 
               , tmp.PersonalName_inf      ::Text     
               , tmp.UnitName_inf          ::TVarChar  
-         FROM lpSelect_Object_CommercLocal_choice (inUserId_order       := vbUserId_order
+         FROM lpSelect_Object_CommercLocal_choice (inMemberId_order     := (SELECT lfSelect.MemberId
+                                                                            FROM lfSelect_Object_Member_findPersonal (zfCalc_UserAdmin()) AS lfSelect
+                                                                                 INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                                                                                       ON ObjectLink_User_Member.ChildObjectId = lfSelect.MemberId
+                                                                                                      AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
+                                                                                                      AND ObjectLink_User_Member.ObjectId      = vbUserId_order
+                                                                            WHERE lfSelect.Ord = 1
+                                                                           )
                                                  , inUserId_source_order:= vbUserId_source_order
                                                  , inRetailId           := vbRetailId
                                                  , inRouteTTId          := vbRouteTTId
