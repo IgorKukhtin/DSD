@@ -25,6 +25,7 @@
     Height = 159
     Align = alTop
     TabOrder = 0
+    ExplicitTop = 8
     object deStart: TcxDateEdit
       Left = 11
       Top = 24
@@ -1342,6 +1343,23 @@
           Name = 'TradeMarkName'
           Value = Null
           Component = GuidesTradeMark
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = GuidesJuridical
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
