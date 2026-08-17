@@ -72,7 +72,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                        , ContractConditionKindId, BonusKindId, BonusTax
                        , GoodsByGoodsKindId
                          --
-                       , MemberId_order, UnitId_user_order, PositionId_user_order, UserId_source_order, RouteTTId
+                       , MemberId_order, UnitId_user_order, PersonalGroupId_order, PositionId_user_order, UserId_source_order, RouteTTId
                         )
 
    WITH tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
@@ -89,6 +89,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                                )
               , tmpPersonal_byUser AS (SELECT ObjectLink_User_Member.ObjectId AS UserId
                                             , lfSelect.MemberId
+                                            , lfSelect.PersonalGroupId
                                             , lfSelect.UnitId
                                             , lfSelect.PositionId
                                        FROM lfSelect_Object_Member_findPersonal (zfCalc_UserAdmin()) AS lfSelect
@@ -145,9 +146,10 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() THEN  1 * MIContainer.Amount * COALESCE (MIFloat_PriceIn.ValueData, 0) * 1.2 ELSE 0 END) AS ReturnIn_SummIn_pav
 
 
-                              , tmpPersonal_byUser.MemberId     AS MemberId_order
-                              , tmpPersonal_byUser.UnitId       AS UnitId_user_order
-                              , tmpPersonal_byUser.PositionId   AS PositionId_user_order
+                              , tmpPersonal_byUser.MemberId         AS MemberId_order
+                              , tmpPersonal_byUser.UnitId           AS UnitId_user_order
+                              , tmpPersonal_byUser.PersonalGroupId  AS PersonalGroupId_order
+                              , tmpPersonal_byUser.PositionId       AS PositionId_user_order
 
                               , CASE WHEN MovementString_DealId.ValueData <> ''         THEN 13992997 -- 'Вчасно'
                                      WHEN MovementLinkMovement_Order_edi.MovementId > 0 THEN 13992996 -- 'EDI'
@@ -220,6 +222,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                                   --
                                 , tmpPersonal_byUser.MemberId
                                 , tmpPersonal_byUser.UnitId
+                                , tmpPersonal_byUser.PersonalGroupId
                                 , tmpPersonal_byUser.PositionId
 
                                 , CASE WHEN MovementString_DealId.ValueData <> ''         THEN 13992997 -- 'Вчасно'
@@ -484,7 +487,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , (tmpOperation_SaleReturn.Sale_SummIn_pav)       AS Sale_SummIn_pav
                  , (tmpOperation_SaleReturn.ReturnIn_SummIn_pav)   AS ReturnIn_SummIn_pav
 
-                 , tmpOperation_SaleReturn.MemberId_order, tmpOperation_SaleReturn.UnitId_user_order, tmpOperation_SaleReturn.PositionId_user_order
+                 , tmpOperation_SaleReturn.MemberId_order, tmpOperation_SaleReturn.UnitId_user_order, tmpOperation_SaleReturn.PersonalGroupId_order, tmpOperation_SaleReturn.PositionId_user_order
                  , tmpOperation_SaleReturn.UserId_source_order
                  , tmpOperation_SaleReturn.RouteTTId
 
@@ -555,7 +558,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , 0 AS Sale_SummIn_pav
                  , 0 AS ReturnIn_SummIn_pav
 
-                 , 0 AS MemberId_order, 0 AS UnitId_user_order, 0 AS PositionId_user_order
+                 , 0 AS MemberId_order, 0 AS UnitId_user_order, 0 AS PersonalGroupId_order, 0 AS PositionId_user_order
                  , 0 AS UserId_source_order
                  , 0 AS RouteTTId
 
@@ -627,7 +630,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , tmpOperation_all.BonusKindId
                  , tmpOperation_all.BonusTax
 
-                 , tmpOperation_all.MemberId_order, tmpOperation_all.UnitId_user_order, tmpOperation_all.PositionId_user_order
+                 , tmpOperation_all.MemberId_order, tmpOperation_all.UnitId_user_order, tmpOperation_all.PersonalGroupId_order, tmpOperation_all.PositionId_user_order
                  , tmpOperation_all.UserId_source_order
                  , tmpOperation_all.RouteTTId
 
@@ -649,7 +652,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                    , tmpOperation_all.BonusKindId
                    , tmpOperation_all.BonusTax
                      --
-                   , tmpOperation_all.MemberId_order, tmpOperation_all.UnitId_user_order, tmpOperation_all.PositionId_user_order
+                   , tmpOperation_all.MemberId_order, tmpOperation_all.UnitId_user_order, tmpOperation_all.PersonalGroupId_order, tmpOperation_all.PositionId_user_order
                    , tmpOperation_all.UserId_source_order
                    , tmpOperation_all.RouteTTId
             )
@@ -758,7 +761,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 
            , COALESCE (tmpGoodsByGoodsKind.Id, 0) AS GoodsByGoodsKindId
 
-           , tmpResult.MemberId_order, tmpResult.UnitId_user_order, tmpResult.PositionId_user_order
+           , tmpResult.MemberId_order, tmpResult.UnitId_user_order, tmpResult.PersonalGroupId_order, tmpResult.PositionId_user_order
            , tmpResult.UserId_source_order
            , tmpResult.RouteTTId
 
@@ -825,7 +828,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , SUM (tmpOperation.BonusBasis) AS BonusBasis
                  , SUM (tmpOperation.Bonus)      AS Bonus
 
-                 , tmpOperation.MemberId_order, tmpOperation.UnitId_user_order, tmpOperation.PositionId_user_order
+                 , tmpOperation.MemberId_order, tmpOperation.UnitId_user_order, tmpOperation.PersonalGroupId_order, tmpOperation.PositionId_user_order
                  , tmpOperation.UserId_source_order
                  , tmpOperation.RouteTTId
 
@@ -854,7 +857,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                    , tmpOperation.BonusKindId
                    , tmpOperation.BonusTax
 
-                   , tmpOperation.MemberId_order, tmpOperation.UnitId_user_order, tmpOperation.PositionId_user_order
+                   , tmpOperation.MemberId_order, tmpOperation.UnitId_user_order, tmpOperation.PersonalGroupId_order, tmpOperation.PositionId_user_order
                    , tmpOperation.UserId_source_order
                    , tmpOperation.RouteTTId
 
@@ -970,7 +973,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 
            , 0 AS GoodsByGoodsKindId
 
-           , 0 AS MemberId_order, 0 AS UnitId_user_order, 0 AS PositionId_user_order
+           , 0 AS MemberId_order, 0 AS UnitId_user_order, 0 AS PersonalGroupId_order, 0 AS PositionId_user_order
            , 0 AS UserId_source_order
            , 0 AS RouteTTId
 
