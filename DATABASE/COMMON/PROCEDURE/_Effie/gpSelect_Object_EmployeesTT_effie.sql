@@ -104,11 +104,11 @@ $BODY$
           , tmpPartner_TT.PartnerId    ::Integer  AS PartnerId
           , 0                          ::Integer  AS isDeleted
      FROM tmpPartner_TT
-          INNER JOIN Object_TT_effie ON Object_TT_effie.PartnerId  = tmpPartner_TT.PartnerId
-                                  /*AND Object_TT_effie.StreetId   = tmpPartner_TT.StreetId
+          INNER JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner_TT.StreetId
                                     AND Object_TT_effie.HouseNumber= tmpPartner_TT.HouseNumber
                                     AND Object_TT_effie.CaseNumber = tmpPartner_TT.CaseNumber
-                                    AND Object_TT_effie.RoomNumber = tmpPartner_TT.RoomNumber*/
+                                    AND Object_TT_effie.RoomNumber = tmpPartner_TT.RoomNumber
+                                  --AND Object_TT_effie.PartnerId  = tmpPartner_TT.PartnerId
       ;
 
 END;

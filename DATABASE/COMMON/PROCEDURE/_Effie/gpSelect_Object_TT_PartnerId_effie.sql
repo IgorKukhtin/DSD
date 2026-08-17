@@ -1,5 +1,7 @@
 -- Function: gpSelect_Object_TT_effie
 
+!!!НЕТ, только для PartnerId!!!
+
 DROP FUNCTION IF EXISTS gpSelect_Object_TT_effie ( TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_TT_effie(

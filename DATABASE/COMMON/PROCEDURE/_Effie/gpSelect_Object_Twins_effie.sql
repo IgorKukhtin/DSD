@@ -93,11 +93,11 @@ $BODY$
               , tmpPartner_TT.RoomNumber
               , ROW_NUMBER() OVER (PARTITION BY Object_TT_effie.Id ORDER BY tmpPartner_TT.PartnerId DESC) AS Ord
          FROM tmpPartner_TT
-              LEFT JOIN Object_TT_effie ON Object_TT_effie.PartnerId  = tmpPartner_TT.PartnerId
-                                     /*AND Object_TT_effie.StreetId   = tmpPartner_TT.StreetId
+              LEFT JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner_TT.StreetId
                                        AND Object_TT_effie.HouseNumber= tmpPartner_TT.HouseNumber
                                        AND Object_TT_effie.CaseNumber = tmpPartner_TT.CaseNumber
-                                       AND Object_TT_effie.RoomNumber = tmpPartner_TT.RoomNumber*/
+                                       AND Object_TT_effie.RoomNumber = tmpPartner_TT.RoomNumber
+                                     --AND Object_TT_effie.PartnerId  = tmpPartner_TT.PartnerId
          -- есть Адрес
          WHERE tmpPartner_TT.StreetId > 0
         ) AS tmp
