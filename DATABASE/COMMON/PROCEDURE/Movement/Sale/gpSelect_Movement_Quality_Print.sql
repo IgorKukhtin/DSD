@@ -770,7 +770,8 @@ BEGIN
            , tmpMovement_QualityParams.ExpertPrior
            , tmpMovement_QualityParams.ExpertLast
            , tmpMovement_QualityParams.QualityNumber
-           , tmpMovement_QualityParams.Comment              AS QualityComment_Movement
+           , RTRIM (tmpMovement_QualityParams.Comment) :: Text AS QualityComment_Movement
+         --, tmpMovement_QualityParams.Comment :: Text AS QualityComment_Movement
            , tmpMovement_QualityParams.ReportType
 
            , Movement.InvNumber_Order
@@ -1408,11 +1409,14 @@ BEGIN
            , tmpMovement_QualityParams.ExpertPrior
            , tmpMovement_QualityParams.ExpertLast
            , tmpMovement_QualityParams.QualityNumber
-           , tmpMovement_QualityParams.Comment AS QualityComment_Movement
+           , RTRIM (tmpMovement_QualityParams.Comment) :: Text AS QualityComment_Movement
+        --, tmpMovement_QualityParams.Comment :: Text AS QualityComment_Movement
            , tmpMovement_QualityParams.ReportType
            , tmpMovement_QualityParams.MovementId_find
 
            , Movement.InvNumber_Order
+
+           , right  (RTRIM (tmpMovement_QualityParams.Comment), 100) :: Text AS QualityComment_Movement_test
 
        FROM tmpMI
             INNER JOIN tmpMovement_Params AS Movement ON Movement.Id =  tmpMI.MovementId
