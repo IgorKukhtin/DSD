@@ -653,7 +653,7 @@ BEGIN
         , tmpMovement_PromoPartner AS (SELECT *
                                        FROM Movement AS Movement_PromoPartner
                                        WHERE Movement_PromoPartner.ParentId IN (SELECT DISTINCT tmpMovement_Promo.Id FROM tmpMovement_Promo)
-                                         AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+                                         AND Movement_PromoPartner.DescId   IN (zc_Movement_PromoPartner(), zc_Movement_PromoSalePartner())
                                          AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                                       )
 
