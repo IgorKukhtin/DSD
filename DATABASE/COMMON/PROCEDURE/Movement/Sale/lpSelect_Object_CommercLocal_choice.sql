@@ -7,7 +7,6 @@ DROP FUNCTION IF EXISTS lpSelect_Object_CommercLocal_choice (Integer, Integer, I
 CREATE OR REPLACE FUNCTION lpSelect_Object_CommercLocal_choice(
     IN inMemberId_order        Integer  , --
     IN inUserId_source_order   Integer  , --  = 0 если EDI
-    IN
     IN inRetailId              Integer  ,
     IN inRouteTTId             Integer  ,
     IN inPartnerId             Integer  ,
@@ -604,7 +603,7 @@ BEGIN
                     , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_5) ELSE tmp.PositionName END AS PositionName
                     , tmp.PersonalGroupName
                     , tmp.PersonalName ::Text
-                    , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) ELSE tmp.UnitName END AS UnitName
+                    ,  tmp.UnitName
                FROM tmpCommercLocal
                     LEFT JOIN tmpLevel5 AS tmp ON 1 = 1
               UNION
@@ -612,7 +611,7 @@ BEGIN
                     , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_6) ELSE tmp.PositionName END AS PositionName
                     , tmp.PersonalGroupName
                     , tmp.PersonalName ::Text
-                    , CASE WHEN vbisEDI = FALSE THEN COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) ELSE tmp.UnitName END AS UnitName
+                    , tmp.UnitName
                FROM tmpCommercLocal
                     LEFT JOIN tmpLevel6 AS tmp ON 1 = 1
               ) AS tmp

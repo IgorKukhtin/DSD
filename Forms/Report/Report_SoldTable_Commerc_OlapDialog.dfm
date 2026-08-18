@@ -429,7 +429,7 @@ object Report_SoldTable_Commerc_OlapDialogForm: TReport_SoldTable_Commerc_OlapDi
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 104
+    Left = 72
     Top = 56
   end
   object GuidesArea: TdsdGuides

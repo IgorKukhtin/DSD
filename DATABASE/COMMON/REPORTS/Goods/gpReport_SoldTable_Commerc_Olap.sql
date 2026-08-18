@@ -24,6 +24,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsTagName TVarChar, GoodsGroupStatName TVarChar
              , GoodsPlatformName TVarChar, GoodsGroupDirectionName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
+             , BranchKAMId Integer, BranchKAMCode Integer, BranchKAMName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, SectionName TVarChar
              , RetailName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar, PartnerCategory TFloat
@@ -241,6 +242,7 @@ BEGIN
                            AND (SoldTable.BranchId    = inBranchId    OR inBranchId    = 0)
                            AND (SoldTable.AreaId      = inAreaId      OR inAreaId      = 0)
                            AND (SoldTable.RetailId    = inRetailId    OR inRetailId    = 0)
+--and 1 = 0
                          GROUP BY SoldTable.Id
                                 , SoldTable.BranchId
                                 , SoldTable.JuridicalGroupId
@@ -293,104 +295,7 @@ BEGIN
                              OR SUM (SoldTable.Return_AmountPartner_Weight) <> 0
                              OR SUM (SoldTable.Return_AmountPartner_Sh)     <> 0
                         )
-     /*  , tmpOperationGroup1 AS
-                        (SELECT SoldTable.MovementId
-                              , SoldTable.BranchId
-                              , SoldTable.JuridicalGroupId
-                              , SoldTable.JuridicalId
-                              , SoldTable.PartnerId
-                              , SoldTable.InfoMoneyId
-                              , SoldTable.RetailId           
-                              , SoldTable.AreaId             
-                              , SoldTable.PartnerTagId       
-                              , SoldTable.ContractId         
-                              , SoldTable.ContractTagId      
-                              , SoldTable.ContractTagGroupId 
-
-                              , SoldTable.GoodsPlatformId     
-                              , SoldTable.TradeMarkId         
-                              , SoldTable.GoodsGroupAnalystId 
-                              , SoldTable.GoodsGroupId     
-                              , SoldTable.GoodsGroupStatId 
-                              , SoldTable.GoodsTagId       
-                              , SoldTable.GoodsId          
-                              , SoldTable.GoodsKindId      
-                              , SoldTable.MeasureId        
-
-                              , SoldTable.RegionId       
-                              , SoldTable.CityKindId     
-                              , SoldTable.CityId         
-                              , SoldTable.PaidKindId
-                              , SoldTable.OperDate
-
-                              , SUM (SoldTable.Promo_Summ)   AS Promo_Summ
-                              , SUM (SoldTable.Sale_Summ)    AS Sale_Summ
-                              , SUM (SoldTable.Return_Summ)  AS Return_Summ
-
-                              , SUM (SoldTable.Sale_Summ_10250)   AS Sale_Summ_10250
-
-                              , SUM (SoldTable.Sale_Amount_Weight)   AS Sale_Amount_Weight
-                              , SUM (SoldTable.Sale_Amount_Sh)       AS Sale_Amount_Sh
-                              , SUM (SoldTable.Return_Amount_Weight) AS Return_Amount_Weight
-                              , SUM (SoldTable.Return_Amount_Sh)     AS Return_Amount_Sh
-
-                              , SUM (SoldTable.Promo_AmountPartner_Weight)  AS Promo_AmountPartner_Weight
-                              , SUM (SoldTable.Promo_AmountPartner_Sh)      AS Promo_AmountPartner_Sh
-                              , SUM (SoldTable.Sale_AmountPartner_Weight)   AS Sale_AmountPartner_Weight
-                              , SUM (SoldTable.Sale_AmountPartner_Sh)       AS Sale_AmountPartner_Sh
-                              , SUM (SoldTable.Return_AmountPartner_Weight) AS Return_AmountPartner_Weight
-                              , SUM (SoldTable.Return_AmountPartner_Sh)     AS Return_AmountPartner_Sh
-
-                              , SoldTable.GoodsPropertyId
-
-                         FROM tmpOperationGroup_all AS SoldTable
-                         GROUP BY SoldTable.MovementId
-                                , SoldTable.BranchId
-                                , SoldTable.JuridicalGroupId
-                                , SoldTable.JuridicalId
-                                , SoldTable.PartnerId
-                                , SoldTable.InfoMoneyId
-                                , SoldTable.RetailId           
-                                , SoldTable.AreaId             
-                                , SoldTable.PartnerTagId       
-                                , SoldTable.ContractId         
-                                , SoldTable.ContractTagId      
-                                , SoldTable.ContractTagGroupId 
-  
-                                , SoldTable.GoodsPlatformId     
-                                , SoldTable.TradeMarkId         
-                                , SoldTable.GoodsGroupAnalystId 
-                                , SoldTable.GoodsGroupId     
-                                , SoldTable.GoodsGroupStatId 
-                                , SoldTable.GoodsTagId       
-                                , SoldTable.GoodsId          
-                                , SoldTable.GoodsKindId      
-                                , SoldTable.MeasureId        
-  
-                                , SoldTable.RegionId
-                                , SoldTable.CityKindId     
-                                , SoldTable.CityId    
-                                , SoldTable.PaidKindId
-                                , SoldTable.OperDate
-                                , SoldTable.GoodsPropertyId
-                         HAVING SUM (SoldTable.Promo_Summ)   <> 0
-                             OR SUM (SoldTable.Sale_Summ)    <> 0
-                             OR SUM (SoldTable.Return_Summ)  <> 0
-                             OR SUM (SoldTable.Sale_Summ_10250)   <> 0
-
-                             OR SUM (SoldTable.Sale_Amount_Weight)   <> 0
-                             OR SUM (SoldTable.Sale_Amount_Sh)       <> 0
-                             OR SUM (SoldTable.Return_Amount_Weight) <> 0
-                             OR SUM (SoldTable.Return_Amount_Sh)     <> 0
-
-                             OR SUM (SoldTable.Promo_AmountPartner_Weight)  <> 0
-                             OR SUM (SoldTable.Promo_AmountPartner_Sh)      <> 0
-                             OR SUM (SoldTable.Sale_AmountPartner_Weight)   <> 0
-                             OR SUM (SoldTable.Sale_AmountPartner_Sh)       <> 0
-                             OR SUM (SoldTable.Return_AmountPartner_Weight) <> 0
-                             OR SUM (SoldTable.Return_AmountPartner_Sh)     <> 0
-                        )
-                 */      
+     
        --выбираем уник. ключ для получения данных CommercLocal
        , tmpParams_CommercLocal AS (SELECT DISTINCT 
                                            tmp.MemberId_order
@@ -753,7 +658,7 @@ BEGIN
                                   
                                WHERE (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                                  AND (MILinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
-                                 AND (MILinkObject_PaidKind.ObjectId = inPaidKindId OR PaidKindId = 0)
+                                 AND (MILinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
                                  AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
                                  AND (ObjectLink_Partner_Area.ChildObjectId = inAreaId OR inAreaId = 0) 
                                )
@@ -775,6 +680,7 @@ BEGIN
                           , Object_Branch.ObjectCode                   AS BranchCode
                           , Object_Branch.ValueData                    AS BranchName
                           , Object_BranchKAM.Id                        AS BranchKAMId
+                          , Object_BranchKAM.ObjectCode                AS BranchKAMCode
                           , Object_BranchKAM.ValueData                 AS BranchKAMName
                           , ObjectDesc_BranchKAM.ItemName              AS DescName_BranchKAM
                           , Object_PaidKind.Id                         AS PaidKindId
@@ -1158,6 +1064,10 @@ BEGIN
           , Object_Branch.Id            AS BranchId
           , Object_Branch.ObjectCode    AS BranchCode
           , Object_Branch.ValueData     AS BranchName
+          , 0                           AS BranchKAMId
+          , 0                           AS BranchKAMCode
+          , ''::TVarChar                AS BranchKAMName
+          
           , Object_Juridical.Id         AS JuridicalId
           , Object_Juridical.ObjectCode AS JuridicalCode
           , Object_Juridical.ValueData  AS JuridicalName
@@ -1353,7 +1263,7 @@ BEGIN
                               ON ObjectLink_Juridical_Section.ObjectId = Object_Juridical.Id
                              AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
          LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
-     -- WHERE 1 = 0   
+      --WHERE 1 = 0   
     UNION
       SELECT Object_Goods.GoodsGroupName
            , Object_Goods.GoodsGroupNameFull
@@ -1385,7 +1295,11 @@ BEGIN
 
           , tmpMI_Master.BranchId
           , tmpMI_Master.BranchCode
-          , tmpMI_Master.BranchName
+          , tmpMI_Master.BranchName 
+          , tmpMI_Master.BranchKAMId
+          , tmpMI_Master.BranchKAMCode
+          , tmpMI_Master.BranchKAMName ::TVarChar
+
           , tmpMI_Master.JuridicalId
           , tmpMI_Master.JuridicalCode
           , tmpMI_Master.JuridicalName
@@ -1584,3 +1498,5 @@ SELECT * FROM gpReport_SoldTable_Commerc_Olap (inStartDate:= '01.07.2026', inEnd
 --select * from gpSelect_MI_SaleCommerc(inMovementId := 34902310 , inIsErased := 'False' ,  inSession := '9457');
 
 
+
+--select * from gpReport_SoldTable_Commerc_Olap(inStartDate := ('01.07.2026')::TDateTime , inEndDate := ('02.07.2026')::TDateTime , inBranchId := 8374 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 862910 , inPaidKindId := 0 , inTradeMarkId := 0 , inGoodsGroupId := 0 , inInfoMoneyId := 0 ,  inSession := '9457');
