@@ -235,14 +235,15 @@ BEGIN
                               , zfCalc_GoodsPropertyId (SoldTable.ContractId, SoldTable.JuridicalId, SoldTable.PartnerId) AS GoodsPropertyId
 
                           FROM SoldTable
-                          INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = SoldTable.GoodsId 
+                         -- INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = SoldTable.GoodsId 
                          WHERE SoldTable.OperDate BETWEEN inStartDate AND inEndDate
                            AND (SoldTable.JuridicalId = inJuridicalId OR inJuridicalId = 0)
-                           --AND (SoldTable.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
+                           AND (SoldTable.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
                            AND (SoldTable.PaidKindId  = inPaidKindId  OR inPaidKindId  = 0)
                            AND (SoldTable.BranchId    = inBranchId    OR inBranchId    = 0)
                            AND (SoldTable.AreaId      = inAreaId      OR inAreaId      = 0)
-                           AND (SoldTable.RetailId    = inRetailId    OR inRetailId    = 0)
+                           AND (SoldTable.RetailId    = inRetailId    OR inRetailId    = 0) 
+                           AND (SoldTable.TradeMarkId = inTradeMarkId OR inTradeMarkId = 0)
 --and 1 = 0
                          GROUP BY SoldTable.Id
                                 , SoldTable.BranchId
@@ -853,7 +854,7 @@ BEGIN
                          , _tmpGoods.InfoMoneyId
                          , MovementItem.Amount
                      FROM MovementItem
-                        INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+                        LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
                      WHERE MovementItem.ParentId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
                        AND MovementItem.DescId     = zc_MI_Child()
                        AND MovementItem.isErased   = FALSE
