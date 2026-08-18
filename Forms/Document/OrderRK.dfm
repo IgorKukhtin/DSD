@@ -21,6 +21,7 @@ inherited OrderRKForm: TOrderRKForm
       inherited cxGrid: TcxGrid
         Width = 1298
         Height = 321
+        ExplicitTop = -24
         ExplicitWidth = 1298
         ExplicitHeight = 321
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -33,50 +34,17 @@ inherited OrderRKForm: TOrderRKForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount_order
             end
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Amount_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -87,53 +55,22 @@ inherited OrderRKForm: TOrderRKForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountTotal
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount_order
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount_diff
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -201,17 +138,7 @@ inherited OrderRKForm: TOrderRKForm
             Options.Editing = False
             Width = 45
           end
-          object Amount: TcxGridDBColumn [5]
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object GoodsCode_in: TcxGridDBColumn [6]
+          object GoodsCode_in: TcxGridDBColumn [5]
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088' ('#1087#1077#1088#1077#1089#1086#1088#1090'-'#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsCode_in'
             Visible = False
@@ -221,7 +148,7 @@ inherited OrderRKForm: TOrderRKForm
             Options.Editing = False
             Width = 86
           end
-          object GoodsName_in: TcxGridDBColumn [7]
+          object GoodsName_in: TcxGridDBColumn [6]
             Caption = #1058#1086#1074#1072#1088' ('#1087#1077#1088#1077#1089#1086#1088#1090'-'#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsName_in'
             HeaderAlignmentHorz = taCenter
@@ -229,7 +156,7 @@ inherited OrderRKForm: TOrderRKForm
             Options.Editing = False
             Width = 245
           end
-          object GoodsKindName_in: TcxGridDBColumn [8]
+          object GoodsKindName_in: TcxGridDBColumn [7]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088' ('#1087#1077#1088#1077#1089#1086#1088#1090'-'#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsKindName_in'
             HeaderAlignmentHorz = taCenter
@@ -237,9 +164,55 @@ inherited OrderRKForm: TOrderRKForm
             Options.Editing = False
             Width = 202
           end
+          object Amount: TcxGridDBColumn [8]
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object AmountTotal: TcxGridDBColumn [9]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1048#1058#1054#1043#1054
+            DataBinding.FieldName = 'AmountTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1087#1086' '#1074#1089#1077#1084' '#1079#1072#1076#1072#1085#1080#1103#1084
+            Options.Editing = False
+            Width = 73
+          end
+          object Amount_order: TcxGridDBColumn [10]
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1047#1072#1103#1074#1082#1072' '#1087#1086#1082'.)'
+            DataBinding.FieldName = 'Amount_order'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
+          object Amount_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082'. '#1086#1090' '#1047#1072#1103#1074#1082#1080' '#1087#1086#1082'.'
+            DataBinding.FieldName = 'Amount_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082'. '#1086#1090' '#1047#1072#1103#1074#1082#1080' '#1087#1086#1082'.'
+            Options.Editing = False
+            Width = 84
+          end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1213,6 +1186,14 @@ inherited OrderRKForm: TOrderRKForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -1244,6 +1225,10 @@ inherited OrderRKForm: TOrderRKForm
         item
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
         end
         item
           BeginGroup = True

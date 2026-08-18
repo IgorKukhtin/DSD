@@ -78,7 +78,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Promo_Summ           TFloat
              , Sale_Weight_noReturn TFloat
              , Sale_Summ_NoReturn   TFloat
- 
+             , Sale_Weight          TFloat
+             , Sale_Summ            TFloat
                --ПЛАН
              , Sale_weight_plan         TFloat
              , Sale_Summ_plan           TFloat
@@ -1149,6 +1150,9 @@ BEGIN
           , (COALESCE (tmpOperationGroup.Sale_AmountPartner_Weight,0) - COALESCE (tmpOperationGroup.Return_Amount_Weight,0))  :: TFloat AS Sale_Weight_noReturn
           , (COALESCE (tmpOperationGroup.Sale_Summ,0) - COALESCE (tmpOperationGroup.Return_Summ,0))                           :: TFloat AS Sale_Summ_NoReturn
 
+          , COALESCE (tmpOperationGroup.Sale_AmountPartner_Weight,0)   :: TFloat AS Sale_Weight
+          , COALESCE (tmpOperationGroup.Sale_Summ,0)                   :: TFloat AS Sale_Summ
+
             --ПЛАН
            , 0  ::TFloat AS Sale_weight_plan      
            , 0  ::TFloat AS Sale_Summ_plan
@@ -1381,6 +1385,9 @@ BEGIN
 
           , 0  :: TFloat AS Sale_Weight_noReturn
           , 0  :: TFloat AS Sale_Summ_NoReturn
+
+          , 0  :: TFloat AS Sale_Weight
+          , 0  :: TFloat AS Sale_Summ
           
           
            --продажа без возвратов (1)
