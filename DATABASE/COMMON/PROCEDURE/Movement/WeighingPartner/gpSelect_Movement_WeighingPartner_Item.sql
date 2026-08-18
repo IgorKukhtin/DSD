@@ -621,9 +621,15 @@ BEGIN
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND (MovementItem.isErased   = inIsErased
+                                    OR MovementItem.isErased  = FALSE
                                     OR inGoodsGroupId <> 0
                                     OR inGoodsId <> 0
                                     OR (inStartDate + INTERVAL '3 DAY') >= inEndDate
+                                      )
+                                   AND (MovementItem.isErased   = inIsErased
+                                    OR MovementItem.isErased  = FALSE
+                                    OR inGoodsGroupId <> 0
+                                    OR inGoodsId <> 0
                                       )
 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
