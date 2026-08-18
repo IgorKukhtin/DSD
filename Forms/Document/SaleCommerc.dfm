@@ -26,8 +26,6 @@ object SaleCommercForm: TSaleCommercForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -176
-    ExplicitTop = -32
     object edInvNumber: TcxTextEdit
       Left = 177
       Top = 23
@@ -583,6 +581,14 @@ object SaleCommercForm: TSaleCommercForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object GoodsGroupDirectionName: TcxGridDBColumn
+            Caption = #1040#1085#1072#1083#1110#1090#1080#1095#1085#1072' '#1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupDirectionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1072#1103' '#1075#1088#1091#1087#1087#1072' '#1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            Width = 84
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1072' ('#1091#1089#1110')'

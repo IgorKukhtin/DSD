@@ -217,10 +217,11 @@ type
     procedure LoadSectionFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSaleAssetFormTest;
+    procedure LoadSaleCommercDocumentFormTest;
     procedure LoadSaleExternalFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendAssetFormTest;
-    procedure LoadSaleCommercDocumentFormTest;
+
     procedure LoadSendDebtFormTest;
     procedure LoadSendMemberFormTest;
     procedure LoadSendOnPriceFormTest;
