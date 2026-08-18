@@ -373,7 +373,7 @@
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvRetailName: TcxDBPivotGridField
-      AreaIndex = 1
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1058#1086#1088#1075#1110#1074#1077#1083#1100#1085#1072' '#1084#1077#1088#1077#1078#1072
       DataBinding.FieldName = 'RetailName'
@@ -381,7 +381,7 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvOKPO: TcxDBPivotGridField
-      AreaIndex = 2
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1054#1050#1055#1054
       DataBinding.FieldName = 'OKPO'
