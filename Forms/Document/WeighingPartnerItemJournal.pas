@@ -125,6 +125,7 @@ type
     AmountPartner_Weight: TcxGridDBColumn;
     RealWeight_Weight: TcxGridDBColumn;
     IP: TcxGridDBColumn;
+    TotalCountStick: TcxGridDBColumn;
   private
   public
   end;

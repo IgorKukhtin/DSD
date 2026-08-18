@@ -149,6 +149,11 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = RealWeight_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountStick
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -230,6 +235,11 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = RealWeight_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountStick
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1040,6 +1050,16 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object TotalCountStick: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1089#1090#1080#1082#1077#1088')'
+        DataBinding.FieldName = 'TotalCountStick'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object PersonalCode1_Stick: TcxGridDBColumn
         Caption = #1050#1086#1076'1 '#1089#1086#1090#1088'. '#1089#1090#1080#1082'.'

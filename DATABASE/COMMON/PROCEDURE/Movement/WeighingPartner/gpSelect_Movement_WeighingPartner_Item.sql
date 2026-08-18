@@ -78,6 +78,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , isErased Boolean
              , Count_Doc  Integer
              , Count_Item Integer
+             , TotalCountStick TFloat
               )
 AS
 $BODY$
@@ -335,6 +336,12 @@ BEGIN
              , tmpMI.Ord   ::Integer AS Count_Doc
              , tmpMI.Count ::Integer AS Count_Item
 
+               -- Кол-во Упаковок (пакетов)
+             , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                         THEN CAST ((MovementItem.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                  / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+                    ELSE 0
+               END :: TFloat AS TotalCountStick
        FROM tmpStatus
             INNER JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -752,8 +759,8 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                            ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
-                           AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                  ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
@@ -761,7 +768,18 @@ BEGIN
 
             LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
                                           ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
-                                         AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+                                         AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode() 
+
+ 
+            -- Товар и Вид товара  
+            LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = MovementItem.ObjectId
+                                                  AND Object_GoodsByGoodsKind_View.GoodsKindId = MILinkObject_GoodsKind.ObjectId
+            -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+            LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                  ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+
+                   
       ;
 
 END;
