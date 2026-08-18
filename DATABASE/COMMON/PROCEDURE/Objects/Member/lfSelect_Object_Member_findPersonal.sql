@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION lfSelect_Object_Member_findPersonal(
     IN inSession          TVarChar  DEFAULT ''     -- сессия пользователя
 )
 RETURNS TABLE (MemberId Integer, PersonalId Integer
+             , PersonalGroupId Integer
              , UnitId   Integer, PositionId Integer, PositionLevelId Integer
              , BranchId Integer, PersonalServiceListId Integer
              , DateIn TDateTime, DateOut TDateTime
@@ -27,6 +28,7 @@ BEGIN
    RETURN QUERY 
      WITH tmpPersonal AS (SELECT ObjectLink_Personal_Member.ChildObjectId         AS MemberId
                                , ObjectLink_Personal_Member.ObjectId              AS PersonalId
+                               , ObjectLink_Personal_PersonalGroup.ObjectId       AS PersonalGroupId
                                , ObjectLink_Personal_Unit.ChildObjectId           AS UnitId
                                , ObjectLink_Personal_Position.ChildObjectId       AS PositionId
                                , ObjectLink_Personal_PositionLevel.ChildObjectId  AS PositionLevelId
@@ -50,6 +52,10 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                     ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Member.ObjectId
                                                    AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                                                    ON ObjectLink_Personal_PersonalGroup.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                   AND ObjectLink_Personal_PersonalGroup.DescId   = zc_ObjectLink_Personal_PersonalGroup()
+                                                   
                                LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                                     ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId
                                                    AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
@@ -81,6 +87,7 @@ BEGIN
      -- Результат
      SELECT tmpPersonal.MemberId
           , tmpPersonal.PersonalId
+          , tmpPersonal.PersonalGroupId
           , tmpPersonal.UnitId
           , tmpPersonal.PositionId
           , tmpPersonal.PositionLevelId
