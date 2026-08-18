@@ -78,6 +78,8 @@ type
     cxLabel7: TcxLabel;
     cxLabel9: TcxLabel;
     edSearchJuridicalName: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    edSearchGoodsNameGP: TcxTextEdit;
     cxLabel11: TcxLabel;
     edSearchRetailName: TcxTextEdit;
     RetailName: TcxGridDBColumn;
@@ -101,12 +103,10 @@ type
     cxLabel14: TcxLabel;
     ådTradeMark: TcxButtonEdit;
     GuidesTradeMark: TdsdGuides;
-    JuridicalName: TcxGridDBColumn;
+    cxJuridicalName: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
     edSearchPartnerName: TcxTextEdit;
     cxLabel15: TcxLabel;
-    GoodsCode: TcxGridDBColumn;
-    GoodsCode_basis: TcxGridDBColumn;
   private
   public
   end;
