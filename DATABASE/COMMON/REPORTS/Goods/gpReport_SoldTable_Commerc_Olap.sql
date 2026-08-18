@@ -22,7 +22,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , MeasureName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar, GoodsGroupAnalystName TVarChar
              , GoodsTagName TVarChar, GoodsGroupStatName TVarChar
-             , GoodsPlatformName TVarChar
+             , GoodsPlatformName TVarChar, GoodsGroupDirectionName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, SectionName TVarChar
              , RetailName TVarChar
@@ -1028,6 +1028,7 @@ BEGIN
                            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                  ON ObjectFloat_Weight.ObjectId = tmp.GoodsId
                                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
                        )
 
 
@@ -1150,6 +1151,7 @@ BEGIN
           , Object_GoodsTag.ValueData          AS GoodsTagName
           , Object_GoodsGroupStat.ValueData    AS GoodsGroupStatName
           , Object_GoodsPlatform.ValueData     AS GoodsPlatformName
+          , Object_GoodsGroupDirection.ValueData AS GoodsGroupDirectionName 
 
           , Object_Branch.Id            AS BranchId
           , Object_Branch.ObjectCode    AS BranchCode
@@ -1263,6 +1265,11 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupDirection
+                                  ON ObjectLink_Goods_GoodsGroupDirection.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroupDirection.DescId = zc_ObjectLink_Goods_GoodsGroupDirection()
+             LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = ObjectLink_Goods_GoodsGroupDirection.ChildObjectId
+
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
           LEFT JOIN tmpJuridicalDetails AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
@@ -1342,6 +1349,7 @@ BEGIN
           , Object_Goods.GoodsTagName
           , Object_Goods.GoodsGroupStatName
           , Object_Goods.GoodsPlatformName
+          , Object_Goods.GoodsGroupDirectionName
 
           , tmpMI_Master.BranchId
           , tmpMI_Master.BranchCode

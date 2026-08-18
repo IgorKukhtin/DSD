@@ -23,6 +23,7 @@ RETURNS TABLE (Ord Integer, Id Integer
              , MeasureName TVarChar, TradeMarkName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsGroupPropertyName TVarChar, GoodsGroupPropertyName_Parent TVarChar
+             , GoodsGroupDirectionName TVarChar
 
              , Amount                TFloat
              , Amount_sh             TFloat
@@ -162,6 +163,7 @@ BEGIN
                                  , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                                  , Object_GoodsGroupProperty.ValueData         AS GoodsGroupPropertyName
                                  , Object_GoodsGroupPropertyParent.ValueData   AS GoodsGroupPropertyName_Parent
+                                 , Object_GoodsGroupDirection.ValueData        AS GoodsGroupDirectionName
                             FROM (SELECT DISTINCT tmpMI_Child.ObjectId FROM tmpMI_Child) AS tmp
                                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.ObjectId
                                  --
@@ -197,6 +199,11 @@ BEGIN
                                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                        ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                                       AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupDirection
+                                                      ON ObjectLink_Goods_GoodsGroupDirection.ObjectId = Object_Goods.Id
+                                                     AND ObjectLink_Goods_GoodsGroupDirection.DescId = zc_ObjectLink_Goods_GoodsGroupDirection()
+                                 LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = ObjectLink_Goods_GoodsGroupDirection.ChildObjectId
                             )
         --
         SELECT ROW_NUMBER() OVER (ORDER BY MovementItem.Id) ::Integer AS Ord
@@ -243,6 +250,7 @@ BEGIN
            , Object_Goods.GoodsGroupNameFull      AS GoodsGroupNameFull
            , Object_Goods.GoodsGroupPropertyName  AS GoodsGroupPropertyName
            , Object_Goods.GoodsGroupPropertyName_Parent AS GoodsGroupPropertyName_Parent
+           , Object_Goods.GoodsGroupDirectionName ::TVarChar
 
             -- CASE WHEN tmpParams_Goods.MeasureId = zc_Measure_Sh() THEN COALESCE (tmpParams_Goods.Weight,1) ELSE 1 END
            , tmpMI_Child.Amount                                                                           ::TFloat AS Amount

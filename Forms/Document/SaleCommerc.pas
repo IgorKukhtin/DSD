@@ -163,6 +163,7 @@ type
     UpdateRecordBraanch_kam: TUpdateRecord;
     bbUpdateRecordKAM: TdxBarButton;
     bbUpdateRecordBraanch_kam: TdxBarButton;
+    GoodsGroupDirectionName: TcxGridDBColumn;
   private
   public
   end;
