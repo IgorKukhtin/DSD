@@ -307,16 +307,15 @@
     Groups = <>
     OptionsView.RowGrandTotalWidth = 456
     TabOrder = 1
-    ExplicitTop = 179
     object pvOperDate: TcxDBPivotGridField
-      AreaIndex = 51
+      AreaIndex = 52
       IsCaptionAssigned = True
       Caption = #1044#1072#1090#1072
       DataBinding.FieldName = 'OperDate'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvMonthDate: TcxDBPivotGridField
-      AreaIndex = 1
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1052#1110#1089#1103#1094#1100
       DataBinding.FieldName = 'MonthDate'
@@ -325,7 +324,7 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvYear: TcxDBPivotGridField
-      AreaIndex = 50
+      AreaIndex = 51
       IsCaptionAssigned = True
       Caption = #1056#1110#1082
       DataBinding.FieldName = 'Year'
@@ -341,8 +340,17 @@
       Width = 150
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
+    object pvBranchKAMName: TcxDBPivotGridField
+      AreaIndex = 0
+      IsCaptionAssigned = True
+      Caption = #1060#1110#1083#1110#1103' / '#1050#1040#1052
+      DataBinding.FieldName = 'BranchKAMName'
+      Visible = True
+      Width = 150
+      UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
+    end
     object pvJuridicalName: TcxDBPivotGridField
-      AreaIndex = 9
+      AreaIndex = 10
       IsCaptionAssigned = True
       Caption = #1070#1088'.'#1086#1089#1086#1073#1072
       DataBinding.FieldName = 'JuridicalName'
@@ -351,7 +359,7 @@
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvRetailName: TcxDBPivotGridField
-      AreaIndex = 0
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1058#1086#1088#1075#1110#1074#1077#1083#1100#1085#1072' '#1084#1077#1088#1077#1078#1072
       DataBinding.FieldName = 'RetailName'
@@ -359,14 +367,14 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvOKPO: TcxDBPivotGridField
-      AreaIndex = 2
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1054#1050#1055#1054
       DataBinding.FieldName = 'OKPO'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvSectionName: TcxDBPivotGridField
-      AreaIndex = 3
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1057#1077#1075#1084#1077#1085#1090
       DataBinding.FieldName = 'SectionName'
@@ -374,14 +382,14 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvContractCode: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 6
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1076#1086#1075'.'
       DataBinding.FieldName = 'ContractCode'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvContractNumber: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1044#1086#1075#1086#1074#1110#1088
       DataBinding.FieldName = 'ContractNumber'
@@ -389,7 +397,7 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvContractTagGroupName: TcxDBPivotGridField
-      AreaIndex = 6
+      AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1072' '#1086#1079#1085#1072#1082#1072' '#1076#1086#1075'.'
       DataBinding.FieldName = 'ContractTagGroupName'
@@ -397,7 +405,7 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvContractTagName: TcxDBPivotGridField
-      AreaIndex = 7
+      AreaIndex = 8
       IsCaptionAssigned = True
       Caption = #1054#1079#1085#1072#1082#1072' '#1076#1086#1075'.'
       DataBinding.FieldName = 'ContractTagName'
@@ -405,7 +413,7 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvAreaName: TcxDBPivotGridField
-      AreaIndex = 8
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1056#1077#1075#1110#1086#1085
       DataBinding.FieldName = 'AreaName'
@@ -413,21 +421,21 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPartnerCode: TcxDBPivotGridField
-      AreaIndex = 12
+      AreaIndex = 13
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       DataBinding.FieldName = 'PartnerCode'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPartnerId: TcxDBPivotGridField
-      AreaIndex = 13
+      AreaIndex = 14
       IsCaptionAssigned = True
       Caption = #1050#1083#1102#1095'-2'
       DataBinding.FieldName = 'PartnerID'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPartnerName: TcxDBPivotGridField
-      AreaIndex = 10
+      AreaIndex = 11
       IsCaptionAssigned = True
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
       DataBinding.FieldName = 'PartnerName'
@@ -435,7 +443,7 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvTypeCommercName: TcxDBPivotGridField
-      AreaIndex = 14
+      AreaIndex = 15
       IsCaptionAssigned = True
       Caption = #1058#1080#1087' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103
       DataBinding.FieldName = 'TypeCommercName'
@@ -443,14 +451,14 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvCityKindName: TcxDBPivotGridField
-      AreaIndex = 15
+      AreaIndex = 16
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1085'.'#1087'.'
       DataBinding.FieldName = 'CityKindName'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvCityName: TcxDBPivotGridField
-      AreaIndex = 16
+      AreaIndex = 17
       IsCaptionAssigned = True
       Caption = #1053#1072#1089#1077#1083#1077#1085#1080#1081' '#1087#1091#1085#1082#1090
       DataBinding.FieldName = 'CityName'
@@ -458,14 +466,14 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvAddress: TcxDBPivotGridField
-      AreaIndex = 17
+      AreaIndex = 18
       IsCaptionAssigned = True
       Caption = #1040#1076#1088#1077#1089#1072
       DataBinding.FieldName = 'Address'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPartnerCategory: TcxDBPivotGridField
-      AreaIndex = 11
+      AreaIndex = 12
       IsCaptionAssigned = True
       Caption = #1050#1072#1090#1077#1075#1086#1088#1110#1103' '#1058#1058
       DataBinding.FieldName = 'PartnerCategory'
@@ -473,7 +481,7 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPartnerTagName: TcxDBPivotGridField
-      AreaIndex = 18
+      AreaIndex = 19
       IsCaptionAssigned = True
       Caption = #1054#1079#1085#1072#1082#1072' '#1058#1058
       DataBinding.FieldName = 'PartnerTagName'
@@ -481,217 +489,217 @@
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPersonalName_1: TcxDBPivotGridField
-      AreaIndex = 20
+      AreaIndex = 21
       IsCaptionAssigned = True
       Caption = #1055#1030#1041' '#1056'-1'
       DataBinding.FieldName = 'PersonalName_1'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPersonalName_2: TcxDBPivotGridField
-      AreaIndex = 21
+      AreaIndex = 22
       IsCaptionAssigned = True
       Caption = #1055#1030#1041' '#1056'-2'
       DataBinding.FieldName = 'PersonalName_2'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPersonalName_3: TcxDBPivotGridField
-      AreaIndex = 22
+      AreaIndex = 23
       IsCaptionAssigned = True
       Caption = #1055#1030#1041' '#1056'-3'
       DataBinding.FieldName = 'PersonalName_3'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPersonalName_4: TcxDBPivotGridField
-      AreaIndex = 23
+      AreaIndex = 24
       IsCaptionAssigned = True
       Caption = #1055#1030#1041' '#1056'-4'
       DataBinding.FieldName = 'PersonalName_4'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPersonalName_5: TcxDBPivotGridField
-      AreaIndex = 24
+      AreaIndex = 25
       IsCaptionAssigned = True
       Caption = #1055#1030#1041' '#1056'-5'
       DataBinding.FieldName = 'PersonalName_5'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPersonalName_6: TcxDBPivotGridField
-      AreaIndex = 25
+      AreaIndex = 26
       IsCaptionAssigned = True
       Caption = #1055#1030#1041' '#1056'-6'
       DataBinding.FieldName = 'PersonalName_6'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPositionName_1: TcxDBPivotGridField
-      AreaIndex = 26
+      AreaIndex = 27
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1072#1076#1072' '#1056'-1'
       DataBinding.FieldName = 'PositionName_1'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPositionName_2: TcxDBPivotGridField
-      AreaIndex = 27
+      AreaIndex = 28
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1072#1076#1072' '#1056'-2'
       DataBinding.FieldName = 'PositionName_2'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPositionName_3: TcxDBPivotGridField
-      AreaIndex = 28
+      AreaIndex = 29
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1072#1076#1072' '#1056'-3'
       DataBinding.FieldName = 'PositionName_3'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPositionName_4: TcxDBPivotGridField
-      AreaIndex = 29
+      AreaIndex = 30
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1072#1076#1072' '#1056'-4'
       DataBinding.FieldName = 'PositionName_4'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPositionName_5: TcxDBPivotGridField
-      AreaIndex = 30
+      AreaIndex = 31
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1072#1076#1072' '#1056'-5'
       DataBinding.FieldName = 'PositionName_5'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPositionName_6: TcxDBPivotGridField
-      AreaIndex = 31
+      AreaIndex = 32
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1072#1076#1072' '#1056'-6'
       DataBinding.FieldName = 'PositionName_6'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvUnitName_1: TcxDBPivotGridField
-      AreaIndex = 32
+      AreaIndex = 33
       IsCaptionAssigned = True
       Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-1'
       DataBinding.FieldName = 'UnitName_1'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvUnitName_2: TcxDBPivotGridField
-      AreaIndex = 33
+      AreaIndex = 34
       IsCaptionAssigned = True
       Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-2'
       DataBinding.FieldName = 'UnitName_2'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvUnitName_3: TcxDBPivotGridField
-      AreaIndex = 34
+      AreaIndex = 35
       IsCaptionAssigned = True
       Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-3'
       DataBinding.FieldName = 'UnitName_3'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvUnitName_4: TcxDBPivotGridField
-      AreaIndex = 35
+      AreaIndex = 36
       IsCaptionAssigned = True
       Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-4'
       DataBinding.FieldName = 'UnitName_4'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvUnitName_5: TcxDBPivotGridField
-      AreaIndex = 36
+      AreaIndex = 37
       IsCaptionAssigned = True
       Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-5'
       DataBinding.FieldName = 'UnitName_5'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvUnitName_6: TcxDBPivotGridField
-      AreaIndex = 37
+      AreaIndex = 38
       IsCaptionAssigned = True
       Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-6'
       DataBinding.FieldName = 'UnitName_6'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPersonalName_1ret: TcxDBPivotGridField
-      AreaIndex = 38
+      AreaIndex = 39
       IsCaptionAssigned = True
       Caption = #1055#1030#1041' '#1056'-1 ('#1084#1077#1088#1077#1078#1110')'
       DataBinding.FieldName = 'PersonalName_1ret'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPersonalName_21ret: TcxDBPivotGridField
-      AreaIndex = 39
+      AreaIndex = 40
       IsCaptionAssigned = True
       Caption = #1055#1030#1041' '#1056'-2 ('#1084#1077#1088#1077#1078#1110')'
       DataBinding.FieldName = 'PersonalName_2ret'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPersonalName_3ret: TcxDBPivotGridField
-      AreaIndex = 40
+      AreaIndex = 41
       IsCaptionAssigned = True
       Caption = #1055#1030#1041' '#1056'-3 ('#1084#1077#1088#1077#1078#1110')'
       DataBinding.FieldName = 'PersonalName_3ret'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPositionName_1ret: TcxDBPivotGridField
-      AreaIndex = 41
+      AreaIndex = 42
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1072#1076#1072' '#1056'-1 ('#1084#1077#1088#1077#1078#1110')'
       DataBinding.FieldName = 'PositionName_1ret'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPositionName_2ret: TcxDBPivotGridField
-      AreaIndex = 42
+      AreaIndex = 43
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1072#1076#1072' '#1056'-2 ('#1084#1077#1088#1077#1078#1110')'
       DataBinding.FieldName = 'PositionName_2ret'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvPositionName_3ret: TcxDBPivotGridField
-      AreaIndex = 43
+      AreaIndex = 44
       IsCaptionAssigned = True
       Caption = #1055#1086#1089#1072#1076#1072' '#1056'-3 ('#1084#1077#1088#1077#1078#1110')'
       DataBinding.FieldName = 'PositionName_3ret'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvUnitName_1ret: TcxDBPivotGridField
-      AreaIndex = 44
+      AreaIndex = 45
       IsCaptionAssigned = True
       Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-1 ('#1084#1077#1088#1077#1078#1110')'
       DataBinding.FieldName = 'UnitName_1ret'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvUnitName_2ret: TcxDBPivotGridField
-      AreaIndex = 45
+      AreaIndex = 46
       IsCaptionAssigned = True
       Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-2 ('#1084#1077#1088#1077#1078#1110')'
       DataBinding.FieldName = 'UnitName_2ret'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvUnitName_3ret: TcxDBPivotGridField
-      AreaIndex = 46
+      AreaIndex = 47
       IsCaptionAssigned = True
       Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-3 ('#1084#1077#1088#1077#1078#1110')'
       DataBinding.FieldName = 'UnitName_3ret'
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvTradeMarkName: TcxDBPivotGridField
-      AreaIndex = 55
+      AreaIndex = 56
       IsCaptionAssigned = True
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
       DataBinding.FieldName = 'TradeMarkName'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsGroupNameFull: TcxDBPivotGridField
-      AreaIndex = 52
+      AreaIndex = 53
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
       DataBinding.FieldName = 'GoodsGroupNameFull'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsGroupName: TcxDBPivotGridField
-      AreaIndex = 53
+      AreaIndex = 54
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsGroupName'
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvGoodsCode: TcxDBPivotGridField
-      AreaIndex = 48
+      AreaIndex = 49
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1090#1086#1074'.'
       DataBinding.FieldName = 'GoodsCode'
@@ -709,7 +717,7 @@
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvGoodsGroupDirectionName: TcxDBPivotGridField
-      AreaIndex = 56
+      AreaIndex = 57
       IsCaptionAssigned = True
       Caption = #1040#1085#1072#1083#1110#1090#1080#1095#1085#1072' '#1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'GoodsGroupDirectionName'
@@ -718,7 +726,7 @@
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvGoodsName_ukr: TcxDBPivotGridField
-      AreaIndex = 57
+      AreaIndex = 58
       IsCaptionAssigned = True
       Caption = #1058#1086#1074#1072#1088' ('#1091#1082#1088'.)'
       DataBinding.FieldName = 'GoodsName_ukr'
@@ -746,7 +754,7 @@
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvGoodsCode_basis: TcxDBPivotGridField
-      AreaIndex = 49
+      AreaIndex = 50
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' ('#1094#1077#1093')'
       DataBinding.FieldName = 'GoodsCode_basis'
@@ -754,7 +762,7 @@
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvGoodsName_basis: TcxDBPivotGridField
-      AreaIndex = 66
+      AreaIndex = 67
       IsCaptionAssigned = True
       Caption = #1058#1086#1074#1072#1088' ('#1094#1077#1093')'
       DataBinding.FieldName = 'GoodsName_basis'
@@ -762,7 +770,7 @@
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvGoodsKindName_basis: TcxDBPivotGridField
-      AreaIndex = 58
+      AreaIndex = 59
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1094#1077#1093')'
       DataBinding.FieldName = 'GoodsKindName_basis'
@@ -770,14 +778,14 @@
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvMeasureName_basis: TcxDBPivotGridField
-      AreaIndex = 54
+      AreaIndex = 55
       IsCaptionAssigned = True
       Caption = #1045#1076'. '#1080#1079#1084'. ('#1094#1077#1093')'
       DataBinding.FieldName = 'MeasureName_basis'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvInfoMoneyName: TcxDBPivotGridField
-      AreaIndex = 47
+      AreaIndex = 48
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       DataBinding.FieldName = 'InfoMoneyName'
@@ -785,7 +793,7 @@
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvPaidKindName: TcxDBPivotGridField
-      AreaIndex = 19
+      AreaIndex = 20
       IsCaptionAssigned = True
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1080
       DataBinding.FieldName = 'PaidKindName'
@@ -808,7 +816,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvReturn_Summ: TcxDBPivotGridField
-      AreaIndex = 61
+      AreaIndex = 62
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088', '#1075#1088#1085' ('#1060#1040#1050#1058')'
       DataBinding.FieldName = 'Return_Summ'
@@ -835,7 +843,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvSale_Summ_NoPromo: TcxDBPivotGridField
-      AreaIndex = 60
+      AreaIndex = 61
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076' '#1073#1077#1079' '#1040#1082#1094#1080#1081', '#1075#1088#1085' ('#1060#1040#1050#1058')'
       DataBinding.FieldName = 'Sale_Summ_NoPromo'
@@ -862,7 +870,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvPromo_Summ: TcxDBPivotGridField
-      AreaIndex = 62
+      AreaIndex = 63
       IsCaptionAssigned = True
       Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1060#1040#1050#1058')'
       DataBinding.FieldName = 'Promo_Summ'
@@ -889,7 +897,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvSale_Summ_NoReturn: TcxDBPivotGridField
-      AreaIndex = 63
+      AreaIndex = 64
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1074#1086#1079#1074#1088'., '#1075#1088#1085' ('#1060#1040#1050#1058')'
       DataBinding.FieldName = 'Sale_Summ_NoReturn'
@@ -902,7 +910,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvSale_Summ_plan: TcxDBPivotGridField
-      AreaIndex = 59
+      AreaIndex = 60
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1074#1086#1079#1074#1088'., '#1075#1088#1085' ('#1055#1051#1040#1053')'
       DataBinding.FieldName = 'Sale_Summ_plan'
@@ -985,7 +993,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvPersentWeight: TcxDBPivotGridField
-      AreaIndex = 64
+      AreaIndex = 65
       IsCaptionAssigned = True
       Caption = '% '#1074#1080#1082#1086#1085#1072#1085#1085#1103', '#1082#1075
       PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -995,7 +1003,7 @@
       UniqueName = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.'
     end
     object pvPersentSumm: TcxDBPivotGridField
-      AreaIndex = 65
+      AreaIndex = 66
       IsCaptionAssigned = True
       Caption = '% '#1074#1080#1082#1086#1085#1072#1085#1085#1103', '#1075#1088#1085
       Visible = True
@@ -1008,7 +1016,7 @@
     Width = 1140
     Height = 183
     Align = alBottom
-    TabOrder = 6
+    TabOrder = 4
     Visible = False
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -1263,7 +1271,7 @@
   object edSearchMember: TcxTextEdit
     Left = 316
     Top = 131
-    TabOrder = 7
+    TabOrder = 5
     DesignSize = (
       132
       21)
@@ -1284,7 +1292,7 @@
   object edSearchUnit: TcxTextEdit
     Left = 767
     Top = 131
-    TabOrder = 9
+    TabOrder = 8
     DesignSize = (
       116
       21)
@@ -1769,6 +1777,24 @@
       end
       item
         Component = GuidesInfoMoney
+      end
+      item
+        Component = GuidesArea
+      end
+      item
+        Component = GuidesBranch
+      end
+      item
+        Component = GuidesJuridical
+      end
+      item
+        Component = GuidesPaidKind
+      end
+      item
+        Component = GuidesRetail
+      end
+      item
+        Component = GuidesTradeMark
       end>
     Left = 1080
     Top = 24
