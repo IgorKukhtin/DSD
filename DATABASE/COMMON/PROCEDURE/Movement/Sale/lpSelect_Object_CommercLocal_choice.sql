@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS lpSelect_Object_CommercLocal_choice (Integer, Integer, I
 CREATE OR REPLACE FUNCTION lpSelect_Object_CommercLocal_choice(
     IN inMemberId_order        Integer  , --
     IN inUserId_source_order   Integer  , --  = 0 если EDI
+    IN
     IN inRetailId              Integer  ,
     IN inRouteTTId             Integer  ,
     IN inPartnerId             Integer  ,
