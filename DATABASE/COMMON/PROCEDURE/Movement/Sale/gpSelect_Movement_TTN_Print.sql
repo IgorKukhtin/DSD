@@ -645,7 +645,7 @@ BEGIN
            , CASE WHEN COALESCE (tmpTransportGoods.CarTrailerName, '') = '' THEN 'немає' ELSE tmpTransportGoods.CarTrailerName END ::TVarChar AS CarTrailerName
            , tmpTransportGoods.CarTrailerModelName
            , tmpTransportGoods.PersonalDriverName
-           , CASE WHEN COALESCE (ObjectString_PersonalDriver_INN.ValueData,'') <> '' THEN '('||ObjectString_PersonalDriver_INN.ValueData||')' ELSE '' END ::TVarChar AS INN_PersonalDriver
+           , CASE WHEN COALESCE (ObjectString_MemberExternal_INN.ValueData, ObjectString_PersonalDriver_INN.ValueData,'') <> '' THEN '(' || COALESCE (ObjectString_MemberExternal_INN.ValueData, ObjectString_PersonalDriver_INN.ValueData) ||')' ELSE '' END ::TVarChar AS INN_PersonalDriver
            , COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData) :: TVarChar AS DriverCertificate
 
 --         , ('(водій) '||CASE WHEN TRIM (COALESCE (tmpTransportGoods.MemberName1, '')) = '' THEN COALESCE (tmpTransportGoods.PersonalDriverName, '') ELSE tmpTransportGoods.MemberName1 END) :: TVarChar AS MemberName1
@@ -903,6 +903,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Member1_INN
                                    ON ObjectString_Member1_INN.ObjectId = OL_Member1_Member.ChildObjectId
                                   AND ObjectString_Member1_INN.DescId = zc_ObjectString_Member_INN()
+
+            LEFT JOIN ObjectString AS ObjectString_MemberExternal_INN
+                                   ON ObjectString_MemberExternal_INN.ObjectId = tmpTransportGoods.PersonalDriverId
+                                  AND ObjectString_MemberExternal_INN.DescId = zc_ObjectString_MemberExternal_INN()
+
             --кол. тары из взвешивания
             LEFT JOIN tmpWeighingPartner ON 1 = 1
        WHERE Movement.Id = inMovementId
