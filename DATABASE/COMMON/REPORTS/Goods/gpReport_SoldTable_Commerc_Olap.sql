@@ -69,18 +69,14 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , UnitName_3ret     TVarChar
 
           
-             , Return_AmountPartner_Weight TFloat
-             --, Return_AmountPartner_Sh     TFloat
-             , Return_Summ                 TFloat
-             , Sale_AmountPartner_Weight_noPromo TFloat
-             --, Sale_AmountPartner_Sh_noPromo     TFloat
-             , Sale_Summ_NoPromo                 TFloat
-             , Promo_AmountPartner_Weight        TFloat
-             , Promo_Summ                      TFloat
-             --, Promo_AmountPartner_Sh            TFloat
-             , Sale_AmountPartner_Weight_noReturn TFloat
-             --, Sale_AmountPartner_Sh_noReturn     TFloat
-             , Sale_Summ_NoReturn               TFloat
+             , Return_Weight        TFloat
+             , Return_Summ          TFloat
+             , Sale_Weight_noPromo  TFloat
+             , Sale_Summ_NoPromo    TFloat
+             , Promo_Weight         TFloat
+             , Promo_Summ           TFloat
+             , Sale_Weight_noReturn TFloat
+             , Sale_Summ_NoReturn   TFloat
  
                --ПЛАН
              , Sale_weight_plan         TFloat
@@ -89,6 +85,12 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Promo_Summ_plan          TFloat
              , SaleNoPromo_weight_plan  TFloat
              , SaleNoPromo_Summ_plan    TFloat
+             
+             -- поля для поиска
+             , Goods_Search TVarChar
+             , Member_Search TVarChar 
+             , Position_Search TVarChar
+             , Unit_Search TVarChar
               )
 AS
 $BODY$
@@ -1225,17 +1227,17 @@ BEGIN
           , tmpOperationGroup.UnitName_2ret      ::TVarChar
           , tmpOperationGroup.UnitName_3ret      ::TVarChar
 
-          , tmpOperationGroup.Return_AmountPartner_Weight :: TFloat AS Return_AmountPartner_Weight
-          , tmpOperationGroup.Return_Summ        :: TFloat  AS Return_Summ
+          , tmpOperationGroup.Return_AmountPartner_Weight :: TFloat AS Return_Weight
+          , tmpOperationGroup.Return_Summ                 :: TFloat AS Return_Summ
           
-          , (COALESCE (tmpOperationGroup.Sale_AmountPartner_Weight,0) - COALESCE (tmpOperationGroup.Promo_AmountPartner_Weight,0))  :: TFloat AS Sale_AmountPartner_Weight_noPromo
-          , (COALESCE (tmpOperationGroup.Sale_Summ,0) - COALESCE (tmpOperationGroup.Promo_Summ,0))  ::TFloat AS Sale_Summ_NoPromo
+          , (COALESCE (tmpOperationGroup.Sale_AmountPartner_Weight,0) - COALESCE (tmpOperationGroup.Promo_AmountPartner_Weight,0))  :: TFloat AS Sale_Weight_noPromo
+          , (COALESCE (tmpOperationGroup.Sale_Summ,0) - COALESCE (tmpOperationGroup.Promo_Summ,0))                                  :: TFloat AS Sale_Summ_NoPromo
           
-          , tmpOperationGroup.Promo_AmountPartner_Weight :: TFloat AS Promo_AmountPartner_Weight
-          , tmpOperationGroup.Promo_Summ         :: TFloat  AS Promo_Summ
+          , tmpOperationGroup.Promo_AmountPartner_Weight :: TFloat AS Promo_Weight
+          , tmpOperationGroup.Promo_Summ                 :: TFloat AS Promo_Summ
 
-          , (COALESCE (tmpOperationGroup.Sale_AmountPartner_Weight,0) - COALESCE (tmpOperationGroup.Return_Amount_Weight,0))  :: TFloat AS Sale_AmountPartner_Weight_noReturn
-          , (COALESCE (tmpOperationGroup.Sale_Summ,0) - COALESCE (tmpOperationGroup.Return_Summ,0)) ::TFloat AS Sale_Summ_NoReturn
+          , (COALESCE (tmpOperationGroup.Sale_AmountPartner_Weight,0) - COALESCE (tmpOperationGroup.Return_Amount_Weight,0))  :: TFloat AS Sale_Weight_noReturn
+          , (COALESCE (tmpOperationGroup.Sale_Summ,0) - COALESCE (tmpOperationGroup.Return_Summ,0))                           :: TFloat AS Sale_Summ_NoReturn
 
             --ПЛАН
            , 0  ::TFloat AS Sale_weight_plan      
@@ -1245,6 +1247,36 @@ BEGIN
            , 0  ::TFloat AS SaleNoPromo_weight_plan
            , 0  ::TFloat AS SaleNoPromo_Summ_plan          
 
+             -- поля для поиска
+           , (Object_Goods.ObjectCode::TVarChar||'-'||Object_Goods.ValueData) ::TVarChar AS Goods_Search
+           , (COALESCE (tmpOperationGroup.PersonalName_1,'')||'-'
+            ||COALESCE (tmpOperationGroup.PersonalName_2,'')||'-'
+            ||COALESCE (tmpOperationGroup.PersonalName_3,'')||'-'
+            ||COALESCE (tmpOperationGroup.PersonalName_4,'')||'-'
+            ||COALESCE (tmpOperationGroup.PersonalName_5,'')||'-'
+            ||COALESCE (tmpOperationGroup.PersonalName_6,'')||'-'
+            ||COALESCE (tmpOperationGroup.PersonalName_1ret,'')||'-'
+            ||COALESCE (tmpOperationGroup.PersonalName_2ret,'')||'-'
+            ||COALESCE (tmpOperationGroup.PersonalName_3ret,'')) ::TVarChar AS Member_Search 
+           , (COALESCE (tmpOperationGroup.PositionName_1,'')||'-'
+            ||COALESCE (tmpOperationGroup.PositionName_2,'')||'-'
+            ||COALESCE (tmpOperationGroup.PositionName_3,'')||'-'
+            ||COALESCE (tmpOperationGroup.PositionName_4,'')||'-'
+            ||COALESCE (tmpOperationGroup.PositionName_5,'')||'-'
+            ||COALESCE (tmpOperationGroup.PositionName_6,'')||'-'
+            ||COALESCE (tmpOperationGroup.PositionName_1ret,'')||'-'
+            ||COALESCE (tmpOperationGroup.PositionName_2ret,'')||'-'
+            ||COALESCE (tmpOperationGroup.PositionName_3ret,'')) ::TVarChar AS Position_Search
+           ,(COALESCE (tmpOperationGroup.UnitName_1,'')||'-'
+            ||COALESCE (tmpOperationGroup.UnitName_2,'')||'-'
+            ||COALESCE (tmpOperationGroup.UnitName_3,'')||'-'
+            ||COALESCE (tmpOperationGroup.UnitName_4,'')||'-'
+            ||COALESCE (tmpOperationGroup.UnitName_5,'')||'-'
+            ||COALESCE (tmpOperationGroup.UnitName_6,'')||'-'
+            ||COALESCE (tmpOperationGroup.UnitName_1ret,'')||'-'
+            ||COALESCE (tmpOperationGroup.UnitName_2ret,'')||'-'
+            ||COALESCE (tmpOperationGroup.UnitName_3ret,'')) ::TVarChar AS  Unit_Search
+             
      FROM tmpOperationGroup
           -- LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpOperationGroup.PartnerId AND 1 = 0
 
@@ -1424,16 +1456,16 @@ BEGIN
           , tmpCommercRetail_partner.UnitName_2ret      ::TVarChar
           , tmpCommercRetail_partner.UnitName_3ret      ::TVarChar
 
-          , 0  :: TFloat AS Return_AmountPartner_Weight
+          , 0  :: TFloat AS Return_Weight
           , 0  :: TFloat AS Return_Summ
           
-          , 0  :: TFloat AS Sale_AmountPartner_Weight_noPromo
+          , 0  :: TFloat AS Sale_Weight_noPromo
           , 0  :: TFloat AS Sale_Summ_NoPromo
           
-          , 0  :: TFloat AS Promo_AmountPartner_Weight
+          , 0  :: TFloat AS Promo_Weight
           , 0  :: TFloat AS Promo_Summ
 
-          , 0  :: TFloat AS Sale_AmountPartner_Weight_noReturn
+          , 0  :: TFloat AS Sale_Weight_noReturn
           , 0  :: TFloat AS Sale_Summ_NoReturn
           
           
@@ -1449,6 +1481,38 @@ BEGIN
            , (COALESCE (MIFloat_AmountNoPromo.ValueData, 0)
               * CASE WHEN Object_Goods.MeasureId = zc_Measure_Sh() THEN COALESCE (Object_Goods.Weight,1) ELSE 1 END)       ::TFloat AS SaleNoPromo_weight_plan
            , COALESCE (MIFloat_SummNoPromo.ValueData, 0)                                                                   ::TFloat AS SaleNoPromo_Summ_plan
+
+
+             -- поля для поиска
+           , (Object_Goods.GoodsCode::TVarChar||'-'||Object_Goods.GoodsName) ::TVarChar AS Goods_Search
+           , (COALESCE (tmpCommercLocal_partner.PersonalName_1,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.PersonalName_2,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.PersonalName_3,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.PersonalName_4,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.PersonalName_5,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.PersonalName_6,'')||'-'
+            ||COALESCE (tmpCommercRetail_partner.PersonalName_1ret,'')||'-'
+            ||COALESCE (tmpCommercRetail_partner.PersonalName_2ret,'')||'-'
+            ||COALESCE (tmpCommercRetail_partner.PersonalName_3ret,'')) ::TVarChar AS Member_Search 
+           , (COALESCE (tmpCommercLocal_partner.PositionName_1,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.PositionName_2,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.PositionName_3,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.PositionName_4,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.PositionName_5,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.PositionName_6,'')||'-'
+            ||COALESCE (tmpCommercRetail_partner.PositionName_1ret,'')||'-'
+            ||COALESCE (tmpCommercRetail_partner.PositionName_2ret,'')||'-'
+            ||COALESCE (tmpCommercRetail_partner.PositionName_3ret,'')) ::TVarChar AS Position_Search
+           , (COALESCE (tmpCommercLocal_partner.UnitName_1,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.UnitName_2,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.UnitName_3,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.UnitName_4,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.UnitName_5,'')||'-'
+            ||COALESCE (tmpCommercLocal_partner.UnitName_6,'')||'-'
+            ||COALESCE (tmpCommercRetail_partner.UnitName_1ret,'')||'-'
+            ||COALESCE (tmpCommercRetail_partner.UnitName_2ret,'')||'-'
+            ||COALESCE (tmpCommercRetail_partner.UnitName_3ret,'')) ::TVarChar AS  Unit_Search
+
         FROM tmpMI_Master
            LEFT JOIN tmpSaleCommerc AS Movement ON Movement.Id = tmpMI_Master.MovementId
            LEFT JOIN tmpJuridicalDetails AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = tmpMI_Master.JuridicalId

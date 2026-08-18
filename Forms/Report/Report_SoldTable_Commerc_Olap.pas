@@ -59,7 +59,7 @@ type
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GuidesGoodsGroup: TdsdGuides;
-    cfPrice: TdsdPivotGridCalcFields;
+    cfPersentWeight: TdsdPivotGridCalcFields;
     cxLabel5: TcxLabel;
     edInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
@@ -69,7 +69,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     GoodsGroupNameFull: TcxGridDBColumn;
     ContractNumber: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
+    Goods_Search: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
@@ -78,13 +78,11 @@ type
     cxLabel7: TcxLabel;
     cxLabel9: TcxLabel;
     edSearchJuridicalName: TcxTextEdit;
-    cxLabel10: TcxLabel;
-    edSearchGoodsNameGP: TcxTextEdit;
     cxLabel11: TcxLabel;
     edSearchRetailName: TcxTextEdit;
     RetailName: TcxGridDBColumn;
     GoodsName_basis: TcxGridDBColumn;
-    pvPrice: TcxDBPivotGridField;
+    pvPersentWeight: TcxDBPivotGridField;
     cxLabel8: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
@@ -107,6 +105,17 @@ type
     PartnerName: TcxGridDBColumn;
     edSearchPartnerName: TcxTextEdit;
     cxLabel15: TcxLabel;
+    cfPersentSumm: TdsdPivotGridCalcFields;
+    pvPersentSumm: TcxDBPivotGridField;
+    edSearchMember: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    edSearchUnit: TcxTextEdit;
+    cxLabel16: TcxLabel;
+    edSearchPosition: TcxTextEdit;
+    cxLabel17: TcxLabel;
+    Member_Search: TcxGridDBColumn;
+    Position_Search: TcxGridDBColumn;
+    Unit_Search: TcxGridDBColumn;
   private
   public
   end;
