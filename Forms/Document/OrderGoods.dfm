@@ -1214,7 +1214,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
     Width = 1100
     Height = 100
     TabOrder = 3
-    ExplicitTop = 4
     ExplicitWidth = 1100
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit

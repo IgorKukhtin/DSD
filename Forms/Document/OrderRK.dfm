@@ -1,29 +1,28 @@
 inherited OrderRKForm: TOrderRKForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1076#1072#1085#1080#1077' '#1085#1072' '#1089#1073#1086#1088#1082#1091' '#1043#1055'>'
-  ClientHeight = 460
+  ClientHeight = 605
   ClientWidth = 1298
   ExplicitWidth = 1314
-  ExplicitHeight = 499
+  ExplicitHeight = 644
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
     Width = 1298
-    Height = 345
+    Height = 490
     ExplicitTop = 115
     ExplicitWidth = 1298
     ExplicitHeight = 345
-    ClientRectBottom = 345
+    ClientRectBottom = 490
     ClientRectRight = 1298
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1298
       ExplicitHeight = 321
       inherited cxGrid: TcxGrid
         Width = 1298
-        Height = 321
-        ExplicitTop = -24
+        Height = 278
         ExplicitWidth = 1298
-        ExplicitHeight = 321
+        ExplicitHeight = 169
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -219,6 +218,121 @@ inherited OrderRKForm: TOrderRKForm
             Width = 190
           end
         end
+      end
+      object cxGridChild: TcxGrid
+        Left = 0
+        Top = 286
+        Width = 1298
+        Height = 180
+        Align = alBottom
+        TabOrder = 1
+        ExplicitTop = 308
+        ExplicitWidth = 1100
+        object cxGridDBTableViewDetail: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DetailDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch2
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch2
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.Inactive = dmMain.cxSelection
+          Styles.Selection = dmMain.cxSelection
+          Styles.Footer = dmMain.cxFooterStyle
+          Styles.Header = dmMain.cxHeaderStyle
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object StatusCode_ch2: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 128
+          end
+          object OperDate_ch2: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
+            Options.Editing = False
+            Width = 146
+          end
+          object Invnumber_ch2: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'Invnumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 103
+          end
+          object Amount_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086
+            Options.Editing = False
+            Width = 134
+          end
+        end
+        object cxGridLevelChild: TcxGridLevel
+          GridView = cxGridDBTableViewDetail
+        end
+      end
+      object cxSplitter2: TcxSplitter
+        Left = 0
+        Top = 278
+        Width = 1298
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGridChild
+        ExplicitTop = 8
       end
     end
   end
@@ -547,6 +661,7 @@ inherited OrderRKForm: TOrderRKForm
           StoredProc = spSelect
         end
         item
+          StoredProc = spSelect_Detail
         end>
       RefreshOnTabSetChanges = True
     end
@@ -1273,19 +1388,15 @@ inherited OrderRKForm: TOrderRKForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -2426,5 +2537,58 @@ inherited OrderRKForm: TOrderRKForm
       end>
     Left = 524
     Top = 8
+  end
+  object DetailCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'key'
+    MasterFields = 'key'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 872
+    Top = 537
+  end
+  object DetailDS: TDataSource
+    DataSet = DetailCDS
+    Left = 852
+    Top = 506
+  end
+  object spSelect_Detail: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_OrderRK_Detail'
+    DataSet = DetailCDS
+    DataSets = <
+      item
+        DataSet = DetailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 520
+  end
+  object lDBViewAddOnDetail: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewDetail
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 798
+    Top = 553
   end
 end
