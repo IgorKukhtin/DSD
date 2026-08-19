@@ -35,6 +35,7 @@ AS
                            , isPreDiscountCheckSkipped
                            , linkDiscounts_extId
                            , linkDiscounts_discount
+                           , PriceDiscount	
                       FROM dblink ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                  , ('SELECT extId
                                           , Name
@@ -55,28 +56,8 @@ AS
                                           , isPreDiscountCheckSkipped
                                           , linkDiscounts_extId
                                           , linkDiscounts_discount
-                                     FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar) AS gpSelect
-                                    UNION ALL
-                                     SELECT extId
-                                          , Name
-                                          , description
-                                          , typeId
-                                          , linkTypeId
-                                          , priority
-                                          , сontractHeaderExtId
-                                          , beginDate
-                                          , endDate
-                                          , shortName
-                                          , isAutoUse
-                                          , beforeDiscountQuestHeaderId
-                                          , afterDiscountQuestHeaderId
-                                          , isDeleted
-                                          , customTypeExtId
-                                          , clientExtId
-                                          , isPreDiscountCheckSkipped
-                                          , linkDiscounts_extId
-                                          , linkDiscounts_discount
-                                     FROM gpSelect_Movement_DiscountProgramsTax_effie (zfCalc_UserAdmin()::TVarChar) AS gpSelect'
+                                          , Price_promo AS PriceDiscount
+                                     FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar) AS gpSelect'
                                     ) :: Text
                                   ) AS gpSelect (extId                      TVarChar   --Уникальный идентификатор промо акции
                                                , Name                       TVarChar   --Описание программы скидок
@@ -99,6 +80,7 @@ AS
                                                
                                                , linkDiscounts_extId        TVarChar   --Идентификатор единицы связи. К примеру, типа связи по продуктам это будет значение внешнего идентификатора продукта.
                                                , linkDiscounts_discount     TFloat     --"Объём скидки, используется только для типа программы скидок 1 - фиксированная.Допустимо отрицательное значение.    
+                                               , PriceDiscount              TFloat     --"Объём скидки, используется только для типа программы скидок 1 - фиксированная.Допустимо отрицательное значение.    
                                                 )
                      )
       --
@@ -121,6 +103,7 @@ AS
            , isPreDiscountCheckSkipped
            , linkDiscounts_extId
            , linkDiscounts_discount
+           , PriceDiscount
       FROM _tmpresult
            INNER JOIN _tmpTT ON _tmpTT.clientExtId = _tmpresult.clientExtId
      ;

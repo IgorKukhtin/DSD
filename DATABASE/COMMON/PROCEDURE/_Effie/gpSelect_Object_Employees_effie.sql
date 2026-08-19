@@ -91,8 +91,10 @@ $BODY$
             Object_Member.Id                             ::TVarChar AS extId
           , TRIM (Object_Member.ValueData)               ::TVarChar AS Name 
           , '1'                                          ::TVarChar AS orgStructExtId
-          , '4ADBB652-F1EE-427E-AAE4-96C41A25C97B'       ::TVarChar AS groupId
-          , 'AC86FF1D-78F8-4D0A-A0F9-3422C6BBA570'       ::TVarChar AS roles
+--          , '4ADBB652-F1EE-427E-AAE4-96C41A25C97B'       ::TVarChar AS groupId
+--          , 'AC86FF1D-78F8-4D0A-A0F9-3422C6BBA570'       ::TVarChar AS roles
+          , ''       ::TVarChar AS groupId
+          , ''       ::TVarChar AS roles
           , ('User'||Object_Member.Id::TVarChar||'@alan.ua')  ::TVarChar AS login
           , ('User'||Object_Member.Id::TVarChar||'@alan.ua')  ::TVarChar AS email           --user+zc_Object_Member.Id@alan.ua
           , COALESCE (ObjectString_User_.ValueData||'SFA', 'sfa12345SFA')  ::TVarChar AS password
