@@ -8,6 +8,7 @@ AS
                            , contractHeaderExtId
                            , validFrom
                            , validTo
+                           , discount
                            , isDeleted
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                  , ('SELECT DISTINCT
@@ -15,6 +16,7 @@ AS
                                           , contractHeaderExtId
                                           , validFrom
                                           , validTo
+                                          , discount
                                           , isDeleted
                                     FROM gpSelect_Object_ContractPrices_effie(zfCalc_UserAdmin())'
                                     ) :: Text
@@ -22,6 +24,7 @@ AS
                                                , contractHeaderExtId   TVarChar   -- Идентификатор контракта
                                                , validFrom             TVarChar   -- Дата начала (минимальная дата 1753-01-01)
                                                , validTo               TVarChar   -- Дата окончания (максимальная дата 9999-12-31)
+                                               , discount              TFloat     -- % скидки по договору
                                                , isDeleted             Boolean    -- Признак активности: false = активна / true = не активна. По умолчанию false = активна.                        
                                                 )
                      )
@@ -30,6 +33,7 @@ AS
       , contractHeaderExtId
       , validFrom
       , validTo
+      , discount
       , isDeleted
    FROM _tmpresult
   ;

@@ -19,7 +19,8 @@ AS
                                                 )
                      )
  --
- SELECT employeeExtId
+ SELECT DISTINCT
+        employeeExtId
       , ttExtId
       , isDeleted
    FROM _tmpresult
