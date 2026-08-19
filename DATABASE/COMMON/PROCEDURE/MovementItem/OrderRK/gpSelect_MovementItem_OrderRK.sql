@@ -1,6 +1,7 @@
 -- Function: gpSelect_MovementItem_OrderRK()
 
  DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderRK (Integer, Boolean, TVarChar); 
+ DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderRK (Integer, Boolean, Boolean, TVarChar); 
  
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderRK(
     IN inMovementId  Integer      , -- ключ Документа 
@@ -8,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderRK(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, LineNum Integer
+RETURNS TABLE (Key TVarChar 
+             , Id Integer, LineNum Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar             
              , MeasureName TVarChar 
@@ -162,28 +164,28 @@ BEGIN
                             )
      
      
-       SELECT
-             MovementItem.Id                   :: Integer AS Id
-           , ROW_NUMBER() OVER (Order BY MovementItem.Id)  ::Integer AS LineNum
-           , Object_Goods.Id                              AS GoodsId
-           , Object_Goods.ObjectCode                      AS GoodsCode
-           , Object_Goods.ValueData                       AS GoodsName
-           , tmpGoods_Param.GoodsGroupNameFull ::TVarChar AS GoodsGroupNameFull
-           , tmpGoods_Param.MeasureName        ::TVarChar AS MeasureName
-           , COALESCE (Object_GoodsKind.Id, 0)            AS GoodsKindId
-           , Object_GoodsKind.ValueData                   AS GoodsKindName
+       SELECT (MovementItem.ObjectId||'_'||COALESCE (MovementItem.GoodsKindId,0)) ::TVarChar AS Key
+            , MovementItem.Id                   :: Integer AS Id
+            , ROW_NUMBER() OVER (Order BY MovementItem.Id)  ::Integer AS LineNum
+            , Object_Goods.Id                              AS GoodsId
+            , Object_Goods.ObjectCode                      AS GoodsCode
+            , Object_Goods.ValueData                       AS GoodsName
+            , tmpGoods_Param.GoodsGroupNameFull ::TVarChar AS GoodsGroupNameFull
+            , tmpGoods_Param.MeasureName        ::TVarChar AS MeasureName
+            , COALESCE (Object_GoodsKind.Id, 0)            AS GoodsKindId
+            , Object_GoodsKind.ValueData                   AS GoodsKindName
 
-           , Object_Goods_in.Id                   AS GoodsId_in
-           , Object_Goods_in.ObjectCode           AS GoodsCode_in
-           , Object_Goods_in.ValueData            AS GoodsName_in
-           , COALESCE (Object_GoodsKind_in.Id, 0) AS GoodsKindId_in
-           , Object_GoodsKind_in.ValueData        AS GoodsKindName_in
+            , Object_Goods_in.Id                   AS GoodsId_in
+            , Object_Goods_in.ObjectCode           AS GoodsCode_in
+            , Object_Goods_in.ValueData            AS GoodsName_in
+            , COALESCE (Object_GoodsKind_in.Id, 0) AS GoodsKindId_in
+            , Object_GoodsKind_in.ValueData        AS GoodsKindName_in
 
-           , MovementItem.Amount        :: TFloat AS Amount
-           , tmpOrderRK_Total.Amount    ::TFloat AS AmountTotal  --
-           , tmpMI_order.Amount  ::TFloat  AS Amount_order
-           , ((COALESCE (tmpOrderRK_Total.Amount) + COALESCE (MovementItem.Amount,0)) - COALESCE (tmpMI_order.Amount,0) ) ::TFloat AS Amount_diff  -- 
-           , MovementItem.isErased                AS isErased
+            , MovementItem.Amount        :: TFloat AS Amount
+            , tmpOrderRK_Total.Amount    ::TFloat AS AmountTotal  --
+            , tmpMI_order.Amount  ::TFloat  AS Amount_order
+            , ((COALESCE (tmpOrderRK_Total.Amount,0) + COALESCE (MovementItem.Amount,0)) - COALESCE (tmpMI_order.Amount,0) ) ::TFloat AS Amount_diff  -- 
+            , MovementItem.isErased                AS isErased
 
        FROM tmpMI_all AS MovementItem
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -209,7 +211,8 @@ BEGIN
                                      AND COALESCE (tmpOrderRK_Total.GoodsKindId,0) = COALESCE (MovementItem.GoodsKindId,0)
 
      UNION
-       SELECT 0 ::Integer AS Id
+       SELECT (Object_Goods.Id||'_'||COALESCE (Object_GoodsKind.Id, 0)) ::TVarChar AS Key
+            , 0 ::Integer AS Id
             , 0 ::Integer AS LineNum
             , Object_Goods.Id                              AS GoodsId
             , Object_Goods.ObjectCode                      AS GoodsCode
@@ -228,7 +231,7 @@ BEGIN
             , 0  ::TFloat         AS Amount 
             , tmpOrderRK_Total.Amount    ::TFloat AS AmountTotal  --
             , tmpMI_order.Amount         ::TFloat AS Amount_order
-            , (COALESCE (tmpOrderRK_Total.Amount,0) - COALESCE (tmpMI_order.Amount)) ::TFloat AS Amount_diff  -- 
+            , (COALESCE (tmpOrderRK_Total.Amount,0) - COALESCE (tmpMI_order.Amount,0)) ::TFloat AS Amount_diff  -- 
             , FALSE                AS isErased
        FROM tmpMI_order
            LEFT JOIN tmpMI_all ON tmpMI_all.ObjectId = tmpMI_order.GoodsId
@@ -258,7 +261,7 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_MovementItem_OrderRK(inMovementId := 18298048 , inShowAll := 'true'  , inIsErased := 'False' ,inSession := '5')
+--select * from gpSelect_MovementItem_OrderRK(inMovementId := 18298048 , inShowAll := 'true'  , inIsErased := 'False' ,inSession := '5')
 
 
 --(SELECT Movement.ParentId FROM Movement WHERE Movement.Id = 18298048);

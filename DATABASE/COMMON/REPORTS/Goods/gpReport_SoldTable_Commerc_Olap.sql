@@ -1274,8 +1274,8 @@ BEGIN
                               ON ObjectLink_Juridical_Section.ObjectId = Object_Juridical.Id
                              AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
          LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
-      --WHERE 1 = 0   
-    UNION
+    --  WHERE vbUserId <> 9457   
+    UNION ALL
       SELECT Object_Goods.GoodsGroupName
            , Object_Goods.GoodsGroupNameFull
            , Object_Goods.GoodsId

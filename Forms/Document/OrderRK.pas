@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  cxImageComboBox, cxSplitter;
 
 type
   TOrderRKForm = class(TAncestorDocumentForm)
@@ -117,6 +118,18 @@ type
     edOperDatePartner_sale: TcxDateEdit;
     cxLabel11: TcxLabel;
     edInsertDate: TcxDateEdit;
+    DetailCDS: TClientDataSet;
+    DetailDS: TDataSource;
+    spSelect_Detail: TdsdStoredProc;
+    lDBViewAddOnDetail: TdsdDBViewAddOn;
+    cxGridChild: TcxGrid;
+    cxGridDBTableViewDetail: TcxGridDBTableView;
+    Invnumber_ch2: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
+    OperDate_ch2: TcxGridDBColumn;
+    StatusCode_ch2: TcxGridDBColumn;
+    cxGridLevelChild: TcxGridLevel;
+    cxSplitter2: TcxSplitter;
   private
     { Private declarations }
   public
