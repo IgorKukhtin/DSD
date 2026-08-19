@@ -940,7 +940,7 @@
     object pvSale_Summ_plan: TcxDBPivotGridField
       AreaIndex = 67
       IsCaptionAssigned = True
-      Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1074#1086#1079#1074#1088'., '#1075#1088#1085' ('#1055#1051#1040#1053')'
+      Caption = #1055#1088#1086#1076'.., '#1075#1088#1085' ('#1055#1051#1040#1053')'
       DataBinding.FieldName = 'Sale_Summ_plan'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -953,7 +953,7 @@
     object pvSale_weight_plan: TcxDBPivotGridField
       AreaIndex = 66
       IsCaptionAssigned = True
-      Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1074#1086#1079#1074#1088'., '#1074#1077#1089' ('#1055#1051#1040#1053')'
+      Caption = #1055#1088#1086#1076'.., '#1074#1077#1089' ('#1055#1051#1040#1053')'
       DataBinding.FieldName = 'Sale_weight_plan'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
