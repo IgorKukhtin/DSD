@@ -195,6 +195,7 @@ type
     spUpdate_isPLM: TdsdStoredProc;
     actUpdate_isPLM: TdsdExecStoredProc;
     bbUpdate_isPLM: TdxBarButton;
+    dxBarSeparator2: TdxBarSeparator;
   private
     { Private declarations }
   public

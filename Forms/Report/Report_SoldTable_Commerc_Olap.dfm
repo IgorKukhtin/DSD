@@ -1879,7 +1879,7 @@
       item
         Field = pvSale_weight_plan
       end>
-    CalcFieldsType = cfDivision
+    CalcFieldsType = cfPercent
     Left = 704
     Top = 488
   end
@@ -2140,7 +2140,7 @@
       item
         Field = pvSale_Summ_plan
       end>
-    CalcFieldsType = cfDivision
+    CalcFieldsType = cfPercent
     Left = 808
     Top = 480
   end

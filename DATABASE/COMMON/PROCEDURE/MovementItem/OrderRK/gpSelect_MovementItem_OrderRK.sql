@@ -136,7 +136,7 @@ BEGIN
                                             WHERE Movement.ParentId = vbMovementId_Order
                                               AND Movement.DescId = zc_Movement_OrderRK()
                                               AND Movement.StatusId <> zc_Enum_Status_Erased()   --= zc_Enum_Status_Complete()
-                                              AND Movement.Id <> inMovementId
+                                              --AND Movement.Id <> inMovementId
                                             )
                           , tmpMI AS (SELECT MovementItem.Id
                                            , MovementItem.Amount
@@ -184,7 +184,7 @@ BEGIN
             , MovementItem.Amount        :: TFloat AS Amount
             , tmpOrderRK_Total.Amount    ::TFloat AS AmountTotal  --
             , tmpMI_order.Amount  ::TFloat  AS Amount_order
-            , ((COALESCE (tmpOrderRK_Total.Amount,0) + COALESCE (MovementItem.Amount,0)) - COALESCE (tmpMI_order.Amount,0) ) ::TFloat AS Amount_diff  -- 
+            , (COALESCE (tmpOrderRK_Total.Amount,0) - COALESCE (tmpMI_order.Amount,0) ) ::TFloat AS Amount_diff  -- 
             , MovementItem.isErased                AS isErased
 
        FROM tmpMI_all AS MovementItem

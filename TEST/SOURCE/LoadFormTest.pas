@@ -702,7 +702,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-
+   exit;
   {exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
