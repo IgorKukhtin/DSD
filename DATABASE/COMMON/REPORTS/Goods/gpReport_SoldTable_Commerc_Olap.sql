@@ -120,6 +120,7 @@ BEGIN
 
     -- для оптимизации
     inJuridicalId:= COALESCE (inJuridicalId, 0);
+  --IF COALESCE (inInfoMoneyId, 0) =  0 THEN inInfoMoneyId:= zc_Enum_InfoMoney_30101(); END IF; -- !!!Продукция!!!) 
     inInfoMoneyId:= COALESCE (inInfoMoneyId, 0);
     inPaidKindId := COALESCE (inPaidKindId, 0);
     inBranchId   := COALESCE (inBranchId, 0);
@@ -141,6 +142,11 @@ BEGIN
                      SELECT *
                      FROM Object_InfoMoney_View
                      WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- !!!Продукция!!!) 
+                       AND inInfoMoneyId = 0
+                    UNION 
+                     SELECT *
+                     FROM Object_InfoMoney_View
+                     WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- !!!Ирна!!!) 
                        AND inInfoMoneyId = 0
                     )
 
@@ -173,7 +179,7 @@ BEGIN
                                     AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                 INNER JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
            WHERE Object_Goods.DescId = zc_Object_Goods()
-             AND Object_Goods.isErased = FALSE
+           --AND Object_Goods.isErased = FALSE
              AND (ObjectLink_Goods_TradeMark.ChildObjectId = inTradeMarkId OR COALESCE (inTradeMarkId, 0) = 0)
              AND COALESCE (inGoodsGroupId, 0) = 0
           )
@@ -235,7 +241,7 @@ BEGIN
                               , zfCalc_GoodsPropertyId (SoldTable.ContractId, SoldTable.JuridicalId, SoldTable.PartnerId) AS GoodsPropertyId
 
                           FROM SoldTable
-                         -- INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = SoldTable.GoodsId 
+                               INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = SoldTable.GoodsId 
                          WHERE SoldTable.OperDate BETWEEN inStartDate AND inEndDate
                            AND (SoldTable.JuridicalId = inJuridicalId OR inJuridicalId = 0)
                            AND (SoldTable.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
@@ -854,7 +860,7 @@ BEGIN
                          , _tmpGoods.InfoMoneyId
                          , MovementItem.Amount
                      FROM MovementItem
-                        LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+                          INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
                      WHERE MovementItem.ParentId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
                        AND MovementItem.DescId     = zc_MI_Child()
                        AND MovementItem.isErased   = FALSE
