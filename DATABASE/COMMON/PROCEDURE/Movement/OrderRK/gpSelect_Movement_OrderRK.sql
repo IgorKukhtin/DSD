@@ -57,6 +57,7 @@ BEGIN
            , Movement_OrderExternal.OperDate     AS OperDate_OrderExternal
            , MovementDate_OperDatePartner_order.ValueData AS OperDatePartner_OrderExternal
            , COALESCE (MovementDate_OperDatePartner_Effie.ValueData, MovementDate_OperDatePartner_order.ValueData + (COALESCE (ObjectFloat_DocumentDayCount_order.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale_OE
+           , MovementString_Comment_OrderExternal.ValueData    AS Comment_OrderExternal
 
            , COALESCE (MovementBoolean_Print.ValueData, False) ::Boolean AS isPrint
            , MovementDate_Print.ValueData                    ::TDateTime AS OperDate_Print
@@ -106,6 +107,11 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount_order
                                   ON ObjectFloat_DocumentDayCount_order.ObjectId = MovementLinkObject_From_order.ObjectId
                                  AND ObjectFloat_DocumentDayCount_order.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
+
+            LEFT JOIN MovementString AS MovementString_Comment_OrderExternal
+                                     ON MovementString_Comment_OrderExternal.MovementId = Movement_OrderExternal.Id
+                                    AND MovementString_Comment_OrderExternal.DescId = zc_MovementString_Comment()
+
             --
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id

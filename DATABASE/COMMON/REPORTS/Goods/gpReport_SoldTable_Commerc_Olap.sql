@@ -24,7 +24,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsTagName TVarChar, GoodsGroupStatName TVarChar
              , GoodsPlatformName TVarChar, GoodsGroupDirectionName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
-             , BranchKAMId Integer, BranchKAMCode Integer, BranchKAMName TVarChar
+             --, BranchKAMId Integer, BranchKAMCode Integer
+             , BranchKAMName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, SectionName TVarChar
              , RetailName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar, PartnerCategory TFloat
@@ -1072,9 +1073,11 @@ BEGIN
           , Object_Branch.Id            AS BranchId
           , Object_Branch.ObjectCode    AS BranchCode
           , Object_Branch.ValueData     AS BranchName
-          , 0                           AS BranchKAMId
-          , 0                           AS BranchKAMCode
-          , ''::TVarChar                AS BranchKAMName
+          --, 0 ::Integer                 AS BranchKAMId
+          --, 0                           AS BranchKAMCode
+          , CASE WHEN COALESCE (tmpOperationGroup.PersonalName_2ret,'') <> '' THEN tmpOperationGroup.PersonalName_2ret
+                 ELSE Object_Branch.ValueData
+            END ::TVarChar                AS BranchKAMName
           
           , Object_Juridical.Id         AS JuridicalId
           , Object_Juridical.ObjectCode AS JuridicalCode
@@ -1307,8 +1310,8 @@ BEGIN
           , tmpMI_Master.BranchId
           , tmpMI_Master.BranchCode
           , tmpMI_Master.BranchName 
-          , tmpMI_Master.BranchKAMId
-          , tmpMI_Master.BranchKAMCode
+          --, tmpMI_Master.BranchKAMId
+          --, tmpMI_Master.BranchKAMCode
           , tmpMI_Master.BranchKAMName ::TVarChar
 
           , tmpMI_Master.JuridicalId

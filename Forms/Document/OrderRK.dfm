@@ -12,17 +12,17 @@ inherited OrderRKForm: TOrderRKForm
     Height = 490
     ExplicitTop = 115
     ExplicitWidth = 1298
-    ExplicitHeight = 345
+    ExplicitHeight = 490
     ClientRectBottom = 490
     ClientRectRight = 1298
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1298
-      ExplicitHeight = 321
+      ExplicitHeight = 466
       inherited cxGrid: TcxGrid
         Width = 1298
         Height = 278
         ExplicitWidth = 1298
-        ExplicitHeight = 169
+        ExplicitHeight = 278
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -226,8 +226,6 @@ inherited OrderRKForm: TOrderRKForm
         Height = 180
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 308
-        ExplicitWidth = 1100
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -307,6 +305,37 @@ inherited OrderRKForm: TOrderRKForm
             Options.Editing = False
             Width = 103
           end
+          object isPrint: TcxGridDBColumn
+            Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085
+            DataBinding.FieldName = 'isPrint'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object OperDate_Print: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1087#1077#1095#1072#1090#1080
+            DataBinding.FieldName = 'OperDate_Print'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1077#1095#1072#1090#1080
+            Width = 105
+          end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
+          object InsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 103
+          end
           object Amount_ch2: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -332,7 +361,6 @@ inherited OrderRKForm: TOrderRKForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 8
       end
     end
   end
@@ -678,6 +706,15 @@ inherited OrderRKForm: TOrderRKForm
       Caption = #1055#1077#1095#1072#1090#1100' ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1082#1086#1076#1091' '#1090#1086#1074#1072#1088#1072')'
       Hint = #1055#1077#1095#1072#1090#1100' ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1082#1086#1076#1091' '#1090#1086#1074#1072#1088#1072')'
       ImageIndex = 19
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spSelect_Detail
+        end>
     end
     object actPrintTotal: TdsdPrintAction [11]
       Category = 'Print'

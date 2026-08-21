@@ -278,6 +278,14 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object Comment_OrderExternal: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103')'
+            DataBinding.FieldName = 'Comment_OrderExternal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end

@@ -3,7 +3,7 @@ object GoodsForm: TGoodsForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 404
-  ClientWidth = 1105
+  ClientWidth = 1104
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object GoodsForm: TGoodsForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 1105
+    Width = 1104
     Height = 378
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 1105
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -630,14 +631,6 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbStartLoad'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
           ItemName = 'bbDateBuh_text'
         end
         item
@@ -646,7 +639,7 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbcStartLoad_BUH'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -662,23 +655,7 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbStartLoad_Group'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbcUpdate_Group'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoad_GGProperty'
         end
         item
           Visible = True
@@ -865,6 +842,30 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbcStartLoad_BUH'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_Group'
+        end
+        item
+          Visible = True
+          ItemName = 'bbcUpdate_Group'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_GGProperty'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -947,6 +948,13 @@ object GoodsForm: TGoodsForm
     object bbUpdate_isPLM: TdxBarButton
       Action = actUpdate_isPLM
       Category = 0
+    end
+    object dxBarSeparator2: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object ActionList: TActionList
