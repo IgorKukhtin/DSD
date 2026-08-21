@@ -984,6 +984,8 @@ object PartnerForm: TPartnerForm
         Caption = '***'#1040#1076#1088#1077#1089' '#1058#1058
         DataBinding.FieldName = 'Address_effie'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end

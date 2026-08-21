@@ -384,11 +384,19 @@ BEGIN
          , Object_PersonalGroupCommerc.ValueData ::TVarChar AS PersonalGroupCommercName
          -- адрес из effie
          , Object_Street_effie.Id ::Integer AS Id_effie
-         , (Object_Street_effie.ValueData
-           ||CASE WHEN (Object_TT_effie.HouseNumber <> '' THEN ', дом '||Object_TT_effie.HouseNumber ELSE'' END
-           ||CASE WHEN (Object_TT_effie.CaseNumber <> '' THEN ', корпус '||Object_TT_effie.CaseNumber ELSE'' END
-           ||CASE WHEN (Object_TT_effie.RoomNumber <> '' THEN ', кв. '||Object_TT_effie.RoomNumber ELSE'' END
-           ) ::TVarChar AS Address_effie
+         , TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
+             || ' ' || COALESCE (Object_Street_effie.CityName, '')
+             || ' ' || COALESCE (ObjectString_StreetKind_ShortName.ValueData, '')     
+             || ' ' || COALESCE (Object_Street_effie.Name, '')               --StreetName
+                    || CASE WHEN COALESCE (Object_TT_effie.HouseNumber, '') <> ''
+                                 THEN ' буд.' || COALESCE (Object_TT_effie.HouseNumber, '')
+                            ELSE ''
+                       END
+                    || CASE WHEN COALESCE (Object_TT_effie.CaseNumber, '') <> ''
+                                 THEN ' корп.' || COALESCE (Object_TT_effie.CaseNumber, '')
+                            ELSE ''
+                       END
+                      ) ::TVarChar AS Address_effie
      FROM tmpIsErased
          INNER JOIN tmpPartner AS Object_Partner
                                ON Object_Partner.isErased = tmpIsErased.isErased
@@ -716,9 +724,19 @@ BEGIN
                                      AND Object_TT_effie.CaseNumber = COALESCE (ObjectString_CaseNumber.ValueData,'')
                                      AND Object_TT_effie.RoomNumber = COALESCE (ObjectString_RoomNumber.ValueData,'')
                                   
-         LEFT JOIN Object AS Object_Street_effie ON Object_Street_effie.Id = Object_TT_effie.StreetId
+         LEFT JOIN Object_Street_View AS Object_Street_effie ON Object_Street_effie.Id = Object_TT_effie.StreetId
 
-   WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+         LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
+                              ON ObjectLink_City_CityKind.ObjectId = Object_Street_effie.CityId
+                             AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
+         LEFT JOIN ObjectString AS ObjectString_CityKind_ShortName
+                                ON ObjectString_CityKind_ShortName.ObjectId = ObjectLink_City_CityKind.ChildObjectId
+                               AND ObjectString_CityKind_ShortName.DescId = zc_ObjectString_CityKind_ShortName()
+         LEFT JOIN ObjectString AS ObjectString_StreetKind_ShortName
+                                ON ObjectString_StreetKind_ShortName.ObjectId = Object_Street_effie.StreetKindId
+                               AND ObjectString_StreetKind_ShortName.DescId = zc_ObjectString_StreetKind_ShortName()
+
+  WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
                                                                 )
            -- филиал
@@ -930,11 +948,19 @@ BEGIN
 
          -- адрес из effie
          , Object_Street_effie.Id ::Integer AS Id_effie
-         , (Object_Street_effie.ValueData
-           ||CASE WHEN (Object_TT_effie.HouseNumber <> '' THEN ', дом '||Object_TT_effie.HouseNumber ELSE'' END
-           ||CASE WHEN (Object_TT_effie.CaseNumber <> '' THEN ', корпус '||Object_TT_effie.CaseNumber ELSE'' END
-           ||CASE WHEN (Object_TT_effie.RoomNumber <> '' THEN ', кв. '||Object_TT_effie.RoomNumber ELSE'' END
-           ) ::TVarChar AS Address_effie
+         , TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
+             || ' ' || COALESCE (Object_Street_effie.CityName, '')
+             || ' ' || COALESCE (ObjectString_StreetKind_ShortName.ValueData, '')     
+             || ' ' || COALESCE (Object_Street_effie.Name, '')               --StreetName
+                    || CASE WHEN COALESCE (Object_TT_effie.HouseNumber, '') <> ''
+                                 THEN ' буд.' || COALESCE (Object_TT_effie.HouseNumber, '')
+                            ELSE ''
+                       END
+                    || CASE WHEN COALESCE (Object_TT_effie.CaseNumber, '') <> ''
+                                 THEN ' корп.' || COALESCE (Object_TT_effie.CaseNumber, '')
+                            ELSE ''
+                       END
+                      ) ::TVarChar AS Address_effie
      FROM tmpIsErased
          INNER JOIN Object AS Object_Partner
                            ON Object_Partner.isErased = tmpIsErased.isErased
@@ -1260,7 +1286,18 @@ BEGIN
                                      AND Object_TT_effie.CaseNumber = COALESCE (ObjectString_CaseNumber.ValueData,'')
                                      AND Object_TT_effie.RoomNumber = COALESCE (ObjectString_RoomNumber.ValueData,'')
                                   
-         LEFT JOIN Object AS Object_Street_effie ON Object_Street_effie.Id = Object_TT_effie.StreetId
+         LEFT JOIN Object_Street_View AS Object_Street_effie ON Object_Street_effie.Id = Object_TT_effie.StreetId
+
+         LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
+                              ON ObjectLink_City_CityKind.ObjectId = Object_Street_effie.CityId
+                             AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
+         LEFT JOIN ObjectString AS ObjectString_CityKind_ShortName
+                                ON ObjectString_CityKind_ShortName.ObjectId = ObjectLink_City_CityKind.ChildObjectId
+                               AND ObjectString_CityKind_ShortName.DescId = zc_ObjectString_CityKind_ShortName()
+         LEFT JOIN ObjectString AS ObjectString_StreetKind_ShortName
+                                ON ObjectString_StreetKind_ShortName.ObjectId = Object_Street_effie.StreetKindId
+                               AND ObjectString_StreetKind_ShortName.DescId = zc_ObjectString_StreetKind_ShortName()
+
    WHERE inJuridicalId = 0
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
