@@ -382,8 +382,10 @@ BEGIN
          , Object_UnitCommerc.ValueData      ::TVarChar AS UnitCommercName
          , Object_PersonalGroupCommerc.Id        ::Integer  AS PersonalGroupCommercId
          , Object_PersonalGroupCommerc.ValueData ::TVarChar AS PersonalGroupCommercName
-         -- адрес из effie
-         , Object_Street_effie.Id ::Integer AS Id_effie
+
+           -- Id из effie
+         , Object_TT_effie.Id ::Integer AS Id_effie
+           --
          , TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
              || ' ' || COALESCE (Object_Street_effie.CityName, '')
              || ' ' || COALESCE (ObjectString_StreetKind_ShortName.ValueData, '')     
@@ -946,8 +948,9 @@ BEGIN
          , Object_PersonalGroupCommerc.Id        ::Integer  AS PersonalGroupCommercId
          , Object_PersonalGroupCommerc.ValueData ::TVarChar AS PersonalGroupCommercName
 
-         -- адрес из effie
-         , Object_Street_effie.Id ::Integer AS Id_effie
+           -- Id из effie
+         , Object_TT_effie.Id ::Integer AS Id_effie
+           --
          , TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
              || ' ' || COALESCE (Object_Street_effie.CityName, '')
              || ' ' || COALESCE (ObjectString_StreetKind_ShortName.ValueData, '')     
