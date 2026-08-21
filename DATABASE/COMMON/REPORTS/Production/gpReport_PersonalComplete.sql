@@ -241,7 +241,8 @@ BEGIN
               , tmp.PositionLevelName
 
               , tmp.MovementDescId          AS MovementDescId
-              , MovementDesc.ItemName       AS MovementDescName
+              , (MovementDesc.ItemName || CASE WHEN tmp.GoodsCode > 0 THEN '(' || tmp.GoodsCode :: TVarChar || ')' || tmp.GoodsName || ' ' || tmp.GoodsKindName ELSE '' END :: TVarChar) :: TVarChar AS MovementDescName
+            --, (CASE WHEN tmp.GoodsCode > 0 THEN tmp.GoodsCode :: TVarChar ELSE '' END) :: TVarChar AS MovementDescName
               , Object_BranchFrom.ValueData AS BranchFromName
               , Object_BranchTo.ValueData   AS BranchToName
               , Object_From.ValueData       AS FromName
@@ -305,6 +306,10 @@ BEGIN
                    , tmpMovement_all.ToId
                    , tmpMovement_all.MovementDescId
 
+                   , 0    AS GoodsCode
+                   , ''   AS GoodsName
+                   , ''   AS GoodsKindName
+
               FROM tmpMovement_all
                    INNER JOIN tmpPersonal_all               ON tmpPersonal_all.PersonalId = tmpMovement_all.PersonalId
                    LEFT JOIN Object AS Object_Unit          ON Object_Unit.Id             = tmpPersonal_all.UnitId
@@ -315,6 +320,7 @@ BEGIN
 
                    INNER JOIN tmpMovement ON tmpMovement.MovementId = tmpMovement_all.MovementId
                    INNER JOIN tmpMI       ON tmpMI.MovementId       = tmpMovement_all.MovementId
+
               WHERE tmpMovement_all.isStick = FALSE
 
              UNION ALL
@@ -355,6 +361,10 @@ BEGIN
                    , tmpMovement_all.FromId
                    , tmpMovement_all.ToId
                    , tmpMovement_all.MovementDescId
+
+                   , 0    AS GoodsCode
+                   , ''   AS GoodsName
+                   , ''   AS GoodsKindName
 
               FROM (SELECT DISTINCT tmpMovement_all.MovementId
                                   , tmpMovement_all.MovementId_parent
@@ -426,6 +436,19 @@ BEGIN
                    , tmpMovement_all.ToId
                    , tmpMovement_all.MovementDescId
 
+                   , CASE WHEN inIsDetail = TRUE
+                               THEN Object_Goods.ObjectCode
+                          ELSE 0
+                     END AS GoodsCode
+                   , CASE WHEN inIsDetail = TRUE
+                               THEN Object_Goods.ValueData
+                          ELSE ''
+                     END AS GoodsName
+                   , CASE WHEN inIsDetail = TRUE
+                               THEN Object_GoodsKind.ValueData
+                          ELSE ''
+                     END AS GoodsKindName
+
               FROM tmpMovement_all
                    INNER JOIN tmpPersonal_all               ON tmpPersonal_all.PersonalId = tmpMovement_all.PersonalId
 
@@ -435,6 +458,9 @@ BEGIN
                    LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id    = tmpPersonal_all.PositionLevelId
 
                    INNER JOIN tmpMI_all AS tmpMI ON tmpMI.MovementId       = tmpMovement_all.MovementId
+
+                   LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpMI.GoodsId
+                   LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
                    -- Товар и Вид товара
                    LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpMI.GoodsId
@@ -501,6 +527,9 @@ BEGIN
                , Object_To.ValueData
                , MovementDesc.ItemName
                , tmp.MovementDescId
+               , tmp.GoodsCode
+               , tmp.GoodsName
+               , tmp.GoodsKindName
                 ;
 
 END;
