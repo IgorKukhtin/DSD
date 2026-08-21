@@ -424,7 +424,7 @@ type
     miPartnerTag: TMenuItem;
     N1: TMenuItem;
     miPaidKind: TMenuItem;
-    N32: TMenuItem;
+    miLine_902: TMenuItem;
     miContractConditionValue: TMenuItem;
     miContract: TMenuItem;
     miContractKind: TMenuItem;
@@ -484,7 +484,7 @@ type
     miProfitLoss: TMenuItem;
     N37: TMenuItem;
     miJuridicalGuides: TMenuItem;
-    N38: TMenuItem;
+    miLine_901: TMenuItem;
     actContractPartner_All: TdsdOpenForm;
     miContractPartner: TMenuItem;
     actRoleUnion: TdsdOpenForm;
@@ -1599,7 +1599,7 @@ type
     actOrderFinance_PlanDate: TdsdOpenForm;
     miOrderFinance_PlanDate: TMenuItem;
     miPlanDocuments: TMenuItem;
-    N272: TMenuItem;
+    miLine_1001: TMenuItem;
     actOrderFinance_SB: TdsdOpenForm;
     miOrderFinance_SB: TMenuItem;
     actOrderFinanceSBJournal: TdsdOpenForm;
@@ -1609,7 +1609,7 @@ type
     actOrderFinance_SB_4: TdsdOpenForm;
     actOrderFinance_PlanDate_5: TdsdOpenForm;
     actOrderFinance_Plan_6: TdsdOpenForm;
-    N273: TMenuItem;
+    miLine_1002: TMenuItem;
     N274: TMenuItem;
     N275: TMenuItem;
     N276: TMenuItem;
@@ -1630,7 +1630,7 @@ type
     actReport_Component_Plan_Olap_BI: TdsdOpenForm;
     miReport_Component_Plan_Olap_BI: TMenuItem;
     actPricePlanItem: TdsdOpenForm;
-    N281: TMenuItem;
+    miPricePlanItem: TMenuItem;
     actRouteTT: TdsdOpenForm;
     miRouteTT: TMenuItem;
     actTypeCommerc: TdsdOpenForm;
@@ -1639,7 +1639,7 @@ type
     actCommercRetail: TdsdOpenForm;
     miCommercLocal: TMenuItem;
     miCommercRetail: TMenuItem;
-    N283: TMenuItem;
+    miLine_903: TMenuItem;
     actNotBudgPromo: TdsdOpenForm;
     miNotBudgPromo: TMenuItem;
     actReport_CommercBonus: TdsdOpenForm;
@@ -1651,7 +1651,7 @@ type
     miProductionUnionTechReceiptPF: TMenuItem;
     miOrderInternalBasisPF: TMenuItem;
     actSaleCommercJournal: TdsdOpenForm;
-    N284: TMenuItem;
+    miLine_1003: TMenuItem;
     miSaleCommercJournal: TMenuItem;
     actPromoSaleJournal: TdsdOpenForm;
     miPromoSaleJournal: TMenuItem;
@@ -1660,9 +1660,11 @@ type
     actOrderRK: TdsdOpenForm;
     miOrderRK: TMenuItem;
     actContractTagKind: TdsdOpenForm;
-    N285: TMenuItem;
+    miContractTagKind: TMenuItem;
     actReport_SoldTable_Commerc_Olap: TdsdOpenForm;
     miReport_SoldTable_Commerc_Olap: TMenuItem;
+    actOrderInternalBasisTerm: TdsdOpenForm;
+    miOrderInternalBasisTerm: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
