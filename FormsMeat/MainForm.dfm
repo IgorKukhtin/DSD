@@ -10600,11 +10600,11 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actOrderInternalBasisTerm: TdsdOpenForm
+    object actOrderInternalBasisCK: TdsdOpenForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1044#1110#1083#1100#1085#1080#1094#1103' '#1090#1077#1088#1084#1110#1095#1085#1086#1111' '#1086#1073#1088#1086#1073#1082#1080')'
-      Hint = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1044#1110#1083#1100#1085#1080#1094#1103' '#1090#1077#1088#1084#1110#1095#1085#1086#1111' '#1086#1073#1088#1086#1073#1082#1080')'
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1062#1045#1061' '#1089'/'#1082')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
       FormName = 'TOrderInternalBasisJournalForm'
       FormNameParam.Value = 'TOrderInternalBasisJournalForm'
       FormNameParam.DataType = ftString
@@ -10612,7 +10612,7 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'inFromId'
-          Value = '8450'
+          Value = '8449'
           MultiSelectSeparator = ','
         end
         item
@@ -10628,11 +10628,11 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object dsdOpenForm1: TdsdOpenForm
+    object actOrderInternalBasisTerm: TdsdOpenForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1062#1077#1093' '#1076#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074')'
-      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1044#1110#1083#1100#1085#1080#1094#1103' '#1090#1077#1088#1084#1110#1095#1085#1086#1111' '#1086#1073#1088#1086#1073#1082#1080')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1044#1110#1083#1100#1085#1080#1094#1103' '#1090#1077#1088#1084#1110#1095#1085#1086#1111' '#1086#1073#1088#1086#1073#1082#1080')'
       FormName = 'TOrderInternalBasisJournalForm'
       FormNameParam.Value = 'TOrderInternalBasisJournalForm'
       FormNameParam.DataType = ftString
@@ -10640,7 +10640,7 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'inFromId'
-          Value = '8448'
+          Value = '8450'
           MultiSelectSeparator = ','
         end
         item
@@ -11598,7 +11598,7 @@ inherited MainForm: TMainForm
         Action = actOrderInternalBasisDelik
       end
       object miOrderInternalBasisCK: TMenuItem
-        Action = actOrderInternalBasisTerm
+        Action = actOrderInternalBasisCK
       end
       object N215: TMenuItem
         Action = actOrderInternalBasisStew
@@ -11944,7 +11944,7 @@ inherited MainForm: TMainForm
       object miOrderFinance_Plan: TMenuItem
         Action = actOrderFinance_Plan
       end
-      object N272: TMenuItem
+      object miLine_1001: TMenuItem
         Caption = '-'
       end
       object miOrderFinance: TMenuItem
@@ -11953,7 +11953,7 @@ inherited MainForm: TMainForm
       object miJuridicalOrderFinance: TMenuItem
         Action = actJuridicalOrderFinance
       end
-      object N273: TMenuItem
+      object miLine_1002: TMenuItem
         Caption = '-'
       end
       object N274: TMenuItem
@@ -11971,7 +11971,7 @@ inherited MainForm: TMainForm
       object N278: TMenuItem
         Action = actOrderFinance_Plan_6
       end
-      object N284: TMenuItem
+      object miLine_1003: TMenuItem
         Caption = '-'
       end
       object miSaleCommercJournal: TMenuItem
@@ -12124,7 +12124,7 @@ inherited MainForm: TMainForm
       object miPriceListItem: TMenuItem
         Action = actPriceListItem
       end
-      object N281: TMenuItem
+      object miPricePlanItem: TMenuItem
         Action = actPricePlanItem
       end
       object N197: TMenuItem
@@ -13458,7 +13458,7 @@ inherited MainForm: TMainForm
       object miTypeCommerc: TMenuItem
         Action = actTypeCommerc
       end
-      object N38: TMenuItem
+      object miLine_901: TMenuItem
         Caption = '-'
       end
       object miContractConditionValue: TMenuItem
@@ -13473,7 +13473,7 @@ inherited MainForm: TMainForm
       object miContractTag: TMenuItem
         Action = actContractTag
       end
-      object N285: TMenuItem
+      object miContractTagKind: TMenuItem
         Action = actContractTagKind
       end
       object miContractTagGroup: TMenuItem
@@ -13506,7 +13506,7 @@ inherited MainForm: TMainForm
       object miContractConditionPartnerValue: TMenuItem
         Action = actContractConditionPartnerValue
       end
-      object N32: TMenuItem
+      object miLine_902: TMenuItem
         Caption = '-'
       end
       object miAdres: TMenuItem
@@ -13533,7 +13533,7 @@ inherited MainForm: TMainForm
           Action = actStreetKind
         end
       end
-      object N283: TMenuItem
+      object miLine_903: TMenuItem
         Caption = '-'
       end
       object miCommercLocal: TMenuItem
