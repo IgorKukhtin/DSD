@@ -53,7 +53,7 @@ BEGIN
           , ObjectLink_Personal_Unit.ChildObjectId           AS UnitId
           , ObjectLink_Unit_Branch.ChildObjectId             AS BranchId
           , ObjectLink_Personal_Position.ChildObjectId       AS PositionId
-          , ObjectLink_Personal_PersonalGroup.ChildObjectId  AS PersonalGroupId
+          , COALESCE (ObjectLink_Personal_PersonalGroup.ChildObjectId,0)  AS PersonalGroupId
             INTO vbPersonalId, vbUnitId, vbBranchId, vbPositionId_1, vbPersonalGroupId_1
      FROM ObjectLink AS ObjectLink_Personal_Member
          LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
@@ -291,7 +291,7 @@ BEGIN
                              WHERE Object_CommercLocal.DescId = zc_Object_CommercLocal()
                                AND Object_CommercLocal.isErased = FALSE
                                AND vbisEDI = TRUE
-                               AND ObjectLink_CommercLocal_PersonalGroup_1.ChildObjectId IN (SELECT DISTINCT tmpRouteTT.PersonalGroupId FROM tmpRouteTT)
+                               AND COALESCE (ObjectLink_CommercLocal_PersonalGroup_1.ChildObjectId,0) IN (SELECT DISTINCT tmpRouteTT.PersonalGroupId FROM tmpRouteTT)
                              )
                 --список сотрудников из подразделения Пользователя заявки
               , tmpPersonal_byUnit AS (SELECT Object_Personal.Id                              AS PersonalId
