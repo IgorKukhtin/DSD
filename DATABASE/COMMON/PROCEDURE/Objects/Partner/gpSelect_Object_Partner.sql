@@ -75,7 +75,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                Terminal TVarChar,
                TypeCommercId Integer, TypeCommercName TVarChar,
                UnitCommercId Integer, UnitCommercName TVarChar,
-               PersonalGroupCommercId Integer, PersonalGroupCommercName TVarChar
+               PersonalGroupCommercId Integer, PersonalGroupCommercName TVarChar,
+               --
+               Id_effie Integer, Address_effie TVarChar
               )
 AS
 $BODY$
@@ -191,6 +193,7 @@ BEGIN
                                        -- здесь Филиал
                                        AND _tmpMemberBranch.BranchId = vbBranchId_Constraint
                                  )
+
      -- Результат
      SELECT
            Object_Partner.Id               AS Id
@@ -379,6 +382,13 @@ BEGIN
          , Object_UnitCommerc.ValueData      ::TVarChar AS UnitCommercName
          , Object_PersonalGroupCommerc.Id        ::Integer  AS PersonalGroupCommercId
          , Object_PersonalGroupCommerc.ValueData ::TVarChar AS PersonalGroupCommercName
+         -- адрес из effie
+         , Object_Street_effie.Id ::Integer AS Id_effie
+         , (Object_Street_effie.ValueData
+           ||CASE WHEN (Object_TT_effie.HouseNumber <> '' THEN ', дом '||Object_TT_effie.HouseNumber ELSE'' END
+           ||CASE WHEN (Object_TT_effie.CaseNumber <> '' THEN ', корпус '||Object_TT_effie.CaseNumber ELSE'' END
+           ||CASE WHEN (Object_TT_effie.RoomNumber <> '' THEN ', кв. '||Object_TT_effie.RoomNumber ELSE'' END
+           ) ::TVarChar AS Address_effie
      FROM tmpIsErased
          INNER JOIN tmpPartner AS Object_Partner
                                ON Object_Partner.isErased = tmpIsErased.isErased
@@ -698,6 +708,16 @@ BEGIN
                                  ON ObjectBoolean_Partner_GoodsBox.ObjectId = Object_Partner.Id
                                 AND ObjectBoolean_Partner_GoodsBox.DescId = zc_ObjectBoolean_Partner_GoodsBox()
 
+
+         -- effie
+         LEFT JOIN  Object_TT_effie
+                                      ON Object_TT_effie.StreetId = ObjectLink_Partner_Street.ChildObjectId
+                                     AND Object_TT_effie.HouseNumber = COALESCE (ObjectString_HouseNumber.ValueData,'')
+                                     AND Object_TT_effie.CaseNumber = COALESCE (ObjectString_CaseNumber.ValueData,'')
+                                     AND Object_TT_effie.RoomNumber = COALESCE (ObjectString_RoomNumber.ValueData,'')
+                                  
+         LEFT JOIN Object AS Object_Street_effie ON Object_Street_effie.Id = Object_TT_effie.StreetId
+
    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
                                                                 )
@@ -907,6 +927,14 @@ BEGIN
          , Object_UnitCommerc.ValueData      ::TVarChar AS UnitCommercName
          , Object_PersonalGroupCommerc.Id        ::Integer  AS PersonalGroupCommercId
          , Object_PersonalGroupCommerc.ValueData ::TVarChar AS PersonalGroupCommercName
+
+         -- адрес из effie
+         , Object_Street_effie.Id ::Integer AS Id_effie
+         , (Object_Street_effie.ValueData
+           ||CASE WHEN (Object_TT_effie.HouseNumber <> '' THEN ', дом '||Object_TT_effie.HouseNumber ELSE'' END
+           ||CASE WHEN (Object_TT_effie.CaseNumber <> '' THEN ', корпус '||Object_TT_effie.CaseNumber ELSE'' END
+           ||CASE WHEN (Object_TT_effie.RoomNumber <> '' THEN ', кв. '||Object_TT_effie.RoomNumber ELSE'' END
+           ) ::TVarChar AS Address_effie
      FROM tmpIsErased
          INNER JOIN Object AS Object_Partner
                            ON Object_Partner.isErased = tmpIsErased.isErased
@@ -1225,6 +1253,14 @@ BEGIN
                                  ON ObjectBoolean_Partner_GoodsBox.ObjectId = Object_Partner.Id
                                 AND ObjectBoolean_Partner_GoodsBox.DescId = zc_ObjectBoolean_Partner_GoodsBox()
 
+         -- effie
+         LEFT JOIN  Object_TT_effie
+                                      ON Object_TT_effie.StreetId = ObjectLink_Partner_Street.ChildObjectId
+                                     AND Object_TT_effie.HouseNumber = COALESCE (ObjectString_HouseNumber.ValueData,'')
+                                     AND Object_TT_effie.CaseNumber = COALESCE (ObjectString_CaseNumber.ValueData,'')
+                                     AND Object_TT_effie.RoomNumber = COALESCE (ObjectString_RoomNumber.ValueData,'')
+                                  
+         LEFT JOIN Object AS Object_Street_effie ON Object_Street_effie.Id = Object_TT_effie.StreetId
    WHERE inJuridicalId = 0
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги

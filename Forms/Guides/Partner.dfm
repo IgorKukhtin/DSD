@@ -971,6 +971,22 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 120
       end
+      object Id_effie: TcxGridDBColumn
+        Caption = #1050#1083#1102#1095' Effie'
+        DataBinding.FieldName = 'Id_effie'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object Address_effie: TcxGridDBColumn
+        Caption = '***'#1040#1076#1088#1077#1089' '#1058#1058
+        DataBinding.FieldName = 'Address_effie'
+        Visible = False
+        Options.Editing = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

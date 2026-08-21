@@ -802,8 +802,7 @@
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvReturn_Weight: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 4
+      AreaIndex = 68
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088', '#1074#1077#1089' ('#1060#1040#1050#1058')'
       DataBinding.FieldName = 'Return_Weight'
@@ -816,8 +815,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvReturn_Summ: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 5
+      AreaIndex = 69
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088', '#1075#1088#1085' ('#1060#1040#1050#1058')'
       DataBinding.FieldName = 'Return_Summ'
@@ -858,7 +856,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvSale_Weight_noPromo: TcxDBPivotGridField
-      AreaIndex = 64
+      AreaIndex = 62
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076' '#1073#1077#1079' '#1040#1082#1094#1080#1081', '#1074#1077#1089' ('#1060#1040#1050#1058')'
       DataBinding.FieldName = 'Sale_Weight_noPromo'
@@ -884,8 +882,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvPromo_Weight: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 2
+      AreaIndex = 70
       IsCaptionAssigned = True
       Caption = #1040#1082#1094#1080#1080', '#1074#1077#1089' ('#1060#1040#1050#1058')'
       DataBinding.FieldName = 'Promo_Weight'
@@ -898,8 +895,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvPromo_Summ: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 3
+      AreaIndex = 71
       IsCaptionAssigned = True
       Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1060#1040#1050#1058')'
       DataBinding.FieldName = 'Promo_Summ'
@@ -912,7 +908,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvSale_Weight_noReturn: TcxDBPivotGridField
-      AreaIndex = 65
+      AreaIndex = 63
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1074#1086#1079#1074#1088'., '#1074#1077#1089' ('#1060#1040#1050#1058')'
       DataBinding.FieldName = 'Sale_Weight_noReturn'
@@ -938,9 +934,10 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvSale_Summ_plan: TcxDBPivotGridField
-      AreaIndex = 67
+      Area = faData
+      AreaIndex = 2
       IsCaptionAssigned = True
-      Caption = #1055#1088#1086#1076'.., '#1075#1088#1085' ('#1055#1051#1040#1053')'
+      Caption = #1055#1088#1086#1076'., '#1075#1088#1085' ('#1055#1051#1040#1053')'
       DataBinding.FieldName = 'Sale_Summ_plan'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -951,9 +948,10 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvSale_weight_plan: TcxDBPivotGridField
-      AreaIndex = 66
+      Area = faData
+      AreaIndex = 3
       IsCaptionAssigned = True
-      Caption = #1055#1088#1086#1076'.., '#1074#1077#1089' ('#1055#1051#1040#1053')'
+      Caption = #1055#1088#1086#1076'., '#1074#1077#1089' ('#1055#1051#1040#1053')'
       DataBinding.FieldName = 'Sale_weight_plan'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -964,7 +962,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvPromo_weight_plan: TcxDBPivotGridField
-      AreaIndex = 68
+      AreaIndex = 64
       IsCaptionAssigned = True
       Caption = #1040#1082#1094#1080#1080', '#1074#1077#1089' ('#1055#1051#1040#1053')'
       DataBinding.FieldName = 'Promo_weight_plan'
@@ -977,7 +975,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvPromo_Summ_plan: TcxDBPivotGridField
-      AreaIndex = 69
+      AreaIndex = 65
       IsCaptionAssigned = True
       Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1055#1051#1040#1053')'
       DataBinding.FieldName = 'Promo_Summ_plan'
@@ -990,7 +988,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvSaleNoPromo_weight_plan: TcxDBPivotGridField
-      AreaIndex = 70
+      AreaIndex = 66
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076' '#1073#1077#1079' '#1040#1082#1094#1080#1081', '#1074#1077#1089' ('#1055#1051#1040#1053')'
       DataBinding.FieldName = 'SaleNoPromo_weight_plan'
@@ -1003,7 +1001,7 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvSaleNoPromo_Summ_plan: TcxDBPivotGridField
-      AreaIndex = 71
+      AreaIndex = 67
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076' '#1073#1077#1079' '#1040#1082#1094#1080#1081', '#1075#1088#1085' ('#1055#1051#1040#1053')'
       DataBinding.FieldName = 'SaleNoPromo_Summ_plan'
@@ -1016,7 +1014,8 @@
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvPersentWeight: TcxDBPivotGridField
-      AreaIndex = 62
+      Area = faData
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = '% '#1074#1080#1082#1086#1085#1072#1085#1085#1103', '#1082#1075
       PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1026,7 +1025,8 @@
       UniqueName = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.'
     end
     object pvPersentSumm: TcxDBPivotGridField
-      AreaIndex = 63
+      Area = faData
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = '% '#1074#1080#1082#1086#1085#1072#1085#1085#1103', '#1075#1088#1085
       PropertiesClassName = 'TcxCurrencyEditProperties'

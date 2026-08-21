@@ -220,6 +220,8 @@ type
     actGetImportSettingIdTypeComm: TdsdExecStoredProc;
     macStartLoadTypeComm: TMultiAction;
     bbStartLoadTypeComm: TdxBarButton;
+    Id_effie: TcxGridDBColumn;
+    Address_effie: TcxGridDBColumn;
   private
     { Private declarations }
   public
