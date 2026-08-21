@@ -18,7 +18,7 @@ $BODY$
    DECLARE vbMovementId_begin Integer;
    DECLARE vbMovementDescId   Integer;
    DECLARE vbUnitId           Integer;
-   
+
    DECLARE vbMovementId_Security      Integer;
    DECLARE vbMovementItemId_pas_check Integer;
 
@@ -716,7 +716,8 @@ BEGIN
     ELSE
         -- Распроводим Документ !!!существующий!!!
         PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_begin
-                                     , inUserId     := vbUserId);
+                                     , inUserId     := vbUserId
+                                      );
     END IF;
 
 
@@ -836,10 +837,10 @@ BEGIN
          THEN
              RAISE EXCEPTION 'Ошибка.Нет прав сохранять документ Инвентаризация для охранника.%Можно сохранять только документ Кладовщика.', CHR (13);
          END IF;
-                                                                     
+
 
          -- Проверка
-         IF 1 < (SELECT COUNT(*) FROM Movement 
+         IF 1 < (SELECT COUNT(*) FROM Movement
                                        INNER JOIN MovementFloat AS MovementFloat_NumSecurity
                                                                 ON MovementFloat_NumSecurity.MovementId = Movement.Id
                                                                AND MovementFloat_NumSecurity.DescId     = zc_MovementFloat_NumSecurity()
@@ -862,8 +863,8 @@ BEGIN
 
          -- Нашли документ охраны
          vbMovementId_Security:= (SELECT Movement_find.Id
-         
-                                  FROM Movement 
+
+                                  FROM Movement
                                        INNER JOIN MovementFloat AS MovementFloat_NumSecurity
                                                                 ON MovementFloat_NumSecurity.MovementId = Movement.Id
                                                                AND MovementFloat_NumSecurity.DescId     = zc_MovementFloat_NumSecurity()
@@ -895,9 +896,9 @@ BEGIN
                             , zfConvert_DateToString ((SELECT Movement.OperDate + INTERVAL '1 DAY' FROM Movement WHERE Movement.Id = inMovementId))
                              ;
          END IF;
-                                                                     
+
          -- Нашли партию, по которой несоответствие
-         vbMovementItemId_pas_check:= (WITH 
+         vbMovementItemId_pas_check:= (WITH
                                         -- Док Кладовщика
                                         tmpMI_member AS (SELECT MovementItem.ObjectId           AS GoodsId
                                                               , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
@@ -1231,7 +1232,7 @@ BEGIN
                                   --      THEN 0 -- надо суммировать
                                   ELSE MovementItem.Id -- пока не надо суммировать
                              END AS myId
-                             
+
                              -- нужен чтоб найти ящики для инвентаризации
                            , CASE WHEN vbUnitId = zc_Unit_RK() AND vbMovementDescId = zc_Movement_Inventory()
                                    AND inBranchCode = 1
@@ -1753,16 +1754,27 @@ BEGIN
                    -- Проводим Документ
                    PERFORM lpComplete_Movement_ProductionUnion (inMovementId     := vbMovementId_begin
                                                               , inIsHistoryCost  := FALSE
-                                                              , inUserId         := vbUserId);
+                                                              , inUserId         := vbUserId
+                                                               );
                ELSE
                -- <Инвентаризация>
                IF vbMovementDescId = zc_Movement_Inventory() AND COALESCE (vbIsCloseInventory, TRUE) = TRUE
 
-                THEN
+               THEN
                    -- Проводим Документ
                    PERFORM gpComplete_Movement_Inventory (inMovementId     := vbMovementId_begin
                                                         , inIsLastComplete := NULL
                                                         , inSession        := inSession);
+
+               -- <ProductionSeparate>
+               ELSEIF vbMovementDescId = zc_Movement_ProductionSeparate()
+               THEN
+                   -- создаются временные таблицы - для формирование данных для проводок
+                   PERFORM lpComplete_Movement_ProductionSeparate_CreateTemp();
+                   -- Проводим Документ
+                   PERFORM lpComplete_Movement_ProductionSeparate (inMovementId:= inMovementId
+                                                                 , inUserId    := vbUserId
+                                                                  );
                END IF;
                END IF;
                END IF;
@@ -2108,7 +2120,7 @@ BEGIN
      END IF;
 
 
-if (vbUserId = 5 AND 1=1) -- OR inMovementId = 34404010 
+if (vbUserId = 5 AND 1=1) -- OR inMovementId = 34404010
 then
     RAISE EXCEPTION 'Admin - Errr _end <%>  <%>  <%>'
                   , (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin)
@@ -2137,4 +2149,3 @@ $BODY$
 -- тест
 -- SELECT * FROM gpInsert_ScaleCeh_Movement_all (inBranchCode:= 102, inMovementId:= 34279667, inOperDate:= '12.05.2026', inSession:= '2321579')
 -- SELECT * FROM gpInsert_ScaleCeh_Movement_all (inBranchCode:= 102, inMovementId:= 34279253, inOperDate:= '12.05.2026', inSession:= '10381347')
-
