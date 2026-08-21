@@ -10600,10 +10600,38 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actOrderInternalBasisCK: TdsdOpenForm
+    object actOrderInternalBasisTerm: TdsdOpenForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1062#1045#1061' '#1089'/'#1082')'
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1044#1110#1083#1100#1085#1080#1094#1103' '#1090#1077#1088#1084#1110#1095#1085#1086#1111' '#1086#1073#1088#1086#1073#1082#1080')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1044#1110#1083#1100#1085#1080#1094#1103' '#1090#1077#1088#1084#1110#1095#1085#1086#1111' '#1086#1073#1088#1086#1073#1082#1080')'
+      FormName = 'TOrderInternalBasisJournalForm'
+      FormNameParam.Value = 'TOrderInternalBasisJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8450'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToid'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRemains'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object dsdOpenForm1: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1062#1077#1093' '#1076#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074')'
       Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
       FormName = 'TOrderInternalBasisJournalForm'
       FormNameParam.Value = 'TOrderInternalBasisJournalForm'
@@ -10612,7 +10640,7 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'inFromId'
-          Value = '8449'
+          Value = '8448'
           MultiSelectSeparator = ','
         end
         item
@@ -11570,13 +11598,16 @@ inherited MainForm: TMainForm
         Action = actOrderInternalBasisDelik
       end
       object miOrderInternalBasisCK: TMenuItem
-        Action = actOrderInternalBasisCK
+        Action = actOrderInternalBasisTerm
       end
       object N215: TMenuItem
         Action = actOrderInternalBasisStew
       end
       object miOrderInternalBasisPF: TMenuItem
         Action = actOrderInternalBasisPF
+      end
+      object miOrderInternalBasisTerm: TMenuItem
+        Action = actOrderInternalBasisTerm
       end
       object miOrderType: TMenuItem
         Action = actOrderType

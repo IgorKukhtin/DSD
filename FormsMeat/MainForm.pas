@@ -880,7 +880,7 @@ type
     actProductionUnionTechReceiptCK: TdsdOpenForm;
     actProductionUnionTechCK: TdsdOpenForm;
     miOrderInternalBasisCK: TMenuItem;
-    actOrderInternalBasisCK: TdsdOpenForm;
+    actOrderInternalBasisTerm: TdsdOpenForm;
     actReport_Promo_Result: TdsdOpenForm;
     miReport_Promo_Result: TMenuItem;
     actProductionSeparateStorageLine: TdsdOpenForm;
@@ -1663,6 +1663,8 @@ type
     N285: TMenuItem;
     actReport_SoldTable_Commerc_Olap: TdsdOpenForm;
     miReport_SoldTable_Commerc_Olap: TMenuItem;
+    dsdOpenForm1: TdsdOpenForm;
+    miOrderInternalBasisTerm: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
