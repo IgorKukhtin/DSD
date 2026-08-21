@@ -142,6 +142,7 @@ BEGIN
 
                              WHERE Object_CommercLocal.DescId = zc_Object_CommercLocal()
                               AND Object_CommercLocal.isErased = FALSE
+                              AND ObjectLink_CommercLocal_PersonalGroup_1.ChildObjectId IN (SELECT DISTINCT tmpRouteTT.PersonalGroupId FROM tmpRouteTT)
                              )
 
      , tmpRetail AS (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId

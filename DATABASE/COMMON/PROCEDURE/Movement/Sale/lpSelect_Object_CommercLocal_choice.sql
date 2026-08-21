@@ -291,6 +291,7 @@ BEGIN
                              WHERE Object_CommercLocal.DescId = zc_Object_CommercLocal()
                                AND Object_CommercLocal.isErased = FALSE
                                AND vbisEDI = TRUE
+                               AND ObjectLink_CommercLocal_PersonalGroup_1.ChildObjectId IN (SELECT DISTINCT tmpRouteTT.PersonalGroupId FROM tmpRouteTT)
                              )
                 --список сотрудников из подразделения Пользователя заявки
               , tmpPersonal_byUnit AS (SELECT Object_Personal.Id                              AS PersonalId
