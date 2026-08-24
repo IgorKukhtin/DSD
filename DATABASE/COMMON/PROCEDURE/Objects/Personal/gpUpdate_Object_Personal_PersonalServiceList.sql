@@ -15,8 +15,16 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Personal_PersonalServiceList());
 
-   --проверка
-   IF COALESCE (inPersonalServiceListId,0) = 0 
+
+   -- Нет прав менять ведомости у сотрудника
+   IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 14025514)
+   THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав.';
+   END IF;
+
+
+   -- проверка
+   IF COALESCE (inPersonalServiceListId,0) = 0
    THEN
         RAISE EXCEPTION 'Ошибка.Значение Новая Ведомость начисл.(главная) не выбрано.';
    END IF;
@@ -27,6 +35,13 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
+
+
+   IF vbUserId IN (5, 9457)
+   THEN
+        RAISE EXCEPTION 'Test.Ok.';
+   END IF;
+
 
 END;
 $BODY$
