@@ -1,6 +1,8 @@
 -- Function: gpSelect_Object_ContractPrices_effie
 -- Перевязки: Договор-прайс
 
+ OLD - версия
+
 DROP FUNCTION IF EXISTS gpSelect_Object_ContractPrices_effie ( TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ContractPrices_effie(
