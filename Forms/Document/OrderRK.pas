@@ -82,14 +82,11 @@ type
     spSelectPrintBill: TdsdStoredProc;
     cxLabel22: TcxLabel;
     edCarInfo_Date: TcxDateEdit;
-    actUpdateMIChild_Amount: TdsdExecStoredProc;
-    macUpdateMIChild_Amount: TMultiAction;
     bbUpdateMIChild_Amount: TdxBarButton;
     bbUpdateMIChild_AmountSecond: TdxBarButton;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     bbOpenFormOrderExternalChild: TdxBarButton;
-    actUpdate_MIChild_AmountNull: TdsdExecStoredProc;
     bbUpdate_MIChild_AmountNull: TdxBarButton;
     bbUpdate_MIChild_AmountSecondNull: TdxBarButton;
     actPrintSort: TdsdPrintAction;
@@ -130,6 +127,10 @@ type
     StatusCode_ch2: TcxGridDBColumn;
     cxGridLevelChild: TcxGridLevel;
     cxSplitter2: TcxSplitter;
+    actOpenFormExternal: TdsdOpenForm;
+    bbOpenFormExternal: TdxBarButton;
+    actOpenFormRK: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

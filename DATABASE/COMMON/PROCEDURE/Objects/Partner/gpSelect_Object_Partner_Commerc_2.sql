@@ -44,7 +44,8 @@ BEGIN
                         AND ObjectLink_Partner_Juridical.ObjectId = inId --5817065 --inPartnerId
                      )
      --Сети
-     , tmpCommercRetail AS (SELECT Object_Position_1.Id                ::Integer  AS PositionId_1
+     , tmpCommercRetail AS (SELECT ObjectLink_CommercRetail_Retail.ChildObjectId  AS RetailId
+                                 , Object_Position_1.Id                ::Integer  AS PositionId_1
                                  , Object_Position_1.ObjectCode        ::Integer  AS PositionCode_1
                                  , Object_Position_1.ValueData         ::TVarChar AS PositionName_1 
                                  , Object_Position_2.Id                ::Integer  AS PositionId_2
@@ -85,7 +86,7 @@ BEGIN
                               AND Object_CommercRetail.isErased = FALSE
                            )
 
-                --получаем сотрудника из справочника торговой сети Помошник КАМ
+                -- 1.1. У Контрагента -> Юр.лицо -> Довідник "Торгівельні мережі "-> Помічник КАМ (ПІБ співробітника), якщо у "Структурі комерції Мережі" посада співробітника присутня на 1 рівні
               , tmpLevel1 AS (SELECT 1 AS Ord 
                                    , Object_Position.ValueData       AS PositionName
                                    , Object_PersonalGroup.ValueData  AS PersonalGroupName
@@ -99,6 +100,10 @@ BEGIN
                                                        AND ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                    LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
 
+                                   -- должность сотрудника пом. КАМ должна соотв. должности Структуры ур. 1
+                                   INNER JOIN tmpCommercRetail ON tmpCommercRetail.RetailId = tmpRetail.RetailId
+                                                              AND tmpCommercRetail.PositionId_1 = ObjectLink_Personal_Position.ChildObjectId
+
                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                                                         ON ObjectLink_Personal_PersonalGroup.ObjectId = ObjectLink_Personal_Position.ObjectId
                                                        AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
@@ -112,10 +117,17 @@ BEGIN
                                    LEFT JOIN ObjectDate AS ObjectDate_DateOut
                                                         ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
                                                        AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
+
+                                 /* -- основное место работы 
+                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                           ON ObjectBoolean_Main.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                          AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main() 
+                                                          */
                               WHERE COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
+                                AND COALESCE (tmpCommercRetail.PositionId_1,0) <> 0
                               )
 
-                --получаем сотрудника из справочника торговой сети сотрудник КАМ
+                --2.1. У Контрагента -> Юр.лицо -> Довідник "Торгівельні мережі "-> КАМ (співробітник), якщо у "Структурі комерції Мережі" 1)посада співробітника присутня на 2 рівні 2) співпадає посада п.1.2.
               , tmpLevel2 AS (SELECT 2 AS Ord 
                                    , Object_Position.ValueData       AS PositionName
                                    , Object_PersonalGroup.ValueData  AS PersonalGroupName
@@ -129,6 +141,10 @@ BEGIN
                                                        AND ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                    LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
 
+                                   -- должность сотрудника КАМ должна соотв. должности Структуры ур. 2
+                                   INNER JOIN tmpCommercRetail ON tmpCommercRetail.RetailId = tmpRetail.RetailId
+                                                              AND tmpCommercRetail.PositionId_2 = ObjectLink_Personal_Position.ChildObjectId
+
                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                                                         ON ObjectLink_Personal_PersonalGroup.ObjectId = ObjectLink_Personal_Position.ObjectId
                                                        AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
@@ -144,7 +160,7 @@ BEGIN
                                                        AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
                               WHERE COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
                               )
-
+                --3.2. Довідник "Співробітники" знайти відповідно до п.3.1. + або Підрозділ п.1.3. + або Підрозділ п.2.3+ або Філія п.1.3. + або Філія п.2.3
               , tmpLevel3 AS (SELECT 3 AS Ord 
                                    , tmpCommercRetail.PositionName_3       AS PositionName
                                    , String_AGG (DISTINCT Object_PersonalGroup.ValueData, '; ') ::TVarChar AS PersonalGroupName
