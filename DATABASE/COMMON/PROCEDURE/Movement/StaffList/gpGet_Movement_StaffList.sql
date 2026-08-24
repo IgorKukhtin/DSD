@@ -76,7 +76,7 @@ BEGIN
        SELECT 0 AS Id
             , CAST (NEXTVAL ('Movement_StaffList_seq') as TVarChar) AS InvNumber
             , inOperDate            AS OperDate                            --CURRENT_DATE
-            , zc_DateEnd()    ::TDateTime AS DateClose
+            , NULL      ::TDateTime AS DateClose
             , Object_Status.Code    AS StatusCode
             , Object_Status.Name    AS StatusName
 
@@ -139,7 +139,7 @@ BEGIN
        SELECT Movement.Id
             , Movement.InvNumber               AS InvNumber
             , Movement.OperDate
-            , COALESCE (MovementDate_DateClose.ValueData, zc_DateEnd()) ::TDateTime AS DateClose
+            , MovementDate_DateClose.ValueData ::TDateTime AS DateClose
             , Object_Status.ObjectCode         AS StatusCode
             , Object_Status.ValueData          AS StatusName
 

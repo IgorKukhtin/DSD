@@ -8,13 +8,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_StaffList(
  INOUT ioId                     Integer   , -- Ключ объекта <Документ>
     IN inInvNumber              TVarChar  , -- Номер документа
     IN inOperDate               TDateTime , -- Дата документа
-    IN inDateClose              TDateTime , -- Дата закрытия
+ INOUT ioDateClose              TDateTime , -- Дата закрытия
     IN inUnitId                 Integer   , -- подразделение
     IN inPersonalId             Integer   , -- Менеджер по персоналу
     IN inComment                TVarChar  , -- Примечание
     IN inSession                TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId         Integer;
    DECLARE vbIsInsert       Boolean;
@@ -41,10 +42,13 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalHead(), ioId, vbPersonalHeadId);
  
      --проверяем, если внесли значение то записываем инече не записываем
-     IF COALESCE (inDateClose, zc_DateEnd()) <> zc_DateEnd()
+     IF COALESCE (ioDateClose, zc_DateEnd()) <> zc_DateEnd()
+    AND COALESCE (ioDateClose, zc_DateEnd()) <> CURRENT_DATE
      THEN
          -- сохранили свойство <Дата создания>
-         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateClose(), ioId, inDateClose);
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateClose(), ioId, ioDateClose);
+     ELSE
+         ioDateClose:= NULL;
      END IF;
 
      -- сохранили свойство <Примечание>

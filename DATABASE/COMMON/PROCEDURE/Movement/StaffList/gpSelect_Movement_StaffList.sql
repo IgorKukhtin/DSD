@@ -52,7 +52,7 @@ BEGIN
        SELECT Movement.Id                        AS Id
             , Movement.InvNumber                 AS InvNumber
             , Movement.OperDate                  AS OperDate
-            , COALESCE (MovementDate_DateClose.ValueData, zc_DateEnd()) ::TDateTime AS DateClose
+            , MovementDate_DateClose.ValueData ::TDateTime AS DateClose
             , Object_Status.ObjectCode           AS StatusCode
             , Object_Status.ValueData            AS StatusName
 
