@@ -2009,11 +2009,11 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDateClose'
+        Name = 'ioDateClose'
         Value = Null
         Component = edDateClose
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2025,7 +2025,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMemberId'
+        Name = 'inPersonalId'
         Value = Null
         Component = GuidesPersonal
         ComponentItem = 'Key'
