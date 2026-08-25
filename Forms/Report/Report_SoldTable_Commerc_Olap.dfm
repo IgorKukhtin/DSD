@@ -225,8 +225,8 @@
       Width = 151
     end
     object edPaidKind: TcxButtonEdit
-      Left = 412
-      Top = 67
+      Left = 419
+      Top = 61
       Properties.Buttons = <
         item
           Default = True
@@ -237,8 +237,8 @@
       Width = 81
     end
     object cxLabel12: TcxLabel
-      Left = 412
-      Top = 51
+      Left = 419
+      Top = 45
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object cxLabel13: TcxLabel

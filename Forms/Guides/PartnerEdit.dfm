@@ -1223,7 +1223,7 @@
             Caption = 'Panel4'
             ShowCaption = False
             TabOrder = 1
-            object edJuridicalName: TcxTextEdit
+            object edRetailName: TcxTextEdit
               Left = 285
               Top = 4
               Properties.ReadOnly = True
@@ -1915,6 +1915,7 @@
       Caption = #1054#1085#1086#1074#1080#1090#1080' '#1076#1072#1085#1110
       Hint = #1054#1085#1086#1074#1080#1090#1080' '#1076#1072#1085#1110
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -3340,9 +3341,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalName'
+        Name = 'RetailName'
         Value = Null
-        Component = edJuridicalName
+        Component = edRetailName
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -3389,8 +3390,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 352
-    Top = 354
+    Left = 688
+    Top = 338
   end
   object GuidesMemberTake: TdsdGuides
     KeyField = 'Id'
@@ -3688,7 +3689,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 192
+    Left = 120
     Top = 337
   end
   object GuidesRegion: TdsdGuides

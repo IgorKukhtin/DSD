@@ -40,7 +40,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
     -- inUserId_source_order = 0 если док.
-    vbisEDI:= (CASE WHEN COALESCE (inUserId_source_order,0) = 0 THEN TRUE ELSE FALSE END);
+    vbisEDI:= (CASE WHEN COALESCE (inUserId_source_order,0) IN (0, 13992997, 13992996)  THEN TRUE ELSE FALSE END);
     --
     vbPersonalGroupCommercId:= (SELECT ObjectLink_Partner_PersonalGroupCommerc.ChildObjectId
                                 FROM ObjectLink AS ObjectLink_Partner_PersonalGroupCommerc
@@ -291,7 +291,7 @@ BEGIN
                              WHERE Object_CommercLocal.DescId = zc_Object_CommercLocal()
                                AND Object_CommercLocal.isErased = FALSE
                                AND vbisEDI = TRUE
-                               AND COALESCE (ObjectLink_CommercLocal_PersonalGroup_1.ChildObjectId,0) IN (SELECT DISTINCT tmpRouteTT.PersonalGroupId FROM tmpRouteTT)
+                               AND COALESCE (ObjectLink_CommercLocal_PersonalGroup_1.ChildObjectId,0) IN (SELECT DISTINCT COALESCE (tmpRouteTT.PersonalGroupId,0) FROM tmpRouteTT)
                              )
                 --список сотрудников из подразделения Пользователя заявки
               , tmpPersonal_byUnit AS (SELECT Object_Personal.Id                              AS PersonalId

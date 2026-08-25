@@ -528,7 +528,7 @@ BEGIN
                                                        AND tmpCommercLocal.PositionId_user_order = SoldTable.PositionId_user_order
                                                        AND tmpCommercLocal.UnitId_user_order     = SoldTable.UnitId_user_order
                                                        AND tmpCommercLocal.RetailId     = SoldTable.RetailId
-                                                       AND tmpCommercLocal.RouteTTId    = SoldTable.RouteTTId
+                                                       AND COALESCE (tmpCommercLocal.RouteTTId,0) = COALESCE (SoldTable.RouteTTId,0)
                                                        AND tmpCommercLocal.PartnerId    = SoldTable.PartnerId
                               LEFT JOIN tmpCommercRetail ON tmpCommercRetail.MemberId_order = SoldTable.MemberId_order
                                                         AND tmpCommercRetail.UnitId_user_order = SoldTable.UnitId_user_order
