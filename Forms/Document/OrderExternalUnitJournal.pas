@@ -110,6 +110,7 @@ type
     mactPrint_OrderCell: TMultiAction;
     bbPrint_OrderCell: TdxBarButton;
     actPrintCell: TdsdPrintAction;
+    GoodsPropertyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

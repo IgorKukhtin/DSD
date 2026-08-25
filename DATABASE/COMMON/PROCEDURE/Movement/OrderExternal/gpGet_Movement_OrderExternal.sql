@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceListId Integer, PriceListName TVarChar
              , RetailId Integer, RetailName TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , CarInfoId Integer, CarInfoName TVarChar, OperDate_CarInfo TDateTime
              , StatusId_wms Integer, StatusCode_wms Integer, StatusName_wms TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
@@ -120,6 +121,8 @@ BEGIN
              , CAST ('' AS TVarChar)                            AS RetailName
              , CAST (0  AS Integer)                             AS PartnerId
              , CAST ('' AS TVarChar)                            AS PartnerName
+             , CAST (0  AS Integer)                             AS GoodsPropertyId
+             , CAST ('' AS TVarChar)                            AS GoodsPropertyName
              , CAST (0  AS Integer)                             AS CarInfoId
              , CAST ('' AS TVarChar)                            AS CarInfoName
              , NULL ::TDateTime                                 AS OperDate_CarInfo
@@ -227,6 +230,9 @@ BEGIN
            , Object_Retail.ValueData                    AS RetailName
            , Object_Partner.Id                          AS PartnerId
            , Object_Partner.ValueData                   AS PartnerName
+
+           , Object_GoodsProperty.Id                    AS GoodsPropertyId
+           , Object_GoodsProperty.ValueData             AS GoodsPropertyName
 
            , Object_CarInfo.Id                          AS CarInfoId
            , Object_CarInfo.ValueData                   AS CarInfoName
@@ -399,6 +405,11 @@ BEGIN
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsProperty
+                                         ON MovementLinkObject_GoodsProperty.MovementId = Movement.Id
+                                        AND MovementLinkObject_GoodsProperty.DescId = zc_MovementLinkObject_GoodsProperty()
+            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = MovementLinkObject_GoodsProperty.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Status_wms
                                          ON MovementLinkObject_Status_wms.MovementId = Movement.Id
                                         AND MovementLinkObject_Status_wms.DescId = zc_MovementLinkObject_Status_wms()
@@ -417,12 +428,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.08.26         *
  09.04.26         *
  10.10.25         * isManual
  14.06.22         * CarInfo

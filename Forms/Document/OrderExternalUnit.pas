@@ -161,6 +161,9 @@ type
     bbSeparator: TdxBarSeparator;
     actPrintCell: TdsdPrintAction;
     bbPrintCell: TdxBarButton;
+    cxLabel25: TcxLabel;
+    ceGoodsProperty: TcxButtonEdit;
+    GuidesGoodsProperty: TdsdGuides;
   private
     { Private declarations }
   public

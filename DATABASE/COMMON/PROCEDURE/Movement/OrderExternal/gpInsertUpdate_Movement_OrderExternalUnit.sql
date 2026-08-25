@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_OrderExternalUnit()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternalUnit (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternalUnit (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternalUnit (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternalUnit(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -26,7 +27,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternalUnit(
    OUT outPriceListName      TVarChar  , -- Прайс лист
 
     IN inRetailId            Integer   , -- Торговая сеть
-    IN inPartnerId           Integer   , -- Контрагент
+    IN inPartnerId           Integer   , -- Контрагент  
+    IN inGoodsPropertyId     Integer   , -- Классификатор свойств товра
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -105,6 +107,9 @@ BEGIN
 
      -- сохранили связь с <Торговая сеть>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Retail(), ioId, inRetailId);
+     -- сохранили связь с <Торговая сеть>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GoodsProperty(), ioId, inGoodsPropertyId);
+
 
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
@@ -121,6 +126,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.08.26         * inGoodsPropertyId
  25.05.21         * inisPrintComment
  21.05.15         * add inRetailId, inPartnerId
  11.02.15         *
