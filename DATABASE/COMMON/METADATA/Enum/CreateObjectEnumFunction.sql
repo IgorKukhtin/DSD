@@ -1799,6 +1799,10 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_CommercLocal() RETURNS Integer 
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_SaleCommerc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_SaleCommerc' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_SaleCommerc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_SaleCommerc' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+ -- Загрузка Признак договора в договор
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_Contract_ContractTag() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_Contract_ContractTag' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_Contract_ContractTag() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_Contract_ContractTag' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 
 
 
@@ -1806,6 +1810,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_SaleCommerc() RETURNS Integer A
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 26.08.26         * Загрузка Признак договора в договор 
  05.06.26         * 
  01.06.26         * Загрузка Маршруты ТТ (RouteTT)
  03.02.26         * Загрузка OrderFinanceSB

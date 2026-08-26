@@ -2203,6 +2203,10 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -2411,6 +2415,10 @@
       Hint = 'New Separator'
       Visible = ivAlways
     end
+    object dxBarButton2: TdxBarButton
+      Action = macStartLoad_ContractTag
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -2502,6 +2510,17 @@
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actGetImportSetting_ContractTag: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_ContractTag
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_ContractTag
+        end>
+      Caption = 'actGetImportSetting'
+    end
     object macStartLoad_StatePersonal: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -2519,6 +2538,25 @@
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1047#1072#1082#1088#1099#1090#1100' '#1076#1086#1075#1086#1074#1086#1088' + '#1060#1048#1054' '#1086#1090#1074#1077#1090#1089#1090#1074'.'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1047#1072#1082#1088#1099#1090#1100' '#1076#1086#1075#1086#1074#1086#1088' + '#1060#1048#1054' '#1086#1090#1074#1077#1090#1089#1090#1074'.'
+      ImageIndex = 41
+    end
+    object macStartLoad_ContractTag: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_ContractTag
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1088#1080#1079#1085#1072#1082#1072' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1080#1079' '#1101#1082#1089#1077#1083#1103'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 41
     end
     object macStartLoadPriceList: TMultiAction
@@ -5909,8 +5947,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 920
-    Top = 184
+    Left = 1216
+    Top = 216
   end
   object spGetImportSettingId_StatePersonal: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -5991,5 +6029,37 @@
     PackSize = 1
     Left = 608
     Top = 168
+  end
+  object spGetImportSettingId_ContractTag: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TContractForm;zc_Object_ImportSetting_Contract_ContractTag'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1208
+    Top = 112
   end
 end

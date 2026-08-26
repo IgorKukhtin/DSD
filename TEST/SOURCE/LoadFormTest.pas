@@ -482,24 +482,25 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractJuridicalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractJuridicalChoiceForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionPartnerValueEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionPartnerValueEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionPartnerValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionPartnerValueForm');
    exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
-   exit;
+  exit;
 
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
-   exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
@@ -543,7 +544,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionByContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionByContractForm');
   // Признак договора
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractTagForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagEditForm'));

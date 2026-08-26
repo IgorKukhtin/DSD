@@ -394,6 +394,10 @@ type
     isReExch: TcxGridDBColumn;
     PositionName_ContractTag: TcxGridDBColumn;
     ContractTagKindName: TcxGridDBColumn;
+    spGetImportSettingId_ContractTag: TdsdStoredProc;
+    actGetImportSetting_ContractTag: TdsdExecStoredProc;
+    macStartLoad_ContractTag: TMultiAction;
+    dxBarButton2: TdxBarButton;
 
   private
     { Private declarations }
