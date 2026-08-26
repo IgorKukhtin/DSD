@@ -189,13 +189,13 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                                                           ON MIFloat_PriceIn.MovementItemId = MIContainer.MovementItemId
                                                          AND MIFloat_PriceIn.DescId         = zc_MIFloat_PriceIn()
 
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteTT
+                                                           ON MovementLinkObject_RouteTT.MovementId = MIContainer.MovementId
+                                                          AND MovementLinkObject_RouteTT.DescId     = zc_MovementLinkObject_RouteTT()
                               -- ЗаявкА
                               LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                              ON MovementLinkMovement_Order.MovementId = MIContainer.MovementId
                                                             AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteTT
-                                                           ON MovementLinkObject_RouteTT.MovementId = MovementLinkMovement_Order.MovementChildId
-                                                          AND MovementLinkObject_RouteTT.DescId     = zc_MovementLinkObject_RouteTT()
                               -- Док EDI
                               LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_edi
                                                              ON MovementLinkMovement_Order_edi.MovementId = MovementLinkMovement_Order.MovementChildId
