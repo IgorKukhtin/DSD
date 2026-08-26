@@ -296,7 +296,7 @@ type
     UnitName_ch5: TcxGridDBColumn;
     cxGridLevelComRetail: TcxGridLevel;
     Panel4: TPanel;
-    edJuridicalName: TcxTextEdit;
+    edRetailName: TcxTextEdit;
     cxLabel77: TcxLabel;
     cxLabel79: TcxLabel;
     edCode_page2: TcxCurrencyEdit;

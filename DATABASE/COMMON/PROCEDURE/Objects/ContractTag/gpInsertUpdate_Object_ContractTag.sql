@@ -28,7 +28,25 @@ BEGIN
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ContractTag());
    
    -- проверка прав уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_ContractTag(), inName);
+   --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_ContractTag(), inName);
+   -- проверка уникальности
+   IF EXISTS (SELECT 1 
+              FROM Object AS Object_ContractTag
+                     LEFT JOIN ObjectLink AS ObjectLink_ContractTag_ContractTagGroup
+                                          ON ObjectLink_ContractTag_ContractTagGroup.ObjectId = Object_ContractTag.Id 
+                                         AND ObjectLink_ContractTag_ContractTagGroup.DescId = zc_ObjectLink_ContractTag_ContractTagGroup()
+                     LEFT JOIN ObjectLink AS ObjectLink_ContractTag_ContractTagKind
+                                          ON ObjectLink_ContractTag_ContractTagKind.ObjectId = Object_ContractTag.Id 
+                                         AND ObjectLink_ContractTag_ContractTagKind.DescId = zc_ObjectLink_ContractTag_ContractTagKind()
+              WHERE Object_ContractTag.DescId = zc_Object_ContractTag()
+                  AND COALESCE (ObjectLink_ContractTag_ContractTagGroup.ChildObjectId,0) = COALESCE (inContractTagGroupId,0)
+                  AND COALESCE (ObjectLink_ContractTag_ContractTagKind.ChildObjectId,0) = COALESCE (inContractTagKindId,0)
+                  AND Object_ContractTag.Id <>  COALESCE (ioId, 0))
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> + <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inContractTagGroupId), inName, lfGet_Object_ValueData (inContractTagKindId);
+   END IF;   
+
+ 
    -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ContractTag(), vbCode_calc);
 

@@ -386,6 +386,71 @@ BEGIN
                         HAVING SUM (tmpRemains.StartSumm) <> 0 OR SUM (tmpRemains.EndSumm) <> 0
                        )
 
+        , tmpMovementString AS (SELECT *
+                                FROM MovementString
+                                WHERE MovementString.MovementId IN (SELECT DISTINCT Operation.MovementId FROM Operation)
+                                  AND MovementString.DescId = zc_MovementString_InvNumberPartner()
+                                )
+        , tmpMLO AS (SELECT *
+                     FROM MovementLinkObject
+                     WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT Operation.MovementId FROM Operation)
+                       AND MovementLinkObject.DescId = zc_MovementString_InvNumberPartner()
+                     )
+        , tmpMovementFloat AS (SELECT MovementFloat.MovementId
+                                    , MovementFloat.ValueData :: Integer
+                                    , MovementFloat.DescId 
+                               FROM MovementFloat
+                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT Operation.MovementId FROM Operation)
+                                 AND MovementFloat.DescId = zc_MovementFloat_MovementItemId()
+                               )
+
+        , tmpMLM AS (SELECT *
+                     FROM MovementLinkMovement
+                     WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT Operation.MovementId FROM Operation)
+                       AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Transport()
+                     )
+        , tmpMI_reestr AS (SELECT *
+                           FROM MovementItem
+                           WHERE MovementItem.Id IN (SELECT DISTINCT tmpMovementFloat.ValueData FROM tmpMovementFloat)
+                             AND MovementItem.isErased = FALSE 
+                           )
+
+        , tmpMLM_reestr AS (SELECT *
+                               FROM MovementLinkMovement
+                               WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMI_reestr.MovementId FROM tmpMI_reestr)
+                                 AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Transport()
+                               )  
+
+        , tmpMLO_Transport AS (SELECT *
+                                FROM MovementLinkObject
+                                WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMLM.MovementId FROM tmpMLM
+                                                                  UNION SELECT DISTINCT tmpMLM_reestr.MovementId FROM tmpMLM_reestr     
+                                                                       )
+                                  AND MovementLinkObject.DescId IN (zc_MovementLinkObject_Car()
+                                                                  , zc_MovementLinkObject_PersonalDriver()
+                                                                  )
+                                )
+
+        , tmpMI AS (SELECT *
+                    FROM MovementItem
+                    WHERE MovementItem.Id IN (SELECT DISTINCT Operation.MovementItemId FROM Operation)
+                      AND MovementItem.DescId = zc_MI_Master()
+                    )
+        , tmpMIString AS (SELECT *
+                          FROM MovementItemString
+                          WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT Operation.MovementItemId FROM Operation)
+                            AND MovementItemString.DescId = zc_MIString_Comment()
+                          )
+        , tmpMILO AS (SELECT *
+                      FROM MovementItemLinkObject
+                      WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT Operation.MovementItemId FROM Operation)
+                        AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Unit()
+                                                            , zc_MILinkObject_MoneyPlace()
+                                                             )
+                      )  
+
+
+
    -- результат
    SELECT
           CASE WHEN Operation.OperationSort = 0
@@ -487,45 +552,47 @@ BEGIN
       LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
       LEFT JOIN Movement ON Movement.Id = Operation.MovementId
       LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-      LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                               ON MovementString_InvNumberPartner.MovementId = Operation.MovementId
-                              AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-      LEFT JOIN MovementItemString AS MIString_Comment
-                                   ON MIString_Comment.MovementItemId = Operation.MovementItemId
-                                  AND MIString_Comment.DescId = zc_MIString_Comment()
+      LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
+                                  ON MovementString_InvNumberPartner.MovementId = Operation.MovementId
+                                 AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-      LEFT JOIN MovementItem AS MovementItem_by ON MovementItem_by.Id = Operation.MovementItemId
-                                               AND MovementItem_by.DescId IN (zc_MI_Master())
-                                               AND Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
-      LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                       ON MILinkObject_Unit.MovementItemId = Operation.MovementItemId
-                                      AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-      LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                       ON MILinkObject_MoneyPlace.MovementItemId = Operation.MovementItemId
-                                      AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+      LEFT JOIN tmpMIString AS MIString_Comment
+                            ON MIString_Comment.MovementItemId = Operation.MovementItemId
+                           AND MIString_Comment.DescId = zc_MIString_Comment()
 
-      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                   ON MovementLinkObject_From.MovementId = Movement.Id
-                                  AND MovementLinkObject_From.DescId = CASE WHEN Movement.DescId IN (zc_Movement_TransportService())
-                                                                               THEN zc_MovementLinkObject_UnitForwarding()
-                                                                            WHEN Movement.DescId IN (zc_Movement_PersonalAccount())
-                                                                                 THEN zc_MovementLinkObject_Personal()
-                                                                            WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut(), zc_Movement_Loss())
-                                                                                 THEN zc_MovementLinkObject_From()
-                                                                            WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
-                                                                                 THEN zc_MovementLinkObject_From()
-                                                                       END
-      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                   ON MovementLinkObject_To.MovementId = Movement.Id
-                                  AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut(), zc_Movement_Loss())
-                                                                               THEN zc_MovementLinkObject_To()
-                                                                          WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
-                                                                               THEN zc_MovementLinkObject_To()
-                                                                     END
-      LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                   ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                  AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+      LEFT JOIN tmpMI AS MovementItem_by 
+                      ON MovementItem_by.Id = Operation.MovementItemId
+                     AND MovementItem_by.DescId IN (zc_MI_Master())
+                     AND Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+      LEFT JOIN tmpMILO AS MILinkObject_Unit
+                        ON MILinkObject_Unit.MovementItemId = Operation.MovementItemId
+                       AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+      LEFT JOIN tmpMILO AS MILinkObject_MoneyPlace
+                        ON MILinkObject_MoneyPlace.MovementItemId = Operation.MovementItemId
+                       AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+
+      LEFT JOIN tmpMLO AS MovementLinkObject_From
+                       ON MovementLinkObject_From.MovementId = Movement.Id
+                      AND MovementLinkObject_From.DescId = CASE WHEN Movement.DescId IN (zc_Movement_TransportService())
+                                                                   THEN zc_MovementLinkObject_UnitForwarding()
+                                                                WHEN Movement.DescId IN (zc_Movement_PersonalAccount())
+                                                                     THEN zc_MovementLinkObject_Personal()
+                                                                WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut(), zc_Movement_Loss())
+                                                                     THEN zc_MovementLinkObject_From()
+                                                                WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
+                                                                     THEN zc_MovementLinkObject_From()
+                                                           END
+      LEFT JOIN tmpMLO AS MovementLinkObject_To
+                       ON MovementLinkObject_To.MovementId = Movement.Id
+                      AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut(), zc_Movement_Loss())
+                                                                   THEN zc_MovementLinkObject_To()
+                                                              WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
+                                                                   THEN zc_MovementLinkObject_To()
+                                                         END
+      LEFT JOIN tmpMLO AS MovementLinkObject_Partner
+                       ON MovementLinkObject_Partner.MovementId = Movement.Id
+                      AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
 
       LEFT JOIN Object AS Object_PartionMovement ON Object_PartionMovement.Id = Operation.PartionMovementId
       LEFT JOIN ObjectDate AS ObjectDate_PartionMovement_Payment
@@ -551,32 +618,32 @@ BEGIN
 
       -- путевой из реестра
       -- реестр
-       LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+       LEFT JOIN tmpMovementFloat AS MovementFloat_MovementItemId
                                ON MovementFloat_MovementItemId.MovementId = Operation.MovementId
                               AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
-       LEFT JOIN MovementItem AS MI_reestr
+       LEFT JOIN tmpMI_reestr AS MI_reestr
                               ON MI_reestr.Id       = MovementFloat_MovementItemId.ValueData :: Integer
                              AND MI_reestr.isErased = FALSE
 
        -- ѕ/л (реестр)
-       LEFT JOIN MovementLinkMovement AS MLM_Transport_reestr
+       LEFT JOIN tmpMLM_reestr AS MLM_Transport_reestr
                                       ON MLM_Transport_reestr.MovementId = MI_reestr.MovementId
                                      AND MLM_Transport_reestr.DescId     = zc_MovementLinkMovement_Transport()
        --LEFT JOIN Movement AS Movement_Transport_reestr ON Movement_Transport_reestr.Id = MLM_Transport_reestr.MovementChildId
 
       -- путевой из свойсв документа
-      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+      LEFT JOIN tmpMLM AS MovementLinkMovement_Transport
                                      ON MovementLinkMovement_Transport.MovementId = Operation.MovementId
                                     AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
 
       LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = COALESCE (MLM_Transport_reestr.MovementChildId, MovementLinkMovement_Transport.MovementChildId)
 
-      LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+      LEFT JOIN tmpMLO_Transport AS MovementLinkObject_Car
                                    ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
                                   AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
       LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
 
-      LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+      LEFT JOIN tmpMLO_Transport AS MovementLinkObject_PersonalDriver
                                    ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
                                   AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
       LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
@@ -698,3 +765,10 @@ $BODY$
 -- SELECT * FROM ResourseProtocol where ProcName ilike '%gpReport_JuridicalCollation%' AND OperDate >= CURRENT_DATE - INTERVAL '1 DAY' ORDER BY Id DESC LIMIT 100
 -- SELECT * FROM gpReport_JuridicalCollation (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inJuridicalId:= 0, inPartnerId:=0, inContractId:= 0, inAccountId:= 0, inPaidKindId:= 0, inInfoMoneyId:= 0, inCurrencyId:= 0, inMovementId_Partion:=0, inSession:= zfCalc_UserAdmin());
 -- select * from gpReport_JuridicalCollation(inStartDate := ('11.04.2023')::TDateTime , inEndDate := ('11.04.2023')::TDateTime , inJuridicalId := 6629649 , inPartnerId := 0 , inContractId := 0 , inAccountId := 0 , inPaidKindId := 0 , inInfoMoneyId := 0 , inCurrencyId := 0 , inMovementId_Partion := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+
+/*
+select * from gpReport_JuridicalCollation
+(inStartDate := ('03.08.2026')::TDateTime , inEndDate := ('10.08.2026')::TDateTime 
+, inJuridicalId := 9399 , inPartnerId := 0 , inContractId := 0 , inAccountId := 0 
+, inPaidKindId := 0 , inInfoMoneyId := 0 , inCurrencyId := 0 , inMovementId_Partion := 0 ,  inSession := '13246443');
+*/

@@ -1665,6 +1665,8 @@ type
     miReport_SoldTable_Commerc_Olap: TMenuItem;
     actOrderInternalBasisTerm: TdsdOpenForm;
     miOrderInternalBasisTerm: TMenuItem;
+    actReport_SoldTable_Commerc_table: TdsdOpenForm;
+    miReport_SoldTable_Commerc_table: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

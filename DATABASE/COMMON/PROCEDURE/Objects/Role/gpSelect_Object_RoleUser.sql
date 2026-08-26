@@ -16,13 +16,46 @@ $BODY$BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
    RETURN QUERY 
-   WITH tmpPersonal AS (SELECT View_Personal.MemberId
-                             , MAX (View_Personal.UnitId) AS UnitId
-                             , MAX (View_Personal.PositionId) AS PositionId
-                        FROM Object_Personal_View AS View_Personal
-                        WHERE View_Personal.isErased = FALSE
-                        GROUP BY View_Personal.MemberId
+   WITH tmpPersonal AS (SELECT tmp.MemberId
+                             , tmp.UnitId
+                             , tmp.PositionId
+                        FROM
+                            (SELECT ObjectLink_Personal_Member.ChildObjectId         AS MemberId
+                                  , ObjectLink_Personal_Unit.ChildObjectId           AS UnitId
+                                  , ObjectLink_Personal_Position.ChildObjectId       AS PositionId
+                                  , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId
+                                                       -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
+                                                       ORDER BY CASE WHEN ObjectBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END
+                                                              , CASE WHEN Object_Personal.isErased = FALSE THEN 0 ELSE 1 END
+                                                              , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
+                                                              , CASE WHEN ObjectBoolean_Official.ValueData = TRUE THEN 0 ELSE 1 END
+                                                              , ObjectLink_Personal_Member.ObjectId
+                                                      ) AS Ord
+                             FROM ObjectLink AS ObjectLink_Personal_Member
+                                  LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ObjectId
+                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                       ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                      AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
+                                                      
+                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                       ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                      AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
+                                                          ON ObjectBoolean_Official.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                         AND ObjectBoolean_Official.DescId   = zc_ObjectBoolean_Member_Official()
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                          ON ObjectBoolean_Main.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                         AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
+                                  LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                       ON ObjectDate_DateOut.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                      AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()          
+                             WHERE ObjectLink_Personal_Member.ChildObjectId > 0
+                               AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                            ) AS tmp
+                        WHERE tmp.Ord = 1
                        )
+                         
+                         
 
    SELECT 
          ObjectUser.Id         AS Id 

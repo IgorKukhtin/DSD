@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                GLNCodeCorporate_vch TVarChar, EdiOrdspr_vch Boolean, EdiInvoice_vch Boolean, EdiDesadv_vch Boolean,
                isDayCount_30201 Boolean,
 
-               JuridicalId Integer, JuridicalName TVarChar, 
+               JuridicalId Integer, JuridicalName TVarChar, RetailId Integer, RetailName TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteTTId Integer, RouteTTName TVarChar,
                RouteId_30201 Integer, RouteName_30201 TVarChar,
@@ -64,6 +64,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
              , TypeCommercId Integer, TypeCommercName TVarChar
              , UnitCommercId Integer, UnitCommercName TVarChar
              , PersonalGroupCommercId Integer, PersonalGroupCommercName TVarChar
+ 
                ) AS
 $BODY$
 BEGIN
@@ -122,7 +123,9 @@ BEGIN
            
            , inJuridicalId    AS JuridicalId
            , lfGet_Object_ValueData (inJuridicalId)  AS JuridicalName
-       
+           , CAST (0 as Integer)    AS RetailId
+           , CAST ('' as TVarChar)  AS RetailName
+                  
            , CAST (0 as Integer)    AS RouteId
            , CAST ('' as TVarChar)  AS RouteName
 
@@ -267,6 +270,8 @@ BEGIN
 
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName
+           , Object_Retail.Id            AS RetailId
+           , Object_Retail.ValueData     AS RetailName
            
            , Object_Route.Id           AS RouteId
            , Object_Route.ValueData    AS RouteName
@@ -508,6 +513,11 @@ BEGIN
                                AND Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Partner_Juridical.ChildObjectId
                                                AND COALESCE (inMaskId, 0) = 0
+
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                ON ObjectLink_Juridical_Retail.ObjectId = Partner_Juridical.ChildObjectId
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ObjectId
           
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
                                 ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 

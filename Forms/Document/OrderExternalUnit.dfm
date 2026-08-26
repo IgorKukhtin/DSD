@@ -1,25 +1,26 @@
 inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 399
-  ClientWidth = 1024
-  ExplicitWidth = 1040
+  ClientWidth = 1189
+  ExplicitLeft = 0
+  ExplicitWidth = 1205
   ExplicitHeight = 438
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1024
+    Width = 1189
     Height = 233
     ExplicitTop = 166
     ExplicitWidth = 1024
     ExplicitHeight = 233
     ClientRectBottom = 233
-    ClientRectRight = 1024
+    ClientRectRight = 1189
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1024
       ExplicitHeight = 209
       inherited cxGrid: TcxGrid
-        Width = 1024
+        Width = 1189
         Height = 209
         ExplicitWidth = 1024
         ExplicitHeight = 209
@@ -464,7 +465,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1024
+    Width = 1189
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1024
@@ -596,14 +597,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 77
     end
     object cxLabel13: TcxLabel
-      Left = 1007
-      Top = 85
+      Left = 1038
+      Top = 17
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
       Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 1007
-      Top = 103
+      Left = 1038
+      Top = 40
       Properties.Buttons = <
         item
           Default = True
@@ -798,7 +799,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Properties.ReadOnly = True
       TabOrder = 42
       Text = ' '
-      Width = 168
+      Width = 176
     end
     object edRetail: TcxButtonEdit
       Left = 606
@@ -825,7 +826,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
     object cxLabel21: TcxLabel
       Left = 833
-      Top = 86
+      Top = 85
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
     object cxLabel22: TcxLabel
@@ -870,6 +871,23 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Properties.ReadOnly = True
       TabOrder = 50
       Width = 141
+    end
+    object cxLabel25: TcxLabel
+      Left = 1018
+      Top = 85
+      Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074'-'#1074' '#1090#1086#1074'.'
+    end
+    object ceGoodsProperty: TcxButtonEdit
+      Left = 1018
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 52
+      Width = 164
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1968,6 +1986,13 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMask'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
@@ -2247,6 +2272,21 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftBoolean
         ParamType = ptResult
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsPropertyId'
+        Value = Null
+        Component = GuidesGoodsProperty
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsPropertyName'
+        Value = Null
+        Component = GuidesGoodsProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2436,6 +2476,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsPropertyId'
+        Value = Null
+        Component = GuidesGoodsProperty
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -2527,6 +2575,9 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = ceGoodsProperty
       end>
     Left = 232
     Top = 193
@@ -2853,8 +2904,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1048
-    Top = 104
+    Left = 1064
+    Top = 16
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -3270,8 +3321,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 892
-    Top = 100
+    Left = 900
+    Top = 108
   end
   object RetailGuides: TdsdGuides
     KeyField = 'Id'
@@ -3406,5 +3457,32 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     PackSize = 1
     Left = 810
     Top = 200
+  end
+  object GuidesGoodsProperty: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGoodsProperty
+    FormNameParam.Value = 'TGoodsPropertyForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsPropertyForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsProperty
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 1104
+    Top = 91
   end
 end
