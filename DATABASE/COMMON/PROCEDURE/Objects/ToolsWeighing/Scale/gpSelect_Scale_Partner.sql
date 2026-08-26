@@ -658,6 +658,10 @@ BEGIN
                               , 11921036 -- Склад повернень ф.Вінниця
                                 --
                               , 13094686  -- СТО Петренко
+                                --
+                              , 14034211 -- Склад ГП ф.Київ (Сільпо)
+                              , 14034228 -- Склад ГП ф.Київ (Новус)
+                              , 14034227 -- Склад ГП ф.Одеса (Сільпо)
                                )
          AND inBranchCode BETWEEN 301 AND 310
 
@@ -700,7 +704,7 @@ BEGIN
 
        FROM tmpMember
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = tmpMember.DescId
-            LEFT JOIN (SELECT zc_Movement_Send() AS MovementDescId WHERE inBranchCode <> 301
+            LEFT JOIN (SELECT zc_Movement_Send() AS MovementDescId WHERE inBranchCode NOT IN (301, 1, 2, 3, 4, 5, 6, 7 , 8 , 9 , 10 , 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
                  UNION SELECT zc_Movement_Loss() AS MovementDescId WHERE inBranchCode BETWEEN 301 AND 310
                       ) AS tmpDesc ON 1=1
 
@@ -834,6 +838,10 @@ BEGIN
                                 , 3080696-- 50011	Склад возвратов ф.Львов
                                 , 11921035 -- Склад ГП ф.Вінниця
                                 , 11921036 -- Склад повернень ф.Вінниця
+                                  --
+                                , 14034211 -- Склад ГП ф.Київ (Сільпо)
+                                , 14034228 -- Склад ГП ф.Київ (Новус)
+                                , 14034227 -- Склад ГП ф.Одеса (Сільпо)
                                 )
             AND (vbBranchId_Constraint = 0
               OR vbUserId = zfCalc_UserAdmin() :: Integer)
