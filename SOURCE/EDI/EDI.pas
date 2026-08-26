@@ -2777,6 +2777,7 @@ var
 begin
   if (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
      and (1=0)
+//  if (HeaderDataSet.FieldByName('isSchema_metro').asBoolean = TRUE)
   then begin
             // Создать XML
             DESADV_fozz := DesadvFozzXML.NewDESADV;
@@ -3139,6 +3140,11 @@ begin
             DESADV.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
             // Дата накладної
             DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+
+            // Номер договору на поставку
+            DESADV.CAMPAIGNNUMBER := HeaderDataSet.FieldByName('ContractName').asString;
+            DESADV.CAMPAIGNNUMBERDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
+
             //
             if HeaderDataSet.FieldByName('INFO_RoomNumber').asString <> ''
             then DESADV.INFO := HeaderDataSet.FieldByName('INFO_RoomNumber').asString;
@@ -3220,9 +3226,9 @@ begin
               FileName := 'DOCUMENTINVOICE_TN_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
          end
     else begin DESADV.OwnerDocument.SaveToStream(Stream);
-              lNumber:= DESADV.NUMBER;
-              //
-              FileName := 'desadv_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
+               lNumber:= DESADV.NUMBER;
+               //
+               FileName := 'desadv_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
          end;
     // !временно!
     if (FisEDISaveLocal) or (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
@@ -3231,7 +3237,7 @@ begin
        try
          if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
          then DESADV_fozz_Amount.OwnerDocument.SaveToFile(FileName)
-         else DESADV     .OwnerDocument.SaveToFile(FDirectoryError + FileName);
+         else DESADV            .OwnerDocument.SaveToFile(FDirectoryError + FileName);
        except
          if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
          then DESADV_fozz_Amount.OwnerDocument.SaveToFile(FileName)
@@ -3502,7 +3508,7 @@ begin
       //
 
       try if isMetro = TRUE
-          then ParamByName('inGLNCode').Value := BUYERPARTNUMBER //PRODUCTIDBUYER
+          then ParamByName('inGLNCode').Value := PRODUCTIDBUYER //BUYERPARTNUMBER
           else ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
       except
             {try s1 := BUYERPARTNUMBER; //PRODUCTIDBUYER
