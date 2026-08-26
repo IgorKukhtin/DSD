@@ -83,6 +83,11 @@ BEGIN
                                                       AND ObjectBoolean_Unit_notStaffList.DescId    = zc_ObjectBoolean_Unit_notStaffList()
                                                       AND ObjectBoolean_Unit_notStaffList.ValueData = TRUE
 
+                               -- Исключить из ШР
+                               LEFT JOIN MovementDate AS MovementDate_DateClose
+                                                      ON MovementDate_DateClose.MovementId = Movement.Id
+                                                     AND MovementDate_DateClose.DescId = zc_MovementDate_DateClose()
+
                           WHERE Movement.DescId = zc_Movement_StaffList()
                             AND Movement.OperDate <= inStartDate --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                             AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -90,6 +95,8 @@ BEGIN
                             AND (ObjectLink_Unit_Department.ChildObjectId = inDepartmentId OR inDepartmentId = 0)
                             -- Исключить из ШР
                             AND ObjectBoolean_Unit_notStaffList.ObjectId IS NULL
+                            -- Исключить
+                            AND COALESCE (MovementDate_DateClose.ValueData, zc_DateEnd()) > inStartDate
                          ) AS tmp
                     WHERE tmp.Ord = 1
                     )

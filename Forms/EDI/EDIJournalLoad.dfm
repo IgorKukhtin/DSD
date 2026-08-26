@@ -4,6 +4,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
   ClientWidth = 1368
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -474
   ExplicitWidth = 1384
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -893,7 +894,6 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
             OptionsCustomize.DataRowSizing = True
             OptionsData.Deleting = False
             OptionsData.DeletingConfirmation = False
-            OptionsData.Editing = False
             OptionsData.Inserting = False
             OptionsView.ColumnAutoWidth = True
             OptionsView.Footer = True
@@ -912,8 +912,14 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
             object colProtocolText: TcxGridDBColumn
               Caption = #1054#1087#1080#1089#1072#1085#1080#1077
               DataBinding.FieldName = 'ProtocolText'
+              PropertiesClassName = 'TcxButtonEditProperties'
+              Properties.Buttons = <
+                item
+                  Default = True
+                  Kind = bkEllipsis
+                end>
+              Properties.ReadOnly = True
               HeaderAlignmentVert = vaCenter
-              Options.Editing = False
               Width = 100
             end
             object colProtocolUserName: TcxGridDBColumn

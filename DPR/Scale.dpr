@@ -141,7 +141,8 @@ uses
   GuideGoodsPeresort in '..\Scale\GuideGoodsPeresort.pas' {GuideGoodsPeresortForm},
   DialogPeresort in '..\Scale\DialogPeresort.pas' {DialogPeresortForm},
   DialogGofro in '..\Scale\DialogGofro.pas' {DialogGofroForm},
-  GuideGofro in '..\Scale\GuideGofro.pas' {GuideGofroForm};
+  GuideGofro in '..\Scale\GuideGofro.pas' {GuideGofroForm},
+  DesadvXML_vch in '..\SOURCE\EDI\DesadvXML_vch.pas';
 
 {$R *.res}
 
