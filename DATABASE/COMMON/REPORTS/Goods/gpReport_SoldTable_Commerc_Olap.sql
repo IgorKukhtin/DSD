@@ -30,7 +30,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , RetailName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar, PartnerCategory TFloat
              , Address TVarChar, RegionName TVarChar, CityKindName TVarChar, CityName TVarChar
-             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar, TypeCommercName  TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar, TypeCommercName  TVarChar, RouteTTName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -451,7 +451,8 @@ BEGIN
                               , SoldTable.PartnerTagId       
                               , SoldTable.ContractId         
                               , SoldTable.ContractTagId      
-                              , SoldTable.ContractTagGroupId 
+                              , SoldTable.ContractTagGroupId
+                              , SoldTable.RouteTTId 
 
                               , SoldTable.GoodsPlatformId     
                               , SoldTable.TradeMarkId         
@@ -544,7 +545,8 @@ BEGIN
                                 , SoldTable.PartnerTagId       
                                 , SoldTable.ContractId         
                                 , SoldTable.ContractTagId      
-                                , SoldTable.ContractTagGroupId 
+                                , SoldTable.ContractTagGroupId
+                                , SoldTable.RouteTTId 
   
                                 , SoldTable.GoodsPlatformId     
                                 , SoldTable.TradeMarkId         
@@ -709,6 +711,8 @@ BEGIN
                           , Object_Region.ValueData                    AS RegionName
                           , Object_CityKind.ValueData                  AS CityKindName
                           , Object_Street_View.CityName                AS CityName
+                          , Object_RouteTT.Id                          AS RouteTTId
+                          , Object_RouteTT.ValueData                   AS RouteTTName
                      FROM tmpMI AS MovementItem
                            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementItem.ContractId
                            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.JuridicalId
@@ -749,6 +753,11 @@ BEGIN
                                                 ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id
                                                AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
                            LEFT JOIN Object_Street_View ON Object_Street_View.Id = ObjectLink_Partner_Street.ChildObjectId
+
+                           LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteTT
+                                                ON ObjectLink_Partner_RouteTT.ObjectId = Object_Partner.Id 
+                                               AND ObjectLink_Partner_RouteTT.DescId = zc_ObjectLink_Partner_RouteTT()
+                           LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = ObjectLink_Partner_RouteTT.ChildObjectId
                   
                            LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
                                                 ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId
@@ -1098,6 +1107,7 @@ BEGIN
           , Object_Partner.ObjectCode      AS PartnerCode
           , Object_Partner.ValueData       AS PartnerName
           , Object_TypeCommerc.ValueData   ::TVarChar AS TypeCommercName
+          , Object_RouteTT.ValueData       ::TVarChar AS RouteTTName
 
           , Object_Contract.Id                AS ContractId
           , Object_Contract.ObjectCode        AS ContractCode
@@ -1239,6 +1249,7 @@ BEGIN
 
           LEFT JOIN Object AS Object_Area ON Object_Area.Id = tmpOperationGroup.AreaId
           LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = tmpOperationGroup.PartnerTagId
+          LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = tmpOperationGroup.RouteTTId
 
           LEFT JOIN Object AS Object_Region       ON Object_Region.Id       = tmpOperationGroup.RegionId
          -- LEFT JOIN Object AS Object_Province     ON Object_Province.Id     = tmpOperationGroup.ProvinceId
@@ -1334,6 +1345,7 @@ BEGIN
           , tmpMI_Master.PartnerCode
           , tmpMI_Master.PartnerName
           , tmpMI_Master.TypeCommercName ::TVarChar
+          , tmpMI_Master.RouteTTName     ::TVarChar
 
           , tmpMI_Master.ContractId
           , tmpMI_Master.ContractCode

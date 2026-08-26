@@ -1,8 +1,8 @@
-﻿object Report_SoldTable_Commerc_OlapForm: TReport_SoldTable_Commerc_OlapForm
+﻿object Report_SoldTable_Commerc_tableForm: TReport_SoldTable_Commerc_tableForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1092#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1110' ('#1082#1086#1084#1077#1088#1094#1110#1103')>'
-  ClientHeight = 600
+  ClientHeight = 593
   ClientWidth = 1140
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -299,14 +299,15 @@
   end
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
-    Top = 185
+    Top = 441
     Width = 1140
-    Height = 232
-    Align = alClient
+    Height = 152
+    Align = alBottom
     DataSource = MasterDS
     Groups = <>
     OptionsView.RowGrandTotalWidth = 456
     TabOrder = 1
+    Visible = False
     object pvOperDate: TcxDBPivotGridField
       AreaIndex = 53
       IsCaptionAssigned = True
@@ -1046,12 +1047,11 @@
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 417
+    Top = 185
     Width = 1140
-    Height = 183
-    Align = alBottom
+    Height = 256
+    Align = alClient
     TabOrder = 2
-    Visible = False
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -1060,152 +1060,168 @@
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colReturn_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colReturn_Summ
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colSale_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colSale_Summ
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colSale_Weight_noPromo
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colSale_Summ_NoPromo
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colPromo_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colPromo_Summ
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colSale_Weight_noReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colSale_Summ_NoReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colSale_Summ_plan
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colSale_weight_plan
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colPromo_weight_plan
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colPromo_Summ_plan
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colSaleNoPromo_weight_plan
         end
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
+          Column = colSaleNoPromo_Summ_plan
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colReturn_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colReturn_Summ
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = colSale_Weight
         end
         item
-          Format = 'C'#1090#1088#1086#1082': ,0'
+          Format = ',0.####'
+          Kind = skSum
+          Column = colSale_Summ
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colSale_Weight_noPromo
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colSale_Summ_NoPromo
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colPromo_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colPromo_Summ
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colSale_Weight_noReturn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colSale_Summ_NoReturn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colSale_Summ_plan
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colSale_weight_plan
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colPromo_weight_plan
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colPromo_Summ_plan
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colSaleNoPromo_weight_plan
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colSaleNoPromo_Summ_plan
+        end
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = Goods_Search
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
+          Column = colPartnerName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1222,79 +1238,673 @@
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object GoodsGroupNameFull: TcxGridDBColumn
+      object colOperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072
+        DataBinding.FieldName = 'OperDate'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colMonthDate: TcxGridDBColumn
+        Caption = #1052#1110#1089#1103#1094#1100
+        DataBinding.FieldName = 'MonthDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'mmmm yyyy'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colYear: TcxGridDBColumn
+        Caption = #1056#1110#1082
+        DataBinding.FieldName = 'Year'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 150
+      end
+      object colBranchName: TcxGridDBColumn
+        Caption = #1060#1110#1083#1110#1103
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colBranchKAMName: TcxGridDBColumn
+        Caption = #1060#1110#1083#1110#1103' / '#1050#1040#1052
+        DataBinding.FieldName = 'BranchKAMName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colJuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'.'#1086#1089#1086#1073#1072
+        DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colRetailName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1110#1074#1077#1083#1100#1085#1072' '#1084#1077#1088#1077#1078#1072
+        DataBinding.FieldName = 'RetailName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colOKPO: TcxGridDBColumn
+        Caption = #1054#1050#1055#1054
+        DataBinding.FieldName = 'OKPO'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 79
+      end
+      object colSectionName: TcxGridDBColumn
+        Caption = #1057#1077#1075#1084#1077#1085#1090
+        DataBinding.FieldName = 'SectionName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colContractCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 51
+      end
+      object colContractNumber: TcxGridDBColumn
+        Caption = #1044#1086#1075#1086#1074#1110#1088
+        DataBinding.FieldName = 'ContractNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colContractTagGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1072' '#1086#1079#1085#1072#1082#1072' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractTagGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colContractTagName: TcxGridDBColumn
+        Caption = #1054#1079#1085#1072#1082#1072' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractTagName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colAreaName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1110#1086#1085
+        DataBinding.FieldName = 'AreaName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 77
+      end
+      object colPartnerCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+        DataBinding.FieldName = 'PartnerCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colPartnerId: TcxGridDBColumn
+        Caption = #1050#1083#1102#1095'-2'
+        DataBinding.FieldName = 'PartnerID'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colPartnerName: TcxGridDBColumn
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+        DataBinding.FieldName = 'PartnerName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colRouteTTName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058
+        DataBinding.FieldName = 'RouteTTName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colTypeCommercName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1074#1110#1076#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103
+        DataBinding.FieldName = 'TypeCommercName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colCityKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1085'.'#1087'.'
+        DataBinding.FieldName = 'CityKindName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colCityName: TcxGridDBColumn
+        Caption = #1053#1072#1089#1077#1083#1077#1085#1080#1081' '#1087#1091#1085#1082#1090
+        DataBinding.FieldName = 'CityName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colAddress: TcxGridDBColumn
+        Caption = #1040#1076#1088#1077#1089#1072
+        DataBinding.FieldName = 'Address'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colPartnerCategory: TcxGridDBColumn
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1110#1103' '#1058#1058
+        DataBinding.FieldName = 'PartnerCategory'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colPartnerTagName: TcxGridDBColumn
+        Caption = #1054#1079#1085#1072#1082#1072' '#1058#1058
+        DataBinding.FieldName = 'PartnerTagName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colPersonalName_1: TcxGridDBColumn
+        Caption = #1055#1030#1041' '#1056'-1'
+        DataBinding.FieldName = 'PersonalName_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPersonalName_2: TcxGridDBColumn
+        Caption = #1055#1030#1041' '#1056'-2'
+        DataBinding.FieldName = 'PersonalName_2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPersonalName_3: TcxGridDBColumn
+        Caption = #1055#1030#1041' '#1056'-3'
+        DataBinding.FieldName = 'PersonalName_3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPersonalName_4: TcxGridDBColumn
+        Caption = #1055#1030#1041' '#1056'-4'
+        DataBinding.FieldName = 'PersonalName_4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPersonalName_5: TcxGridDBColumn
+        Caption = #1055#1030#1041' '#1056'-5'
+        DataBinding.FieldName = 'PersonalName_5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPersonalName_6: TcxGridDBColumn
+        Caption = #1055#1030#1041' '#1056'-6'
+        DataBinding.FieldName = 'PersonalName_6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPositionName_1: TcxGridDBColumn
+        Caption = #1055#1086#1089#1072#1076#1072' '#1056'-1'
+        DataBinding.FieldName = 'PositionName_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPositionName_2: TcxGridDBColumn
+        Caption = #1055#1086#1089#1072#1076#1072' '#1056'-2'
+        DataBinding.FieldName = 'PositionName_2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPositionName_3: TcxGridDBColumn
+        Caption = #1055#1086#1089#1072#1076#1072' '#1056'-3'
+        DataBinding.FieldName = 'PositionName_3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPositionName_4: TcxGridDBColumn
+        Caption = #1055#1086#1089#1072#1076#1072' '#1056'-4'
+        DataBinding.FieldName = 'PositionName_4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPositionName_5: TcxGridDBColumn
+        Caption = #1055#1086#1089#1072#1076#1072' '#1056'-5'
+        DataBinding.FieldName = 'PositionName_5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPositionName_6: TcxGridDBColumn
+        Caption = #1055#1086#1089#1072#1076#1072' '#1056'-6'
+        DataBinding.FieldName = 'PositionName_6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colUnitName_1: TcxGridDBColumn
+        Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-1'
+        DataBinding.FieldName = 'UnitName_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colUnitName_2: TcxGridDBColumn
+        Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-2'
+        DataBinding.FieldName = 'UnitName_2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colUnitName_3: TcxGridDBColumn
+        Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-3'
+        DataBinding.FieldName = 'UnitName_3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colUnitName_4: TcxGridDBColumn
+        Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-4'
+        DataBinding.FieldName = 'UnitName_4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colUnitName_5: TcxGridDBColumn
+        Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-5'
+        DataBinding.FieldName = 'UnitName_5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colUnitName_6: TcxGridDBColumn
+        Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-6'
+        DataBinding.FieldName = 'UnitName_6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPersonalName_1ret: TcxGridDBColumn
+        Caption = #1055#1030#1041' '#1056'-1 ('#1084#1077#1088#1077#1078#1110')'
+        DataBinding.FieldName = 'PersonalName_1ret'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPersonalName_21ret: TcxGridDBColumn
+        Caption = #1055#1030#1041' '#1056'-2 ('#1084#1077#1088#1077#1078#1110')'
+        DataBinding.FieldName = 'PersonalName_2ret'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPersonalName_3ret: TcxGridDBColumn
+        Caption = #1055#1030#1041' '#1056'-3 ('#1084#1077#1088#1077#1078#1110')'
+        DataBinding.FieldName = 'PersonalName_3ret'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPositionName_1ret: TcxGridDBColumn
+        Caption = #1055#1086#1089#1072#1076#1072' '#1056'-1 ('#1084#1077#1088#1077#1078#1110')'
+        DataBinding.FieldName = 'PositionName_1ret'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPositionName_2ret: TcxGridDBColumn
+        Caption = #1055#1086#1089#1072#1076#1072' '#1056'-2 ('#1084#1077#1088#1077#1078#1110')'
+        DataBinding.FieldName = 'PositionName_2ret'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPositionName_3ret: TcxGridDBColumn
+        Caption = #1055#1086#1089#1072#1076#1072' '#1056'-3 ('#1084#1077#1088#1077#1078#1110')'
+        DataBinding.FieldName = 'PositionName_3ret'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colUnitName_1ret: TcxGridDBColumn
+        Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-1 ('#1084#1077#1088#1077#1078#1110')'
+        DataBinding.FieldName = 'UnitName_1ret'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colUnitName_2ret: TcxGridDBColumn
+        Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-2 ('#1084#1077#1088#1077#1078#1110')'
+        DataBinding.FieldName = 'UnitName_2ret'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colUnitName_3ret: TcxGridDBColumn
+        Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083' '#1056'-3 ('#1084#1077#1088#1077#1078#1110')'
+        DataBinding.FieldName = 'UnitName_3ret'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colTradeMarkName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+        DataBinding.FieldName = 'TradeMarkName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colGoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 111
+        Width = 80
+      end
+      object colGoodsGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object colGoodsGroupDirectionName: TcxGridDBColumn
+        Caption = #1040#1085#1072#1083#1110#1090#1080#1095#1085#1072' '#1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'GoodsGroupDirectionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colGoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074'.'
+        DataBinding.FieldName = 'GoodsCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object colGoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colGoodsName_ukr: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088' ('#1091#1082#1088'.)'
+        DataBinding.FieldName = 'GoodsName_ukr'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 150
+      end
+      object colGoodsKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colMeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colGoodsCode_basis: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1094#1077#1093')'
+        DataBinding.FieldName = 'GoodsCode_basis'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object colGoodsName_basis: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088' ('#1094#1077#1093')'
+        DataBinding.FieldName = 'GoodsName_basis'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 150
+      end
+      object colGoodsKindName_basis: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1094#1077#1093')'
+        DataBinding.FieldName = 'GoodsKindName_basis'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 150
+      end
+      object colMeasureName_basis: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'. ('#1094#1077#1093')'
+        DataBinding.FieldName = 'MeasureName_basis'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object colInfoMoneyName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object colPaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1080
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object colReturn_Weight: TcxGridDBColumn
+        Caption = #1042#1086#1079#1074#1088', '#1074#1077#1089' ('#1060#1040#1050#1058')'
+        DataBinding.FieldName = 'Return_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colReturn_Summ: TcxGridDBColumn
+        Caption = #1042#1086#1079#1074#1088', '#1075#1088#1085' ('#1060#1040#1050#1058')'
+        DataBinding.FieldName = 'Return_Summ'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colSale_Weight: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076', '#1074#1077#1089' ('#1060#1040#1050#1058')'
+        DataBinding.FieldName = 'Sale_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colSale_Summ: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076', '#1075#1088#1085' ('#1060#1040#1050#1058')'
+        DataBinding.FieldName = 'Sale_Summ'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colSale_Weight_noPromo: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076' '#1073#1077#1079' '#1040#1082#1094#1080#1081', '#1074#1077#1089' ('#1060#1040#1050#1058')'
+        DataBinding.FieldName = 'Sale_Weight_noPromo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colSale_Summ_NoPromo: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076' '#1073#1077#1079' '#1040#1082#1094#1080#1081', '#1075#1088#1085' ('#1060#1040#1050#1058')'
+        DataBinding.FieldName = 'Sale_Summ_NoPromo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPromo_Weight: TcxGridDBColumn
+        Caption = #1040#1082#1094#1080#1080', '#1074#1077#1089' ('#1060#1040#1050#1058')'
+        DataBinding.FieldName = 'Promo_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPromo_Summ: TcxGridDBColumn
+        Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1060#1040#1050#1058')'
+        DataBinding.FieldName = 'Promo_Summ'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colSale_Weight_noReturn: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1074#1086#1079#1074#1088'., '#1074#1077#1089' ('#1060#1040#1050#1058')'
+        DataBinding.FieldName = 'Sale_Weight_noReturn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colSale_Summ_NoReturn: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1074#1086#1079#1074#1088'., '#1075#1088#1085' ('#1060#1040#1050#1058')'
+        DataBinding.FieldName = 'Sale_Summ_NoReturn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colSale_Summ_plan: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076'., '#1075#1088#1085' ('#1055#1051#1040#1053')'
+        DataBinding.FieldName = 'Sale_Summ_plan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colSale_weight_plan: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076'., '#1074#1077#1089' ('#1055#1051#1040#1053')'
+        DataBinding.FieldName = 'Sale_weight_plan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPromo_weight_plan: TcxGridDBColumn
+        Caption = #1040#1082#1094#1080#1080', '#1074#1077#1089' ('#1055#1051#1040#1053')'
+        DataBinding.FieldName = 'Promo_weight_plan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colPromo_Summ_plan: TcxGridDBColumn
+        Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1055#1051#1040#1053')'
+        DataBinding.FieldName = 'Promo_Summ_plan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colSaleNoPromo_weight_plan: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076' '#1073#1077#1079' '#1040#1082#1094#1080#1081', '#1074#1077#1089' ('#1055#1051#1040#1053')'
+        DataBinding.FieldName = 'SaleNoPromo_weight_plan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colSaleNoPromo_Summ_plan: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076' '#1073#1077#1079' '#1040#1082#1094#1080#1081', '#1075#1088#1085' ('#1055#1051#1040#1053')'
+        DataBinding.FieldName = 'SaleNoPromo_Summ_plan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object Goods_Search: TcxGridDBColumn
-        Caption = #1082#1086#1076' -'#1058#1086#1074#1072#1088' '
+        Caption = #1055#1086#1096#1091#1082' - '#1050#1086#1076' -'#1058#1086#1074#1072#1088' '
         DataBinding.FieldName = 'Goods_Search'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 157
       end
-      object MeasureName: TcxGridDBColumn
-        Caption = #1045#1076'. '#1080#1079#1084'.'
-        DataBinding.FieldName = 'MeasureName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 33
-      end
-      object GoodsName_basis: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088' '#1094#1077#1093
-        DataBinding.FieldName = 'GoodsName_basis'
-        Width = 70
-      end
-      object cxJuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'. '#1086#1089#1086#1073#1072
-        DataBinding.FieldName = 'JuridicalName'
-      end
-      object RetailName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
-        DataBinding.FieldName = 'RetailName'
-        Width = 70
-      end
-      object ContractNumber: TcxGridDBColumn
-        Caption = #1044#1086#1075#1086#1074#1110#1088
-        DataBinding.FieldName = 'ContractNumber'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 42
-      end
-      object GoodsKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsKindName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object PartnerName: TcxGridDBColumn
-        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-        DataBinding.FieldName = 'PartnerName'
-        Width = 70
-      end
       object Member_Search: TcxGridDBColumn
-        Caption = #1060#1048#1054' ('#1091#1088#1086#1074#1085#1080')'
+        Caption = #1055#1086#1096#1091#1082' - '#1055#1030#1041' ('#1088#1110#1074#1085#1110')'
         DataBinding.FieldName = 'Member_Search'
+        Visible = False
         Width = 70
       end
       object Position_Search: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1091#1088#1086#1074#1085#1080')'
+        Caption = #1055#1086#1096#1091#1082' - '#1055#1086#1089#1072#1076#1099' ('#1088#1110#1074#1085#1110')'
         DataBinding.FieldName = 'Position_Search'
+        Visible = False
         Width = 70
       end
       object Unit_Search: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1091#1088#1086#1074#1085#1080')'
+        Caption = #1055#1086#1096#1091#1082' -'#1055#1110#1076#1088#1086#1079#1076#1110#1083#1080' ('#1088#1110#1074#1085#1110')'
         DataBinding.FieldName = 'Unit_Search'
+        Visible = False
         Width = 70
       end
     end
@@ -1779,8 +2389,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 896
-    Top = 112
+    Left = 904
+    Top = 72
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 1048
@@ -1930,19 +2540,19 @@
         Column = Goods_Search
       end
       item
-        Column = cxJuridicalName
+        Column = colJuridicalName
         TextEdit = edSearchJuridicalName
       end
       item
-        Column = RetailName
+        Column = colRetailName
         TextEdit = edSearchRetailName
       end
       item
-        Column = ContractNumber
+        Column = colContractNumber
         TextEdit = edSearchContractNumber
       end
       item
-        Column = PartnerName
+        Column = colPartnerName
         TextEdit = edSearchPartnerName
       end
       item

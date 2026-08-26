@@ -11,20 +11,21 @@
     Top = 145
     Width = 1540
     Height = 562
-    ExplicitTop = 139
+    Properties.ActivePage = TabSheet_out
+    ExplicitTop = 145
     ExplicitWidth = 1540
-    ExplicitHeight = 568
+    ExplicitHeight = 562
     ClientRectBottom = 562
     ClientRectRight = 1540
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 1540
-      ExplicitHeight = 544
+      ExplicitHeight = 538
       inherited cxGrid: TcxGrid
         Width = 1540
         Height = 173
         ExplicitWidth = 1540
-        ExplicitHeight = 179
+        ExplicitHeight = 173
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1028,7 +1029,6 @@
         Height = 173
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 187
         object cxSplitter1: TcxSplitter
           Left = 657
           Top = 1
@@ -1597,7 +1597,6 @@
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitTop = 179
       end
       object cxSplitter2: TcxSplitter
         Left = 0
@@ -1607,7 +1606,6 @@
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridPromoStateKind
-        ExplicitTop = 360
       end
       object cxGridPromoStateKind: TcxGrid
         Left = 0
@@ -1617,7 +1615,6 @@
         Align = alBottom
         PopupMenu = PromoStateKindPopupMenu
         TabOrder = 4
-        ExplicitTop = 368
         object cxGridDBTableViewPromoStateKind: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PromoStateKindDS
@@ -1713,7 +1710,6 @@
     object TabSheet_out: TcxTabSheet
       Caption = #1055#1088#1086#1084#1086'-'#1084#1077#1093#1072#1085#1080#1082#1072
       ImageIndex = 9
-      ExplicitHeight = 544
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1722,7 +1718,6 @@
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitHeight = 544
         object cxGridDBTableView_out: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -2120,7 +2115,6 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = '2.1.'#1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
-      ExplicitHeight = 544
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -2129,7 +2123,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 544
         object cxGridDBTableViewCalc: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS
@@ -2462,7 +2455,6 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = '2.2.'#1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
-      ExplicitHeight = 544
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -2471,7 +2463,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 544
         object cxGridDBTableViewCalc2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS2
@@ -2790,7 +2781,6 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitHeight = 544
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2799,7 +2789,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 544
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -2885,7 +2874,6 @@
     object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
-      ExplicitHeight = 544
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2893,7 +2881,6 @@
         Height = 538
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 544
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MessageDS
@@ -3036,7 +3023,6 @@
     object cxTabSheetPromoInvoice: TcxTabSheet
       Caption = '4.'#1057#1095#1077#1090#1072' '#1076#1083#1103' '#1072#1082#1094#1080#1080
       ImageIndex = 6
-      ExplicitHeight = 544
       object GridPromoInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -3044,7 +3030,6 @@
         Height = 538
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 544
         object cxGridDBTableViewPromoInvoice: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PromoInvoiceDS
@@ -3231,7 +3216,6 @@
     object cxTabSheetStat: TcxTabSheet
       Caption = '5.1.'#1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1088#1086#1076#1072#1078
       ImageIndex = 5
-      ExplicitHeight = 544
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -3240,7 +3224,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 544
         object cxGridDBTableViewPlan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanDS
@@ -3814,7 +3797,6 @@
     object cxTabSheetPlanSale: TcxTabSheet
       Caption = '5.2.'#1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1040#1082#1094#1080#1103
       ImageIndex = 7
-      ExplicitHeight = 544
       object cxGridPlanMaster: TcxGrid
         Left = 0
         Top = 0
@@ -3823,7 +3805,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 544
         object cxGridDBTableViewPlanMaster: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanMasterDS
@@ -4014,7 +3995,6 @@
     object cxTabSheetPlanProd: TcxTabSheet
       Caption = '5.3.'#1055#1083#1072#1085' '#1087#1088'-'#1074#1072' '#1076#1083#1103' '#1040#1082#1094#1080#1080
       ImageIndex = 8
-      ExplicitHeight = 544
       object cxGridPlanChild: TcxGrid
         Left = 0
         Top = 0
@@ -4023,9 +4003,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitLeft = 120
-        ExplicitTop = -72
-        ExplicitHeight = 524
         object cxGridDBTableViewPlanChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanChildDS
@@ -5111,7 +5088,6 @@
       Category = 'Goods'
       TabSheet = TabSheet_out
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView_out
       Action = actGoodsChoiceForm
@@ -5619,6 +5595,9 @@
         end>
       Caption = 'actUpdateDataSetMessage'
       DataSource = MessageDS
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
     end
     object actUpdateCalcDS: TdsdUpdateDataSet [38]
       Category = 'DSDLib'
@@ -6208,6 +6187,7 @@
       Category = 'Goods'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = actGoodsChoiceForm
