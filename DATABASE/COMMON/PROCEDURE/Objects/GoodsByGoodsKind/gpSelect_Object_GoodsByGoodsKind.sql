@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , MeasureName TVarChar
              , Weight TFloat
              , WeightPackageKorob TFloat, WeightPackage TFloat, WeightPackageSticker TFloat, WeightPackageSticker_real TFloat
+             , WeightTareBranch TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
              , WeightMin TFloat, WeightMax TFloat
              , Height TFloat, Length TFloat, Width TFloat
@@ -198,6 +199,7 @@ BEGIN
            , COALESCE (ObjectFloat_WeightPackage.ValueData,0)       ::TFloat  AS WeightPackage
            , COALESCE (ObjectFloat_WeightPackageSticker.ValueData,0)::TFloat  AS WeightPackageSticker
            , COALESCE (ObjectFloat_WeightPackageSticker_real.ValueData,0)::TFloat AS WeightPackageSticker_real
+           , COALESCE (ObjectFloat_WeightTareBranch.ValueData,0)    ::TFloat  AS WeightTareBranch
            , COALESCE (ObjectFloat_WeightTotal.ValueData,0)         ::TFloat  AS WeightTotal
            , COALESCE (ObjectFloat_ChangePercentAmount.ValueData,0) ::TFloat  AS ChangePercentAmount
 
@@ -375,6 +377,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackageSticker_real
                                   ON ObjectFloat_WeightPackageSticker_real.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_WeightPackageSticker_real.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker_real()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_WeightTareBranch
+                                  ON ObjectFloat_WeightTareBranch.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_WeightTareBranch.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTareBranch()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                   ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -703,6 +709,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.08.26        *
  13.01.26        *
  27.05.25        *
  22.05.25        * 
