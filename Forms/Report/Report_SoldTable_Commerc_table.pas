@@ -43,23 +43,17 @@ type
     PanelHead: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    cxDBPivotGrid: TcxDBPivotGrid;
-    pvGoodsName: TcxDBPivotGridField;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    pvMonthDate: TcxDBPivotGridField;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    PivotAddOn: TPivotAddOn;
     FormParams: TdsdFormParams;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    pvMeasureName: TcxDBPivotGridField;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GuidesGoodsGroup: TdsdGuides;
-    cfPersentWeight: TdsdPivotGridCalcFields;
     cxLabel5: TcxLabel;
     edInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
@@ -76,7 +70,6 @@ type
     edSearchJuridicalName: TcxTextEdit;
     cxLabel11: TcxLabel;
     edSearchRetailName: TcxTextEdit;
-    pvPersentWeight: TcxDBPivotGridField;
     cxLabel8: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
@@ -97,8 +90,6 @@ type
     GuidesTradeMark: TdsdGuides;
     edSearchPartnerName: TcxTextEdit;
     cxLabel15: TcxLabel;
-    cfPersentSumm: TdsdPivotGridCalcFields;
-    pvPersentSumm: TcxDBPivotGridField;
     edSearchMember: TcxTextEdit;
     cxLabel10: TcxLabel;
     edSearchUnit: TcxTextEdit;
@@ -108,6 +99,7 @@ type
     Member_Search: TcxGridDBColumn;
     Position_Search: TcxGridDBColumn;
     Unit_Search: TcxGridDBColumn;
+    DBViewAddOn: TdsdDBViewAddOn;
   private
   public
   end;
