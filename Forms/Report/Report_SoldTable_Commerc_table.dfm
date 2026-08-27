@@ -1244,6 +1244,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colMonthDate: TcxGridDBColumn
@@ -1254,6 +1255,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colYear: TcxGridDBColumn
@@ -1262,6 +1264,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object colBranchName: TcxGridDBColumn
@@ -1269,6 +1272,7 @@
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colBranchKAMName: TcxGridDBColumn
@@ -1276,6 +1280,7 @@
         DataBinding.FieldName = 'BranchKAMName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colJuridicalName: TcxGridDBColumn
@@ -1283,6 +1288,7 @@
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colRetailName: TcxGridDBColumn
@@ -1290,6 +1296,7 @@
         DataBinding.FieldName = 'RetailName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colOKPO: TcxGridDBColumn
@@ -1297,6 +1304,7 @@
         DataBinding.FieldName = 'OKPO'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 79
       end
       object colSectionName: TcxGridDBColumn
@@ -1305,6 +1313,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colContractCode: TcxGridDBColumn
@@ -1312,6 +1321,7 @@
         DataBinding.FieldName = 'ContractCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 51
       end
       object colContractNumber: TcxGridDBColumn
@@ -1319,6 +1329,7 @@
         DataBinding.FieldName = 'ContractNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colContractTagGroupName: TcxGridDBColumn
@@ -1327,6 +1338,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colContractTagName: TcxGridDBColumn
@@ -1335,6 +1347,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colAreaName: TcxGridDBColumn
@@ -1342,6 +1355,7 @@
         DataBinding.FieldName = 'AreaName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 77
       end
       object colPartnerCode: TcxGridDBColumn
@@ -1349,11 +1363,19 @@
         DataBinding.FieldName = 'PartnerCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colPartnerId: TcxGridDBColumn
         Caption = #1050#1083#1102#1095'-2'
         DataBinding.FieldName = 'PartnerID'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 103
@@ -1363,6 +1385,7 @@
         DataBinding.FieldName = 'PartnerName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colRouteTTName: TcxGridDBColumn
@@ -1370,6 +1393,7 @@
         DataBinding.FieldName = 'RouteTTName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colTypeCommercName: TcxGridDBColumn
@@ -1378,6 +1402,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colCityKindName: TcxGridDBColumn
@@ -1386,6 +1411,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colCityName: TcxGridDBColumn
@@ -1394,6 +1420,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colAddress: TcxGridDBColumn
@@ -1402,6 +1429,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colPartnerCategory: TcxGridDBColumn
@@ -1409,6 +1437,7 @@
         DataBinding.FieldName = 'PartnerCategory'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colPartnerTagName: TcxGridDBColumn
@@ -1416,6 +1445,7 @@
         DataBinding.FieldName = 'PartnerTagName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colPersonalName_1: TcxGridDBColumn
@@ -1423,6 +1453,7 @@
         DataBinding.FieldName = 'PersonalName_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPersonalName_2: TcxGridDBColumn
@@ -1430,6 +1461,7 @@
         DataBinding.FieldName = 'PersonalName_2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPersonalName_3: TcxGridDBColumn
@@ -1437,6 +1469,7 @@
         DataBinding.FieldName = 'PersonalName_3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPersonalName_4: TcxGridDBColumn
@@ -1444,6 +1477,7 @@
         DataBinding.FieldName = 'PersonalName_4'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPersonalName_5: TcxGridDBColumn
@@ -1451,6 +1485,7 @@
         DataBinding.FieldName = 'PersonalName_5'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPersonalName_6: TcxGridDBColumn
@@ -1458,6 +1493,7 @@
         DataBinding.FieldName = 'PersonalName_6'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPositionName_1: TcxGridDBColumn
@@ -1465,6 +1501,7 @@
         DataBinding.FieldName = 'PositionName_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPositionName_2: TcxGridDBColumn
@@ -1472,6 +1509,7 @@
         DataBinding.FieldName = 'PositionName_2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPositionName_3: TcxGridDBColumn
@@ -1479,6 +1517,7 @@
         DataBinding.FieldName = 'PositionName_3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPositionName_4: TcxGridDBColumn
@@ -1486,6 +1525,7 @@
         DataBinding.FieldName = 'PositionName_4'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPositionName_5: TcxGridDBColumn
@@ -1493,6 +1533,7 @@
         DataBinding.FieldName = 'PositionName_5'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPositionName_6: TcxGridDBColumn
@@ -1500,6 +1541,7 @@
         DataBinding.FieldName = 'PositionName_6'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colUnitName_1: TcxGridDBColumn
@@ -1507,6 +1549,7 @@
         DataBinding.FieldName = 'UnitName_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colUnitName_2: TcxGridDBColumn
@@ -1514,6 +1557,7 @@
         DataBinding.FieldName = 'UnitName_2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colUnitName_3: TcxGridDBColumn
@@ -1521,6 +1565,7 @@
         DataBinding.FieldName = 'UnitName_3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colUnitName_4: TcxGridDBColumn
@@ -1528,6 +1573,7 @@
         DataBinding.FieldName = 'UnitName_4'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colUnitName_5: TcxGridDBColumn
@@ -1535,6 +1581,7 @@
         DataBinding.FieldName = 'UnitName_5'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colUnitName_6: TcxGridDBColumn
@@ -1542,6 +1589,7 @@
         DataBinding.FieldName = 'UnitName_6'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPersonalName_1ret: TcxGridDBColumn
@@ -1549,6 +1597,7 @@
         DataBinding.FieldName = 'PersonalName_1ret'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPersonalName_21ret: TcxGridDBColumn
@@ -1556,6 +1605,7 @@
         DataBinding.FieldName = 'PersonalName_2ret'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPersonalName_3ret: TcxGridDBColumn
@@ -1563,6 +1613,7 @@
         DataBinding.FieldName = 'PersonalName_3ret'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPositionName_1ret: TcxGridDBColumn
@@ -1570,6 +1621,7 @@
         DataBinding.FieldName = 'PositionName_1ret'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPositionName_2ret: TcxGridDBColumn
@@ -1577,6 +1629,7 @@
         DataBinding.FieldName = 'PositionName_2ret'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPositionName_3ret: TcxGridDBColumn
@@ -1584,6 +1637,7 @@
         DataBinding.FieldName = 'PositionName_3ret'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colUnitName_1ret: TcxGridDBColumn
@@ -1591,6 +1645,7 @@
         DataBinding.FieldName = 'UnitName_1ret'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colUnitName_2ret: TcxGridDBColumn
@@ -1598,6 +1653,7 @@
         DataBinding.FieldName = 'UnitName_2ret'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colUnitName_3ret: TcxGridDBColumn
@@ -1605,6 +1661,7 @@
         DataBinding.FieldName = 'UnitName_3ret'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colTradeMarkName: TcxGridDBColumn
@@ -1613,6 +1670,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colGoodsGroupNameFull: TcxGridDBColumn
@@ -1621,6 +1679,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colGoodsGroupName: TcxGridDBColumn
@@ -1629,6 +1688,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object colGoodsGroupDirectionName: TcxGridDBColumn
@@ -1636,6 +1696,7 @@
         DataBinding.FieldName = 'GoodsGroupDirectionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colGoodsCode: TcxGridDBColumn
@@ -1643,6 +1704,7 @@
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object colGoodsName: TcxGridDBColumn
@@ -1650,6 +1712,7 @@
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colGoodsName_ukr: TcxGridDBColumn
@@ -1658,6 +1721,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object colGoodsKindName: TcxGridDBColumn
@@ -1665,6 +1729,7 @@
         DataBinding.FieldName = 'GoodsKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colMeasureName: TcxGridDBColumn
@@ -1672,6 +1737,7 @@
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 103
       end
       object colGoodsCode_basis: TcxGridDBColumn
@@ -1680,6 +1746,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object colGoodsName_basis: TcxGridDBColumn
@@ -1688,6 +1755,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object colGoodsKindName_basis: TcxGridDBColumn
@@ -1696,6 +1764,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object colMeasureName_basis: TcxGridDBColumn
@@ -1704,6 +1773,7 @@
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
       object colInfoMoneyName: TcxGridDBColumn
@@ -1711,6 +1781,7 @@
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object colPaidKindName: TcxGridDBColumn
@@ -1718,6 +1789,7 @@
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object colReturn_Weight: TcxGridDBColumn
@@ -1728,6 +1800,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colReturn_Summ: TcxGridDBColumn
@@ -1738,6 +1811,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colSale_Weight: TcxGridDBColumn
@@ -1748,6 +1822,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colSale_Summ: TcxGridDBColumn
@@ -1758,6 +1833,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colSale_Weight_noPromo: TcxGridDBColumn
@@ -1768,6 +1844,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colSale_Summ_NoPromo: TcxGridDBColumn
@@ -1778,6 +1855,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPromo_Weight: TcxGridDBColumn
@@ -1788,6 +1866,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPromo_Summ: TcxGridDBColumn
@@ -1798,6 +1877,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colSale_Weight_noReturn: TcxGridDBColumn
@@ -1808,6 +1888,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colSale_Summ_NoReturn: TcxGridDBColumn
@@ -1818,6 +1899,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colSale_Summ_plan: TcxGridDBColumn
@@ -1828,6 +1910,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colSale_weight_plan: TcxGridDBColumn
@@ -1838,6 +1921,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPromo_weight_plan: TcxGridDBColumn
@@ -1848,6 +1932,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colPromo_Summ_plan: TcxGridDBColumn
@@ -1858,6 +1943,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colSaleNoPromo_weight_plan: TcxGridDBColumn
@@ -1868,6 +1954,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object colSaleNoPromo_Summ_plan: TcxGridDBColumn
@@ -1878,6 +1965,7 @@
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object Goods_Search: TcxGridDBColumn
@@ -1893,18 +1981,21 @@
         Caption = #1055#1086#1096#1091#1082' - '#1055#1030#1041' ('#1088#1110#1074#1085#1110')'
         DataBinding.FieldName = 'Member_Search'
         Visible = False
+        Options.Editing = False
         Width = 70
       end
       object Position_Search: TcxGridDBColumn
         Caption = #1055#1086#1096#1091#1082' - '#1055#1086#1089#1072#1076#1099' ('#1088#1110#1074#1085#1110')'
         DataBinding.FieldName = 'Position_Search'
         Visible = False
+        Options.Editing = False
         Width = 70
       end
       object Unit_Search: TcxGridDBColumn
         Caption = #1055#1086#1096#1091#1082' -'#1055#1110#1076#1088#1086#1079#1076#1110#1083#1080' ('#1088#1110#1074#1085#1110')'
         DataBinding.FieldName = 'Unit_Search'
         Visible = False
+        Options.Editing = False
         Width = 70
       end
     end
@@ -2126,7 +2217,7 @@
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
-      Grid = cxDBPivotGrid
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -2399,8 +2490,8 @@
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 56
-    Top = 32
+    Left = 80
+    Top = 64
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
