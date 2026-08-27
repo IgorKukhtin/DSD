@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractTag(
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;  
+   DECLARE vbCode_calc Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ContractTag());
@@ -26,33 +26,54 @@ BEGIN
 
    -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ContractTag());
-   
+
    -- проверка прав уникальности для свойства <Наименование>
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_ContractTag(), inName);
    -- проверка уникальности
-   IF EXISTS (SELECT 1 
+   IF EXISTS (SELECT 1
               FROM Object AS Object_ContractTag
                      LEFT JOIN ObjectLink AS ObjectLink_ContractTag_ContractTagGroup
-                                          ON ObjectLink_ContractTag_ContractTagGroup.ObjectId = Object_ContractTag.Id 
+                                          ON ObjectLink_ContractTag_ContractTagGroup.ObjectId = Object_ContractTag.Id
                                          AND ObjectLink_ContractTag_ContractTagGroup.DescId = zc_ObjectLink_ContractTag_ContractTagGroup()
                      LEFT JOIN ObjectLink AS ObjectLink_ContractTag_ContractTagKind
-                                          ON ObjectLink_ContractTag_ContractTagKind.ObjectId = Object_ContractTag.Id 
+                                          ON ObjectLink_ContractTag_ContractTagKind.ObjectId = Object_ContractTag.Id
                                          AND ObjectLink_ContractTag_ContractTagKind.DescId = zc_ObjectLink_ContractTag_ContractTagKind()
               WHERE Object_ContractTag.DescId = zc_Object_ContractTag()
                   AND COALESCE (ObjectLink_ContractTag_ContractTagGroup.ChildObjectId,0) = COALESCE (inContractTagGroupId,0)
                   AND COALESCE (ObjectLink_ContractTag_ContractTagKind.ChildObjectId,0) = COALESCE (inContractTagKindId,0)
-                  AND Object_ContractTag.Id <>  COALESCE (ioId, 0))
-   THEN 
-       RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> + <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inContractTagGroupId), inName, lfGet_Object_ValueData (inContractTagKindId);
-   END IF;   
+                  AND Object_ContractTag.Id <>  COALESCE (ioId, 0)
+                  AND Object_ContractTag.ValueData = inName
+             )
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> + <%> уже есть в справочнике.Код = <%>. Дублирование запрещено.'
+                     , lfGet_Object_ValueData_sh (inContractTagGroupId)
+                     , inName
+                     , lfGet_Object_ValueData_sh (inContractTagKindId)
+                     , (SELECT Object_ContractTag.ObjectCode
+                        FROM Object AS Object_ContractTag
+                               LEFT JOIN ObjectLink AS ObjectLink_ContractTag_ContractTagGroup
+                                                    ON ObjectLink_ContractTag_ContractTagGroup.ObjectId = Object_ContractTag.Id
+                                                   AND ObjectLink_ContractTag_ContractTagGroup.DescId = zc_ObjectLink_ContractTag_ContractTagGroup()
+                               LEFT JOIN ObjectLink AS ObjectLink_ContractTag_ContractTagKind
+                                                    ON ObjectLink_ContractTag_ContractTagKind.ObjectId = Object_ContractTag.Id
+                                                   AND ObjectLink_ContractTag_ContractTagKind.DescId = zc_ObjectLink_ContractTag_ContractTagKind()
+                        WHERE Object_ContractTag.DescId = zc_Object_ContractTag()
+                            AND COALESCE (ObjectLink_ContractTag_ContractTagGroup.ChildObjectId,0) = COALESCE (inContractTagGroupId,0)
+                            AND COALESCE (ObjectLink_ContractTag_ContractTagKind.ChildObjectId,0) = COALESCE (inContractTagKindId,0)
+                            AND Object_ContractTag.Id <>  COALESCE (ioId, 0)
+                            AND Object_ContractTag.ValueData = inName
+                        LIMIT 1
+                       )
+                      ;
+   END IF;
 
- 
+
    -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ContractTag(), vbCode_calc);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ContractTag(), vbCode_calc, inName);
-   
+
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractTag_ContractTagGroup(), ioId, inContractTagGroupId);
    -- сохранили связь с <>
@@ -79,4 +100,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_ContractTag ()
-                            
