@@ -194,6 +194,17 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
             HeaderHint = #1056#1045#1040#1051#1068#1053#1067#1049' '#1042#1077#1089' 1-'#1086#1075#1086' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1087#1077#1095'. '#1069#1058#1048#1050#1045#1058#1050#1048
             Width = 78
           end
+          object WeightTareBranch: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1090#1072#1088#1099' ('#1092#1080#1083#1080#1072#1083')'
+            DataBinding.FieldName = 'WeightTareBranch'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' 1-'#1086#1075#1086' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1059#1055#1040#1050#1054#1042#1050#1048
+            Width = 80
+          end
           object WeightTotal: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
             DataBinding.FieldName = 'WeightTotal'
@@ -647,6 +658,15 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'WeightPackageSticker_real'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightTareBranch'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightTareBranch'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

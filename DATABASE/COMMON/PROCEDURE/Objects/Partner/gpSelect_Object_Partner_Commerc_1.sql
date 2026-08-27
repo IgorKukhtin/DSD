@@ -36,7 +36,13 @@ BEGIN
                            , ObjectLink_RouteTT_Position.ChildObjectId  AS PositionId
                            , CASE WHEN Object_PersonalGroup.ValueData <> '' THEN ObjectLink_RouteTT_PersonalGroup.ChildObjectId ELSE 0 END AS PersonalGroupId
                            , ObjectLink_RouteTT_Personal.ChildObjectId  AS PersonalId
-                           , Object_Personal.ValueData                  AS PersonalName
+                           --, Object_Personal.ValueData                  AS PersonalName
+                           --
+                           , ObjectLink_Personal_Position.ChildObjectId AS PositionId_Personal
+                           , ObjectLink_Personal_Unit.ChildObjectId     AS UnitId_Personal
+                           , CASE WHEN Object_PersonalGroup_Personal.ValueData <> '' THEN Object_PersonalGroup_Personal.Id ELSE 0 END AS PersonalGroupId_Personal
+                           , COALESCE (ObjectBoolean_Main.ValueData, FALSE) ::Boolean AS isMain_Personal 
+                           
                       FROM ObjectLink AS ObjectLink_Partner_RouteTT  --Маршрут ТТ контрагента
                        LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = ObjectLink_Partner_RouteTT.ChildObjectId
                                 LEFT JOIN ObjectLink AS ObjectLink_RouteTT_Unit
@@ -52,18 +58,38 @@ BEGIN
                                 LEFT JOIN ObjectLink AS ObjectLink_RouteTT_Personal
                                                      ON ObjectLink_RouteTT_Personal.ObjectId = Object_RouteTT.Id
                                                     AND ObjectLink_RouteTT_Personal.DescId = zc_ObjectLink_RouteTT_Personal()
-                                LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_RouteTT_Personal.ChildObjectId
+                                --LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_RouteTT_Personal.ChildObjectId
                       
                                 LEFT JOIN ObjectLink AS ObjectLink_RouteTT_PersonalGroup
                                                      ON ObjectLink_RouteTT_PersonalGroup.ObjectId = Object_RouteTT.Id
                                                     AND ObjectLink_RouteTT_PersonalGroup.DescId = zc_ObjectLink_RouteTT_PersonalGroup()
                                 LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_RouteTT_PersonalGroup.ChildObjectId
 
+                                --факт должность сотрудника
+                                LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                     ON ObjectLink_Personal_Position.ObjectId = ObjectLink_RouteTT_Personal.ChildObjectId
+                                                    AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                LEFT JOIN Object AS Object_Position_Personal ON Object_Position_Personal.Id = ObjectLink_Personal_Position.ChildObjectId
+                                --факт подразделение сотрудника
+                                LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                     ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_RouteTT_Personal.ChildObjectId
+                                                    AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                LEFT JOIN Object AS Object_Unit_Personal ON Object_Unit_Personal.Id = ObjectLink_Personal_Unit.ChildObjectId
+                                --факт группа сотрудника
+                                LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                                                     ON ObjectLink_Personal_PersonalGroup.ObjectId = ObjectLink_RouteTT_Personal.ChildObjectId
+                                                    AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+                                LEFT JOIN Object AS Object_PersonalGroup_Personal ON Object_PersonalGroup_Personal.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+                                --у сотрудника должно быть основное место работы
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                        ON ObjectBoolean_Main.ObjectId = ObjectLink_RouteTT_Personal.ChildObjectId
+                                                       AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
+
                        WHERE ObjectLink_Partner_RouteTT.ObjectId = inId --5817065  --inPartnerId
                         AND ObjectLink_Partner_RouteTT.DescId = zc_ObjectLink_Partner_RouteTT()
                       )
 
-         --получем строку справочника, у которой подразд+ должность ур.1 + группа сотр. 1 соответствуют  пользователю созд. заявку
+       --получем строку справочника, у которой 3 условия выполняются  -- подразд+ должность ур.1 + группа сотр. 1 
      , tmpCommercLocal AS (SELECT Object_CommercLocal.Id
                                 , Object_Unit.Id                      ::Integer  AS UnitId
                                 , Object_Unit.ValueData               ::TVarChar AS UnitName
@@ -103,7 +129,7 @@ BEGIN
                                                        AND ObjectLink_CommercLocal_Position_1.DescId = zc_ObjectLink_CommercLocal_Position_1()
                                                        AND ObjectLink_CommercLocal_Position_1.ChildObjectId IN (SELECT DISTINCT tmpRouteTT.PositionId FROM tmpRouteTT)
                                   LEFT JOIN Object AS Object_Position_1 ON Object_Position_1.Id = ObjectLink_CommercLocal_Position_1.ChildObjectId
-                        
+
                                   LEFT JOIN ObjectLink AS ObjectLink_CommercLocal_PersonalGroup_1
                                                        ON ObjectLink_CommercLocal_PersonalGroup_1.ObjectId = Object_CommercLocal.Id
                                                       AND ObjectLink_CommercLocal_PersonalGroup_1.DescId = zc_ObjectLink_CommercLocal_PersonalGroup_1()
@@ -114,17 +140,17 @@ BEGIN
                                                        ON ObjectLink_CommercLocal_Position_2.ObjectId = Object_CommercLocal.Id
                                                       AND ObjectLink_CommercLocal_Position_2.DescId = zc_ObjectLink_CommercLocal_Position_2()
                                   LEFT JOIN Object AS Object_Position_2 ON Object_Position_2.Id = ObjectLink_CommercLocal_Position_2.ChildObjectId
-                        
+
                                   LEFT JOIN ObjectLink AS ObjectLink_CommercLocal_PersonalGroup_2
                                                        ON ObjectLink_CommercLocal_PersonalGroup_2.ObjectId = Object_CommercLocal.Id
                                                       AND ObjectLink_CommercLocal_PersonalGroup_2.DescId = zc_ObjectLink_CommercLocal_PersonalGroup_2()
                                   LEFT JOIN Object AS Object_PersonalGroup_2 ON Object_PersonalGroup_2.Id = ObjectLink_CommercLocal_PersonalGroup_2.ChildObjectId
-                        
+
                                   LEFT JOIN ObjectLink AS ObjectLink_CommercLocal_Position_3
                                                        ON ObjectLink_CommercLocal_Position_3.ObjectId = Object_CommercLocal.Id
                                                       AND ObjectLink_CommercLocal_Position_3.DescId = zc_ObjectLink_CommercLocal_Position_3()
                                   LEFT JOIN Object AS Object_Position_3 ON Object_Position_3.Id = ObjectLink_CommercLocal_Position_3.ChildObjectId
-                        
+
                                   LEFT JOIN ObjectLink AS ObjectLink_CommercLocal_Position_4
                                                        ON ObjectLink_CommercLocal_Position_4.ObjectId = Object_CommercLocal.Id
                                                       AND ObjectLink_CommercLocal_Position_4.DescId = zc_ObjectLink_CommercLocal_Position_4()
@@ -209,32 +235,46 @@ BEGIN
 
        --Заповнюється автоматично на основі маршруту, якщо вказана в маршруті посада співпадає з посадами поточного рівня відповідно до структури відділу 
      , tmpLevel1 AS (SELECT 1                              AS ord
-                     , Object_Personal.Id             AS PersonalId
-                     , Object_Personal.ValueData      AS PersonalName
-                     , tmpCommercLocal.PositionId_1   AS PositionId
-                     , tmpCommercLocal.PositionName_1 AS PositionName
-                     , tmpRouteTT.UnitId              AS UnitId
-                     , tmpRouteTT.UnitName            AS UnitName
-                FROM tmpRouteTT
-                     INNER JOIN tmpCommercLocal ON tmpCommercLocal.UnitId = tmpRouteTT.UnitId
-                                               AND tmpCommercLocal.PositionId_1 = tmpRouteTT.PositionId
-                     LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = CASE WHEN tmpCommercLocal.Id IS NOT NULL THEN tmpRouteTT.PersonalId ELSE 0 END
-                )
-       --Автоматично - відносно рівня 1, відповідно до структури комерції, по співпадінню "Підрозділ торгівельної команди + посада (рівень 1) + група співробітників (рівень 1)". Якщо Рівень 1 - пусто, то Рівень 2 також пусто.
-     , tmpLevel2 AS (SELECT 2                              AS ord
-                          , tmpPersonal_byUnit.PersonalId
-                          , tmpPersonal_byUnit.PersonalName
-                          , tmpPersonal_byUnit.PositionId
-                          , tmpCommercLocal.PositionName_2 AS PositionName
-                          , tmpPersonal_byUnit.UnitId
-                          , tmpPersonal_byUnit.UnitName
+                          , Object_Personal.Id             AS PersonalId
+                          , Object_Personal.ValueData      AS PersonalName
+                          , tmpCommercLocal.PositionId_1   AS PositionId
+                          , tmpCommercLocal.PositionName_1 AS PositionName
+                          , tmpCommercLocal.UnitId         AS UnitId
+                          , tmpCommercLocal.UnitName       AS UnitName
                      FROM tmpRouteTT
                           INNER JOIN tmpCommercLocal ON tmpCommercLocal.UnitId = tmpRouteTT.UnitId
                                                     AND tmpCommercLocal.PositionId_1 = tmpRouteTT.PositionId
-                                                    AND COALESCE (tmpCommercLocal.PersonalGroupId_1,0) = CASE WHEN COALESCE (tmpRouteTT.PersonalGroupId,0) <> 0 THEN COALESCE (tmpRouteTT.PersonalGroupId,0) ELSE COALESCE (vbPersonalGroupCommercId,0) END
+                                                    AND COALESCE (tmpCommercLocal.PersonalGroupId_1,0) = COALESCE (tmpRouteTT.PersonalGroupId,0)
+                          --выбираем сотрудника по 3 усл. + главное место работы
+                          LEFT JOIN Object AS Object_Personal
+                                           ON Object_Personal.Id = CASE WHEN tmpRouteTT.PositionId = tmpRouteTT.PositionId_Personal
+                                                                         AND tmpRouteTT.UnitId = tmpRouteTT.UnitId_Personal
+                                                                         AND COALESCE (tmpRouteTT.PersonalGroupId,0) = COALESCE (tmpRouteTT.PersonalGroupId_Personal,0)
+                                                                         AND tmpRouteTT.isMain_Personal = TRUE    
+                                                                        THEN tmpRouteTT.PersonalId
+                                                                        ELSE 0
+                                                                   END
+                     )
+       --Автоматично - відносно рівня 1, відповідно до структури комерції, по співпадінню "Підрозділ торгівельної команди + посада (рівень 1) + група співробітників (рівень 1)". Якщо Рівень 1 - пусто, то Рівень 2 також пусто.
+     , tmpLevel2 AS (SELECT 2                              AS ord
+                          , COALESCE (tmpPersonal_byUnit.PersonalId, tmpPersonal_byBranch.PersonalId)     AS PersonalId
+                          , COALESCE (tmpPersonal_byUnit.PersonalName, tmpPersonal_byBranch.PersonalName) AS PersonalName
+                          , tmpCommercLocal.PositionId_2                                                  AS PositionId
+                          , tmpCommercLocal.PositionName_2                                                AS PositionName
+                          , COALESCE (tmpPersonal_byUnit.UnitId, tmpPersonal_byBranch.UnitId)             AS UnitId
+                          , COALESCE (tmpPersonal_byUnit.UnitName, tmpPersonal_byBranch.UnitName)         AS UnitName
+                     FROM tmpCommercLocal    -- элемент справочника уже соотв. 3 условиям из Маршрут ТТ
+                          --находим сотружника по 3 условиям
                           LEFT JOIN tmpPersonal_byUnit ON tmpPersonal_byUnit.PositionId = tmpCommercLocal.PositionId_2
-                                                      AND COALESCE (tmpPersonal_byUnit.PersonalGroupId, 0) = CASE WHEN COALESCE (tmpRouteTT.PersonalGroupId,0) <> 0 THEN COALESCE (tmpRouteTT.PersonalGroupId,0) ELSE COALESCE (vbPersonalGroupCommercId,0) END
-                     WHERE (SELECT COUNT(*) FROM tmpLevel1) <> 0
+                                                      AND COALESCE (tmpPersonal_byUnit.PersonalGroupId, 0) = COALESCE (tmpCommercLocal.PersonalGroupId_2,0)
+                                                      AND tmpPersonal_byUnit.UnitId = tmpCommercLocal.UnitId
+
+                          --находим сотружника по 2 условиям + филиал,
+                          LEFT JOIN tmpPersonal_byUnit AS tmpPersonal_byBranch
+                                                       ON tmpPersonal_byBranch.PositionId = tmpCommercLocal.PositionId_2
+                                                      AND COALESCE (tmpPersonal_byBranch.PersonalGroupId, 0) = COALESCE (tmpCommercLocal.PersonalGroupId_2,0)
+                                                      AND tmpPersonal_byBranch.BranchId = tmpCommercLocal.BranchId
+                                                      AND tmpPersonal_byUnit.PersonalId IS  NULL
                      )
        --Автоматично - відносно рівня 1, відповідно до структури комерції по співпадінню "Філія підрозділу (рівень 1) + посада (рівень 3). При умові, що по мережі в довіднику "Торгівельна мережа" поля "КАМ" та "НОП НМ" пусті. В іншому випадку пусто.
      , tmpLevel3 AS (SELECT 3                              AS ord

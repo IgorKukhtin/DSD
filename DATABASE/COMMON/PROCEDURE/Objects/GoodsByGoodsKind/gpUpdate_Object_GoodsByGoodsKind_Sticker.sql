@@ -1,12 +1,14 @@
 -- Function: gpUpdate_Object_GoodsByGoodsKind_Sticker (Integer, Integer, Integer)
 
 --DROP FUNCTION IF EXISTS  gpUpdate_Object_GoodsByGoodsKind_Sticker (Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS  gpUpdate_Object_GoodsByGoodsKind_Sticker (Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS  gpUpdate_Object_GoodsByGoodsKind_Sticker (Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsByGoodsKind_Sticker(
     IN inId                           Integer  , -- ключ объекта <Товар>
     IN inWeightPackageSticker         TFloat   , -- вес 1-ого пакета
     IN inWeightPackageSticker_real    TFloat   , -- вес 1-ого пакета
+    IN inWeightTareBranch             TFloat   , -- Вес тары(филиал)
     IN inSession                      TVarChar 
 )
 RETURNS Void
@@ -35,6 +37,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker(), inId, inWeightPackageSticker);
    -- сохранили свойство <вес 1-ого пакета (реальный)>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker_real(), inId, inWeightPackageSticker_real);
+   -- сохранили свойство <Вес тары(филиал)>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightTareBranch(), inId, inWeightTareBranch);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
@@ -47,6 +52,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.08.26         *
  13.01.26         *
  18.02.18         *
 */
