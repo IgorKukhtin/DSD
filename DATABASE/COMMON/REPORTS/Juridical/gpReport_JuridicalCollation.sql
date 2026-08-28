@@ -394,7 +394,12 @@ BEGIN
         , tmpMLO AS (SELECT *
                      FROM MovementLinkObject
                      WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT Operation.MovementId FROM Operation)
-                       AND MovementLinkObject.DescId = zc_MovementString_InvNumberPartner()
+                       AND MovementLinkObject.DescId IN (zc_MovementLinkObject_UnitForwarding()
+                                                         , zc_MovementLinkObject_Personal()
+                                                         , zc_MovementLinkObject_From()
+                                                         , zc_MovementLinkObject_To()
+                                                         , zc_MovementLinkObject_Partner()
+                                                         )
                      )
         , tmpMovementFloat AS (SELECT MovementFloat.MovementId
                                     , MovementFloat.ValueData :: Integer
@@ -767,8 +772,10 @@ $BODY$
 -- select * from gpReport_JuridicalCollation(inStartDate := ('11.04.2023')::TDateTime , inEndDate := ('11.04.2023')::TDateTime , inJuridicalId := 6629649 , inPartnerId := 0 , inContractId := 0 , inAccountId := 0 , inPaidKindId := 0 , inInfoMoneyId := 0 , inCurrencyId := 0 , inMovementId_Partion := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
 
 /*
-select * from gpReport_JuridicalCollation
+select * from gpReport_JuridicalCollation22
 (inStartDate := ('03.08.2026')::TDateTime , inEndDate := ('10.08.2026')::TDateTime 
 , inJuridicalId := 9399 , inPartnerId := 0 , inContractId := 0 , inAccountId := 0 
 , inPaidKindId := 0 , inInfoMoneyId := 0 , inCurrencyId := 0 , inMovementId_Partion := 0 ,  inSession := '13246443');
 */
+
+--select * from gpReport_JuridicalCollation(inStartDate := ('24.08.2026')::TDateTime , inEndDate := ('27.08.2026')::TDateTime , inJuridicalId := 15212 , inPartnerId := 0 , inContractId := 0 , inAccountId := 0 , inPaidKindId := 0 , inInfoMoneyId := 8965 , inCurrencyId := 0 , inMovementId_Partion := 0 ,  inSession := '9457');
