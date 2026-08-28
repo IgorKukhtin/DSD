@@ -502,16 +502,6 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object TotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
-        DataBinding.FieldName = 'TotalCount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
       object TotalCountPartner: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         DataBinding.FieldName = 'TotalCountPartner'
@@ -521,6 +511,16 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
+      end
+      object TotalCount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+        DataBinding.FieldName = 'TotalCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object TotalCountKg: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1050#1086#1083'-'#1074#1086' '#1074#1077#1089
