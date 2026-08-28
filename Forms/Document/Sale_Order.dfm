@@ -3863,6 +3863,12 @@ inherited Sale_OrderForm: TSale_OrderForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 328
@@ -3935,6 +3941,15 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = FormParams
         ComponentItem = 'inChangePercentAmount'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -4350,6 +4365,13 @@ inherited Sale_OrderForm: TSale_OrderForm
         Value = Null
         Component = cbGofro
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end>
     Left = 216

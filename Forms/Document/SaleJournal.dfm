@@ -1763,6 +1763,12 @@ inherited SaleJournalForm: TSaleJournalForm
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate

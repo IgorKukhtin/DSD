@@ -3757,6 +3757,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 304
@@ -3822,6 +3828,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ComponentItem = 'inChangePercentAmount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -4222,6 +4236,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Value = Null
         Component = cbGofro
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end>
     Left = 216

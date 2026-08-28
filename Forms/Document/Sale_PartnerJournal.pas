@@ -292,6 +292,8 @@ type
     bbUpdate_Commerc: TdxBarButton;
     actPrint_Metro: TdsdPrintAction;
     bbPrint_Metro: TdxBarButton;
+    macInsertMask: TMultiAction;
+    bbcInsertMask: TdxBarButton;
   private
     { Private declarations }
   public
