@@ -431,6 +431,8 @@ type
     UnitName_order: TcxGridDBColumn;
     actPrint_Metro: TdsdPrintAction;
     bbPrint_Metro: TdxBarButton;
+    macInsertMask: TMultiAction;
+    bbmacInsertMask: TdxBarButton;
   private
     { Private declarations }
   public

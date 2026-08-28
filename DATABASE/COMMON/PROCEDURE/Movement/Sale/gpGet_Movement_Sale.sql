@@ -1,12 +1,14 @@
 -- Function: gpGet_Movement_Sale()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Sale (Integer, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_Sale (Integer, TDateTime, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_Sale (Integer, TDateTime, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Sale (Integer, TDateTime, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Sale(
     IN inMovementId          Integer  , -- ключ Документа
     IN inOperDate            TDateTime, -- ключ Документа
     IN inChangePercentAmount TFloat , -- Расчет по % скидки вес
+    IN inMask                Boolean  , -- добавить по маске 
     IN inSession             TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -76,6 +78,14 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. Невозможно открыть пустой документ.';
     END IF;
+
+     -- создаем док по маске
+     IF COALESCE (inMask, False) = True
+     THEN
+         inMovementId := gpInsert_Movement_Sale_Mask (ioId        := inMovementId
+                                                    , inOperDate  := inOperDate
+                                                    , inSession   := inSession); 
+     END IF;
 
 
      IF COALESCE (inMovementId, 0) = 0
@@ -668,4 +678,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Sale (inMovementId:= 40874, inOperDate:= CURRENT_DATE, inChangePercentAmount:= 1, inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Sale (inMovementId:= 40874, inOperDate:= CURRENT_DATE, inChangePercentAmount:= 1, inMask:=False, inSession := zfCalc_UserAdmin());

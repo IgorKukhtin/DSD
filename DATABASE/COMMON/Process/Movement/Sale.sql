@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Movement_Sale_Invnumber() RETU
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Movement_Sale_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Movement_Sale_PriceList' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Movement_Sale_Currency() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Movement_Sale_Currency' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Movement_Sale_TS_GoodsReal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Movement_Sale_TS_GoodsReal' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Insert_Movement_Sale_mask() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Insert_Movement_Sale_mask' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 -- строки
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_Sale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_MI_Sale' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -75,6 +76,16 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Movement_Sale_
                                   , inCode:= 8
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Sale())||'> - изменение данных <-Расчет суммы по схеме - Товар (факт)>..'
                                   , inEnumName:= 'zc_Enum_Process_Update_Movement_Sale_TS_GoodsReal');
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Insert_Movement_Sale_mask()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 9
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Sale())||'> - сохранение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Insert_Movement_Sale_mask');
+
+
+
+
 --
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_MI_Sale()
                                   , inDescId:= zc_Object_Process()
