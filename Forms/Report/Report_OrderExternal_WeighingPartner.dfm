@@ -482,8 +482,8 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
     end
     object edOperDatePartner_sale: TcxDateEdit
-      Left = 277
-      Top = 63
+      Left = 274
+      Top = 68
       EditValue = 42195d
       Enabled = False
       Properties.ReadOnly = True
@@ -1146,7 +1146,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         end>
       isShowModal = False
     end
-    object dsdOpenForm2: TdsdOpenForm
+    object actOpenFormWeightPatner: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1316,6 +1316,182 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
       ImageIndex = 28
     end
+    object actPrintGoods: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100'  '#1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100'  '#1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 'GoodsName;GoodsKindName;WeighingNumber'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'isGroupGoods'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDatePartner'
+          Value = 43282d
+          Component = edOperDatePartner
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberOrder'
+          Value = ''
+          Component = edInvNumberOrder
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsPropertyName'
+          Value = ''
+          Component = GuidesGoodsProperty
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CarInfoName'
+          Value = ''
+          Component = GuidesCarInfo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_OrderExternal_WeighingPartner'
+      ReportNameParam.Value = 'PrintReport_OrderExternal_WeighingPartner'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintWeighingNumber: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100'  '#1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1087#1086#1076#1076#1086#1085#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100'  '#1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1087#1086#1076#1076#1086#1085#1072#1084
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 'WeighingNumber;GoodsName;GoodsKindName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'isGroupGoods'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 44197d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDatePartner'
+          Value = 44197d
+          Component = edOperDatePartner
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberOrder'
+          Value = ''
+          Component = edInvNumberOrder
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsPropertyName'
+          Value = ''
+          Component = GuidesGoodsProperty
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CarInfoName'
+          Value = ''
+          Component = GuidesCarInfo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_OrderExternal_WeighingPartner'
+      ReportNameParam.Value = 'PrintReport_OrderExternal_WeighingPartner'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1387,7 +1563,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormSend'
+          ItemName = 'bbOpenFormWeighingPartner'
         end
         item
           Visible = True
@@ -1404,6 +1580,10 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'mPrint'
         end
         item
           Visible = True
@@ -1468,7 +1648,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       Action = actReport_Goods
       Category = 0
     end
-    object bbOpenFormSend: TdxBarButton
+    object bbOpenFormWeighingPartner: TdxBarButton
       Action = actOpenFormWeighingPartner
       Category = 0
     end
@@ -1486,6 +1666,30 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
     end
     object bbOpenDocumentParent: TdxBarButton
       Action = macOpenDocumentParent
+      Category = 0
+    end
+    object bbPrintWeighingNumber: TdxBarButton
+      Action = actPrintWeighingNumber
+      Caption = #1055#1077#1095#1072#1090#1100' '#1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1087#1086#1076#1076#1086#1085#1072#1084
+      Category = 0
+    end
+    object mPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrintWeighingNumber'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintGoods'
+        end>
+    end
+    object bbPrintGoods: TdxBarButton
+      Action = actPrintGoods
       Category = 0
     end
   end
@@ -2273,8 +2477,8 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 847
-    Top = 216
+    Left = 823
+    Top = 256
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'

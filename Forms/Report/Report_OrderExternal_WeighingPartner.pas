@@ -83,7 +83,7 @@ type
     Amount_order: TcxGridDBColumn;
     GuidesCarInfo: TdsdGuides;
     actOpenFormWeighingPartner: TdsdOpenForm;
-    bbOpenFormSend: TdxBarButton;
+    bbOpenFormWeighingPartner: TdxBarButton;
     actOpenFormOrderExternalChildDetail: TdsdOpenForm;
     bbOpenFormOrderExternalChildDetail: TdxBarButton;
     actReport_GoodsMotion: TdsdOpenForm;
@@ -92,7 +92,7 @@ type
     ceGoodsProperty: TcxButtonEdit;
     GuidesGoodsProperty: TdsdGuides;
     actOpenFormOrderExternalUnit: TdsdOpenForm;
-    dsdOpenForm2: TdsdOpenForm;
+    actOpenFormWeightPatner: TdsdOpenForm;
     getMovementForm: TdsdStoredProc;
     actMovementFormParent: TdsdExecStoredProc;
     actOpenFormParent: TdsdOpenForm;
@@ -108,6 +108,11 @@ type
     edSearchGoodsKind: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
     GoodsName_choice: TcxGridDBColumn;
+    actPrintWeighingNumber: TdsdPrintAction;
+    bbPrintWeighingNumber: TdxBarButton;
+    actPrintGoods: TdsdPrintAction;
+    mPrint: TdxBarSubItem;
+    bbPrintGoods: TdxBarButton;
   private
     { Private declarations }
   public
