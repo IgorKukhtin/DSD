@@ -469,6 +469,7 @@ begin
      ParamAdd(Params,'AssetInvNumber_two',ftString);
 
      ParamAdd(Params,'isReReturnIn',ftBoolean);
+     ParamAdd(Params,'isOrderExternal',ftBoolean);
      ParamAdd(Params,'MovementId_reReturnIn',ftInteger);
      ParamAdd(Params,'InvNumber_reReturnIn',ftString);
      ParamAdd(Params,'OperDate_reReturnIn',ftDateTime);

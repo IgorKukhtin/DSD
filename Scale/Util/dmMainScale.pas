@@ -1876,6 +1876,24 @@ begin
        begin
          MovementDescId_old:=ParamByName('MovementDescId').AsInteger;
          //
+         if (ParamByName('isOrderExternal').AsBoolean = TRUE) and (ParamByName('MovementDescId').AsInteger > 0)
+         then begin
+             //
+             ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
+             ParamByName('OrderExternal_DescId').AsInteger:= DataSet.FieldByName('MovementDescId_order').asInteger;
+             ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
+             ParamByName('OrderExternal_InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
+             ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
+             //
+             ParamByName('GoodsPropertyId').AsInteger:= DataSet.FieldByName('GoodsPropertyId').AsInteger;
+             ParamByName('GoodsPropertyCode').AsInteger:= DataSet.FieldByName('GoodsPropertyCode').AsInteger;
+             ParamByName('GoodsPropertyName').asString:= DataSet.FieldByName('GoodsPropertyName').asString;
+             //
+             ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName_calc').asString;
+             //
+             exit;
+         end;
+         //
          ParamByName('MovementId_get').AsInteger:= DataSet.FieldByName('MovementId_get').asInteger;//документ взвешивания !!!только для заявки!!!, потом переносится в MovementId
          ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
          if (MovementDescId_old <> DataSet.FieldByName('MovementDescId').asInteger) or (ParamByName('FromId').AsInteger = 0) then
@@ -2442,6 +2460,7 @@ begin
                         execParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         execParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;
                         execParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
+                        execParamsMovement.ParamByName('isOrderExternal').asBoolean:= CDS.FieldByName('isOrderExternal').asBoolean;
                         execParamsMovement.ParamByName('isPeresort').asBoolean:= CDS.FieldByName('isPeresort').asBoolean;
                         execParamsMovement.ParamByName('isKh').asBoolean:= CDS.FieldByName('isKh').asBoolean;
 
@@ -2495,6 +2514,7 @@ begin
                         ParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         ParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;
                         ParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
+                        ParamsMovement.ParamByName('isOrderExternal').asBoolean:= CDS.FieldByName('isOrderExternal').asBoolean;
                         ParamsMovement.ParamByName('isPeresort').asBoolean:= CDS.FieldByName('isPeresort').asBoolean;
                         ParamsMovement.ParamByName('isKh').asBoolean:= CDS.FieldByName('isKh').asBoolean;
 

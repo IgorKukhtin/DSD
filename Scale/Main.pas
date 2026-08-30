@@ -2558,6 +2558,12 @@ begin
     then
         PanelPartner.Caption:= ParamsMovement.ParamByName('GoodsPropertyName').asString
     else
+        if ParamByName('isOrderExternal').AsBoolean = TRUE
+        then begin
+                PanelPartner.Caption:= ParamsMovement.ParamByName('calcPartnerName').asString
+                             + ' : ' + ParamsMovement.ParamByName('GoodsPropertyName').asString;
+        end
+        else
         if ParamByName('calcPartnerId').AsInteger<>0
         then begin
                  PanelPartner.Caption:=GetPanelPartnerCaption(ParamsMovement);
