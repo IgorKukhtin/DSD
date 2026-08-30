@@ -144,7 +144,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     end
     object edEndWeighing: TcxDateEdit
       Left = 476
-      Top = 63
+      Top = 68
       EditValue = 42184d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'

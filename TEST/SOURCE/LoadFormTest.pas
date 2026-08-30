@@ -1451,6 +1451,9 @@ end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_WeighingPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_WeighingPartnerForm');
+  //exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalChild_BySendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalChild_BySendForm');
@@ -1476,11 +1479,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalItemJournalForm');
   // заявки на главный склад
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitForm');
-  //exit;
-
+  exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitJournalForm');
   //
@@ -1782,9 +1785,9 @@ end;
 
 procedure TLoadFormTest.LoadSaleFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_CommercForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSale_CommercForm');
+ { TdsdFormStorageFactory.GetStorage.Load('TSale_CommercForm');
   exit;
    }
 
@@ -1813,8 +1816,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
-  exit;
-    {
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
   //exit;
@@ -1830,7 +1833,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderJournalForm');
    exit;
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementCheckForm');
 

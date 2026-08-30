@@ -1697,7 +1697,8 @@ uses
   ContractTagKindEdit in '..\..\Forms\Guides\ContractTagKindEdit.pas' {ContractTagKindEditForm: TParentForm},
   Report_SoldTable_Commerc_OlapDialog in '..\..\Forms\Report\Report_SoldTable_Commerc_OlapDialog.pas' {Report_SoldTable_Commerc_OlapDialogForm: TParentForm},
   Report_SoldTable_Commerc_Olap in '..\..\Forms\Report\Report_SoldTable_Commerc_Olap.pas' {Report_SoldTable_Commerc_OlapForm: TParentForm},
-  Report_SoldTable_Commerc_table in '..\..\Forms\Report\Report_SoldTable_Commerc_table.pas' {Report_SoldTable_Commerc_tableForm: TParentForm};
+  Report_SoldTable_Commerc_table in '..\..\Forms\Report\Report_SoldTable_Commerc_table.pas' {Report_SoldTable_Commerc_tableForm: TParentForm},
+  Report_OrderExternal_WeighingPartner in '..\..\Forms\Report\Report_OrderExternal_WeighingPartner.pas' {Report_OrderExternal_WeighingPartnerForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

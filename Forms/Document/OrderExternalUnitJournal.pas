@@ -111,6 +111,8 @@ type
     bbPrint_OrderCell: TdxBarButton;
     actPrintCell: TdsdPrintAction;
     GoodsPropertyName: TcxGridDBColumn;
+    actOpenReportWeighingPartner: TdsdInsertUpdateAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

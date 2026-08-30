@@ -994,9 +994,6 @@ inherited Sale_CommercForm: TSale_CommercForm
     object cxTabSheetMarket: TcxTabSheet
       Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -5439,6 +5436,13 @@ inherited Sale_CommercForm: TSale_CommercForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 344
@@ -5511,6 +5515,15 @@ inherited Sale_CommercForm: TSale_CommercForm
         Component = FormParams
         ComponentItem = 'inChangePercentAmount'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -6047,6 +6060,13 @@ inherited Sale_CommercForm: TSale_CommercForm
         Value = Null
         Component = cbOrderAuto
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end>
     Left = 216

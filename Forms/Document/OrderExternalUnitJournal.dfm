@@ -736,6 +736,51 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
         end>
       Caption = 'actSPSavePrintState'
     end
+    object actOpenReportWeighingPartner: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1081' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1081' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+      ImageIndex = 25
+      FormName = 'TReport_OrderExternal_WeighingPartnerForm'
+      FormNameParam.Value = 'TReport_OrderExternal_WeighingPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     object mactPrint_Order: TMultiAction
       Category = 'Print'
       MoveParams = <
@@ -1390,6 +1435,14 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbsPrint'
         end
         item
@@ -1472,6 +1525,10 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
     end
     object bbPrint_OrderCell: TdxBarButton
       Action = mactPrint_OrderCell
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actOpenReportWeighingPartner
       Category = 0
     end
   end
