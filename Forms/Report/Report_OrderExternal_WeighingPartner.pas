@@ -33,7 +33,7 @@ type
     GoodsKindName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrint_Goods: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
@@ -107,11 +107,11 @@ type
     edSearchGoodsKind: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
     GoodsName_choice: TcxGridDBColumn;
-    actPrintWeighingNumber: TdsdPrintAction;
-    bbPrintWeighingNumber: TdxBarButton;
-    actPrintGoods: TdsdPrintAction;
+    actPrintGroupWeighingNumber: TdsdPrintAction;
+    bbPrintGroupWeighingNumber: TdxBarButton;
+    actPrintGroupGoods: TdsdPrintAction;
     mPrint: TdxBarSubItem;
-    bbPrintGoods: TdxBarButton;
+    bbPrintGroupGoods: TdxBarButton;
     cxLabel21: TcxLabel;
     edPartner: TcxButtonEdit;
     edCarInfo: TcxButtonEdit;
@@ -120,6 +120,14 @@ type
     edRetail: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
     GuidesRetail: TdsdGuides;
+    dxBarButton1: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
+    spSelectPrint_Weighing: TdsdStoredProc;
+    actPrintWeighing: TdsdPrintAction;
+    bbPrintWeighing: TdxBarButton;
+    spSelectPrint_GoodsAll: TdsdStoredProc;
+    actPrintGoodsAll: TdsdPrintAction;
+    bbPrintGoodsAll: TdxBarButton;
   private
     { Private declarations }
   public

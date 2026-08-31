@@ -34,9 +34,16 @@ RETURNS TABLE (MovementId  Integer
              , GoodsKindName TVarChar 
              , GoodsGroupNameFull TVarChar
              , MeasureName   TVarChar
-             , Amount        TFloat
-             , AmountPartner TFloat
-             , Amount_order  TFloat
+             , InsertDate_mi TDateTime
+             , Amount               TFloat
+             , Amount_sh            TFloat 
+             , Amount_Weight        TFloat
+             , AmountPartner        TFloat
+             , AmountPartner_sh     TFloat
+             , AmountPartner_Weight TFloat
+             , Amount_order         TFloat
+             , Amount_order_sh      TFloat
+             , Amount_order_Weight  TFloat
 
               )
 AS
@@ -92,16 +99,24 @@ BEGIN
                          , COALESCE (MILO_GoodsKind.ObjectId, 0)           AS GoodsKindId
                          , SUM (COALESCE (MovementItem.Amount,0))          AS Amount
                          , SUM (COALESCE (MIF_AmountPartner.ValueData, 0)) AS AmountPartner
+                         , MAX (COALESCE (MIDate_Insert.ValueData, zc_DateStart()))  AS InsertDate
                     FROM tmpMovement_wp AS Movement
                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = FALSE
+                                                --огр. по товару и виду дл€ печати
+                                                AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
                          LEFT JOIN MovementItemFloat AS MIF_AmountPartner
                                                      ON MIF_AmountPartner.MovementItemId = MovementItem.Id
                                                     AND MIF_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
                          LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                           ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                          AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind() 
+                         LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                    ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                   AND MIDate_Insert.DescId = zc_MIDate_Insert()
+ 
+                    WHERE (COALESCE (MILO_GoodsKind.ObjectId, 0) = inGoodsKindId OR inGoodsKindId = 0)
                     GROUP BY MovementItem.MovementId
                            , MovementItem.ObjectId
                            , COALESCE (MILO_GoodsKind.ObjectId, 0)
@@ -121,6 +136,9 @@ BEGIN
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Master()
                          AND MovementItem.isErased   = FALSE
+                         --огр. по товару и виду дл€ печати
+                         AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
+                         AND (COALESCE (MILO_GoodsKind.ObjectId, 0) = inGoodsKindId OR inGoodsKindId = 0)
                        GROUP BY MovementItem.ObjectId
                               , COALESCE (MILO_GoodsKind.ObjectId, 0)
                       )
@@ -143,6 +161,7 @@ BEGIN
                                   , MovementItem.GoodsKindId
                                   , MovementItem.Amount
                                   , MovementItem.AmountPartner
+                                  , MovementItem.InsertDate AS InsertDate_mi
                                   --
                                   , ROW_NUMBER () OVER (PARTITION BY MovementItem.GoodsId, MovementItem.GoodsKindId ORDER BY MovementFloat_WeighingNumber.ValueData, MovementDate_EndWeighing.ValueData) AS Ord
                              FROM tmpMovement_wp AS Movement
@@ -167,7 +186,8 @@ BEGIN
                                                  AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
                                LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
 
-                               LEFT JOIN tmpMI_wp AS MovementItem ON MovementItem.MovementId = Movement.Id
+                               INNER JOIN tmpMI_wp AS MovementItem ON MovementItem.MovementId = Movement.Id
+                             WHERE MovementFloat_WeighingNumber.ValueData = inWeighingNumber OR inWeighingNumber = 0
                              )
 
        -- –езультат
@@ -193,10 +213,19 @@ BEGIN
             , Object_GoodsKind.ValueData ::TVarChar AS GoodsKindName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Measure.ValueData   ::TVarChar AS MeasureName
-            , tmpWeighingPartner.Amount         ::TFloat   
-            , tmpWeighingPartner.AmountPartner  ::TFloat 
+            , tmpWeighingPartner.InsertDate_mi ::TDateTime
+
+            , tmpWeighingPartner.Amount                                                                                                ::TFloat AS Amount
+            , (tmpWeighingPartner.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN 1 ELSE 0 END)                            ::TFloat AS Amount_Sh  
+            , (tmpWeighingPartner.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight   
+
+            , tmpWeighingPartner.AmountPartner                                                                                                ::TFloat AS AmountPartner
+            , (tmpWeighingPartner.AmountPartner * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN 1 ELSE 0 END)                            ::TFloat AS AmountPartner_sh
+            , (tmpWeighingPartner.AmountPartner * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS AmountPartner_Weight
             
-            , tmpMI_order.Amount ::TFloat AS Amount_order
+            , tmpMI_order.Amount                                                                                                ::TFloat AS Amount_order
+            , (tmpMI_order.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN 1 ELSE 0 END)                            ::TFloat AS Amount_order_Sh 
+            , (tmpMI_order.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_order_Weight
 
        FROM tmpWeighingPartner
             LEFT JOIN tmpMI_order ON tmpMI_order.GoodsId = tmpWeighingPartner.GoodsId
@@ -214,6 +243,10 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
        ;
 
 END;
@@ -228,4 +261,4 @@ $BODY$
 
 -- тест
 --select * from gpReport_OrderExternal_WeighingPartner(inMovementId := 35125275 ,  inSession := '9457');
--- SELECT * FROM gpReport_OrderExternal_WeighingPartner (inMovementId:= 35125275 , inMovementDesc:= 'zc_Movement_Send'  , inSession:= zfCalc_UserAdmin())      -- номер док  1877714   за€аки от 26,08
+-- SELECT * FROM gpReport_OrderExternal_WeighingPartner (inMovementId:= 35125275 , inMovementDesc:= 'zc_Movement_Send', inGoodsId:=623864, inGoodsKindId:=0, inWeighingNumber:=0  , inSession:= zfCalc_UserAdmin())      -- номер док  1877714   за€аки от 26,08
