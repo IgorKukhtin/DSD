@@ -10,11 +10,14 @@ $BODY$
 BEGIN
      vbAccessKeyId:= CASE WHEN inUnitId IN (8411   -- Склад ГП ф Киев
                                           , 428365 -- Склад возвратов ф.Киев
+                                          , 14034211 -- Склад ГП ф.Київ (Сільпо)
+                                          , 14034228 -- Склад ГП ф.Київ (Новус)
                                            )
                               THEN zc_Enum_Process_AccessKey_DocumentKiev()
 
                           WHEN inUnitId IN (346093 -- Склад ГП ф.Одесса
                                           , 346094 -- Склад возвратов ф.Одесса
+                                          , 14034227 -- Склад ГП ф.Одеса (Сільпо)
                                            )
                                THEN zc_Enum_Process_AccessKey_DocumentOdessa()
 
