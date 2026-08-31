@@ -1979,7 +1979,8 @@ object MainForm: TMainForm
         Align = alTop
         Alignment = taCenter
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
-        ExplicitWidth = 59
+        ExplicitLeft = -2
+        ExplicitTop = 4
       end
       object EditBarCode: TcxCurrencyEdit
         Left = 5

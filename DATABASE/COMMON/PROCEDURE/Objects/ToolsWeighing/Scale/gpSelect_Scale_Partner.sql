@@ -200,6 +200,10 @@ BEGIN
     -- Результат
     RETURN QUERY
        WITH tmpUnit_not AS (SELECT 954062 AS UnitId -- Отдел Х
+                           UNION
+                            SELECT 8017753 AS UnitId -- ЗСУ
+                           UNION
+                            SELECT 3377419 AS UnitId -- Інваліди
                            /*UNION
                             SELECT lfSelect.LocationId FROM lfSelect_Object_Unit_List (8382) AS lfSelect -- Админ
                            UNION
@@ -240,18 +244,22 @@ BEGIN
                             AND Object_Car.isErased = FALSE
                             AND (inBranchCode BETWEEN 301 AND 310)
                          )
-          , tmpMember AS (SELECT lfSelect.MemberId        AS MemberId
-                               , Object_Member.DescId     AS DescId
-                               , Object_Member.ObjectCode AS MemberCode
-                               , Object_Member.ValueData  AS MemberName
-                               , Object_Unit.ObjectCode   AS UnitCode
-                               , Object_Unit.ValueData    AS UnitName
+          , tmpMember AS (SELECT lfSelect.MemberId            AS MemberId
+                               , Object_Member.DescId         AS DescId
+                               , Object_Member.ObjectCode     AS MemberCode
+                               , Object_Member.ValueData      AS MemberName
+                               , Object_Unit.ObjectCode       AS UnitCode
+                               , Object_Unit.ValueData        AS UnitName
+                               , Object_Position.ObjectCode   AS PositionCode
+                               , Object_Position.ValueData    AS PositionName
                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
-                               INNER JOIN Object AS Object_Member ON Object_Member.Id = lfSelect.MemberId
-                               LEFT  JOIN Object AS Object_Unit   ON Object_Unit.Id   = lfSelect.UnitId
+                               INNER JOIN Object AS Object_Member   ON Object_Member.Id   = lfSelect.MemberId
+                               LEFT  JOIN Object AS Object_Unit     ON Object_Unit.Id     = lfSelect.UnitId
+                               LEFT  JOIN Object AS Object_Position ON Object_Position.Id = lfSelect.PositionId
                                LEFT  JOIN tmpUnit_not ON tmpUnit_not.UnitId = lfSelect.UnitId
                           WHERE tmpUnit_not.UnitId IS NULL
                             AND Object_Member.isErased = FALSE
+                            AND (Object_Position.ValueData ILIKE '%авто%' OR inBranchCode <> 1)
                             -- AND (inBranchCode BETWEEN 301 AND 310 OR (inBranchCode= 1 AND inIsGoodsComplete = TRUE))
                          )
           , tmpInfoMoney AS (-- 1.1.
@@ -670,9 +678,9 @@ BEGIN
        SELECT tmpMember.MemberId     AS PartnerId
             , tmpMember.MemberCode   AS PartnerCode
             , tmpMember.MemberName   AS PartnerName
-            , '' :: TVarChar  AS JuridicalName
-            , NULL :: Integer AS PaidKindId
-            , '' :: TVarChar  AS PaidKindName
+            , ''         :: TVarChar AS JuridicalName
+            , NULL       :: Integer  AS PaidKindId
+            , tmpMember.PositionName AS PaidKindName
 
             , (-1 * zc_Object_Member()) :: Integer AS ContractId
             , tmpMember.UnitCode             AS ContractCode
@@ -704,7 +712,7 @@ BEGIN
 
        FROM tmpMember
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = tmpMember.DescId
-            LEFT JOIN (SELECT zc_Movement_Send() AS MovementDescId WHERE inBranchCode NOT IN (301, 1, 2, 3, 4, 5, 6, 7 , 8 , 9 , 10 , 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+            LEFT JOIN (SELECT zc_Movement_Send() AS MovementDescId WHERE inBranchCode NOT IN (301, 2, 3, 4, 5, 6, 7 , 8 , 9 , 10 , 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
                  UNION SELECT zc_Movement_Loss() AS MovementDescId WHERE inBranchCode BETWEEN 301 AND 310
                       ) AS tmpDesc ON 1=1
 

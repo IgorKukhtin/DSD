@@ -62,7 +62,8 @@ BEGIN
 
     --
     vbIsGP := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-           OR vbUserId IN (81243) -- Урасова Т.В.
+           OR vbUserId IN (81243)  -- Урасова Т.В.
+           OR vbUserId IN (888409) -- Булейко А.И.
              ;
 
     -- Результат

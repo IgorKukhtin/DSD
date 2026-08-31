@@ -310,7 +310,7 @@ BEGIN
                                    -- JuridicalId
                                  , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                    -- GoodsPropertyId
-                                 , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ObjectId) AS GoodsPropertyId
+                                 , COALESCE (MovementLinkObject_GoodsProperty.ObjectId, zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ObjectId)) AS GoodsPropertyId
 
                                    -- вот таким сложным CASE определяется приход или расход
                                  , CASE -- для всех - расход с него !!!блокируется!!!
@@ -348,6 +348,9 @@ BEGIN
 
                             FROM _tmpMovement_find_all AS tmpMovement
 
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsProperty
+                                                              ON MovementLinkObject_GoodsProperty.MovementId = tmpMovement.Id
+                                                             AND MovementLinkObject_GoodsProperty.DescId     = zc_MovementLinkObject_GoodsProperty()
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                               ON MovementLinkObject_Contract.MovementId = tmpMovement.Id
                                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -441,12 +444,18 @@ BEGIN
                                        INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Order.MovementId
                                                           AND Movement.DescId   = zc_Movement_WeighingPartner()
                                                           AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                       LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
+                                                               ON MovementFloat_MovementDesc.MovementId = tmpMovement.Id
+                                                              AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
+                                                              AND MovementFloat_MovementDesc.ValueData  = zc_Movement_Send() :: TFloat
+
                                        LEFT JOIN MovementLinkObject
                                               AS MovementLinkObject_User
                                               ON MovementLinkObject_User.MovementId = Movement.Id
                                              AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
                                           -- AND MovementLinkObject_User.ObjectId = vbUserId
                                               -- AND vbUserId <> 5
+                                  WHERE MovementFloat_MovementDesc.MovementId IS NULL
                                  )
            , tmpMovement_find AS (SELECT tmpMovement_find_all.Id
                                        , tmpMovement_find_all.MovementId_get

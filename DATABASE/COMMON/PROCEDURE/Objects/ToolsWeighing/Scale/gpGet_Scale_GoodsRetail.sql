@@ -47,20 +47,29 @@ BEGIN
     -- !!!меняется параметр!!!
     IF inOrderExternalId <> 0 AND COALESCE (inGoodsPropertyId, 0) = 0
     THEN
-        inGoodsPropertyId:= (SELECT zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) AS GoodsPropertyId
-                             FROM MovementLinkObject AS MovementLinkObject_Partner
-                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                               ON MovementLinkObject_Contract.MovementId = MovementLinkObject_Partner.MovementId
-                                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                  LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                       ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_Partner.ObjectId
-                                                      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                             WHERE MovementLinkObject_Partner.MovementId IN (SELECT inOrderExternalId
-                                                                            UNION
-                                                                             SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inOrderExternalId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
-                                                                            )
-                               AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-                            );
+        inGoodsPropertyId:= COALESCE ((SELECT MovementLinkObject_GoodsProperty.ObjectId AS GoodsPropertyId
+                                       FROM MovementLinkObject AS MovementLinkObject_GoodsProperty
+                                       WHERE MovementLinkObject_GoodsProperty.MovementId IN (SELECT inOrderExternalId
+                                                                                            UNION
+                                                                                             SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inOrderExternalId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+                                                                                      )
+                                         AND MovementLinkObject_GoodsProperty.DescId   = zc_MovementLinkObject_GoodsProperty()
+                                         AND MovementLinkObject_GoodsProperty.ObjectId > 0
+                                      )
+                                    , (SELECT zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) AS GoodsPropertyId
+                                       FROM MovementLinkObject AS MovementLinkObject_Partner
+                                            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                         ON MovementLinkObject_Contract.MovementId = MovementLinkObject_Partner.MovementId
+                                                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_Partner.ObjectId
+                                                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                       WHERE MovementLinkObject_Partner.MovementId IN (SELECT inOrderExternalId
+                                                                                      UNION
+                                                                                       SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inOrderExternalId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+                                                                                      )
+                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                      ));
     END IF;
     -- !!!меняется параметр!!!
     IF COALESCE (inGoodsPropertyId, 0) = 0

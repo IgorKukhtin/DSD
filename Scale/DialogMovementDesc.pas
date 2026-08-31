@@ -139,6 +139,7 @@ begin
            ParamsMovement.ParamByName('isPartionCell').asBoolean           := CDS.FieldByName('isPartionCell').asBoolean;
            ParamsMovement.ParamByName('isPartionPassport').asBoolean       := CDS.FieldByName('isPartionPassport').asBoolean;
            ParamsMovement.ParamByName('isReReturnIn').asBoolean            := CDS.FieldByName('isReReturnIn').asBoolean;
+           ParamsMovement.ParamByName('isOrderExternal').asBoolean         := CDS.FieldByName('isOrderExternal').asBoolean;
            ParamsMovement.ParamByName('isCalc_Sh').asBoolean               := CDS.FieldByName('isCalc_Sh').asBoolean;
            ParamsMovement.ParamByName('isPeresort').asBoolean              := CDS.FieldByName('isPeresort').asBoolean;
            ParamsMovement.ParamByName('isKh').asBoolean                    := CDS.FieldByName('isKh').asBoolean;
@@ -230,6 +231,7 @@ begin
                ParamsMovement_local.ParamByName('calcPartnerId').AsInteger:=0;
                ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger:=0;
                ParamsMovement_local.ParamByName('calcPartnerName').AsString:='';
+               ParamsMovement_local.ParamByName('isOrderExternal').AsBoolean:=FALSE;
           end
      else begin MessagePanel.Font.Style:=[];MessagePanel.Caption:='Ќовое взвешивание';end;
 
@@ -327,6 +329,18 @@ begin
             ShowMessage('ќшибка.¬ыбрать данную оперцию можно только через за€вку.');
             exit;
      end;
+
+     //если режим - нужна только за€вка
+     if (ParamsMovement.ParamByName('isOrderExternal').asBoolean = TRUE)
+         and (ParamsMovement_local.ParamByName('OrderExternalId').AsInteger > 0)
+         and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger > 0)
+     then begin
+              CopyValuesParamsFrom(ParamsMovement_local,ParamsMovement);
+              Result:= true;
+              exit;
+     end;
+
+
 
      //!!!обнул€етс€ т.к.было изменение MovementDescId!!!
      if  (CDS.FieldByName('MovementDescId').asInteger<>ParamsMovement.ParamByName('MovementDescId').AsInteger)
@@ -462,6 +476,7 @@ begin
           ParamByName('isPartionPassport').asBoolean       := CDS.FieldByName('isPartionPassport').asBoolean;
 
           ParamByName('isReReturnIn').asBoolean            := CDS.FieldByName('isReReturnIn').asBoolean;
+          ParamByName('isOrderExternal').asBoolean         := CDS.FieldByName('isOrderExternal').asBoolean;
           ParamByName('isCalc_Sh').asBoolean               := CDS.FieldByName('isCalc_Sh').asBoolean;
           ParamByName('isPeresort').asBoolean              := CDS.FieldByName('isPeresort').asBoolean;
           ParamByName('isKh').asBoolean                    := CDS.FieldByName('isKh').asBoolean;
@@ -919,6 +934,7 @@ begin
                //MovementDescId
                ParamsMovement_local.ParamByName('MovementDescId').AsInteger:=0;
                ParamsMovement_local.ParamByName('MovementDescId_next').AsInteger:=0;
+               ParamsMovement_local.ParamByName('isOrderExternal').AsBoolean:=FALSE;
      end;
 
      //поиск контрагента по коду + заполн€ютс€ параметры (!!!не только Partner!!!)
