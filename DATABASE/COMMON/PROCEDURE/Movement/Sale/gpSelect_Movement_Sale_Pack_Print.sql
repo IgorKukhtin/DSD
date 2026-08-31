@@ -296,12 +296,46 @@ BEGIN
                                 AND MovementString.MovementId IN (SELECT DISTINCT tmpMovementData.ParentId_Movement FROM tmpMovementData)
                                )
                                                
+       -- _w
+     , tmpMovementFloat AS (SELECT MovementFloat.*
+                            FROM MovementFloat
+                            WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovementData.MovementId FROM tmpMovementData)
+                              AND MovementFloat.DescId IN (zc_MovementFloat_WeighingNumber(),zc_MovementFloat_TotalCountKg(), zc_MovementFloat_MovementDesc())
+                            )
+     , tmpMLM_w AS (SELECT MLM.*
+                    FROM MovementLinkMovement AS MLM
+                    WHERE MLM.MovementId IN (SELECT DISTINCT tmpMovementData.MovementId FROM tmpMovementData)
+                      AND MLM.DescId IN (zc_MovementLinkMovement_Order())
+                    )
+     , tmpMovementBoolean_w AS (SELECT MB.*
+                                FROM MovementBoolean AS MB
+                                WHERE MB.MovementId IN (SELECT DISTINCT tmpMovementData.MovementId FROM tmpMovementData)
+                                  AND MB.DescId IN (zc_MovementLinkMovement_Order())
+                                )
+                            
+       -- свойства товара - _w
+     , tmpObjectLink AS (SELECT ObjectLink.*
+                      FROM ObjectLink
+                      WHERE ObjectLink.ObjectId IN (SELECT tmpMovementData.GoodsId FROM tmpMovementData)
+                        AND ObjectLink.DescId IN (zc_ObjectLink_Goods_InfoMoney(), zc_ObjectLink_Goods_Measure())
+                     )
+       -- свойства товара - _w
+     , tmpObjectString AS (SELECT ObjectString.*
+                           FROM ObjectString
+                           WHERE ObjectString.ObjectId IN (SELECT tmpMovementData.GoodsId FROM tmpMovementData)
+                             AND ObjectString.DescId = zc_ObjectString_Goods_GroupNameFull()
+                           )
+
      , tmpMovementParam AS (SELECT tmpMovement.MovementId
                                  , Movement_Sale.OperDate				                      AS OperDate
                                  , COALESCE (MovementDate_OperDatePartner.ValueData, Movement_Sale.OperDate)  AS OperDatePartner
                                  , Movement_Sale.InvNumber		                                  AS InvNumber
                                  , MovementString_InvNumberPartner.ValueData                              AS InvNumberPartner
-                                 , MovementString_InvNumberOrder.ValueData                                AS InvNumberOrder
+                                 , CASE WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_SendOnPrice(), zc_Movement_Send())
+                                             THEN Movement_Order.InvNumber || ' від ' || zfConvert_DateToString (Movement_Order.OperDate)
+                                        ELSE MovementString_InvNumberOrder.ValueData
+                                   END :: TVarChar AS InvNumberOrder
+                                 , MovementFloat_MovementDesc.ValueData :: Integer AS MovementDescId_w
 
                                  , OH_JuridicalDetails_From.FullName                                      AS JuridicalName_From
                                  , OH_JuridicalDetails_From.JuridicalAddress                              AS JuridicalAddress_From
@@ -338,6 +372,15 @@ BEGIN
                                  LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                       ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                                      AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
+                                 -- Тип документа
+                                 LEFT JOIN tmpMovementFloat AS MovementFloat_MovementDesc
+                                                            ON MovementFloat_MovementDesc.MovementId = tmpMovement.MovementId
+                                                           AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
+                                 LEFT JOIN tmpMLM_w AS MLM_Order
+                                                    ON MLM_Order.MovementId = tmpMovement.MovementId
+                                                   AND MLM_Order.DescId     = zc_MovementLinkMovement_Order()
+                                 LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MLM_Order.MovementChildId
 
                                  LEFT JOIN tmpMovementParent AS Movement_Sale ON Movement_Sale.Id = tmpMovement.ParentId_Movement
 
@@ -377,23 +420,6 @@ BEGIN
                                                         ON ObjectString_ToAddress.ObjectId = MovementLinkObject_To.ObjectId
                                                        AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
                )
- 
-     , tmpMovementFloat AS (SELECT MovementFloat.*
-                            FROM MovementFloat
-                            WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovementData.MovementId FROM tmpMovementData)
-                              AND MovementFloat.DescId IN ( zc_MovementFloat_WeighingNumber(),zc_MovementFloat_TotalCountKg()) 
-                            )
-     -- свойства товара
-     , tmpObjectLink AS (SELECT ObjectLink.*
-                      FROM ObjectLink
-                      WHERE ObjectLink.ObjectId IN (SELECT tmpMovementData.GoodsId FROM tmpMovementData)
-                        AND ObjectLink.DescId IN (zc_ObjectLink_Goods_InfoMoney(), zc_ObjectLink_Goods_Measure())
-                     )
-     , tmpObjectString AS (SELECT ObjectString.*
-                           FROM ObjectString
-                           WHERE ObjectString.ObjectId IN (SELECT tmpMovementData.GoodsId FROM tmpMovementData)
-                             AND ObjectString.DescId = zc_ObjectString_Goods_GroupNameFull()
-                           )
 
       -- Результат
      SELECT tmpMovementItem.MovementId	                                            AS MovementId
