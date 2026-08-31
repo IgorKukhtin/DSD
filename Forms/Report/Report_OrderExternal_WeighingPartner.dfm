@@ -1,26 +1,26 @@
 inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_WeighingPartnerForm
   Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1081' '#1076#1083#1103' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 460
-  ClientWidth = 985
-  ExplicitWidth = 1001
+  ClientWidth = 1073
+  ExplicitWidth = 1089
   ExplicitHeight = 499
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 158
-    Width = 985
+    Width = 1073
     Height = 302
     ExplicitTop = 158
     ExplicitWidth = 985
     ExplicitHeight = 302
     ClientRectBottom = 302
-    ClientRectRight = 985
+    ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
       Caption = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
       ExplicitWidth = 985
       ExplicitHeight = 278
       inherited cxGrid: TcxGrid
-        Width = 985
+        Width = 1073
         Height = 278
         ExplicitWidth = 985
         ExplicitHeight = 278
@@ -373,10 +373,11 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
     end
   end
   inherited DataPanel: TPanel
-    Width = 985
+    Width = 1073
     Height = 132
     TabOrder = 3
-    ExplicitWidth = 985
+    ExplicitTop = 7
+    ExplicitWidth = 1073
     ExplicitHeight = 132
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -482,8 +483,8 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
     end
     object edOperDatePartner_sale: TcxDateEdit
-      Left = 274
-      Top = 68
+      Left = 277
+      Top = 63
       EditValue = 42195d
       Enabled = False
       Properties.ReadOnly = True
@@ -509,12 +510,12 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       Width = 113
     end
     object cxLabel25: TcxLabel
-      Left = 814
+      Left = 664
       Top = 45
       Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074'-'#1074' '#1090#1086#1074'.'
     end
     object ceGoodsProperty: TcxButtonEdit
-      Left = 814
+      Left = 664
       Top = 63
       Properties.Buttons = <
         item
@@ -523,7 +524,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         end>
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 164
+      Width = 137
     end
     object cxLabel6: TcxLabel
       Left = 5
@@ -588,13 +589,48 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         21)
       Width = 114
     end
+    object cxLabel21: TcxLabel
+      Left = 814
+      Top = 5
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    end
+    object edPartner: TcxButtonEdit
+      Left = 814
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Text = ' '
+      Width = 187
+    end
+    object cxLabel3: TcxLabel
+      Left = 525
+      Top = 45
+      Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
+    end
+    object cxLabel11: TcxLabel
+      Left = 814
+      Top = 45
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+    end
+    object edRetail: TcxButtonEdit
+      Left = 814
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 30
+      Width = 187
+    end
   end
-  object cxLabel23: TcxLabel [2]
-    Left = 525
-    Top = 45
-    Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
-  end
-  object edCarInfo: TcxButtonEdit [3]
+  object edCarInfo: TcxButtonEdit [2]
     Left = 525
     Top = 63
     Properties.Buttons = <
@@ -603,8 +639,8 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 276
+    TabOrder = 6
+    Width = 131
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 883
@@ -2003,6 +2039,36 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 208
@@ -2659,7 +2725,6 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
   end
   object GuidesCarInfo: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edCarInfo
     DisableGuidesOpen = True
     FormNameParam.Value = 'TCarInfoForm'
     FormNameParam.DataType = ftString
@@ -2689,8 +2754,8 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 689
-    Top = 35
+    Left = 569
+    Top = 83
   end
   object GuidesGoodsProperty: TdsdGuides
     KeyField = 'Id'
@@ -2717,8 +2782,8 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 896
-    Top = 59
+    Left = 736
+    Top = 51
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -2743,7 +2808,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       end>
     PackSize = 1
     Left = 848
-    Top = 8
+    Top = 112
   end
   object FieldFilter_Name: TdsdFieldFilter
     TextEdit = edSearchGoodsName
@@ -2765,5 +2830,99 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
     CheckBoxList = <>
     Left = 664
     Top = 96
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    DisableGuidesOpen = True
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 908
+    Top = 4
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 900
+    Top = 44
   end
 end

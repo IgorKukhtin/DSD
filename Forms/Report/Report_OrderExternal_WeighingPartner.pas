@@ -66,8 +66,6 @@ type
     ChangeGuidesStatuswms3: TChangeGuidesStatus;
     bbPrint_Account: TdxBarButton;
     cxLabel22: TcxLabel;
-    cxLabel23: TcxLabel;
-    edCarInfo: TcxButtonEdit;
     edCarInfo_Date: TcxDateEdit;
     AmountPartner: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
@@ -113,6 +111,14 @@ type
     actPrintGoods: TdsdPrintAction;
     mPrint: TdxBarSubItem;
     bbPrintGoods: TdxBarButton;
+    cxLabel21: TcxLabel;
+    edPartner: TcxButtonEdit;
+    edCarInfo: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    cxLabel11: TcxLabel;
+    edRetail: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
+    GuidesRetail: TdsdGuides;
   private
     { Private declarations }
   public
