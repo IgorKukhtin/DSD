@@ -11,18 +11,18 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
     Width = 1073
     Height = 302
     ExplicitTop = 158
-    ExplicitWidth = 985
+    ExplicitWidth = 1073
     ExplicitHeight = 302
     ClientRectBottom = 302
     ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
       Caption = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
-      ExplicitWidth = 985
+      ExplicitWidth = 1073
       ExplicitHeight = 278
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 278
-        ExplicitWidth = 985
+        ExplicitWidth = 1073
         ExplicitHeight = 278
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -228,7 +228,33 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 67
           end
-          object OperDate: TcxGridDBColumn [1]
+          object StatusCode: TcxGridDBColumn [1]
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object OperDate: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
@@ -236,7 +262,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 82
           end
-          object InvNumber: TcxGridDBColumn [2]
+          object InvNumber: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'. '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
@@ -244,14 +270,30 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 100
           end
-          object EndWeighing: TcxGridDBColumn [3]
+          object StartWeighing: TcxGridDBColumn [4]
+            Caption = #1053#1072#1095'. '#1074#1079#1074#1077#1096'.'
+            DataBinding.FieldName = 'StartWeighing'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object EndWeighing: TcxGridDBColumn [5]
             Caption = #1054#1082#1086#1085#1095'. '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'EndWeighing'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object MovementDescName_Parent: TcxGridDBColumn [4]
+          object UserName: TcxGridDBColumn [6]
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'UserName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object MovementDescName_Parent: TcxGridDBColumn [7]
             Caption = #1042#1080#1076' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
             DataBinding.FieldName = 'MovementDescName_Parent'
             HeaderAlignmentHorz = taCenter
@@ -259,7 +301,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 105
           end
-          object OperDate_Parent: TcxGridDBColumn [5]
+          object OperDate_Parent: TcxGridDBColumn [8]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
             DataBinding.FieldName = 'OperDate_Parent'
             HeaderAlignmentHorz = taCenter
@@ -267,7 +309,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 106
           end
-          object InvNumber_Parent: TcxGridDBColumn [6]
+          object InvNumber_Parent: TcxGridDBColumn [9]
             Caption = #8470' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
             DataBinding.FieldName = 'InvNumber_Parent'
             HeaderAlignmentHorz = taCenter
@@ -275,7 +317,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 100
           end
-          object GoodsGroupNameFull: TcxGridDBColumn [7]
+          object GoodsGroupNameFull: TcxGridDBColumn [10]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             Visible = False
@@ -284,7 +326,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 126
           end
-          object GoodsCode: TcxGridDBColumn [8]
+          object GoodsCode: TcxGridDBColumn [11]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -292,7 +334,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 45
           end
-          object GoodsName: TcxGridDBColumn [9]
+          object GoodsName: TcxGridDBColumn [12]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -300,7 +342,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 153
           end
-          object GoodsKindName: TcxGridDBColumn [10]
+          object GoodsKindName: TcxGridDBColumn [13]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -316,7 +358,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 70
           end
-          object MeasureName: TcxGridDBColumn [11]
+          object MeasureName: TcxGridDBColumn [14]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -324,7 +366,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 45
           end
-          object Amount: TcxGridDBColumn [12]
+          object Amount: TcxGridDBColumn [15]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -335,7 +377,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 55
           end
-          object AmountPartner: TcxGridDBColumn [13]
+          object AmountPartner: TcxGridDBColumn [16]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -346,7 +388,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 104
           end
-          object Amount_order: TcxGridDBColumn [14]
+          object Amount_order: TcxGridDBColumn [17]
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount_order'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -376,7 +418,6 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
     Width = 1073
     Height = 132
     TabOrder = 3
-    ExplicitTop = 7
     ExplicitWidth = 1073
     ExplicitHeight = 132
     inherited edInvNumber: TcxTextEdit
@@ -1545,6 +1586,15 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementDesc'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

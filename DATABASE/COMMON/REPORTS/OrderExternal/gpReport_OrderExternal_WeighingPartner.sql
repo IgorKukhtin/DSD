@@ -1,23 +1,28 @@
 -- Function: gpReport_OrderExternal_WeighingPartner()
 
 DROP FUNCTION IF EXISTS gpReport_OrderExternal_WeighingPartner (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal_WeighingPartner (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderExternal_WeighingPartner(
-    IN inMovementId  Integer      , -- ключ Документа
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inMovementId        Integer   , -- ключ Документа
+    IN inMovementDesc      TVarChar  , 
+    IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId  Integer
              , OperDate                 TDateTime
              , InvNumber                TVarChar
+             , StatusCode               Integer
              , MovementId_Parent        Integer 
              , OperDate_Parent          TDateTime
              , InvNumber_Parent         TVarChar
              , MovementDescName_Parent  TVarChar
              
-             , WeighingNumber           TFloat--номер взвеш = номер поддона
+             , WeighingNumber           TFloat--номер взвеш = номер поддона 
+             , StartWeighing            TDateTime
              , EndWeighing              TDateTime
+             , UserName                 TVarChar
               
-             , GoodsId       Integer   
+             , GoodsId       Integer
              , GoodsCode     Integer
              , GoodsName     TVarChar
              , GoodsName_choice TVarChar
@@ -43,18 +48,18 @@ BEGIN
      RETURN QUERY
       WITH 
       tmpMovement_wp AS (SELECT Movement.* 
-                             FROM MovementLinkMovement AS MovementLinkMovement_Order
-                                  INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId 
-                                                     AND Movement.DescId = zc_Movement_WeighingPartner()
-                                                     AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                  -- Тип документа
-                                  INNER JOIN MovementFloat AS MovementFloat_MovementDesc
-                                                           ON MovementFloat_MovementDesc.MovementId = Movement.Id
-                                                          AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
-                                                          AND MovementFloat_MovementDesc.ValueData  = zc_Movement_Send() :: TFloat
-                             WHERE MovementLinkMovement_Order.MovementChildId = inMovementId --35131290
-                               AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-                             ) 
+                         FROM MovementLinkMovement AS MovementLinkMovement_Order
+                              INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId 
+                                                 AND Movement.DescId = zc_Movement_WeighingPartner()
+                                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              -- Тип документа
+                              INNER JOIN MovementFloat AS MovementFloat_MovementDesc
+                                                       ON MovementFloat_MovementDesc.MovementId = Movement.Id
+                                                      AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
+                                                      AND MovementFloat_MovementDesc.ValueData  = zc_Movement_Send() :: TFloat
+                         WHERE MovementLinkMovement_Order.MovementChildId = inMovementId --35131290
+                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                         ) 
       --№ взвешивания, дата/время завершения, № главного док, дата главного док + вид главного док, № поддона(zc_MovementFloat_WeighingNumber)
     , tmpMovementFloat_wp AS (SELECT *
                               FROM MovementFloat
@@ -65,8 +70,17 @@ BEGIN
     , tmpMovementDate_wp AS (SELECT *
                              FROM MovementDate
                              WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement_wp.Id FROM tmpMovement_wp)
-                               AND MovementDate.DescId IN (zc_MovementDate_EndWeighing())
+                               AND MovementDate.DescId IN (zc_MovementDate_EndWeighing()
+                                                         , zc_MovementDate_StartWeighing()
+                                                          )
                              )
+
+    , tmpLO_wp AS (SELECT *
+                   FROM MovementLinkObject
+                   WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_wp.Id FROM tmpMovement_wp)
+                     AND MovementLinkObject.DescId IN (zc_MovementLinkObject_User()
+                                                )
+                   )
 
     -- данный из док. взвешивания
     ,  tmpMI_wp AS (SELECT MovementItem.MovementId
@@ -110,13 +124,16 @@ BEGIN
     , tmpWeighingPartner AS (SELECT Movement.Id
                                   , Movement.OperDate
                                   , Movement.InvNumber
+                                  , Object_Status.ObjectCode     AS StatusCode
                                   , Movement_Parent.Id           AS MovementId_Parent
                                   , Movement_Parent.OperDate     AS OperDate_Parent
                                   , Movement_Parent.InvNumber    AS InvNumber_Parent
                                   , MovementDesc_Parent.ItemName AS MovementDescName_Parent
                                   
                                   , MovementFloat_WeighingNumber.ValueData AS WeighingNumber --номер взвеш = номер поддона
-                                  , MovementDate_EndWeighing.ValueData     AS EndWeighing 
+                                  , MovementDate_StartWeighing.ValueData   AS StartWeighing
+                                  , MovementDate_EndWeighing.ValueData     AS EndWeighing
+                                  , Object_User.ValueData                  AS UserName 
                                    
                                   , MovementItem.GoodsId
                                   , MovementItem.GoodsKindId
@@ -127,16 +144,25 @@ BEGIN
                              FROM tmpMovement_wp AS Movement
                                LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId  --главный док 
                                LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
+                               LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
                                LEFT JOIN tmpMovementFloat_wp AS MovementFloat_WeighingNumber
                                                              ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                                             AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber() 
 
+                               LEFT JOIN tmpMovementDate_wp AS MovementDate_StartWeighing
+                                                            ON MovementDate_StartWeighing.MovementId = Movement.Id
+                                                           AND MovementDate_StartWeighing.DescId = zc_MovementDate_StartWeighing()
 
                                LEFT JOIN tmpMovementDate_wp AS MovementDate_EndWeighing
                                                             ON MovementDate_EndWeighing.MovementId = Movement.Id
                                                            AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing() 
                                   
+                               LEFT JOIN tmpLO_wp AS MovementLinkObject_User
+                                                  ON MovementLinkObject_User.MovementId = Movement.Id
+                                                 AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                               LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+
                                LEFT JOIN tmpMI_wp AS MovementItem ON MovementItem.MovementId = Movement.Id
                              )
 
@@ -144,13 +170,16 @@ BEGIN
        SELECT tmpWeighingPartner.Id                       ::Integer AS MovementId
             , tmpWeighingPartner.OperDate                 ::TDateTime
             , tmpWeighingPartner.InvNumber                ::TVarChar
+            , tmpWeighingPartner.StatusCode               ::Integer
             , tmpWeighingPartner.MovementId_Parent        ::Integer 
             , tmpWeighingPartner.OperDate_Parent          ::TDateTime
             , tmpWeighingPartner.InvNumber_Parent         ::TVarChar
             , tmpWeighingPartner.MovementDescName_Parent  ::TVarChar
             
             , tmpWeighingPartner.WeighingNumber           ::TFloat--номер взвеш = номер поддона
+            , tmpWeighingPartner.StartWeighing            ::TDateTime 
             , tmpWeighingPartner.EndWeighing              ::TDateTime
+            , tmpWeighingPartner.UserName                 ::TVarChar
              
             , Object_Goods.Id            ::Integer  AS GoodsId        
             , Object_Goods.ObjectCode    ::Integer  AS GoodsCode
@@ -194,4 +223,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal_WeighingPartner (inMovementId:= 35121130   , inSession:= zfCalc_UserAdmin())      -- номер док  1877714   заяаки от 26,08
+--select * from gpReport_OrderExternal_WeighingPartner(inMovementId := 35125275 ,  inSession := '9457');
+-- SELECT * FROM gpReport_OrderExternal_WeighingPartner (inMovementId:= 35125275 , inMovementDesc:= 'zc_Movement_Send'  , inSession:= zfCalc_UserAdmin())      -- номер док  1877714   заяаки от 26,08
