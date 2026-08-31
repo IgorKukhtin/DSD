@@ -2,10 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpReport_OrderExternal_WeighingPartner (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_OrderExternal_WeighingPartner (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal_WeighingPartner (Integer, TVarChar, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderExternal_WeighingPartner(
     IN inMovementId        Integer   , -- ключ Документа
-    IN inMovementDesc      TVarChar  , 
+    IN inMovementDesc      TVarChar  ,
+    IN inGoodsId           Integer   ,
+    IN inGoodsKindId       Integer   ,
+    IN inWeighingNumber    TFloat    , 
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId  Integer
