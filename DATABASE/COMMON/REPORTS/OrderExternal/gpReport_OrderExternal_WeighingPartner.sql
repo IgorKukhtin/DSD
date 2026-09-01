@@ -63,6 +63,8 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId 
                                                  AND Movement.DescId = zc_Movement_WeighingPartner()
                                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              LEFT JOIN Movement AS Movement_parent
+                                                 ON Movement_parent.Id = Movement.ParentId
                               -- Тип документа
                               INNER JOIN MovementFloat AS MovementFloat_MovementDesc
                                                        ON MovementFloat_MovementDesc.MovementId = Movement.Id
@@ -70,7 +72,8 @@ BEGIN
                                                       AND MovementFloat_MovementDesc.ValueData  = zc_Movement_Send() :: TFloat
                          WHERE MovementLinkMovement_Order.MovementChildId = inMovementId --35131290
                            AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-                         ) 
+                           AND COALESCE (Movement_parent.StatusId, 0) <> zc_Enum_Status_Erased()
+                        )
       --№ взвешивания, дата/время завершения, № главного док, дата главного док + вид главного док, № поддона(zc_MovementFloat_WeighingNumber)
     , tmpMovementFloat_wp AS (SELECT *
                               FROM MovementFloat
