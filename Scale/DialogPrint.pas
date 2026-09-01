@@ -126,7 +126,7 @@ begin
      if not PanelDateValue.Visible then Self.Height:= Self.Height - PanelDateValue.Height;
      if not PanelDiscountAmountPartner.Visible then Self.Height:= Self.Height - PanelDiscountAmountPartner.Height;
      //
-     cbPrintPackGross.Checked:= FALSE;
+     cbPrintPackGross.Checked:= ParamsMovement.ParamByName('isOrderExternal').AsBoolean = TRUE;
      cbPrintDiffOrder.Checked:= FALSE;//(MovementDescId=zc_Movement_Sale)or(MovementDescId=zc_Movement_SendOnPrice);
      //
      cbPrintAccount.Enabled:=(SettingMain.isCeh = FALSE);//or(MovementDescId=zc_Movement_Sale)or(MovementDescId<>zc_Movement_SendOnPrice);

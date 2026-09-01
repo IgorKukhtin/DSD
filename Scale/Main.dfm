@@ -1979,8 +1979,7 @@ object MainForm: TMainForm
         Align = alTop
         Alignment = taCenter
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
-        ExplicitLeft = -2
-        ExplicitTop = 4
+        ExplicitWidth = 59
       end
       object EditBarCode: TcxCurrencyEdit
         Left = 5
@@ -3319,6 +3318,16 @@ object MainForm: TMainForm
             TabOrder = 0
             Width = 197
           end
+          object btn_F12: TButton
+            Left = 421
+            Top = -2
+            Width = 34
+            Height = 25
+            Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103' '#1087#1086' '#1047#1072#1082#1072#1079#1091
+            Caption = 'F12'
+            TabOrder = 1
+            OnClick = btn_F12Click
+          end
         end
       end
       object infoPanelPriceList: TPanel
@@ -3884,6 +3893,48 @@ object MainForm: TMainForm
       ActionType = acUpdate
       IdFieldName = 'Id'
     end
+    object actOpenReportWeighingPartner: TdsdInsertUpdateAction
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1081' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1081' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+      ImageIndex = 25
+      FormName = 'TReport_OrderExternal_WeighingPartnerForm'
+      FormNameParam.Value = 'TReport_OrderExternal_WeighingPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId_OrderExternal'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementDesc'
+          Value = 'zc_Movement_Send'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = OperDateEdit
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   object spProtocol_isExit: TdsdStoredProc
     StoredProcName = 'gpInsert_LoginProtocol'
@@ -3934,6 +3985,11 @@ object MainForm: TMainForm
       end
       item
         Name = 'MovementId_begin'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_OrderExternal'
         Value = Null
         MultiSelectSeparator = ','
       end>

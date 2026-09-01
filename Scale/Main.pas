@@ -310,6 +310,8 @@ type
     SubjectDocMILabel: TLabel;
     EditSubjectDocMI: TcxButtonEdit;
     SubjectDocName: TcxGridDBColumn;
+    btn_F12: TButton;
+    actOpenReportWeighingPartner: TdsdInsertUpdateAction;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -363,6 +365,7 @@ type
     procedure bbDeleteAllClick(Sender: TObject);
     procedure EditSubjectDocMIPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure btn_F12Click(Sender: TObject);
   private
     //aTest: Boolean;
     Scale_AP: IAPScale;
@@ -985,6 +988,7 @@ end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.GetParams_MovementDesc(BarCode: String):Boolean;
 var MovementId_save:Integer;
+    isOrderExternal : Boolean;
 begin
      err_count:=0;
      MovementId_save:=ParamsMovement.ParamByName('MovementId').AsInteger;
@@ -999,6 +1003,10 @@ begin
                //Result:=false;
                if MessageDlg('Текущее взвешивание не закрыто.'+#10+#13+'Действительно перейти к созданию <Нового> взвешивания?',mtConfirmation,mbYesNoCancel,0) <> 6
                then begin Result:=false;exit;end;
+               //
+               isOrderExternal:= ParamsMovement.ParamByName('isOrderExternal').AsBoolean;
+               //Обнулили
+               ParamsMovement.ParamByName('isOrderExternal').AsBoolean:= FALSE;
           end;
      //
      Result:=DialogMovementDescForm.Execute(BarCode);
@@ -1030,6 +1038,9 @@ begin
                Initialize_afterSave_MI;
           end;
      end;
+     //else
+         // Восстановили
+         //ParamsMovement.ParamByName('isOrderExternal').AsBoolean:= isOrderExternal;
      //
      //
      if ParamsMovement.ParamByName('isAsset').AsBoolean = FALSE
@@ -1640,6 +1651,19 @@ begin
     //
     GuideMovementForm.Execute(ParamsMovement,FALSE);//isChoice=FALSE
     myActiveControl;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.btn_F12Click(Sender: TObject);
+begin
+    if (ParamsMovement.ParamByName('OrderExternalId').AsInteger = 0)
+    then begin
+            ShowMessage('Ошибка.№ документа заказа не установлен.');
+            exit;
+    end;
+    //
+    FormParams.ParamByName('MovementId_OrderExternal').Value:=ParamsMovement.ParamByName('OrderExternalId').AsInteger;
+    actOpenReportWeighingPartner.Execute;
+
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.cbDocInsertClick(Sender: TObject);
@@ -2884,6 +2908,8 @@ begin
 
      if Key = VK_F8 then bbSale_Order_allClick(Self);
      if Key = VK_F9 then bbSale_Order_diffTaxClick(Self);
+
+     if (Key = VK_F12) and (SettingMain.isSticker = FALSE) then btn_F12Click(Self);
 
      if Key = VK_F5 then Save_Movement_all;
      if Key = VK_F2 then GetParams_MovementDesc('');

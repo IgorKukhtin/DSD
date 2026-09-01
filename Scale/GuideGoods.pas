@@ -456,6 +456,8 @@ begin
        Params.ParamByName('inMovementId').Value     := execParamsMovement.ParamByName('MovementId').AsInteger;
        Params.ParamByName('inGoodsCode').Value      := 0;
        Params.ParamByName('inGoodsName').Value      := '';
+       Params.ParamByName('inIsOrderExternal').Value:= execParamsMovement.ParamByName('isOrderExternal').AsBoolean;
+
        Execute;
      end
      else
@@ -472,6 +474,7 @@ begin
        Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('FromId').AsInteger;
        Params.ParamByName('inGoodsCode').Value      := 0;
        Params.ParamByName('inGoodsName').Value      := '';
+       Params.ParamByName('inIsOrderExternal').Value:= FALSE;
        Execute;
      end
      else
@@ -503,6 +506,7 @@ begin
              Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('FromId').AsInteger;
              Params.ParamByName('inGoodsCode').Value      := 0;
              Params.ParamByName('inGoodsName').Value      := '';
+             Params.ParamByName('inIsOrderExternal').Value:= FALSE;
              Execute;
        end;
      end
@@ -533,6 +537,7 @@ begin
              Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('ToId').AsInteger;
              Params.ParamByName('inGoodsCode').Value      := 0;
              Params.ParamByName('inGoodsName').Value      := '';
+             Params.ParamByName('inIsOrderExternal').Value:= FALSE;
              Execute;
        end;
      end
@@ -553,6 +558,7 @@ begin
        Params.ParamByName('inMovementId').Value     := 0;
        Params.ParamByName('inGoodsCode').Value      := 0;
        Params.ParamByName('inGoodsName').Value      := '';
+       Params.ParamByName('inIsOrderExternal').Value:= FALSE;
        Execute;
      end
      else begin
@@ -787,6 +793,7 @@ begin
                 spSelect.Params.ParamByName('inGoodsName').Value:= trim(EditGoodsName.Text);
                 spSelect.Params.ParamByName('inOrderExternalId').Value:= ParamsMovement.ParamByName('OrderExternalId').AsInteger;
                 spSelect.Params.ParamByName('inMovementId').Value     := ParamsMovement.ParamByName('MovementId').AsInteger;
+                spSelect.Params.ParamByName('inIsOrderExternal').Value:= FALSE;
                 actRefreshExecute(Self);
       end;
 
@@ -1682,6 +1689,7 @@ begin
                 spSelect.Params.ParamByName('inGoodsName').Value:='';
                 spSelect.Params.ParamByName('inOrderExternalId').Value:= ParamsMovement.ParamByName('OrderExternalId').AsInteger;
                 spSelect.Params.ParamByName('inMovementId').Value     := ParamsMovement.ParamByName('MovementId').AsInteger;
+                spSelect.Params.ParamByName('inIsOrderExternal').Value:= FALSE;
                 actRefreshExecute(Self);
                 fEnterGoodsCode:=true;CDS.Filtered:=False;CDS.Filtered:=True;
      end;
@@ -3144,6 +3152,7 @@ begin
        Params.AddParam('inGoodsCode', ftInteger, ptInput, 0);
        Params.AddParam('inGoodsName', ftString, ptInput, '');
        Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput,GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn'));
+       Params.AddParam('inIsOrderExternal', ftBoolean, ptInput, FALSE);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Execute;
   end;
