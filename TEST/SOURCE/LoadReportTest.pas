@@ -824,7 +824,8 @@ begin
   LoadReportFromFile('PrintMovement_OrderIncomeSnab', ReportPath + '\Товарный Учет\PrintMovement_OrderIncomeSnab.fr3');
   exit;
    }
-
+  LoadReportFromFile('PrintReport_OrderExternal_Weighing', ReportPath + '\Товарный Учет\PrintReport_OrderExternal_Weighing.fr3');
+  //exit;
   LoadReportFromFile('PrintReport_OrderExternal_WeighingPartner', ReportPath + '\Товарный Учет\PrintReport_OrderExternal_WeighingPartner.fr3');
   exit;
   {

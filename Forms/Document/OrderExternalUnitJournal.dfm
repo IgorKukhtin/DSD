@@ -774,6 +774,13 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
           Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementDesc'
+          Value = 'zc_Movement_Send'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate

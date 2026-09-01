@@ -1,28 +1,28 @@
 inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_WeighingPartnerForm
   Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1081' '#1076#1083#1103' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 460
-  ClientWidth = 985
-  ExplicitWidth = 1001
+  ClientWidth = 1073
+  ExplicitWidth = 1089
   ExplicitHeight = 499
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 158
-    Width = 985
+    Width = 1073
     Height = 302
     ExplicitTop = 158
-    ExplicitWidth = 985
+    ExplicitWidth = 1073
     ExplicitHeight = 302
     ClientRectBottom = 302
-    ClientRectRight = 985
+    ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
       Caption = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
-      ExplicitWidth = 985
+      ExplicitWidth = 1073
       ExplicitHeight = 278
       inherited cxGrid: TcxGrid
-        Width = 985
+        Width = 1073
         Height = 278
-        ExplicitWidth = 985
+        ExplicitWidth = 1073
         ExplicitHeight = 278
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -112,6 +112,36 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_order_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_order_Sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -208,6 +238,36 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_order_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_order_Sh
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -228,7 +288,33 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 67
           end
-          object OperDate: TcxGridDBColumn [1]
+          object StatusCode: TcxGridDBColumn [1]
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object OperDate: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
@@ -236,7 +322,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 82
           end
-          object InvNumber: TcxGridDBColumn [2]
+          object InvNumber: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'. '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
@@ -244,14 +330,30 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 100
           end
-          object EndWeighing: TcxGridDBColumn [3]
+          object StartWeighing: TcxGridDBColumn [4]
+            Caption = #1053#1072#1095'. '#1074#1079#1074#1077#1096'.'
+            DataBinding.FieldName = 'StartWeighing'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object EndWeighing: TcxGridDBColumn [5]
             Caption = #1054#1082#1086#1085#1095'. '#1074#1079#1074#1077#1096'.'
             DataBinding.FieldName = 'EndWeighing'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object MovementDescName_Parent: TcxGridDBColumn [4]
+          object UserName: TcxGridDBColumn [6]
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'UserName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object MovementDescName_Parent: TcxGridDBColumn [7]
             Caption = #1042#1080#1076' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
             DataBinding.FieldName = 'MovementDescName_Parent'
             HeaderAlignmentHorz = taCenter
@@ -259,7 +361,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 105
           end
-          object OperDate_Parent: TcxGridDBColumn [5]
+          object OperDate_Parent: TcxGridDBColumn [8]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
             DataBinding.FieldName = 'OperDate_Parent'
             HeaderAlignmentHorz = taCenter
@@ -267,7 +369,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 106
           end
-          object InvNumber_Parent: TcxGridDBColumn [6]
+          object InvNumber_Parent: TcxGridDBColumn [9]
             Caption = #8470' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
             DataBinding.FieldName = 'InvNumber_Parent'
             HeaderAlignmentHorz = taCenter
@@ -275,7 +377,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 100
           end
-          object GoodsGroupNameFull: TcxGridDBColumn [7]
+          object GoodsGroupNameFull: TcxGridDBColumn [10]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             Visible = False
@@ -284,7 +386,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 126
           end
-          object GoodsCode: TcxGridDBColumn [8]
+          object GoodsCode: TcxGridDBColumn [11]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -292,7 +394,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 45
           end
-          object GoodsName: TcxGridDBColumn [9]
+          object GoodsName: TcxGridDBColumn [12]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -300,7 +402,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 153
           end
-          object GoodsKindName: TcxGridDBColumn [10]
+          object GoodsKindName: TcxGridDBColumn [13]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -316,7 +418,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 70
           end
-          object MeasureName: TcxGridDBColumn [11]
+          object MeasureName: TcxGridDBColumn [14]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -324,7 +426,76 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 45
           end
-          object Amount: TcxGridDBColumn [12]
+          object Amount_Weight: TcxGridDBColumn [15]
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076'), '#1074#1077#1089
+            DataBinding.FieldName = 'Amount_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountPartner_Weight: TcxGridDBColumn [16]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081', '#1074#1077#1089
+            DataBinding.FieldName = 'AmountPartner_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
+          end
+          object Amount_order_Weight: TcxGridDBColumn [17]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079', '#1074#1077#1089
+            DataBinding.FieldName = 'Amount_order_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_Sh: TcxGridDBColumn [18]
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076'), '#1096#1090
+            DataBinding.FieldName = 'Amount_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountPartner_Sh: TcxGridDBColumn [19]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081', '#1096#1090
+            DataBinding.FieldName = 'AmountPartner_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
+          end
+          object Amount_order_Sh: TcxGridDBColumn [20]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079', '#1096#1090
+            DataBinding.FieldName = 'Amount_order_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount: TcxGridDBColumn [21]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -335,7 +506,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 55
           end
-          object AmountPartner: TcxGridDBColumn [13]
+          object AmountPartner: TcxGridDBColumn [22]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -346,7 +517,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             Options.Editing = False
             Width = 104
           end
-          object Amount_order: TcxGridDBColumn [14]
+          object Amount_order: TcxGridDBColumn [23]
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount_order'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -373,10 +544,10 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
     end
   end
   inherited DataPanel: TPanel
-    Width = 985
+    Width = 1073
     Height = 132
     TabOrder = 3
-    ExplicitWidth = 985
+    ExplicitWidth = 1073
     ExplicitHeight = 132
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -482,8 +653,8 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
     end
     object edOperDatePartner_sale: TcxDateEdit
-      Left = 274
-      Top = 68
+      Left = 277
+      Top = 63
       EditValue = 42195d
       Enabled = False
       Properties.ReadOnly = True
@@ -509,12 +680,12 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       Width = 113
     end
     object cxLabel25: TcxLabel
-      Left = 814
+      Left = 664
       Top = 45
       Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074'-'#1074' '#1090#1086#1074'.'
     end
     object ceGoodsProperty: TcxButtonEdit
-      Left = 814
+      Left = 664
       Top = 63
       Properties.Buttons = <
         item
@@ -523,7 +694,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         end>
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 164
+      Width = 137
     end
     object cxLabel6: TcxLabel
       Left = 5
@@ -588,13 +759,48 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         21)
       Width = 114
     end
+    object cxLabel21: TcxLabel
+      Left = 814
+      Top = 5
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    end
+    object edPartner: TcxButtonEdit
+      Left = 814
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Text = ' '
+      Width = 187
+    end
+    object cxLabel3: TcxLabel
+      Left = 525
+      Top = 45
+      Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
+    end
+    object cxLabel11: TcxLabel
+      Left = 814
+      Top = 45
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+    end
+    object edRetail: TcxButtonEdit
+      Left = 814
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 30
+      Width = 187
+    end
   end
-  object cxLabel23: TcxLabel [2]
-    Left = 525
-    Top = 45
-    Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
-  end
-  object edCarInfo: TcxButtonEdit [3]
+  object edCarInfo: TcxButtonEdit [2]
     Left = 525
     Top = 63
     Properties.Buttons = <
@@ -603,8 +809,8 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 276
+    TabOrder = 6
+    Width = 131
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 883
@@ -659,21 +865,22 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         end>
       DataSource = nil
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
+    object actPrintWeighing: TdsdPrintAction [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Weighing
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_Weighing
         end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1077#1082#1091#1097#1077#1084#1091' '#1087#1086#1076#1076#1086#1085#1091' '#1080' '#1090#1086#1074#1072#1088#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1077#1082#1091#1097#1077#1084#1091' '#1087#1086#1076#1076#1086#1085#1091' '#1080' '#1090#1086#1074#1072#1088#1091
+      ImageIndex = 17
       DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'LineNum;GoodsGroupNameFull;GoodsName;GoodsKindName'
+          IndexFieldNames = 'GoodsName;GoodsKindName;WeighingNumber'
         end>
       Params = <
         item
@@ -684,13 +891,91 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inIsJuridical'
-          Value = False
-          DataType = ftBoolean
+          Name = 'inParam'
+          Value = '1'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_OrderExternal'
-      ReportNameParam.Value = 'PrintMovement_OrderExternal'
+      ReportName = 'PrintReport_OrderExternal_Weighing'
+      ReportNameParam.Value = 'PrintReport_OrderExternal_Weighing'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintGoodsAll: TdsdPrintAction [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_GoodsAll
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_GoodsAll
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1087#1086#1076#1076#1086#1085#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1087#1086#1076#1076#1086#1085#1091
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'WeighingNumber;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inParam'
+          Value = '1'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_OrderExternal_Weighing'
+      ReportNameParam.Value = 'PrintReport_OrderExternal_Weighing'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint_Goods
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Goods
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086#1076#1076#1086#1085#1086#1074' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1090#1086#1074#1072#1088#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086#1076#1076#1086#1085#1086#1074' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1090#1086#1074#1072#1088#1091
+      ShortCut = 0
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName;GoodsKindName;WeighingNumber'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inParam'
+          Value = '2'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_OrderExternal_Weighing'
+      ReportNameParam.Value = 'PrintReport_OrderExternal_Weighing'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -712,7 +997,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1316,7 +1601,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
       ImageIndex = 28
     end
-    object actPrintGoods: TdsdPrintAction
+    object actPrintGroupGoods: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -1404,7 +1689,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintWeighingNumber: TdsdPrintAction
+    object actPrintGroupWeighingNumber: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -1511,6 +1796,34 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementDesc'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeighingNumber'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -1603,6 +1916,9 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
     end
     inherited bbPrint: TdxBarButton
       Action = nil
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086#1076#1076#1086#1085#1086#1074' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1090#1086#1074#1072#1088#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086#1076#1076#1086#1085#1086#1074' '#1087#1086' '#1090#1077#1082#1091#1097#1077#1084#1091' '#1090#1086#1074#1072#1088#1091
+      ShortCut = 0
     end
     object bbOpenReportForm: TdxBarButton
       Action = actOpenReportForm
@@ -1668,8 +1984,8 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       Action = macOpenDocumentParent
       Category = 0
     end
-    object bbPrintWeighingNumber: TdxBarButton
-      Action = actPrintWeighingNumber
+    object bbPrintGroupWeighingNumber: TdxBarButton
+      Action = actPrintGroupWeighingNumber
       Caption = #1055#1077#1095#1072#1090#1100' '#1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1087#1086#1076#1076#1086#1085#1072#1084
       Category = 0
     end
@@ -1681,15 +1997,50 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbPrintWeighingNumber'
+          ItemName = 'bbPrintGroupWeighingNumber'
         end
         item
           Visible = True
-          ItemName = 'bbPrintGoods'
+          ItemName = 'bbPrintGroupGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintWeighing'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintGoodsAll'
         end>
     end
-    object bbPrintGoods: TdxBarButton
-      Action = actPrintGoods
+    object bbPrintGroupGoods: TdxBarButton
+      Action = actPrintGroupGoods
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbPrintWeighing: TdxBarButton
+      Action = actPrintWeighing
+      Category = 0
+    end
+    object bbPrintGoodsAll: TdxBarButton
+      Action = actPrintGoodsAll
       Category = 0
     end
   end
@@ -2000,6 +2351,36 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         Name = 'GoodsPropertyName'
         Value = Null
         Component = GuidesGoodsProperty
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = Null
+        Component = GuidesRetail
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2434,7 +2815,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 588
+    Left = 604
     Top = 209
   end
   object PrintItemsCDS: TClientDataSet
@@ -2446,20 +2827,16 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 524
-    Top = 246
+    Left = 588
+    Top = 278
   end
-  object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderExternal_Print'
-    DataSet = PrintHeaderCDS
+  object spSelectPrint_Goods: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderExternal_WeighingPartner'
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
@@ -2470,15 +2847,40 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsJuridical'
+        Name = 'inMovementDesc'
         Value = False
-        DataType = ftBoolean
+        Component = FormParams
+        ComponentItem = 'inMovementDesc'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeighingNumber'
+        Value = 0.000000000000000000
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 823
-    Top = 256
+    Left = 999
+    Top = 224
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2659,7 +3061,6 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
   end
   object GuidesCarInfo: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edCarInfo
     DisableGuidesOpen = True
     FormNameParam.Value = 'TCarInfoForm'
     FormNameParam.DataType = ftString
@@ -2689,8 +3090,8 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 689
-    Top = 35
+    Left = 569
+    Top = 83
   end
   object GuidesGoodsProperty: TdsdGuides
     KeyField = 'Id'
@@ -2717,8 +3118,8 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 896
-    Top = 59
+    Left = 736
+    Top = 51
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -2743,7 +3144,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       end>
     PackSize = 1
     Left = 848
-    Top = 8
+    Top = 112
   end
   object FieldFilter_Name: TdsdFieldFilter
     TextEdit = edSearchGoodsName
@@ -2765,5 +3166,203 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
     CheckBoxList = <>
     Left = 664
     Top = 96
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    DisableGuidesOpen = True
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 908
+    Top = 4
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 900
+    Top = 44
+  end
+  object spSelectPrint_Weighing: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderExternal_WeighingPartner'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementDesc'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeighingNumber'
+        Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'WeighingNumber'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 991
+    Top = 272
+  end
+  object spSelectPrint_GoodsAll: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderExternal_WeighingPartner'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementDesc'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeighingNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeighingNumber'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 999
+    Top = 320
   end
 end

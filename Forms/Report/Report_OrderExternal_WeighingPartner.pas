@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  cxImageComboBox;
 
 type
   TReport_OrderExternal_WeighingPartnerForm = class(TAncestorDocumentForm)
@@ -32,7 +33,7 @@ type
     GoodsKindName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrint_Goods: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
@@ -66,8 +67,6 @@ type
     ChangeGuidesStatuswms3: TChangeGuidesStatus;
     bbPrint_Account: TdxBarButton;
     cxLabel22: TcxLabel;
-    cxLabel23: TcxLabel;
-    edCarInfo: TcxButtonEdit;
     edCarInfo_Date: TcxDateEdit;
     AmountPartner: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
@@ -108,11 +107,27 @@ type
     edSearchGoodsKind: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
     GoodsName_choice: TcxGridDBColumn;
-    actPrintWeighingNumber: TdsdPrintAction;
-    bbPrintWeighingNumber: TdxBarButton;
-    actPrintGoods: TdsdPrintAction;
+    actPrintGroupWeighingNumber: TdsdPrintAction;
+    bbPrintGroupWeighingNumber: TdxBarButton;
+    actPrintGroupGoods: TdsdPrintAction;
     mPrint: TdxBarSubItem;
-    bbPrintGoods: TdxBarButton;
+    bbPrintGroupGoods: TdxBarButton;
+    cxLabel21: TcxLabel;
+    edPartner: TcxButtonEdit;
+    edCarInfo: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    cxLabel11: TcxLabel;
+    edRetail: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
+    GuidesRetail: TdsdGuides;
+    dxBarButton1: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
+    spSelectPrint_Weighing: TdsdStoredProc;
+    actPrintWeighing: TdsdPrintAction;
+    bbPrintWeighing: TdxBarButton;
+    spSelectPrint_GoodsAll: TdsdStoredProc;
+    actPrintGoodsAll: TdsdPrintAction;
+    bbPrintGoodsAll: TdxBarButton;
   private
     { Private declarations }
   public
