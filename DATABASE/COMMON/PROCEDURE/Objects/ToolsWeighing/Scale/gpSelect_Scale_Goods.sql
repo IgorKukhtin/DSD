@@ -5,7 +5,8 @@
 -- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, Integer, TVarChar, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, Integer, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, Integer, TVarChar, Integer, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Scale_Goods(
     IN inIsGoodsComplete       Boolean  ,    -- склад ГП/производство/упаковка or обвалка
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Goods(
     IN inGoodsCode             Integer,
     IN inGoodsName             TVarChar,
     IN inDayPrior_PriceReturn  Integer,
+    IN inIsOrderExternal       Boolean,      --
     IN inBranchCode            Integer,      --
     IN inSession               TVarChar      -- сессия пользователя
 )
@@ -383,9 +385,16 @@ BEGIN
                                       INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
                                                          AND Movement.DescId = zc_Movement_WeighingPartner()
                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                      -- Тип документа
+                                      LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
+                                                              ON MovementFloat_MovementDesc.MovementId = Movement.Id
+                                                             AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
+                                                             AND MovementFloat_MovementDesc.ValueData  = zc_Movement_Send() :: TFloat
+
                                       INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                              AND MovementItem.DescId     = zc_MI_Master()
                                                              AND MovementItem.isErased   = FALSE
+
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -400,6 +409,10 @@ BEGIN
                                                                  AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                                  WHERE MovementLinkMovement.MovementChildId = inOrderExternalId
                                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                                    -- Теперь только этот Тип документа
+                                   AND (MovementFloat_MovementDesc.MovementId > 0
+                                     OR inIsOrderExternal = FALSE
+                                       )
                                    -- AND inSession <> '5'
                                 )
                      , tmpGoods_byName AS (-- По Названию - Склад Специй
@@ -1602,4 +1615,4 @@ where (namefull  like '%ScaleCeh_201 Movement%'  or namefull  like '%Scale_201 M
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= CURRENT_DATE, inMovementId:= -79137, inOrderExternalId:= -992313, inPriceListId:=0, inGoodsCode:= 0, inGoodsName:= '', inDayPrior_PriceReturn:= 10, inBranchCode:= 1, inSession:=zfCalc_UserAdmin()) -- WHERE GoodsCode = 901
+-- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= CURRENT_DATE, inMovementId:= -79137, inOrderExternalId:= -992313, inPriceListId:=0, inGoodsCode:= 0, inGoodsName:= '', inDayPrior_PriceReturn:= 10, inIsOrderExternal:= FALSE, inBranchCode:= 1, inSession:=zfCalc_UserAdmin()) -- WHERE GoodsCode = 901
