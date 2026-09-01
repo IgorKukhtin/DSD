@@ -1785,13 +1785,11 @@ end;
 
 procedure TLoadFormTest.LoadSaleFormTest;
 begin
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_CommercForm'));
- { TdsdFormStorageFactory.GetStorage.Load('TSale_CommercForm');
-  exit;
-   }
-
    {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_CommercForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSale_CommercForm');
+  exit;
+
    TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartionQEditForm'));
    TdsdFormStorageFactory.GetStorage.Load('TSale_PartionQEditForm');
    exit;
@@ -1813,7 +1811,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
   //exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
   //exit;
@@ -1825,10 +1823,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
  // exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderForm');
-  //exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderJournalForm');

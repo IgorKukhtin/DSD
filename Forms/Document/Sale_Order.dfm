@@ -3185,6 +3185,31 @@ inherited Sale_OrderForm: TSale_OrderForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdateByOrder: TdsdExecStoredProc
+      Category = 'UpdateMask'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateByOrder
+      StoredProcList = <
+        item
+          StoredProc = spUpdateByOrder
+        end>
+      Caption = 'UpdateByOrder'
+    end
+    object macUpdateByOrder: TMultiAction
+      Category = 'UpdateMask'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateByOrder
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080
+      ImageIndex = 74
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3552,6 +3577,10 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Visible = True
           ItemName = 'bbUpdateMaskSend'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateByOrder'
         end>
     end
     object bbsSeparator: TdxBarSeparator
@@ -3748,6 +3777,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object bbPrint_Metro: TdxBarButton
       Action = actPrint_Metro
+      Category = 0
+    end
+    object bbUpdateByOrder: TdxBarButton
+      Action = macUpdateByOrder
       Category = 0
     end
   end
@@ -7000,5 +7033,30 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 1048
     Top = 460
+  end
+  object spUpdateByOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Sale_isMask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId '
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementMaskId'
+        Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 451
   end
 end

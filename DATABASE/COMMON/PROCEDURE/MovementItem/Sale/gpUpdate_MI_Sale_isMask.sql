@@ -17,11 +17,15 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
 
 
+      -- Проверка - что документ копирования выбран 
+      IF COALESCE (inMovementMaskId,0) = 0
+         THEN RAISE EXCEPTION 'Ошибка.Документ, из которого копировать данные, не установлен.'; 
+      END IF;
+
       -- Проверка - что б не копировали два раза
       IF EXISTS (SELECT Id FROM MovementItem WHERE isErased = FALSE AND DescId = zc_MI_Master() AND MovementId = inMovementId AND Amount <> 0)
          THEN RAISE EXCEPTION 'Ошибка.В документе уже есть данные.'; 
       END IF;
-
 
       -- Результат
        CREATE TEMP TABLE tmpMI (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer
@@ -133,7 +137,7 @@ BEGIN
                                              WHERE MovementBoolean_PriceWithVAT.MovementId = inMovementMaskId
                                                AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT())
                                           );
-
+   IF vbUserId = 9457 THEN RAISE EXCEPTION 'Test Admin.Ok'; END IF;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
