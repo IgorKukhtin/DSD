@@ -1110,6 +1110,11 @@ end;
 
 procedure TLoadFormTest.LoadOrderRKFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoods_CountVirtDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoods_CountVirtDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoods_CountVirtForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoods_CountVirtForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderRKJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderRKJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderRKForm'));

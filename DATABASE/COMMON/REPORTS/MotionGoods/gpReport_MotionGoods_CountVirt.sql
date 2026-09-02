@@ -77,12 +77,13 @@ BEGIN
     tmpGoods AS (SELECT lfSelect.GoodsId
                  FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
                  WHERE COALESCE (inGoodsGroupId,0) <> 0
+                   AND COALESCE (inGoodsId,0) = 0
                 UNION ALL
                  SELECT Object.Id AS GoodsId
                  FROM Object
                  WHERE Object.DescId = zc_Object_Goods()
-                   AND (Object.Id = inGoodsId OR inGoodsId = 0)
-                   AND COALESCE (inGoodsGroupId,0) = 0
+                   AND (Object.Id = inGoodsId OR (inGoodsId = 0 AND COALESCE (inGoodsGroupId,0) = 0))
+                   
                 )
                           
     -- все ContainerId    
@@ -348,3 +349,4 @@ $BODY$
 
 -- тест
 --select * from gpReport_MotionGoods_CountVirt (inStartDate :=('03.08.2026')::TDateTime, inEndDate := ('08.08.2026')::TDateTime, inUnitGroupId := 0, inGoodsGroupId := 1846, inGoodsId := 0,  inSession := '5');
+-- select * from gpReport_MotionGoods_CountVirt(inStartDate := ('01.08.2026')::TDateTime , inEndDate := ('31.08.2026')::TDateTime , inUnitGroupId := 8459 , inGoodsGroupId := 563246 , inGoodsId := 0 ,  inSession := '9457');
