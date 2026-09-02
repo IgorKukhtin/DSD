@@ -83,7 +83,6 @@ BEGIN
                  FROM Object
                  WHERE Object.DescId = zc_Object_Goods()
                    AND (Object.Id = inGoodsId OR (inGoodsId = 0 AND COALESCE (inGoodsGroupId,0) = 0))
-                   
                 )
                           
     -- все ContainerId    
