@@ -539,6 +539,15 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object CodeSticker: TcxGridDBColumn
+            Caption = 'PLU '#1085#1072' '#1074#1077#1089#1072#1093
+            DataBinding.FieldName = 'CodeSticker'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -1611,7 +1620,7 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
       DataSets = <
         item
           UserName = 'frxDBDataset'
-          IndexFieldNames = 'GoodsName;GoodsKindName;WeighingNumber'
+          IndexFieldNames = 'GoodsCode;GoodsName;GoodsKindName;WeighingNumber'
           GridView = cxGridDBTableView
         end>
       Params = <

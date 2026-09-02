@@ -128,6 +128,7 @@ type
     spSelectPrint_GoodsAll: TdsdStoredProc;
     actPrintGoodsAll: TdsdPrintAction;
     bbPrintGoodsAll: TdxBarButton;
+    CodeSticker: TcxGridDBColumn;
   private
     { Private declarations }
   public
