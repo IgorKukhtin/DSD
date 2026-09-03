@@ -241,7 +241,8 @@ BEGIN
               , tmp.PositionLevelName
 
               , tmp.MovementDescId          AS MovementDescId
-              , (MovementDesc.ItemName || CASE WHEN tmp.GoodsCode > 0 THEN '(' || tmp.GoodsCode :: TVarChar || ')' || tmp.GoodsName || ' ' || tmp.GoodsKindName ELSE '' END :: TVarChar) :: TVarChar AS MovementDescName
+              , MovementDesc.ItemName       AS MovementDescName
+            --, (MovementDesc.ItemName || CASE WHEN tmp.GoodsCode > 0 THEN '(' || tmp.GoodsCode :: TVarChar || ')' || tmp.GoodsName || ' ' || tmp.GoodsKindName ELSE '' END :: TVarChar) :: TVarChar AS MovementDescName
             --, (CASE WHEN tmp.GoodsCode > 0 THEN tmp.GoodsCode :: TVarChar ELSE '' END) :: TVarChar AS MovementDescName
               , Object_BranchFrom.ValueData AS BranchFromName
               , Object_BranchTo.ValueData   AS BranchToName
