@@ -1319,8 +1319,8 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 176
-    Top = 176
+    Left = 32
+    Top = 152
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -1381,12 +1381,6 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       end
       item
         Component = PositionGuides
-      end
-      item
-        Component = deEnd
-      end
-      item
-        Component = deStart
       end
       item
         Component = BranchGuides

@@ -142,7 +142,7 @@ BEGIN
                                                              AND inIsDetail = TRUE
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                                               ON MovementLinkObject_Personal.MovementId = Movement.Id
-                                                             AND MovementLinkObject_Personal.DescId     IN (SELECT tmpListDesc.PersonalDescId FROM tmpListDesc)
+                                                             AND MovementLinkObject_Personal.DescId IN (SELECT tmpListDesc.PersonalDescId FROM tmpListDesc)
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                                               ON MovementLinkObject_User.MovementId = Movement.Id
                                                              AND MovementLinkObject_User.DescId     = zc_MovementLinkObject_User()
@@ -258,7 +258,7 @@ BEGIN
               , SUM (tmp.CountMI1)          :: TFloat AS CountMI1
               , SUM (tmp.CountMovement1)    :: TFloat AS CountMovement1
 
-              , SUM (tmp.TotalCountStick)   :: TFloat AS TotalCountStick
+              , SUM (COALESCE (tmp.TotalCountStick, 0))   :: TFloat AS TotalCountStick
 
               , SUM (COALESCE (MovementFloat_TotalCountKg_parent.ValueData, 0)) :: TFloat AS TotalCountKg_parent
 
