@@ -343,6 +343,10 @@ type
     actDelete_MI: TdsdExecStoredProc;
     actPrint_Metro: TdsdPrintAction;
     bbPrint_Metro: TdxBarButton;
+    spUpdateByOrder: TdsdStoredProc;
+    actUpdateByOrder: TdsdExecStoredProc;
+    macUpdateByOrder: TMultiAction;
+    bbUpdateByOrder: TdxBarButton;
   private
     { Private declarations }
   public

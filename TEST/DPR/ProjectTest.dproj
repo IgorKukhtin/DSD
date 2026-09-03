@@ -6011,6 +6011,14 @@
 				<Form>Report_OrderExternal_WeighingPartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_MotionGoods_CountVirtDialog.pas">
+				<Form>Report_MotionGoods_CountVirtDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_MotionGoods_CountVirt.pas">
+				<Form>Report_MotionGoods_CountVirtForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

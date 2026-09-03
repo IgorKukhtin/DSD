@@ -21,7 +21,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdCommon;
+  dxSkinXmas2008Blue, dsdCommon, ExternalLoad;
 
 type
   TGoodsByGoodsKind_StickerForm = class(TAncestorEnumForm)
@@ -38,6 +38,12 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     isNotMobile: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public

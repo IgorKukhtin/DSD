@@ -1804,12 +1804,19 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportType_Contract_ContractTag() RETURNS Int
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_Contract_ContractTag() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_Contract_ContractTag' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
+ -- Загрузка товар и Вид товара стикер  - Вес тары (филиал)
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_GoodsByGoodsKind_WeightTareBranch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_GoodsByGoodsKind_WeightTareBranch' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_GoodsByGoodsKind_WeightTareBranch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_GoodsByGoodsKind_WeightTareBranch' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+
+
+          
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 01.09.26         * Загрузка товар и Вид товара стикер  - Вес тары (филиал)
  26.08.26         * Загрузка Признак договора в договор 
  05.06.26         * 
  01.06.26         * Загрузка Маршруты ТТ (RouteTT)

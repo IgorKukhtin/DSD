@@ -959,15 +959,15 @@ inherited SaleForm: TSaleForm
       Width = 140
     end
     object cxLabel12: TcxLabel
-      Left = 88
-      Top = 0
+      Left = 83
+      Top = 5
       Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edInvNumberPartner: TcxTextEdit
       Left = 85
       Top = 23
       TabOrder = 28
-      Width = 84
+      Width = 82
     end
     object edDocumentTaxKind: TcxButtonEdit
       Left = 1155
@@ -1042,7 +1042,7 @@ inherited SaleForm: TSaleForm
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
     end
     object edInvNumberOrder: TcxButtonEdit
-      Left = 168
+      Left = 171
       Top = 23
       Properties.Buttons = <
         item
@@ -3197,6 +3197,31 @@ inherited SaleForm: TSaleForm
         end>
       Caption = 'actUpdateMask'
     end
+    object actUpdateByOrder: TdsdExecStoredProc
+      Category = 'UpdateMask'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateByOrder
+      StoredProcList = <
+        item
+          StoredProc = spUpdateByOrder
+        end>
+      Caption = 'UpdateByOrder'
+    end
+    object macUpdateByOrder: TMultiAction
+      Category = 'UpdateMask'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateByOrder
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080
+      ImageIndex = 74
+    end
     object actExport_fileXml: TdsdStoredProcExportToFile
       Category = 'Export_file'
       MoveParams = <>
@@ -4187,6 +4212,10 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateByOrder'
+        end
+        item
+          Visible = True
           ItemName = 'bbSeparator'
         end
         item
@@ -4424,6 +4453,10 @@ inherited SaleForm: TSaleForm
     end
     object bbPrint_Metro: TdxBarButton
       Action = actPrint_Metro
+      Category = 0
+    end
+    object bbUpdateByOrder: TdxBarButton
+      Action = macUpdateByOrder
       Category = 0
     end
   end
@@ -5289,7 +5322,7 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 162
+    Left = 130
     Top = 312
   end
   inherited GuidesFiller: TGuidesFiller
@@ -6830,8 +6863,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 52
-    Top = 8
+    Left = 188
+    Top = 24
   end
   object spSelectPrint_ExpPack: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_ExpPack_Print'
@@ -7598,7 +7631,7 @@ inherited SaleForm: TSaleForm
       end>
     PackSize = 1
     Left = 272
-    Top = 507
+    Top = 483
   end
   object spGet_Export_FileNameXML: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_FileNameXML'
@@ -7908,5 +7941,30 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 832
     Top = 352
+  end
+  object spUpdateByOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Sale_isMask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId '
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementMaskId'
+        Value = '0'
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 531
   end
 end

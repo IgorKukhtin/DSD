@@ -30,6 +30,7 @@ RETURNS TABLE (MovementId  Integer
              , GoodsCode     Integer
              , GoodsName     TVarChar
              , GoodsName_choice TVarChar
+             , CodeSticker   TVarChar
              , GoodsKindId   Integer
              , GoodsKindName TVarChar 
              , GoodsGroupNameFull TVarChar
@@ -48,11 +49,45 @@ RETURNS TABLE (MovementId  Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+    DECLARE vbUserId Integer;
+    DECLARE vbGoodsPropertyId Integer;
+    DECLARE vbGoodsPropertyId_basis Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_OrderExternal());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- параметры из документа
+     SELECT CASE WHEN COALESCE (MovementLinkObject_GoodsProperty.ObjectId,0) <> 0 THEN MovementLinkObject_GoodsProperty.ObjectId
+                 ELSE zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId
+                                            , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)
+                                            , COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
+                                             )
+            END AS GoodsPropertyId
+          , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)      AS GoodsPropertyId_basis
+         
+            INTO vbGoodsPropertyId, vbGoodsPropertyId_basis
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                       ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                      AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                      AND Object_From.DescId = zc_Object_Unit()
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsProperty
+                                       ON MovementLinkObject_GoodsProperty.MovementId = Movement.Id
+                                      AND MovementLinkObject_GoodsProperty.DescId = zc_MovementLinkObject_GoodsProperty()
+
+     WHERE Movement.Id = inMovementId;
 
 
     -- Результат 
@@ -193,6 +228,38 @@ BEGIN
                              WHERE MovementFloat_WeighingNumber.ValueData = inWeighingNumber OR inWeighingNumber = 0
                              )
 
+
+    , tmpObject_GoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                    AS GoodsId
+                                            , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
+                                            , ObjectString_CodeSticker.ValueData                                   AS CodeSticker
+                                       FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                                            ) AS tmpGoodsProperty
+                                            INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                                  ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                                 AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                            LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            LEFT JOIN ObjectString AS ObjectString_CodeSticker
+                                                                   ON ObjectString_CodeSticker.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                  AND ObjectString_CodeSticker.DescId = zc_ObjectString_GoodsPropertyValue_CodeSticker()
+
+                                            LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                                 ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                            LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                                 ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+
+                                            LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                                                                 ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+                                            LEFT JOIN ObjectString AS ObjectString_Goods_ShortName
+                                                                   ON ObjectString_Goods_ShortName.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
+                                                                  AND ObjectString_Goods_ShortName.DescId   = zc_ObjectString_Goods_ShortName()
+
+                                       WHERE ObjectString_CodeSticker.ValueData     <> ''
+                                      )
+
        -- Результат
        SELECT tmpWeighingPartner.Id                       ::Integer AS MovementId
             , tmpWeighingPartner.OperDate                 ::TDateTime
@@ -211,7 +278,8 @@ BEGIN
             , Object_Goods.Id            ::Integer  AS GoodsId        
             , Object_Goods.ObjectCode    ::Integer  AS GoodsCode
             , Object_Goods.ValueData     ::TVarChar AS GoodsName
-            , (Object_Goods.ObjectCode::TVarChar ||' '||Object_Goods.ValueData) ::TVarChar AS GoodsName_choice
+            , ( Object_Goods.ObjectCode::TVarChar ||' '|| Object_Goods.ValueData ||' '|| COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, '') ) ::TVarChar AS GoodsName_choice
+            , COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, '') :: TVarChar  AS CodeSticker
             , Object_GoodsKind.Id        ::Integer  AS GoodsKindId
             , Object_GoodsKind.ValueData ::TVarChar AS GoodsKindName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -250,6 +318,9 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+            LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpWeighingPartner.GoodsId
+                                                  AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpWeighingPartner.GoodsKindId
        ;
 
 END;

@@ -226,7 +226,7 @@ BEGIN
                                                    AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine()
                             
                           WHERE Object_Personal.DescId = zc_Object_Personal()
-                           AND Object_Personal.isErased = FALSE
+                           --AND Object_Personal.isErased = FALSE
                        ) 
 
         , tmpStorageLine AS (WITH
