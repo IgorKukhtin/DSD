@@ -278,7 +278,7 @@ BEGIN
             , Object_Goods.Id            ::Integer  AS GoodsId        
             , Object_Goods.ObjectCode    ::Integer  AS GoodsCode
             , Object_Goods.ValueData     ::TVarChar AS GoodsName
-            , (Object_Goods.ObjectCode::TVarChar ||' '||Object_Goods.ValueData) ::TVarChar AS GoodsName_choice
+            , ( Object_Goods.ObjectCode::TVarChar ||' '|| Object_Goods.ValueData ||' '|| COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, '') ) ::TVarChar AS GoodsName_choice
             , COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, '') :: TVarChar  AS CodeSticker
             , Object_GoodsKind.Id        ::Integer  AS GoodsKindId
             , Object_GoodsKind.ValueData ::TVarChar AS GoodsKindName
