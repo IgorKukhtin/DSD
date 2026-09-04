@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS lpCheck_Movement_Status (Integer, Integer);
 CREATE OR REPLACE FUNCTION lpCheck_Movement_Status(
     IN inMovementId        Integer  , -- ключ объекта <Документ>
     IN inUserId            Integer    -- Пользователь
-)                              
+)
   RETURNS VOID
 AS
 $BODY$
@@ -23,6 +23,9 @@ $BODY$
    DECLARE vbContractId Integer;
    DECLARE vbStartDate  TDateTime;
    DECLARE vbEndDate  TDateTime;
+   DECLARE vbStartDate_calc  TDateTime;
+   DECLARE vbEndDate_calc    TDateTime;
+   DECLARE vbOperDate_doc    TDateTime;
 
    DECLARE vbAccessKeyId Integer;
 BEGIN
@@ -80,7 +83,7 @@ BEGIN
      -- проверка - если входит в сводную, то она должна быть распроведена
      IF vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax() AND vbStatusId_Tax <> zc_Enum_Status_UnComplete()
      THEN
-         RAISE EXCEPTION 'Ошибка.Изменения невозможны. Найден документ <%> № <%> от <%> в статусе <%>.', vbDescName, vbInvNumber, DATE (vbOperDate), lfGet_Object_ValueData (vbStatusId_Tax);
+         RAISE EXCEPTION 'Ошибка.Изменения невозможны. Найден документ <%> № <%> от <%> в статусе <%>(%)-1.', vbDescName, vbInvNumber, DATE (vbOperDate), lfGet_Object_ValueData (vbStatusId_Tax), inMovementId;
      END IF;
      -- END 2.1.
      -- 2.2.
@@ -103,11 +106,11 @@ BEGIN
      WHERE MovementLinkMovement_Child.MovementChildId = inMovementId
        AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
        AND MovementLinkMovement_Child.MovementId <> inMovementId -- !!!убрать после исправления ошибки когда сама в себя!!!!
-    ; 
+    ;
      -- проверка - если входит в сводную, то она должна быть распроведена
      IF vbStatusId_Tax = zc_Enum_Status_Complete()
      THEN
-         RAISE EXCEPTION 'Ошибка.Изменения невозможны. Найден документ <%> № <%> от <%> в статусе <%>.', vbDescName, vbInvNumber, DATE (vbOperDate), lfGet_Object_ValueData (vbStatusId_Tax);
+         RAISE EXCEPTION 'Ошибка.Изменения невозможны. Найден документ <%> № <%> от <%> в статусе <%>.(%)-2', vbDescName, vbInvNumber, DATE (vbOperDate), lfGet_Object_ValueData (vbStatusId_Tax), inMovementId;
      END IF;
      -- END 2.2. проверка для налоговых
 
@@ -124,7 +127,8 @@ BEGIN
               , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MovementLinkObject_Contract.ObjectId ELSE MovementLinkObject_ContractFrom.ObjectId END AS ContractId
               , DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MovementDate_OperDatePartner.ValueData ELSE Movement.OperDate END) AS StartDate
               , DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MovementDate_OperDatePartner.ValueData ELSE Movement.OperDate END) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AS EndDate
-                INTO vbDocumentTaxKindId, vbPartnerId, vbJuridicalId, vbContractId, vbStartDate, vbEndDate
+              , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MovementDate_OperDatePartner.ValueData ELSE Movement.OperDate END AS OperDate_doc
+                INTO vbDocumentTaxKindId, vbPartnerId, vbJuridicalId, vbContractId, vbStartDate, vbEndDate, vbOperDate_doc
          FROM MovementLinkObject AS MovementLinkObject_DocumentTaxKind
               LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                      ON MovementDate_OperDatePartner.MovementId =  MovementLinkObject_DocumentTaxKind.MovementId
@@ -151,6 +155,45 @@ BEGIN
          -- 2.2.2. так проверка сводной по юр.лицу
          IF vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR())
          THEN
+            vbStartDate_calc:= (SELECT CASE -- без изменений
+                                            WHEN COALESCE (ObjectFloat_Contract_DayTaxSummary.ValueData, ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) = 0
+                                                 THEN vbStartDate
+                                            -- без изменений
+                                            WHEN vbOperDate_doc <= vbStartDate + ((COALESCE (ObjectFloat_Contract_DayTaxSummary.ValueData, ObjectFloat_Juridical_DayTaxSummary.ValueData) + 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                 THEN vbStartDate
+                                            -- нач.дата для второго периода
+                                            ELSE vbStartDate + ((COALESCE (ObjectFloat_Contract_DayTaxSummary.ValueData, ObjectFloat_Juridical_DayTaxSummary.ValueData) + 0) :: TVarChar || ' DAY') :: INTERVAL
+                                       END
+                                FROM Object
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_DayTaxSummary
+                                                           ON ObjectFloat_Juridical_DayTaxSummary.ObjectId = vbJuridicalId
+                                                          AND ObjectFloat_Juridical_DayTaxSummary.DescId = zc_ObjectFloat_Juridical_DayTaxSummary()
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_Contract_DayTaxSummary
+                                                           ON ObjectFloat_Contract_DayTaxSummary.ObjectId  = vbContractId
+                                                          AND ObjectFloat_Contract_DayTaxSummary.DescId    = zc_ObjectFloat_Contract_DayTaxSummary()
+                                                          AND ObjectFloat_Contract_DayTaxSummary.ValueData <> 0
+                                WHERE Object.Id = vbJuridicalId
+                               );
+            vbEndDate_calc:= (SELECT CASE -- без изменений
+                                          WHEN COALESCE (ObjectFloat_Contract_DayTaxSummary.ValueData, ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) = 0
+                                               THEN vbEndDate
+                                          -- Начальна дата + только период (т.е. конечная.дата для первого периода)
+                                          WHEN vbOperDate_doc <= vbStartDate + ((COALESCE (ObjectFloat_Contract_DayTaxSummary.ValueData, ObjectFloat_Juridical_DayTaxSummary.ValueData) + 0) :: TVarChar || ' DAY') :: INTERVAL
+                                               THEN vbStartDate + ((-1 + COALESCE (ObjectFloat_Contract_DayTaxSummary.ValueData, ObjectFloat_Juridical_DayTaxSummary.ValueData) + 0) :: TVarChar || ' DAY') :: INTERVAL
+                                          -- без изменений
+                                          ELSE vbEndDate
+                                       END
+                                FROM Object
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_DayTaxSummary
+                                                           ON ObjectFloat_Juridical_DayTaxSummary.ObjectId = vbJuridicalId
+                                                          AND ObjectFloat_Juridical_DayTaxSummary.DescId = zc_ObjectFloat_Juridical_DayTaxSummary()
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_Contract_DayTaxSummary
+                                                           ON ObjectFloat_Contract_DayTaxSummary.ObjectId  = vbContractId
+                                                          AND ObjectFloat_Contract_DayTaxSummary.DescId    = zc_ObjectFloat_Contract_DayTaxSummary()
+                                                          AND ObjectFloat_Contract_DayTaxSummary.ValueData <> 0
+                                WHERE Object.Id = vbJuridicalId
+                               );
+            --
             vbInvNumber:= NULL; vbOperDate:= NULL;
             SELECT tmp.InvNumber, tmp.OperDate, MovementDesc.ItemName
                    INTO vbInvNumber, vbOperDate, vbDescName
@@ -172,7 +215,7 @@ BEGIN
                  LEFT JOIN MovementString AS MS_InvNumberPartner
                                           ON MS_InvNumberPartner.MovementId = Movement.Id
                                          AND MS_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-            WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+            WHERE Movement.OperDate BETWEEN vbStartDate_calc AND vbEndDate_calc
               AND Movement.DescId = zc_Movement_Tax()
               AND Movement.StatusId = zc_Enum_Status_Complete()
               AND vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
@@ -194,7 +237,8 @@ BEGIN
                  LEFT JOIN MovementString AS MS_InvNumberPartner
                                           ON MS_InvNumberPartner.MovementId = Movement.Id
                                          AND MS_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-            WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+
+            WHERE Movement.OperDate BETWEEN vbStartDate_calc AND vbEndDate_calc
               AND Movement.DescId = zc_Movement_TaxCorrective()
               AND Movement.StatusId = zc_Enum_Status_Complete()
            ) AS tmp
@@ -202,7 +246,26 @@ BEGIN
 
            IF vbInvNumber IS NOT NULL OR vbOperDate IS NOT NULL
            THEN
-               RAISE EXCEPTION 'Ошибка.Изменения невозможны. Найден документ <%> № <%> от <%> в статусе <%>.', vbDescName, vbInvNumber, DATE (vbOperDate), lfGet_Object_ValueData (zc_Enum_Status_Complete());
+               RAISE EXCEPTION 'Ошибка.Изменения невозможны. Найден документ <%> № <%> от <%> в статусе <%>(%)-3(%)(%)(%).'
+                              , vbDescName, vbInvNumber, zfConvert_DateToString (vbOperDate)
+                              , lfGet_Object_ValueData (zc_Enum_Status_Complete())
+                              , inMovementId, zfConvert_DateToString (vbStartDate_calc), zfConvert_DateToString (vbEndDate_calc)
+                              , (SELECT CASE
+                                             WHEN COALESCE (ObjectFloat_Contract_DayTaxSummary.ValueData, ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) = 0
+                                                  THEN 0
+                                             ELSE COALESCE (ObjectFloat_Contract_DayTaxSummary.ValueData, ObjectFloat_Juridical_DayTaxSummary.ValueData)
+                                        END
+                                FROM Object
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_DayTaxSummary
+                                                           ON ObjectFloat_Juridical_DayTaxSummary.ObjectId = vbJuridicalId
+                                                          AND ObjectFloat_Juridical_DayTaxSummary.DescId = zc_ObjectFloat_Juridical_DayTaxSummary()
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_Contract_DayTaxSummary
+                                                           ON ObjectFloat_Contract_DayTaxSummary.ObjectId  = vbContractId
+                                                          AND ObjectFloat_Contract_DayTaxSummary.DescId    = zc_ObjectFloat_Contract_DayTaxSummary()
+                                                          AND ObjectFloat_Contract_DayTaxSummary.ValueData <> 0
+                                WHERE Object.Id = vbJuridicalId
+                               )
+                               ;
            END IF;
          END IF;
 
@@ -261,7 +324,7 @@ BEGIN
 
            IF vbInvNumber IS NOT NULL OR vbOperDate IS NOT NULL
            THEN
-               RAISE EXCEPTION 'Ошибка.Изменения невозможны. Найден документ <%> № <%> от <%> в статусе <%>.', vbDescName, vbInvNumber, DATE (vbOperDate), lfGet_Object_ValueData (zc_Enum_Status_Complete());
+               RAISE EXCEPTION 'Ошибка.Изменения невозможны. Найден документ <%> № <%> от <%> в статусе <%>.(%)-4', vbDescName, vbInvNumber, DATE (vbOperDate), lfGet_Object_ValueData (zc_Enum_Status_Complete()), inMovementId;
            END IF;
          END IF;
 
@@ -335,7 +398,7 @@ BEGIN
            ) AS tmp;
       -- 3.2. проверка <Закрытие периода>
       IF vbOperDate < vbCloseDate
-      THEN 
+      THEN
           RAISE EXCEPTION 'Ошибка.Изменения в документе № <%> от <%> не возможны. Для роли <%> период закрыт до <%>. (%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), vbRoleName, DATE (vbCloseDate), inMovementId;
       END IF;
 
@@ -359,7 +422,7 @@ BEGIN
            ) AS tmp;
 
       IF vbOperDate < vbCloseDate
-      THEN 
+      THEN
           RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> период закрыт до <%>. (% - %)', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (inUserId), DATE (vbCloseDate), vbRoleName, inMovementId;
       END IF;
 
@@ -379,7 +442,7 @@ BEGIN
            ) AS tmp;
 
       IF vbOperDate < vbCloseDate
-      THEN 
+      THEN
           RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> период закрыт до <%>. (% - %)', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (inUserId), DATE (vbCloseDate), vbRoleName, inMovementId;
       END IF;
 
@@ -412,7 +475,7 @@ BEGIN
            ) AS tmp;
 
       IF vbOperDate < vbCloseDate
-      THEN 
+      THEN
           RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> период закрыт до <%>. (% - %)', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (inUserId), DATE (vbCloseDate), vbRoleName, inMovementId;
       END IF;
 
@@ -443,7 +506,7 @@ BEGIN
            ) AS tmp;
       -- 3.2. проверка прав для <Закрытие периода>
       IF vbOperDate < vbCloseDate
-      THEN 
+      THEN
           -- RAISE EXCEPTION 'Ошибка.Изменения в документе № <%> от <%> не возможны.Для роли <%> период закрыт до <%>.(%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), TO_CHAR (vbOperDate, 'DD.MM.YYYY'), vbRoleName, TO_CHAR (vbCloseDate, 'DD.MM.YYYY'), inMovementId;
           RAISE EXCEPTION 'Ошибка.Изменения в документе № <%> от <%> не возможны. Для роли <%> период закрыт до <%>. (%)(%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), vbRoleName, DATE (vbCloseDate), inMovementId, vbDescId;
       END IF;
@@ -464,7 +527,7 @@ BEGIN
                   ) AS tmp;
              -- 3.2. проверка прав для <Закрытие периода>
              IF vbOperDate < vbCloseDate
-             THEN 
+             THEN
                  RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> период закрыт до <%>. (% - %)', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (inUserId), DATE (vbCloseDate), vbRoleName, inMovementId;
              END IF;
          END IF;

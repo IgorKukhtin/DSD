@@ -208,7 +208,25 @@ BEGIN
      END IF;
         
 
-
+     IF 'TRUE' ILIKE (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'Scale_' || inBranchCode
+                                                      , inLevel2      := 'Movement'
+                                                      , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
+                                                      , inItemName    := 'isOrderExternal'
+                                                      , inDefaultValue:= 'FALSE'
+                                                      , inSession     := inSession
+                                                       ) AS RetV
+                      FROM MovementFloat
+                      WHERE MovementFloat.MovementId = inMovementId
+                        AND MovementFloat.DescId = zc_MovementFloat_MovementDescNumber()
+                        AND MovementFloat.ValueData > 0
+                     )
+     THEN
+         IF NOT EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.MovementChildId > 0 AND MLM.DescId = zc_MovementLinkMovement_Order())
+         THEN
+             RAISE EXCEPTION 'Ошибка.Необходимо сначала заполнить <№ док. заявка>.';
+         END IF;
+     END IF;
+                                
 
      -- !!!замена, приходит вес - из него получаем м. или шт.
      /*IF EXISTS (SELECT FROM ObjectLink AS OL_Measure WHERE OL_Measure.ChildObjectId NOT IN (zc_Measure_Kg(), zc_Measure_Sh()) AND OL_Measure.ObjectId = inGoodsId AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure())
@@ -1046,10 +1064,10 @@ BEGIN
 
                                                                                            ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10
                                                                                       END
-                                                           , inAmountPartner       := CASE -- !!!только Для Сканирования Метро!!!
-                                                                                           /*WHEN vbRetailId IN (310828) -- Метро
+                                                            , inAmountPartner       := CASE -- !!!только Для Сканирования Метро!!!
+                                                                                           WHEN vbRetailId IN (310828) -- Метро
                                                                                                 THEN CEIL ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6 - inCountTare7 * inWeightTare7 - inCountTare8 * inWeightTare8 - inCountTare9 * inWeightTare9 - inCountTare10 * inWeightTare10) * 100) / 100
-                                                                                           */
+
                                                                                            WHEN inGoodsId_out > 0 AND inBranchCode = 1
                                                                                                 -- Партия-Пересорт
                                                                                                 THEN inAmount_in_calc

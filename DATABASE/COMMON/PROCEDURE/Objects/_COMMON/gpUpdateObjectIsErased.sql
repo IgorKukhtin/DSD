@@ -25,6 +25,14 @@ BEGIN
    vbDescId:= (SELECT Object.DescId FROM Object WHERE Object.Id = inObjectId);
 
 
+   -- Нет прав менять ведомости у сотрудника
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 14025514)
+      AND vbDescId = zc_Object_Personal()
+   THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав.';
+   END IF;
+
+
    -- проверка
    IF COALESCE (inObjectId, 0) <= 0
    THEN

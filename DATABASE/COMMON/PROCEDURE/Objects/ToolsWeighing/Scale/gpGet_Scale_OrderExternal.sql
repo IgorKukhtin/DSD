@@ -445,7 +445,7 @@ BEGIN
                                                           AND Movement.DescId   = zc_Movement_WeighingPartner()
                                                           AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                        LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
-                                                               ON MovementFloat_MovementDesc.MovementId = tmpMovement.Id
+                                                               ON MovementFloat_MovementDesc.MovementId = Movement.Id
                                                               AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
                                                               AND MovementFloat_MovementDesc.ValueData  = zc_Movement_Send() :: TFloat
 
