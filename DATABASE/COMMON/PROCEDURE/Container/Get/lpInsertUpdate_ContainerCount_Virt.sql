@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerCount_Virt (
     IN inInfoMoneyDestinationId Integer ,
     IN inInfoMoneyId            Integer ,
     IN inGoodsId                Integer ,
-    IN inGoodsKindId            Integer ,
+    IN inGoodsKindId            Integer 
 )
   RETURNS Integer
 AS
@@ -17,7 +17,7 @@ $BODY$
 BEGIN
 
      -- 1. - 20700 Товары + 20900 Ирна + 30100 Продукция
-     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_30100())
+     IF 1=1 -- inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_30100())
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_CountVirt()
                                                  , inParentId          := NULL
                                                  , inObjectId          := inGoodsId

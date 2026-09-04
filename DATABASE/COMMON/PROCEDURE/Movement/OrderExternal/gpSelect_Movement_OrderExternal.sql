@@ -102,6 +102,9 @@ BEGIN
                          -- Zaporozhye
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentZaporozhye() AS AccessKeyId
                                WHERE EXISTS (SELECT 1 FROM tmpRoleAccessKey_user WHERE tmpRoleAccessKey_user.AccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr())
+                         -- Баранова В.М.
+                         UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId
+                               WHERE vbUserId = 8943590
                               )
          , tmpPersonal AS (SELECT lfSelect.MemberId
                                 , lfSelect.PersonalId
