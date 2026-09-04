@@ -365,7 +365,7 @@ END IF;
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_Loss(), zc_Movement_LossAsset())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = FALSE
+       -- AND inIsBefoHistoryCost = FALSE
        -- AND (tmpUnit_from.UnitId > 0)
        AND (tmpUnit_branch_from.UnitId IS NULL OR Movement.DescId = zc_Movement_LossAsset())
        AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
