@@ -2833,12 +2833,6 @@ inherited Report_OrderExternal_WeighingPartnerForm: TReport_OrderExternal_Weighi
     Left = 540
     Top = 206
   end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 588
-    Top = 278
-  end
   object spSelectPrint_Goods: TdsdStoredProc
     StoredProcName = 'gpReport_OrderExternal_WeighingPartner'
     DataSet = PrintItemsCDS

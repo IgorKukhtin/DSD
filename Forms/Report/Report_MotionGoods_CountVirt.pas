@@ -63,6 +63,10 @@ type
     CountItsIn_Weight: TcxGridDBColumn;
     bb: TdxBarButton;
     bbErased: TdxBarControlContainerItem;
+    PrintItemsCDS: TClientDataSet;
+    PrintHeaderCDS: TClientDataSet;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public

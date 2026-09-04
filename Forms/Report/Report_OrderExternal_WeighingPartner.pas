@@ -39,7 +39,6 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    PrintItemsSverkaCDS: TClientDataSet;
     cxLabel5: TcxLabel;
     edInvNumberOrder: TcxTextEdit;
     cxLabel10: TcxLabel;
