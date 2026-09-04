@@ -305,27 +305,27 @@ BEGIN
           , tmpGoods.MeasureName
           , tmpGoods.Weight
           
-          , tmpMIContainer.CountStart         ::TFloat
+          , (tmpMIContainer.CountStart * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)               ::TFloat AS CountStart
           , (tmpMIContainer.CountStart * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END) ::TFloat AS CountStart_Weight
-          , tmpMIContainer.CountEnd           ::TFloat
+          , (tmpMIContainer.CountEnd * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)                 ::TFloat AS CountEnd
           , (tmpMIContainer.CountEnd * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)   ::TFloat AS CountEnd_Weight
           
-          , tmpMIContainer.CountSendIn        ::TFloat
-          , (tmpMIContainer.CountSendIn * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)   ::TFloat AS CountSendIn_Weight
-          , tmpMIContainer.CountSendOut       ::TFloat
+          , (tmpMIContainer.CountSendIn * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)                  ::TFloat AS CountSendIn
+          , (tmpMIContainer.CountSendIn * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)    ::TFloat AS CountSendIn_Weight
+          , (tmpMIContainer.CountSendOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)                 ::TFloat AS CountSendOut
           , (tmpMIContainer.CountSendOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)   ::TFloat AS CountSendOut_Weight
            
-          , tmpMIContainer.CountProductionIn  ::TFloat
+          , (tmpMIContainer.CountProductionIn * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)                 ::TFloat AS CountProductionIn
           , (tmpMIContainer.CountProductionIn * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)   ::TFloat AS CountProductionIn_Weight
-          , tmpMIContainer.CountProductionOut ::TFloat
-          , (tmpMIContainer.CountProductionOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)   ::TFloat AS CountProductionOut_Weight
+          , (tmpMIContainer.CountProductionOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)                ::TFloat AS CountProductionOut
+          , (tmpMIContainer.CountProductionOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)  ::TFloat AS CountProductionOut_Weight
 
-          , tmpMIContainer.CountOrderRKOut    ::TFloat
-          , (tmpMIContainer.CountOrderRKOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)   ::TFloat AS CountOrderRKOut_Weight
+          , (tmpMIContainer.CountOrderRKOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)                   ::TFloat AS CountOrderRKOut
+          , (tmpMIContainer.CountOrderRKOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)     ::TFloat AS CountOrderRKOut_Weight
 
-          , tmpMIContainer.CountItsIn         ::TFloat
-          , (tmpMIContainer.CountItsIn * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)   ::TFloat AS CountItsIn_Weight
-          , tmpMIContainer.CountItsOut        ::TFloat
+          , (tmpMIContainer.CountItsIn * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)                  ::TFloat AS CountItsIn
+          , (tmpMIContainer.CountItsIn * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)    ::TFloat AS CountItsIn_Weight
+          , (tmpMIContainer.CountItsOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)                 ::TFloat AS CountItsOut
           , (tmpMIContainer.CountItsOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)   ::TFloat AS CountItsOut_Weight
           
      FROM tmpMIContainer

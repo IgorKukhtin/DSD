@@ -1,29 +1,29 @@
 inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
   Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077'>'
   ClientHeight = 372
-  ClientWidth = 1152
+  ClientWidth = 1519
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1168
+  ExplicitWidth = 1535
   ExplicitHeight = 411
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 1152
+    Width = 1519
     Height = 313
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1152
     ExplicitHeight = 313
     ClientRectBottom = 313
-    ClientRectRight = 1152
+    ClientRectRight = 1519
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1152
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
-        Width = 1152
+        Width = 1519
         Height = 313
         ExplicitWidth = 1152
         ExplicitHeight = 313
@@ -233,6 +233,11 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
               Format = ',0.####'
               Kind = skSum
               Column = CountProductionOut
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -315,7 +320,7 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
             Width = 70
           end
           object CountStart: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072#1095'.'
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072#1095'., '#1096#1090
             DataBinding.FieldName = 'CountStart'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -336,7 +341,7 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
             Width = 60
           end
           object CountEnd: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082#1086#1085#1077#1095#1085'.'
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082#1086#1085#1077#1095#1085'., '#1096#1090
             DataBinding.FieldName = 'CountEnd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -357,7 +362,7 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
             Width = 60
           end
           object CountSendIn: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097'.'
+            Caption = #1055#1088#1080#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097'., '#1096#1090
             DataBinding.FieldName = 'CountSendIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -378,7 +383,7 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
             Width = 84
           end
           object CountSendOut: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097'.'
+            Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097'., '#1096#1090
             DataBinding.FieldName = 'CountSendOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -398,7 +403,7 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
             Width = 80
           end
           object CountProductionIn: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1087#1088#1086#1080#1079#1074'.'
+            Caption = #1055#1088#1080#1093#1086#1076' '#1087#1088#1086#1080#1079#1074'., '#1096#1090
             DataBinding.FieldName = 'CountProductionIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -419,7 +424,7 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
             Width = 80
           end
           object CountProductionOut: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074'.'
+            Caption = #1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074'., '#1096#1090
             DataBinding.FieldName = 'CountProductionOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -439,7 +444,7 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
             Width = 70
           end
           object CountOrderRKOut: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1079#1072#1076#1072#1085#1080#1077' '#1085#1072' '#1089#1073#1086#1088#1082#1091' '#1043#1055
+            Caption = #1056#1072#1089#1093#1086#1076' '#1079#1072#1076#1072#1085#1080#1077' '#1085#1072' '#1089#1073#1086#1088#1082#1091' '#1043#1055', '#1096#1090
             DataBinding.FieldName = 'CountOrderRKOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -459,7 +464,7 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
             Width = 80
           end
           object CountItsIn: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1076#1088#1091#1075#1086#1077
+            Caption = #1055#1088#1080#1093#1086#1076' '#1076#1088#1091#1075#1086#1077', '#1096#1090
             DataBinding.FieldName = 'CountItsIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -479,7 +484,7 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
             Width = 70
           end
           object CountItsOut: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1076#1088#1091#1075#1086#1077
+            Caption = #1056#1072#1089#1093#1086#1076' '#1076#1088#1091#1075#1086#1077', '#1096#1090
             DataBinding.FieldName = 'CountItsOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -503,7 +508,7 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
     end
   end
   inherited Panel: TPanel
-    Width = 1152
+    Width = 1519
     Height = 33
     ExplicitWidth = 1152
     ExplicitHeight = 33
@@ -695,6 +700,52 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'UnitName;GoodsGroupNameFull;GoodsName;GoodsKindName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = '2'
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_MotionGoods_CountVirt'
+      ReportNameParam.Value = 'PrintReport_MotionGoods_CountVirt'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -790,6 +841,14 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -817,6 +876,10 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
       Category = 0
       Hint = 'Erased'
       Visible = ivAlways
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -972,5 +1035,17 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
       end>
     Left = 944
     Top = 3
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 532
+    Top = 174
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 604
+    Top = 209
   end
 end

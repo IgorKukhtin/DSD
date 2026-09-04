@@ -139,7 +139,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+  LoadReportFromFile('PrintReport_MotionGoods_CountVirt', ReportPath + '\Отчеты (товарные)\PrintReport_MotionGoods_CountVirt.fr3');
+  exit;
  { LoadReportFromFile('PrintMovement_OrderRK', ReportPath + '\Товарный Учет\PrintMovement_OrderRK.fr3');
   exit;
 
