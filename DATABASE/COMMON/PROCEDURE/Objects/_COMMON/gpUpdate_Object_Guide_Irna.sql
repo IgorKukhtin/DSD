@@ -16,6 +16,13 @@ BEGIN
      --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Object_Guide_Irna());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- Нет прав менять ведомости у сотрудника
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 14025514)
+     THEN
+          RAISE EXCEPTION 'Ошибка.Нет прав.';
+     END IF;
+
+
      -- меняется признак
      inisIrna:= NOT inisIrna;
 

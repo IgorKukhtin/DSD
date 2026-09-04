@@ -17,7 +17,7 @@ BEGIN
 
 
    -- Нет прав менять ведомости у сотрудника
-   IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 14025514)
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 14025514)
    THEN
         RAISE EXCEPTION 'Ошибка.Нет прав.';
    END IF;

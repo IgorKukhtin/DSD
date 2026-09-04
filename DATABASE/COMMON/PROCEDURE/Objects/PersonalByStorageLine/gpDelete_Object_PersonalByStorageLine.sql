@@ -15,6 +15,13 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
    
    
+   -- Нет прав менять ведомости у сотрудника
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 14025514)
+   THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав.';
+   END IF;
+
+
     -- проверка
    IF vbUserId <> zfCalc_UserAdmin()
    THEN

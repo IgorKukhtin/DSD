@@ -29,6 +29,13 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Personal());
 
 
+   -- Нет прав менять ведомости у сотрудника
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 14025514)
+   THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав.';
+   END IF;
+
+
    -- Основное место работы - только одно
    vbMemberId:=  (SELECT View_Personal.MemberId FROM Object_Personal_View AS View_Personal WHERE View_Personal.PersonalId = inId);
    -- Основное место работы - только одно

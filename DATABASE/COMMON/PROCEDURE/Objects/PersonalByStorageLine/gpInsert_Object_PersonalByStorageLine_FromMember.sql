@@ -14,6 +14,13 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
 
+   -- Нет прав менять ведомости у сотрудника
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 14025514)
+   THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав.';
+   END IF;
+
+
    --
    PERFORM gpInsertUpdate_Object_PersonalByStorageLine (0::Integer, tmp.PersonalId::Integer, tmp.StorageLineId::Integer, inSession::TVarChar)
    FROM (

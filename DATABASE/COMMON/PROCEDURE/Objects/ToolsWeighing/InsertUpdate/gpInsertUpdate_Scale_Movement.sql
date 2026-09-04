@@ -116,6 +116,28 @@ BEGIN
                                                    , inMovementDescNumber  := inMovementDescNumber
                                                    , inWeighingNumber      := CASE WHEN inId <> 0
                                                                                         THEN (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inId AND MovementFloat.DescId = zc_MovementFloat_WeighingNumber())
+                                                                                   WHEN inMovementDescId IN (zc_Movement_Send()) AND inMovementId_Order > 0
+                                                                                        THEN 1 + COALESCE ((SELECT MAX (COALESCE (MovementFloat_WeighingNumber.ValueData, 0))
+                                                                                                            FROM Movement
+                                                                                                                 INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                                                                                               ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                                                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                                                                                              AND MovementLinkObject_To.ObjectId = inToId
+                                                                                                                 LEFT JOIN MovementLinkMovement AS MLM_Order
+                                                                                                                                                ON MLM_Order.MovementId = Movement.Id
+                                                                                                                                               AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+                                                                                                                 INNER JOIN MovementFloat AS MovementFloat_MovementDesc
+                                                                                                                                          ON MovementFloat_MovementDesc.MovementId = Movement.Id
+                                                                                                                                         AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
+                                                                                                                                         AND MovementFloat_MovementDesc.ValueData = inMovementDescId
+                                                                                                                 INNER JOIN MovementFloat AS MovementFloat_WeighingNumber
+                                                                                                                                          ON MovementFloat_WeighingNumber.MovementId = Movement.Id
+                                                                                                                                         AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
+                                                                                                            WHERE Movement.DescId = zc_Movement_WeighingPartner()
+                                                                                                              AND Movement.OperDate BETWEEN inOperDate - INTERVAL '2 DAY' AND inOperDate
+                                                                                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                                                                              AND COALESCE (MLM_Order.MovementChildId, 0) = COALESCE (inMovementId_Order, 0)
+                                                                                                           ), 0)
                                                                                    WHEN inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_Inventory(), zc_Movement_SendOnPrice())
                                                                                         THEN 1
                                                                                    ELSE 1 + COALESCE ((SELECT MAX (COALESCE (MovementFloat_WeighingNumber.ValueData, 0))
