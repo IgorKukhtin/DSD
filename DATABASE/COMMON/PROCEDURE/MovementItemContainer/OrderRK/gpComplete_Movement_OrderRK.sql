@@ -4,22 +4,31 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_OrderRK (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_OrderRK(
     IN inMovementId        Integer                , -- ключ Документа
+   OUT outPrinted          Boolean              ,
+   OUT outMessageText      Text                 ,
     IN inSession           TVarChar DEFAULT ''      -- сессия пользователя
-)                              
-RETURNS VOID
+)
+RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-      -- проверка прав пользователя на вызов процедуры
-      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_OrderRK());
-      vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_OrderRK());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_OrderRK());
 
-      -- проводим Документ + сохранили протокол
-      PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                 , inDescId     := zc_Movement_OrderRK()
-                                 , inUserId     := vbUserId
-                                  );
+
+      --  Документ
+      PERFORM lpComplete_Movement_OrderRK_CreateTemp();
+
+
+     -- меняем статус документа + сохранили протокол
+     SELECT tmp.outPrinted, tmp.outMessageText
+            INTO outPrinted, outMessageText
+     FROM lpComplete_Movement_OrderRK (inMovementId:= inMovementId
+                                     , inUserId    := vbUserId
+                                      ) AS tmp;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

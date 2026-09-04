@@ -15,12 +15,11 @@ $BODY$
    DECLARE vbUnitId_From    Integer;
    DECLARE vbPartnerId_To   Integer;
    DECLARE vbMovementDescId Integer;
+   DECLARE vbMovementId_CarInfo Integer;
+
 BEGIN
      -- определили признак
-     outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := lfGet_User_Session (inUserId));13:59 04.08.2026
-
-     -- таблица - элементы документа
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperCount TFloat) ON COMMIT DROP;
+     outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := lfGet_User_Session (inUserId));
 
 
      -- Эти параметры нужны
@@ -29,7 +28,7 @@ BEGIN
             -- Склад
           , MovementLinkObject_From.ObjectId AS UnitId_From
             -- Кому
-          , MovementLinkObject_To.ObjectId   AS UnitId_to
+          , MovementLinkObject_To.ObjectId   AS PartnerId_To
             INTO vbOperDate, vbMovementDescId, vbUnitId_From, vbPartnerId_To
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -46,7 +45,11 @@ BEGIN
 
 
      -- !!! Розподільчий комплекс
-     IF vbUnitId_From <> zc_Unint_RK() THEN RETURN; END IF;
+     IF COALESCE (vbUnitId_From, 0) <> zc_Unit_RK()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не выбрано подразделение <%>.', lfGet_Object_ValueData_sh (zc_Unit_RK());
+         -- RETURN;
+     END IF;
 
 
 
@@ -58,7 +61,7 @@ BEGIN
                     OR EXTRACT (HOUR FROM MovementDate.ValueData) = 0
                       )
                )
-        AND vbUnitId_From = zc_Unint_RK()
+        AND vbUnitId_From = zc_Unit_RK()
         AND inUserId = 5
         AND 1=0
      THEN
@@ -133,7 +136,7 @@ BEGIN
              PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), inMovementId, tmp.OperDate_CarInfo)        -- Дата/время отгрузки
              FROM (SELECT COALESCE (
                                     (SELECT -- !!!Дата/время отгрузки - Расчет!!!
-                                           (vbOperDatePartner 
+                                           (vbOperDatePartner
                                           + ((CASE WHEN ObjectFloat_Days.ValueData > 0 THEN  1 * ObjectFloat_Days.ValueData ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
                                           - ((CASE WHEN ObjectFloat_Days.ValueData < 0 THEN -1 * ObjectFloat_Days.ValueData ELSE 0 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
                                           + ((COALESCE (ObjectFloat_Hour.ValueData, 0) :: Integer) :: TVarChar || ' HOUR')   :: INTERVAL
@@ -189,7 +192,7 @@ BEGIN
      END IF;
 
      -- заполняем
-     IF vbUnitId_From = zc_Unint_RK()
+     IF vbUnitId_From = zc_Unit_RK()
  --AND vbOperDate = (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_CarInfo())
      THEN
          IF 1=0 --vbIsSamoV = TRUE
@@ -198,34 +201,135 @@ BEGIN
              PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), inMovementId, vbOperDate + INTERVAL '1 DAY' + INTERVAL '0 MIN');
        /*ELSE
              -- Дата/время отгрузки
-             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), inMovementId, vbOperDate + INTERVAL '1 DAY' + INTERVAL '0 MIN');
-         END IF;*/
+             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_CarInfo(), inMovementId, vbOperDate + INTERVAL '1 DAY' + INTERVAL '0 MIN');*/
+         END IF;
      END IF;
 
 
-     -- заполняем таблицу - количественные элементы документа, со всеми свойствами
-     INSERT INTO _tmpItem (MovementItemId, ContainerId_Goods, GoodsId, GoodsKindId, OperCount)
-        SELECT MovementItem.Id                                                                   AS MovementItemId
-             , 0                                                                                 AS ContainerId_Goods
-             , COALESCE (MILinkObject_Goods_in.ObjectId, MovementItem.ObjectId)                  AS GoodsId
-             , COALESCE (MILinkObject_GoodsKind_in.ObjectId, MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-             , (MovementItem.Amount)                                                             AS OperCount
-        FROM Movement
-             JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_in
-                                              ON MILinkObject_Goods_in.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_Goods_in.DescId         = zc_MILinkObject_Goods_in()
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_in
-                                              ON MILinkObject_GoodsKind_in.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsKind_in.DescId         = zc_MILinkObject_GoodsKind_in()
+     -- Если надо "выровнять" остатки = после инвентаризации, или ....
+     IF vbUnitId_From = vbPartnerId_To
+     THEN
+         WITH tmpGoods AS (SELECT Object_Goods.Id AS GoodsId
+                           FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                JOIN Object AS Object_Goods ON Object_Goods.Id       = ObjectLink_Goods_InfoMoney.ObjectId
+                                                           AND Object_Goods.isErased = FALSE
+                                INNER JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                                 ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                                                            , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                             )
 
-        WHERE Movement.Id = inMovementId
-          AND Movement.DescId = zc_Movement_OrderRK()
-          AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-       ;
+                           WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                          )
+              -- Остатки Факт
+            , tmpRem_real AS (SELECT tmpRem.GoodsId
+                                   , tmpRem.GoodsKindId
+                                   , SUM (tmpRem.Amount) AS Amount
+                              FROM (SELECT Container.ObjectId     AS GoodsId
+                                         , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                         , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
+                                    FROM ContainerLinkObject
+                                         INNER JOIN Container ON Container.Id       = ContainerLinkObject.ContainerId
+                                                             AND Container.DescId   = zc_Container_Count()
+                                                             AND Container.ObjectId IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
+                                         LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                       ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                      AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                         LEFT JOIN MovementItemContainer AS MIContainer
+                                                                         ON MIContainer.ContainerId = Container.Id
+                                                                        -- Обязательно дата в док inMovementId = дате в док.Инвент.
+                                                                        AND MIContainer.OperDate    > vbOperDate
+                                    WHERE ContainerLinkObject.ObjectId = vbUnitId_From
+                                      AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
+                                    GROUP BY Container.Id
+                                           , Container.ObjectId
+                                           , CLO_GoodsKind.ObjectId
+                                           , Container.Amount
+                                    HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                                   ) AS tmpRem
+                              GROUP BY tmpRem.GoodsId
+                                     , tmpRem.GoodsKindId
+                              HAVING  SUM (tmpRem.Amount) <> 0
+                             )
+
+              -- Остатки Вирт
+            , tmpRem_virt AS (SELECT tmpRem.GoodsId
+                                   , tmpRem.GoodsKindId
+                                   , SUM (tmpRem.Amount) AS Amount
+                              FROM (SELECT Container.ObjectId     AS GoodsId
+                                         , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                         , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
+                                    FROM ContainerLinkObject
+                                         INNER JOIN Container ON Container.Id       = ContainerLinkObject.ContainerId
+                                                             AND Container.DescId   = zc_Container_CountVirt()
+                                                             AND Container.ObjectId IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
+                                         LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                       ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                      AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                         LEFT JOIN MovementItemContainer AS MIContainer
+                                                                         ON MIContainer.ContainerId = Container.Id
+                                                                        -- Обязательно дата в док inMovementId = дате в док.Инвент.
+                                                                        AND MIContainer.OperDate    > vbOperDate
+                                    WHERE ContainerLinkObject.ObjectId = vbUnitId_From
+                                      AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
+                                    GROUP BY Container.Id
+                                           , Container.ObjectId
+                                           , CLO_GoodsKind.ObjectId
+                                           , Container.Amount
+                                    HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                                   ) AS tmpRem
+                              GROUP BY tmpRem.GoodsId
+                                     , tmpRem.GoodsKindId
+                              HAVING  SUM (tmpRem.Amount) <> 0
+                             )
+         -- Результат
+         INSERT INTO _tmpItem (MovementItemId, ContainerId_Goods, GoodsId, GoodsKindId, OperCount)
+            SELECT 0                                                                   AS MovementItemId
+                 , 0                                                                   AS ContainerId_Goods
+                 , COALESCE (tmpRem_real.GoodsId, tmpRem_virt.GoodsId)                 AS GoodsId
+                 , COALESCE (tmpRem_real.GoodsKindId, tmpRem_virt.GoodsKindId)         AS GoodsKindId
+                 , -1 * (COALESCE (tmpRem_real.Amount, 0) - COALESCE (tmpRem_virt.Amount, 0)) AS OperCount
+            FROM tmpRem_real
+                 FULL JOIN tmpRem_virt ON tmpRem_virt.GoodsId     = tmpRem_real.GoodsId
+                                      AND tmpRem_virt.GoodsKindId = tmpRem_real.GoodsKindId
+                                     ;
+         -- Результат
+         UPDATE _tmpItem SET MovementItemId = lpInsertUpdate_MovementItem_OrderRK (ioId           := 0
+                                                                                 , inMovementId   := inMovementId
+                                                                                 , inGoodsId      := _tmpItem.GoodsId
+                                                                                 , inGoodsKindId  := _tmpItem.GoodsKindId
+                                                                                 , inAmount       := _tmpItem.OperCount
+                                                                                 , inUserId       := inUserId
+                                                                                  );
+
+
+
+     ELSE
+         -- заполняем таблицу - количественные элементы документа, со всеми свойствами
+         INSERT INTO _tmpItem (MovementItemId, ContainerId_Goods, GoodsId, GoodsKindId, OperCount)
+            SELECT MovementItem.Id                                                                   AS MovementItemId
+                 , 0                                                                                 AS ContainerId_Goods
+                 , COALESCE (MILinkObject_Goods_in.ObjectId, MovementItem.ObjectId)                  AS GoodsId
+                 , COALESCE (MILinkObject_GoodsKind_in.ObjectId, MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                 , (MovementItem.Amount)                                                             AS OperCount
+            FROM Movement
+                 JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_in
+                                                  ON MILinkObject_Goods_in.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_Goods_in.DescId         = zc_MILinkObject_Goods_in()
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_in
+                                                  ON MILinkObject_GoodsKind_in.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_GoodsKind_in.DescId         = zc_MILinkObject_GoodsKind_in()
+
+            WHERE Movement.Id = inMovementId
+              AND Movement.DescId = zc_Movement_OrderRK()
+              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+           ;
+
+     END IF;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -246,7 +350,7 @@ BEGIN
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId --, ParentId, Amount, OperDate, IsActive)
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
-       -- это обычная проводка - zc_Container_Count
+       -- это обычная проводка - zc_Container_CountVirt
        SELECT 0, zc_MIContainer_CountVirt() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItem.ContainerId_Goods
             , 0                                       AS AccountId              -- нет счета
@@ -262,6 +366,10 @@ BEGIN
             , vbOperDate
             , FALSE
        FROM _tmpItem
+      ;
+
+
+     -- RAISE EXCEPTION 'Ошибка.<%>', (select COUNT(*) from _tmpItem where ContainerId_Goods > 0);
 
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
@@ -270,7 +378,7 @@ BEGIN
 
      -- ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_OrderExternal()
+                                , inDescId     := zc_Movement_OrderRK()
                                 , inUserId     := inUserId
                                  );
 
@@ -285,5 +393,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= '2')
--- SELECT * FROM lpComplete_Movement_OrderRK (inMovementId:= 579, inSession:= '2')
+-- SELECT * FROM gpUpdate_Status_OrderRK(inMovementId := 35201623 , inStatusCode := 2 ,  inSession := '5');
