@@ -67,6 +67,10 @@ type
     PrintHeaderCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edSearchGoodsName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
+    GoodsName_choice: TcxGridDBColumn;
   private
     { Private declarations }
   public

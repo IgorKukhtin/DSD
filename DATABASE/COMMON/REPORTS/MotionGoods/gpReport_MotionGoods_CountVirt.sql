@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_MotionGoods_CountVirt(
 )
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
              , GoodsGroupId Integer, GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_choice TVarChar 
              , GoodsKindId Integer, GoodsKindName TVarChar
              , MeasureName TVarChar
              , Weight TFloat
@@ -34,6 +34,8 @@ RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
 
              , CountOrderRKOut        TFloat
              , CountOrderRKOut_Weight TFloat
+             , CountOrderRKInv        TFloat
+             , CountOrderRKInv_Weight TFloat
 
              , CountItsIn         TFloat
              , CountItsIn_Weight  TFloat
@@ -110,6 +112,7 @@ BEGIN
                             , SUM (COALESCE (tmp.CountProductionIn,0))  AS CountProductionIn
                             , SUM (COALESCE (tmp.CountProductionOut,0)) AS CountProductionOut
                             , SUM (COALESCE (tmp.CountOrderRKOut,0))    AS CountOrderRKOut
+                            , SUM (COALESCE (tmp.CountOrderRKInv,0))    AS CountOrderRKInv
                             , SUM (COALESCE (tmp.CountItsIn,0))         AS CountItsIn
                             , SUM (COALESCE (tmp.CountItsOut,0))        AS CountItsOut
                             , SUM (COALESCE (tmp.RemainsStart, 0))      AS CountStart
@@ -145,10 +148,19 @@ BEGIN
       
                                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                AND MIContainer.MovementDescId IN (zc_Movement_OrderRK())
-                                               AND MIContainer.isActive = FALSE
+                                                AND MovementLinkObject_From.ObjectId <> MovementLinkObject_To.ObjectId 
+                                               --AND MIContainer.isActive = FALSE
                                                    THEN -1 * MIContainer.Amount
                                               ELSE 0
                                          END) AS CountOrderRKOut
+
+                                  , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                               AND MIContainer.MovementDescId IN (zc_Movement_OrderRK())
+                                               AND MovementLinkObject_From.ObjectId = MovementLinkObject_To.ObjectId
+                                               --AND MIContainer.isActive = FALSE
+                                                   THEN -1 * MIContainer.Amount
+                                              ELSE 0
+                                         END) AS CountOrderRKInv  --инвентаризация
       
                                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                AND MIContainer.MovementDescId NOT IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
@@ -172,6 +184,16 @@ BEGIN
                                                                  ON MIContainer.ContainerId = tmpContainer.Id
                                                                 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                                 AND MIContainer.DescId = zc_MIContainer_CountVirt()
+
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                              ON MovementLinkObject_From.MovementId = MIContainer.MovementId
+                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                             AND MIContainer.MovementDescId IN (zc_Movement_OrderRK())
+
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                              ON MovementLinkObject_To.MovementId = MIContainer.MovementId
+                                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                             AND MIContainer.MovementDescId IN (zc_Movement_OrderRK())
                              GROUP BY tmpContainer.UnitId
                                     , tmpContainer.ObjectId
                                     , tmpContainer.GoodsKindId 
@@ -203,11 +225,20 @@ BEGIN
                                         END) <> 0 -- AS CountProductionOut
       
                                  OR SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                             AND MIContainer.MovementDescId IN (zc_Movement_OrderRK())
-                                             AND MIContainer.isActive = FALSE
-                                                 THEN -1 * MIContainer.Amount
-                                            ELSE 0
-                                        END) <> 0 -- AS CountOrderRKOut
+                                               AND MIContainer.MovementDescId IN (zc_Movement_OrderRK())
+                                                AND MovementLinkObject_From.ObjectId <> MovementLinkObject_To.ObjectId 
+                                               --AND MIContainer.isActive = FALSE
+                                                   THEN -1 * MIContainer.Amount
+                                              ELSE 0
+                                         END) <> 0 --AS CountOrderRKOut
+
+                                 OR SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                               AND MIContainer.MovementDescId IN (zc_Movement_OrderRK())
+                                               AND MovementLinkObject_From.ObjectId = MovementLinkObject_To.ObjectId
+                                               --AND MIContainer.isActive = FALSE
+                                                   THEN -1 * MIContainer.Amount
+                                              ELSE 0
+                                         END) <> 0 --AS CountOrderRKInv  --инвентаризация
       
                                  OR SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                              AND MIContainer.MovementDescId NOT IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
@@ -234,6 +265,7 @@ BEGIN
                                   , 0 AS CountProductionIn
                                   , 0 AS CountProductionOut
                                   , 0 AS CountOrderRKOut
+                                  , 0 AS CountOrderRKInv
                                   , 0 AS CountItsIn
                                   , 0 AS CountItsOut
                                   -- ***REMAINS***
@@ -300,6 +332,7 @@ BEGIN
           , tmpGoods.GoodsId
           , tmpGoods.GoodsCode
           , tmpGoods.GoodsName
+          , (tmpGoods.GoodsCode::TVarChar ||' '|| tmpGoods.GoodsName) ::TVarChar AS GoodsName_choice
           , Object_GoodsKind.Id         AS GoodsKindId
           , Object_GoodsKind.ValueData  AS GoodsKindName
           , tmpGoods.MeasureName
@@ -322,6 +355,9 @@ BEGIN
 
           , (tmpMIContainer.CountOrderRKOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)                   ::TFloat AS CountOrderRKOut
           , (tmpMIContainer.CountOrderRKOut * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)     ::TFloat AS CountOrderRKOut_Weight
+
+          , (tmpMIContainer.CountOrderRKInv * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)                   ::TFloat AS CountOrderRKInv
+          , (tmpMIContainer.CountOrderRKInv * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)     ::TFloat AS CountOrderRKInv_Weight
 
           , (tmpMIContainer.CountItsIn * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)                  ::TFloat AS CountItsIn
           , (tmpMIContainer.CountItsIn * CASE WHEN tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpGoods.Weight ELSE 1 END)    ::TFloat AS CountItsIn_Weight

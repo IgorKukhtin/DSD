@@ -632,7 +632,7 @@ inherited OrderRKJournalForm: TOrderRKJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1074#1080#1088#1090'.'#1086#1089#1090#1072#1090#1082#1072#1084'>'
       ImageIndex = 26
       FormName = 'TReport_MotionGoods_CountVirtForm'
       FormNameParam.Value = 'TReport_MotionGoods_CountVirtForm'

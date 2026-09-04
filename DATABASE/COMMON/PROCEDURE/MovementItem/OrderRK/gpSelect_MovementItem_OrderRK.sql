@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderRK(
 )
 RETURNS TABLE (Key TVarChar 
              , Id Integer, LineNum Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_choice TVarChar 
              , GoodsGroupNameFull TVarChar             
              , MeasureName TVarChar 
              , GoodsKindId Integer, GoodsKindName  TVarChar
@@ -170,6 +170,7 @@ BEGIN
             , Object_Goods.Id                              AS GoodsId
             , Object_Goods.ObjectCode                      AS GoodsCode
             , Object_Goods.ValueData                       AS GoodsName
+            , (Object_Goods.ObjectCode::TVarChar ||' '|| Object_Goods.ValueData) ::TVarChar AS GoodsName_choice
             , tmpGoods_Param.GoodsGroupNameFull ::TVarChar AS GoodsGroupNameFull
             , tmpGoods_Param.MeasureName        ::TVarChar AS MeasureName
             , COALESCE (Object_GoodsKind.Id, 0)            AS GoodsKindId
@@ -217,6 +218,7 @@ BEGIN
             , Object_Goods.Id                              AS GoodsId
             , Object_Goods.ObjectCode                      AS GoodsCode
             , Object_Goods.ValueData                       AS GoodsName
+            , (Object_Goods.ObjectCode::TVarChar ||' '|| Object_Goods.ValueData) ::TVarChar AS GoodsName_choice
             , tmpGoods_Param.GoodsGroupNameFull ::TVarChar AS GoodsGroupNameFull
             , tmpGoods_Param.MeasureName        ::TVarChar AS MeasureName
             , COALESCE (Object_GoodsKind.Id, 0)            AS GoodsKindId

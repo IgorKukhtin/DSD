@@ -7,22 +7,22 @@ inherited OrderRKForm: TOrderRKForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 115
+    Top = 147
     Width = 1298
-    Height = 490
-    ExplicitTop = 115
+    Height = 458
+    ExplicitTop = 147
     ExplicitWidth = 1298
-    ExplicitHeight = 490
-    ClientRectBottom = 490
+    ExplicitHeight = 458
+    ClientRectBottom = 458
     ClientRectRight = 1298
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1298
-      ExplicitHeight = 466
+      ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 1298
-        Height = 278
+        Height = 246
         ExplicitWidth = 1298
-        ExplicitHeight = 278
+        ExplicitHeight = 246
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -217,11 +217,20 @@ inherited OrderRKForm: TOrderRKForm
             Options.Editing = False
             Width = 190
           end
+          object GoodsName_choice: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1087#1086#1080#1089#1082')'
+            DataBinding.FieldName = 'GoodsName_choice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 286
+        Top = 254
         Width = 1298
         Height = 180
         Align = alBottom
@@ -355,7 +364,7 @@ inherited OrderRKForm: TOrderRKForm
       end
       object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 278
+        Top = 246
         Width = 1298
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -366,10 +375,10 @@ inherited OrderRKForm: TOrderRKForm
   end
   inherited DataPanel: TPanel
     Width = 1298
-    Height = 89
+    Height = 121
     TabOrder = 3
     ExplicitWidth = 1298
-    ExplicitHeight = 89
+    ExplicitHeight = 121
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 22
@@ -590,6 +599,27 @@ inherited OrderRKForm: TOrderRKForm
       Properties.ReadOnly = True
       TabOrder = 28
       Width = 110
+    end
+    object cxLabel12: TcxLabel
+      Left = 8
+      Top = 93
+      Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1090#1086#1074#1072#1088#1091':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchGoodsName: TcxTextEdit
+      Left = 129
+      Top = 94
+      TabOrder = 30
+      DesignSize = (
+        114
+        21)
+      Width = 114
     end
   end
   object cxLabel3: TcxLabel [2]
@@ -2277,7 +2307,6 @@ inherited OrderRKForm: TOrderRKForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2338,11 +2367,10 @@ inherited OrderRKForm: TOrderRKForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    DisableGuidesOpen = True
-    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartner_ObjectForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -2363,7 +2391,7 @@ inherited OrderRKForm: TOrderRKForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 667
+    Left = 707
     Top = 12
   end
   object spSavePrintState: TdsdStoredProc
@@ -2634,8 +2662,8 @@ inherited OrderRKForm: TOrderRKForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 524
-    Top = 8
+    Left = 476
+    Top = 16
   end
   object DetailCDS: TClientDataSet
     Aggregates = <>
@@ -2689,5 +2717,18 @@ inherited OrderRKForm: TOrderRKForm
     PropertiesCellList = <>
     Left = 798
     Top = 553
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchGoodsName
+    DataSet = MasterCDS
+    Column = GoodsName_choice
+    ColumnList = <
+      item
+        Column = GoodsName_choice
+        TextEdit = edSearchGoodsName
+      end>
+    CheckBoxList = <>
+    Left = 248
+    Top = 80
   end
 end

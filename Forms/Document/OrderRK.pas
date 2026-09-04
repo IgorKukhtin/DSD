@@ -131,6 +131,9 @@ type
     bbOpenFormExternal: TdxBarButton;
     actOpenFormRK: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    cxLabel12: TcxLabel;
+    edSearchGoodsName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public

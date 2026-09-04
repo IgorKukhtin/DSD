@@ -1,32 +1,32 @@
 inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
-  Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1074#1080#1088#1090'.'#1086#1089#1090#1072#1090#1082#1072#1084'>'
   ClientHeight = 372
-  ClientWidth = 1519
+  ClientWidth = 1153
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1535
+  ExplicitWidth = 1169
   ExplicitHeight = 411
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
-    Width = 1519
-    Height = 313
+    Top = 96
+    Width = 1153
+    Height = 276
     TabOrder = 3
-    ExplicitTop = 59
-    ExplicitWidth = 1152
-    ExplicitHeight = 313
-    ClientRectBottom = 313
-    ClientRectRight = 1519
+    ExplicitTop = 96
+    ExplicitWidth = 1153
+    ExplicitHeight = 276
+    ClientRectBottom = 276
+    ClientRectRight = 1153
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1152
-      ExplicitHeight = 313
+      ExplicitWidth = 1153
+      ExplicitHeight = 276
       inherited cxGrid: TcxGrid
-        Width = 1519
-        Height = 313
-        ExplicitWidth = 1152
-        ExplicitHeight = 313
+        Width = 1153
+        Height = 276
+        ExplicitWidth = 1153
+        ExplicitHeight = 276
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -130,6 +130,16 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
               Format = ',0.####'
               Kind = skSum
               Column = CountProductionOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOrderRKInv
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOrderRKInv_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -238,6 +248,16 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOrderRKInv
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOrderRKInv_Weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -463,6 +483,26 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object CountOrderRKInv: TcxGridDBColumn
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103', '#1096#1090
+            DataBinding.FieldName = 'CountOrderRKInv'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object CountOrderRKInv_Weight: TcxGridDBColumn
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103', '#1074#1077#1089
+            DataBinding.FieldName = 'CountOrderRKInv_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object CountItsIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' '#1076#1088#1091#1075#1086#1077', '#1096#1090
             DataBinding.FieldName = 'CountItsIn'
@@ -503,15 +543,24 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object GoodsName_choice: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1087#1086#1080#1089#1082')'
+            DataBinding.FieldName = 'GoodsName_choice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1519
-    Height = 33
-    ExplicitWidth = 1152
-    ExplicitHeight = 33
+    Width = 1153
+    Height = 70
+    ExplicitWidth = 1153
+    ExplicitHeight = 70
     inherited deStart: TcxDateEdit
       Left = 49
       EditValue = 41640d
@@ -590,6 +639,27 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 180
+    end
+    object cxLabel6: TcxLabel
+      Left = 5
+      Top = 39
+      Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1090#1086#1074#1072#1088#1091':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchGoodsName: TcxTextEdit
+      Left = 126
+      Top = 40
+      TabOrder = 11
+      DesignSize = (
+        114
+        21)
+      Width = 114
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1047,5 +1117,22 @@ inherited Report_MotionGoods_CountVirtForm: TReport_MotionGoods_CountVirtForm
     Params = <>
     Left = 604
     Top = 209
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchGoodsName
+    DataSet = MasterCDS
+    Column = GoodsName_choice
+    ColumnList = <
+      item
+        Column = GoodsName_choice
+        TextEdit = edSearchGoodsName
+      end
+      item
+      end
+      item
+      end>
+    CheckBoxList = <>
+    Left = 248
+    Top = 32
   end
 end
